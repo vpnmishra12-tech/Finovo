@@ -1,22 +1,27 @@
 
-# SmartKharcha AI - Login Fixes 📱
+# SmartKharcha AI - Installation Guide 📱
 
-Agar aapko login mein problem aa rahi hai, toh neeche diye gaye solution ko follow karein:
+SmartKharcha AI ek **Progressive Web App (PWA)** hai. Iska matlab aap ise bina Play Store ke apne phone par install kar sakte hain.
 
-## 🚀 Solution 1: Guest Mode (Fastest)
-Aap landing page par **"Try Guest Mode"** button ka use karke bina OTP ke app mein enter kar sakte hain. Ye sabse asaan tareeka hai app ko check karne ka.
+## 🚀 How to Install on Phone:
 
-## 🛠 Solution 2: Fix Phone Auth (Billing Issue)
-Agar aapko `auth/billing-not-enabled` error aa raha hai, toh iska matlab hai ki aapke Firebase Project par **"Blaze Plan"** enabled nahi hai. SMS bhejne ke liye Firebase billing mangta hai.
+### 🤖 For Android (Google Chrome):
+1. Phone mein **Chrome browser** kholien aur app ke URL par jayein.
+2. Upar right corner mein **3 dots (⋮)** par click karein.
+3. Menu mein **"Add to Home Screen"** ya **"Install App"** par click karein.
+4. App aapke home screen par icon ban jayegi!
 
-**Steps to Fix:**
-1. [Firebase Console](https://console.firebase.google.com/project/_/usage/details) par jayein.
-2. "Modify Plan" par click karke use **Blaze** par switch karein.
-3. Iske baad OTP SMS aana shuru ho jayega.
-
-## ⚠️ OTP Nahi Aa Raha?
-1. Hamesha `+91` laga kar apna 10-digit number daalein.
-2. Check karein ki Firebase Console mein "Phone" provider **Enabled** hai aur niche **Save** button click kiya gaya hai.
+### 🍎 For iPhone (Safari):
+1. Phone mein **Safari browser** kholien aur app ke URL par jayein.
+2. Niche beech mein **"Share"** button (box with upward arrow) dabayein.
+3. Scroll karke niche jayein aur **"Add to Home Screen"** select karein.
+4. **"Add"** par click karein.
 
 ---
+
+## 🛠 Login Fixes (If needed):
+- **Guest Mode:** Agar OTP nahi aa raha, toh "Try Guest Mode" use karein.
+- **Blaze Plan:** Phone OTP ke liye Firebase Console mein Blaze plan active hona chahiye.
+- **Cookies:** Agar Google login use kar rahe hain, toh browser settings mein "Third-party cookies" allow karein.
+
 *SmartKharcha AI - Track your expenses with the power of AI.*

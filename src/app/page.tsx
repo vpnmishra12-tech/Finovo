@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from 'react';
@@ -9,7 +10,7 @@ import { SpendingChart } from '@/components/dashboard/spending-chart';
 import { MonthlyHistory } from '@/components/dashboard/monthly-history';
 import { ExpenseList } from '@/components/expenses/expense-list';
 import { AddExpenseDrawer } from '@/components/expenses/add-expense-drawer';
-import { Loader2, Sparkles, Wallet, ShieldCheck, Phone, CheckCircle2, Info, UserCircle, Calendar } from 'lucide-react';
+import { Loader2, Sparkles, Wallet, ShieldCheck, Phone, CheckCircle2, Info, UserCircle, Download } from 'lucide-react';
 import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import { collection, query, orderBy, limit } from 'firebase/firestore';
 import { Expense } from '@/lib/expenses';
@@ -17,6 +18,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 export default function Home() {
   const { user, loading, sendOtp, verifyOtp, loginAsGuest, isOtpSent } = useAuth();
@@ -39,7 +41,7 @@ export default function Home() {
     return query(
       collection(firestore, 'users', user.uid, 'expenses'),
       orderBy('createdAt', 'desc'),
-      limit(200) // Increased limit to ensure we have enough history
+      limit(200)
     );
   }, [firestore, user?.uid]);
 
@@ -90,6 +92,14 @@ export default function Home() {
               Track expenses using voice, text, or bill scans. Log in to sync or try Guest Mode.
             </p>
           </div>
+
+          <Alert className="max-w-sm bg-blue-500/10 border-blue-500/20 text-blue-600 rounded-2xl">
+            <Download className="w-4 h-4" />
+            <AlertTitle className="text-sm font-bold">Install Tip</AlertTitle>
+            <AlertDescription className="text-xs">
+              Add to Home Screen from your browser menu to use it like a real app!
+            </AlertDescription>
+          </Alert>
 
           <Card className="w-full max-w-sm border-none shadow-2xl rounded-3xl overflow-hidden bg-card">
             <CardContent className="p-8 space-y-6">
