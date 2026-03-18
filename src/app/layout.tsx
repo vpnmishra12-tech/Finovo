@@ -1,3 +1,4 @@
+
 import type {Metadata, Viewport} from 'next';
 import './globals.css';
 import { FirebaseClientProvider } from '@/firebase/client-provider';
@@ -24,11 +25,12 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#5252E0',
+  themeColor: '#1F1F2E',
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
+  viewportFit: 'cover',
 };
 
 export default function RootLayout({
@@ -42,13 +44,8 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
-        <link rel="manifest" href="/manifest.json" />
-        <meta name="mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <link rel="apple-touch-icon" href="https://images.unsplash.com/photo-1580519542036-c47de6196ba5?w=180&h=180&fit=crop&q=80" />
         
-        {/* STEP 1: AdSense Global Script */}
-        {/* Jab aapka AdSense account approve ho jaye, niche wala code uncomment karein aur 'ca-pub-...' apni ID se badlein */}
+        {/* AdSense Global Script */}
         {/* 
         <Script
           async
@@ -58,7 +55,7 @@ export default function RootLayout({
         /> 
         */}
       </head>
-      <body className="font-body antialiased min-h-screen">
+      <body className="font-body antialiased min-h-screen bg-background text-foreground selection:bg-primary/30">
         <FirebaseClientProvider>
           <AuthProvider>
             <LanguageProvider>

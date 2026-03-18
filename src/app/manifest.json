@@ -5,6 +5,7 @@
   "description": "Professional AI-powered expense tracker for modern Indian users.",
   "start_url": "/",
   "display": "standalone",
+  "orientation": "portrait",
   "background_color": "#1F1F2E",
   "theme_color": "#5252E0",
   "icons": [
@@ -25,6 +26,15 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
+    }
+  ],
+  "categories": ["finance", "productivity"],
+  "screenshots": [
+    {
+      "src": "https://picsum.photos/seed/app1/390/844",
+      "sizes": "390x844",
+      "type": "image/png",
+      "label": "Main Dashboard"
     }
   ]
 }
