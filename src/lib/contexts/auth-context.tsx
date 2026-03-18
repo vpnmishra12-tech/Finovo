@@ -1,12 +1,13 @@
 
 "use client";
 
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { 
-  GoogleAuthProvider, 
-  signInWithPopup, 
   signOut, 
-  User 
+  User,
+  RecaptchaVerifier,
+  signInWithPhoneNumber,
+  ConfirmationResult
 } from 'firebase/auth';
 import { useAuth as useFirebaseServiceAuth, useUser } from '@/firebase';
 import { useToast } from '@/hooks/use-toast';
@@ -14,8 +15,10 @@ import { useToast } from '@/hooks/use-toast';
 interface AuthContextType {
   user: User | null;
   loading: boolean;
-  login: () => Promise<void>;
+  sendOtp: (phoneNumber: string) => Promise<void>;
+  verifyOtp: (otp: string) => Promise<void>;
   logout: () => Promise<void>;
+  isOtpSent: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -24,47 +27,72 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const auth = useFirebaseServiceAuth();
   const { user, isUserLoading } = useUser();
   const { toast } = useToast();
-  const [googleProvider] = useState(() => {
-    const provider = new GoogleAuthProvider();
-    provider.setCustomParameters({ prompt: 'select_account' });
-    return provider;
-  });
+  const [confirmationResult, setConfirmationResult] = useState<ConfirmationResult | null>(null);
+  const [isOtpSent, setIsOtpSent] = useState(false);
 
-  const login = async () => {
+  // Initialize Recaptcha
+  const setupRecaptcha = (containerId: string) => {
+    if (!auth) return null;
+    try {
+      return new RecaptchaVerifier(auth, containerId, {
+        size: 'invisible',
+        callback: () => {
+          // reCAPTCHA solved, allow signInWithPhoneNumber.
+        }
+      });
+    } catch (error) {
+      console.error("Recaptcha setup error:", error);
+      return null;
+    }
+  };
+
+  const sendOtp = async (phoneNumber: string) => {
     if (!auth) return;
 
     try {
-      // Directly initiate popup
-      const result = await signInWithPopup(auth, googleProvider);
+      toast({ title: "Sending OTP...", description: `Sending code to ${phoneNumber}` });
+      
+      const appVerifier = setupRecaptcha('recaptcha-container');
+      if (!appVerifier) throw new Error("Recaptcha not initialized");
+
+      const result = await signInWithPhoneNumber(auth, phoneNumber, appVerifier);
+      setConfirmationResult(result);
+      setIsOtpSent(true);
+      
+      toast({
+        title: "OTP Sent!",
+        description: "Please check your messages.",
+      });
+    } catch (error: any) {
+      console.error("OTP Error:", error);
+      toast({
+        variant: "destructive",
+        title: "Failed to send OTP",
+        description: error.message || "Ensure Phone Auth is enabled in Firebase Console.",
+      });
+    }
+  };
+
+  const verifyOtp = async (otp: string) => {
+    if (!confirmationResult) return;
+
+    try {
+      toast({ title: "Verifying...", description: "Checking your code" });
+      const result = await confirmationResult.confirm(otp);
       if (result.user) {
         toast({
           title: "Login Successful!",
-          description: `Welcome, ${result.user.displayName}`,
+          description: "Welcome to SmartKharcha AI",
         });
+        setIsOtpSent(false);
+        setConfirmationResult(null);
       }
     } catch (error: any) {
-      console.error("Login Error:", error);
-      
-      let errorTitle = "Login Failed";
-      let errorDescription = error.message || "An unknown error occurred.";
-
-      // Specific error handling for common mobile issues
-      if (error.code === 'auth/popup-closed-by-user') {
-        errorTitle = "Login Window Closed";
-        errorDescription = "Ensure you finish the Google sign-in. If it closed automatically, check if 'Third-party cookies' are ALLOWED in your browser settings.";
-      } else if (error.code === 'auth/unauthorized-domain') {
-        errorTitle = "Domain Not Authorized";
-        errorDescription = "Add this domain to Firebase Console (without https://). Check README for steps.";
-      } else if (error.code === 'auth/popup-blocked') {
-        errorTitle = "Popup Blocked";
-        errorDescription = "Please click the icon in your address bar to allow popups for this site.";
-      }
-
+      console.error("Verification Error:", error);
       toast({
         variant: "destructive",
-        duration: 10000,
-        title: errorTitle,
-        description: errorDescription,
+        title: "Invalid OTP",
+        description: "Please check the code and try again.",
       });
     }
   };
@@ -86,8 +114,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading: isUserLoading, login, logout }}>
+    <AuthContext.Provider value={{ user, loading: isUserLoading, sendOtp, verifyOtp, logout, isOtpSent }}>
       {children}
+      <div id="recaptcha-container"></div>
     </AuthContext.Provider>
   );
 }

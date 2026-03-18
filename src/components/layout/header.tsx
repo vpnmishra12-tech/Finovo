@@ -4,13 +4,13 @@
 import { useAuth } from '@/lib/contexts/auth-context';
 import { useLanguage } from '@/lib/contexts/language-context';
 import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Languages, LogOut, Settings, Wallet, LogIn, Share2 } from 'lucide-react';
+import { Languages, LogOut, Settings, Wallet, Share2, User } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 export function Header() {
-  const { user, logout, login } = useAuth();
+  const { user, logout } = useAuth();
   const { t, language, setLanguage } = useLanguage();
   const { toast } = useToast();
 
@@ -28,12 +28,11 @@ export function Header() {
         throw new Error('Web Share not supported');
       }
     } catch (error) {
-      // Fallback: Copy to clipboard if sharing fails or isn't supported
       try {
         await navigator.clipboard.writeText(window.location.href);
         toast({
           title: "Link Copied!",
-          description: "App link copied to clipboard. Share it with your friends!",
+          description: "App link copied to clipboard.",
         });
       } catch (clipError) {
         toast({
@@ -60,7 +59,7 @@ export function Header() {
         </div>
 
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" onClick={handleShare} className="h-9 w-9" title="Share App">
+          <Button variant="ghost" size="icon" onClick={handleShare} className="h-9 w-9">
             <Share2 className="w-4 h-4" />
           </Button>
 
@@ -74,21 +73,22 @@ export function Header() {
             {language === 'en' ? 'हिन्दी' : 'English'}
           </Button>
 
-          {user ? (
+          {user && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-9 w-9 rounded-full">
                   <Avatar className="h-9 w-9 border-2 border-primary/20">
-                    <AvatarImage src={user.photoURL || ''} alt={user.displayName || 'User'} />
-                    <AvatarFallback>{user.displayName?.charAt(0) || 'U'}</AvatarFallback>
+                    <AvatarFallback className="bg-primary/10 text-primary">
+                      <User className="w-4 h-4" />
+                    </AvatarFallback>
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56" align="end" forceMount>
                 <DropdownMenuLabel className="font-normal">
                   <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium leading-none">{user.displayName}</p>
-                    <p className="text-xs leading-none text-muted-foreground">{user.email}</p>
+                    <p className="text-sm font-medium leading-none">{user.phoneNumber || 'User'}</p>
+                    <p className="text-xs leading-none text-muted-foreground">ID: {user.uid.substring(0, 8)}...</p>
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
@@ -107,11 +107,6 @@ export function Header() {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-          ) : (
-            <Button variant="outline" size="sm" onClick={login} className="rounded-xl gap-2 h-9 border-primary/20 hover:bg-primary/5">
-              <LogIn className="w-4 h-4" />
-              <span className="hidden xs:inline">{t.loginWithGoogle}</span>
-            </Button>
           )}
         </div>
       </div>

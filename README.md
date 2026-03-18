@@ -1,42 +1,27 @@
 
-# SmartKharcha AI - Final Login Fix 🚀
+# SmartKharcha AI - Phone Login Instructions 📱
 
-Agar aapka login abhi bhi nahi chal raha hai, toh ye 2 steps bilkul dhyan se follow kijiye.
+Humne login ko **Phone Number (OTP)** par shift kar diya hai taaki Google login ke cookie/popup issues se peecha chhuta ja sake.
 
-## 🛠 Step 1: Authorized Domain (Sabse Zaroori)
+## 🛠 Step 1: Phone Auth Enable Karein (Zaroori)
 
-Firebase sirf unhi domains ko allow karta hai jo list mein hote hain.
+App tabhi kaam karegi jab aap Firebase Console mein ise enable karenge:
 
-### Kaise check karein:
-1. Apne browser tab mein URL dekhiye. Wo kuch aisa hoga:
-   `https://9002-firebase-studio-123.cluster-abc.cloudworkstations.dev/`
-2. **Sirf is hisse ko copy karein** (bina `https://` aur bina aakhri `/` ke):
-   `9002-firebase-studio-123.cluster-abc.cloudworkstations.dev`
-3. [Firebase Console Settings](https://console.firebase.google.com/project/studio-4253837572-72734/authentication/settings) par jaiye.
-4. **Settings** tab -> **Authorized domains** mein ise **Add** kijiye.
-   - ⚠️ **Dhyan dein**: Agar list mein pehle se koi domain hai jisme `https://` laga hai, toh use delete karke naya add karein.
+1. [Firebase Console](https://console.firebase.google.com/project/studio-4253837572-72734/authentication/providers) par jaiye.
+2. **"Add new provider"** par click karein.
+3. **"Phone"** select karein.
+4. Top right mein **"Enable"** toggle ko ON karein.
+5. **Save** par click karein.
 
----
+## 📱 Step 2: Login Kaise Karein
 
-## 🍪 Step 2: Third-Party Cookies (Mobile Users ke liye)
+1. App ke landing page par apna mobile number daalein (Jaise: `+91 9876543210`).
+2. **"Send OTP"** par click karein.
+3. Aapke phone par ek 6-digit ka SMS aayega (Kabhi kabhi Invisible Recaptcha verification ke liye ek-do second lagte hain).
+4. Code daalein aur **"Verify & Login"** click karein.
 
-Agar aap Google login par jaate hain aur wapas aakar login nahi hota, toh iska matlab hai cookies block hain.
+## ⚠️ Troubleshooting
 
-### Chrome (Android/Desktop):
-1. Browser ki **Settings** mein jaiye.
-2. **Privacy and security** par click karein.
-3. **Third-party cookies** par jaiye.
-4. **"Allow third-party cookies"** select kijiye.
-
-### iPhone (Safari):
-1. iPhone ki **Settings** mein jaiye.
-2. **Safari** dhoondiye.
-3. **"Prevent Cross-Site Tracking"** ko **OFF** kar dijiye.
-4. **"Block All Cookies"** ko **OFF** kar dijiye.
-
----
-
-## 📱 Popup Blocked Fix
-Agar login par click karne ke baad kuch nahi khul raha:
-1. Browser ke **Address Bar** (uupar jahan URL hota hai) ke right side mein ek chhota red icon dekhiye.
-2. Us par click karke **"Always allow popups"** select kijiye.
+- **OTP nahi aa raha?** Check karein ki aapne Firebase mein Phone Auth enable kiya hai (Step 1).
+- **Recaptcha Error?** Page ko refresh karein aur check karein ki aapka internet sahi chal raha hai.
+- **Unauthorized Domain?** Check karein ki aapka domain `Authorized domains` list mein added hai (pichhle steps ki tarah).

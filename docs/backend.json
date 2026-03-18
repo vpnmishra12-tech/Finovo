@@ -44,19 +44,19 @@
     }
   },
   "auth": {
-    "providers": ["google"]
+    "providers": ["phone"]
   },
   "firestore": {
     "/users/{userId}": {
-      "schema": { "$ref": "#/entities/UserProfile" },
+      "schema": { "$ref": "#/backend/entities/UserProfile" },
       "description": "User profile document."
     },
     "/users/{userId}/expenses/{expenseId}": {
-      "schema": { "$ref": "#/entities/Expense" },
+      "schema": { "$ref": "#/backend/entities/Expense" },
       "description": "User's individual expenses."
     },
     "/users/{userId}/monthlyBudgets/{monthlyBudgetId}": {
-      "schema": { "$ref": "#/entities/MonthlyBudget" },
+      "schema": { "$ref": "#/backend/entities/MonthlyBudget" },
       "description": "User's monthly budgets."
     }
   }
