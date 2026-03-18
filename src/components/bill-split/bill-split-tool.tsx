@@ -32,8 +32,8 @@ export function BillSplitTool() {
 
   const [totalBill, setTotalBill] = useState<string>("");
   const [participants, setParticipants] = useState<Participant[]>([
-    { id: '1', name: 'Amit', paid: 0 },
-    { id: '2', name: 'Vipin', paid: 0 }
+    { id: '1', name: '', paid: 0 },
+    { id: '2', name: '', paid: 0 }
   ]);
 
   const billValue = parseFloat(totalBill) || 0;
@@ -70,8 +70,8 @@ export function BillSplitTool() {
   const settlements = useMemo(() => {
     if (billValue <= 0) return [];
 
-    let balances = participants.map(p => ({
-      name: p.name || `Person ${p.id.substring(0, 3)}`,
+    let balances = participants.map((p, idx) => ({
+      name: p.name.trim() || `Person ${idx + 1}`,
       balance: p.paid - equalShare
     }));
 
@@ -167,7 +167,7 @@ export function BillSplitTool() {
                   <Input 
                     value={p.name} 
                     onChange={(e) => updateParticipant(p.id, 'name', e.target.value)}
-                    placeholder={`Name ${idx + 1}`}
+                    placeholder={`Name (e.g. Rahul)`}
                     className="h-10 bg-card border-none rounded-xl font-bold px-4 focus-visible:ring-1 ring-primary flex-1"
                   />
                   <Button 
