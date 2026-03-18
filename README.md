@@ -8,7 +8,7 @@ If you see a login error or the page simply reloads without logging you in, it i
 
 ### 1. Authorize Your Domain
 1. Copy the URL of your app from the browser address bar (e.g., `https://9002-firebase-studio...cloudworkstations.dev`).
-2. Go to the [Firebase Console](https://console.firebase.google.com/).
+2. Go to the [Firebase Console](https://console.firebase.google.com/project/studio-4253837572-72734/authentication/settings).
 3. Select your project: **studio-4253837572-72734**.
 4. Go to **Build > Authentication > Settings > Authorized Domains**.
 5. Click **"Add Domain"** and paste your URL (remove everything after `.dev`, just the domain like `9002-firebase...cloudworkstations.dev`).
