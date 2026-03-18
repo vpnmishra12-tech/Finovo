@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -10,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { PiggyBank, Target, TrendingUp, Edit2, AlertTriangle, Info, History } from 'lucide-react';
+import { PiggyBank, Target, TrendingUp, Edit2, AlertTriangle, Info, History, ArrowUpCircle } from 'lucide-react';
 import { useFirestore, useDoc, useMemoFirebase } from '@/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
@@ -80,6 +79,7 @@ export function BudgetSummary({ userId, totalSpent }: { userId: string, totalSpe
 
   const percentage = budget > 0 ? Math.min((totalSpent / budget) * 100, 100) : 0;
   const remaining = Math.max(budget - totalSpent, 0);
+  const overspentAmount = Math.max(totalSpent - budget, 0);
 
   return (
     <div className="space-y-4">
@@ -88,6 +88,9 @@ export function BudgetSummary({ userId, totalSpent }: { userId: string, totalSpe
         <Alert variant="destructive" className="animate-pulse rounded-2xl border-2">
           <AlertTriangle className="h-5 w-5" />
           <AlertTitle className="font-bold">{t.alerts.exhausted}</AlertTitle>
+          <AlertDescription>
+            {t.overspent}: <span className="font-bold text-lg">₹{overspentAmount.toLocaleString()}</span>
+          </AlertDescription>
         </Alert>
       )}
       {percentage >= 75 && percentage < 100 && (
@@ -175,12 +178,14 @@ export function BudgetSummary({ userId, totalSpent }: { userId: string, totalSpe
           <CardContent className="p-5">
             <div className="flex justify-between items-start mb-4">
               <div className={`p-2 rounded-lg ${remaining > 0 ? 'bg-green-500/10' : 'bg-destructive/10'}`}>
-                <Target className={`w-5 h-5 ${remaining > 0 ? 'text-green-500' : 'text-destructive'}`} />
+                {overspentAmount > 0 ? <ArrowUpCircle className="w-5 h-5 text-destructive" /> : <Target className="w-5 h-5 text-green-500" />}
               </div>
             </div>
-            <p className="text-xs font-medium text-muted-foreground mb-1 uppercase tracking-wider">{t.remaining}</p>
-            <p className={`text-2xl font-headline font-bold ${remaining > 0 ? 'text-green-500' : 'text-destructive'}`}>
-              ₹{remaining.toLocaleString()}
+            <p className="text-xs font-medium text-muted-foreground mb-1 uppercase tracking-wider">
+              {overspentAmount > 0 ? t.overspent : t.remaining}
+            </p>
+            <p className={`text-2xl font-headline font-bold ${overspentAmount > 0 ? 'text-destructive' : 'text-green-500'}`}>
+              ₹{(overspentAmount > 0 ? overspentAmount : remaining).toLocaleString()}
             </p>
           </CardContent>
         </Card>

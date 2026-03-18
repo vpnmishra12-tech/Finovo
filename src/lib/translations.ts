@@ -7,8 +7,10 @@ export const translations = {
     budget: "Monthly Budget",
     remaining: "Remaining",
     spent: "Spent",
+    overspent: "Overspent by",
     totalSpent: "Total Spending",
     history: "Recent History",
+    monthlyTrends: "Monthly Breakdown",
     settings: "Settings",
     language: "Language",
     profile: "Profile",
@@ -31,6 +33,20 @@ export const translations = {
       Bills: "Bills",
       Shopping: "Shopping",
       EMI: "EMI"
+    },
+    months: {
+      "01": "January",
+      "02": "February",
+      "03": "March",
+      "04": "April",
+      "05": "May",
+      "06": "June",
+      "07": "July",
+      "08": "August",
+      "09": "September",
+      "10": "October",
+      "11": "November",
+      "12": "December"
     },
     modes: {
       text: "Text",
@@ -58,8 +74,10 @@ export const translations = {
     budget: "मासिक बजट",
     remaining: "शेष",
     spent: "खर्च किया",
+    overspent: "बजट से ज़्यादा",
     totalSpent: "कुल खर्च",
     history: "हालिया इतिहास",
+    monthlyTrends: "महीने के अनुसार खर्च",
     settings: "सेटिंग्स",
     language: "भाषा",
     profile: "प्रोफ़ाइल",
@@ -82,6 +100,20 @@ export const translations = {
       Bills: "बिल",
       Shopping: "खरीदारी",
       EMI: "ईएमआई"
+    },
+    months: {
+      "01": "जनवरी",
+      "02": "फरवरी",
+      "03": "मार्च",
+      "04": "अप्रैल",
+      "05": "मई",
+      "06": "जून",
+      "07": "जुलाई",
+      "08": "अगस्त",
+      "09": "सितंबर",
+      "10": "अक्टूबर",
+      "11": "नवंबर",
+      "12": "दिसंबर"
     },
     modes: {
       text: "टेक्स्ट",

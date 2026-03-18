@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from 'react';
@@ -7,6 +6,7 @@ import { useLanguage } from '@/lib/contexts/language-context';
 import { Header } from '@/components/layout/header';
 import { BudgetSummary } from '@/components/dashboard/budget-summary';
 import { SpendingChart } from '@/components/dashboard/spending-chart';
+import { MonthlyHistory } from '@/components/dashboard/monthly-history';
 import { ExpenseList } from '@/components/expenses/expense-list';
 import { AddExpenseDrawer } from '@/components/expenses/add-expense-drawer';
 import { Loader2, Sparkles, Wallet, ShieldCheck, Phone, CheckCircle2, Info, UserCircle } from 'lucide-react';
@@ -34,7 +34,7 @@ export default function Home() {
     return query(
       collection(firestore, 'users', user.uid, 'expenses'),
       orderBy('createdAt', 'desc'),
-      limit(50)
+      limit(100)
     );
   }, [firestore, user?.uid]);
 
@@ -170,6 +170,16 @@ export default function Home() {
     );
   }
 
+  const currentMonthExpenses = expenses?.filter(exp => {
+    const d = new Date();
+    const month = d.getMonth() + 1;
+    const year = d.getFullYear();
+    const expDate = new Date(exp.transactionDate);
+    return (expDate.getMonth() + 1) === month && expDate.getFullYear() === year;
+  }) || [];
+
+  const totalSpentThisMonth = currentMonthExpenses.reduce((sum, exp) => sum + exp.amount, 0);
+
   return (
     <div className="min-h-screen bg-background pb-32">
       <Header />
@@ -183,8 +193,10 @@ export default function Home() {
 
         <BudgetSummary 
           userId={user.uid} 
-          totalSpent={expenses?.reduce((sum, exp) => sum + exp.amount, 0) || 0} 
+          totalSpent={totalSpentThisMonth} 
         />
+
+        <MonthlyHistory expenses={expenses || []} />
 
         <SpendingChart expenses={expenses || []} />
 
