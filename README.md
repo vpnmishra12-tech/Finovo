@@ -27,7 +27,7 @@ Look at your browser tab's address bar. Your URL looks like this:
 
 ## 🍪 Step 2: Third-Party Cookies (CRITICAL)
 
-If you are redirected back to the app but NOT logged in, it's because your browser is blocking the "handshake" cookie.
+If you are redirected back to the app but NOT logged in (Handshake Failed), it's because your browser is blocking the "handshake" cookie.
 
 ### For Chrome (Mobile/Desktop):
 1. Go to Browser **Settings**.
