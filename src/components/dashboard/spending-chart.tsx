@@ -36,12 +36,12 @@ export function SpendingChart({ expenses }: { expenses: Expense[] }) {
 
   return (
     <Card className="border-none bg-card shadow-sm overflow-hidden">
-      <CardHeader className="pb-1 pt-3">
+      <CardHeader className="pb-1 pt-2">
         <CardTitle className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">
           {t.expenses}
         </CardTitle>
       </CardHeader>
-      <CardContent className="h-[180px] p-0">
+      <CardContent className="h-[140px] p-0">
         {data.length > 0 ? (
           <ChartContainer config={config} className="h-full w-full">
             <PieChart>
@@ -49,8 +49,8 @@ export function SpendingChart({ expenses }: { expenses: Expense[] }) {
                 data={data}
                 cx="50%"
                 cy="50%"
-                innerRadius={40}
-                outerRadius={60}
+                innerRadius={35}
+                outerRadius={55}
                 paddingAngle={4}
                 dataKey="value"
               >

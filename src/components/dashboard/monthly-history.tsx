@@ -34,25 +34,25 @@ export function MonthlyHistory({ expenses }: { expenses: Expense[] }) {
   if (sortedMonths.length === 0) return null;
 
   return (
-    <Card className="border-none bg-card shadow-sm overflow-hidden flex flex-col h-[180px]">
-      <CardHeader className="pb-1 pt-3 shrink-0">
+    <Card className="border-none bg-card shadow-sm overflow-hidden flex flex-col h-[140px]">
+      <CardHeader className="pb-1 pt-2 shrink-0">
         <CardTitle className="text-[9px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
           <CalendarDays className="w-3 h-3" />
           {t.monthlyTrends}
         </CardTitle>
       </CardHeader>
       <CardContent className="pt-0 flex-1 overflow-hidden p-0">
-        <ScrollArea className="h-full px-4 pb-4">
-          <div className="space-y-1.5">
+        <ScrollArea className="h-full px-4 pb-2">
+          <div className="space-y-1">
             {sortedMonths.map((item) => (
-              <div key={`${item.year}-${item.month}`} className="flex items-center justify-between p-2 bg-muted/30 rounded-lg hover:bg-muted/50 transition-colors">
+              <div key={`${item.year}-${item.month}`} className="flex items-center justify-between p-1.5 bg-muted/30 rounded-lg hover:bg-muted/50 transition-colors">
                 <div className="flex flex-col">
                   <span className="font-bold text-[10px]">
                     {t.months[item.month as keyof typeof t.months]} {item.year}
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="font-headline font-bold text-sm">₹{item.total.toLocaleString()}</span>
+                  <span className="font-headline font-bold text-xs">₹{item.total.toLocaleString()}</span>
                   <ArrowRight className="w-2.5 h-2.5 text-muted-foreground/30" />
                 </div>
               </div>
