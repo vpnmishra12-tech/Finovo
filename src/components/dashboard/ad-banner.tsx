@@ -8,31 +8,27 @@ import { ExternalLink, Info } from 'lucide-react';
 export function AdBanner() {
   const { t } = useLanguage();
 
-  // STEP 2: AdSense Push (Ads initialize karne ke liye)
   useEffect(() => {
     try {
       // @ts-ignore
       (window.adsbygoogle = window.adsbygoogle || []).push({});
-    } catch (e) {
-      // Ads might be blocked or script not loaded yet
-    }
+    } catch (e) {}
   }, []);
 
   return (
-    <Card className="border-none bg-muted/50 shadow-inner overflow-hidden rounded-2xl">
-      <CardContent className="p-4">
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-1">
-            <Info className="w-3 h-3" />
+    <Card className="border-none bg-muted/30 shadow-none overflow-hidden rounded-xl">
+      <CardContent className="p-2">
+        <div className="flex items-center justify-between mb-1 px-1">
+          <span className="text-[8px] font-black text-muted-foreground/60 uppercase tracking-widest flex items-center gap-1">
+            <Info className="w-2.5 h-2.5" />
             {t.sponsored}
           </span>
-          <ExternalLink className="w-3 h-3 text-muted-foreground/50" />
         </div>
         
-        <div className="min-h-[100px] w-full bg-gradient-to-br from-primary/5 to-accent/5 rounded-xl border-2 border-dashed border-muted flex flex-col items-center justify-center text-center p-2 relative">
-          {/* STEP 3: Ad Unit Code */}
-          {/* Niche wala 'ins' tag uncomment karein aur data-ad-client aur data-ad-slot apni asli IDs se badlein */}
-          
+        <div className="h-[40px] w-full bg-gradient-to-r from-primary/5 to-accent/5 rounded-lg border border-dashed border-muted/50 flex items-center justify-center text-center px-4 relative">
+          <p className="text-[10px] font-bold text-muted-foreground/80">
+            Professional Ad Space Available • AdSense
+          </p>
           {/* 
           <ins className="adsbygoogle"
                style={{ display: 'block' }}
@@ -41,15 +37,6 @@ export function AdBanner() {
                data-ad-format="auto"
                data-full-width-responsive="true"></ins>
           */}
-
-          <div className="py-4">
-            <p className="text-sm font-medium text-muted-foreground">
-              Your Professional Ad Here
-            </p>
-            <p className="text-[10px] text-muted-foreground/60 mt-1">
-              Google AdSense for Content (No subs needed, just site approval)
-            </p>
-          </div>
         </div>
       </CardContent>
     </Card>

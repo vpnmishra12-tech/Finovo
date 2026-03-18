@@ -33,30 +33,21 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
   const budget = budgetData?.budgetAmount || 0;
   const updateCount = budgetData?.updateCount || 0;
 
-  // Fetch previous month's overspending
   useEffect(() => {
     async function checkCarryover() {
       if (!firestore || !userId) return;
-      
       const prevDate = new Date(year, month - 2, 1);
       const prevMonth = prevDate.getMonth() + 1;
       const prevYear = prevDate.getFullYear();
-      
       const prevBudgetId = `${prevYear}-${prevMonth}`;
       const prevBudgetRef = doc(firestore, 'users', userId, 'monthlyBudgets', prevBudgetId);
       const prevBudgetSnap = await getDoc(prevBudgetRef);
-      
       if (prevBudgetSnap.exists()) {
         const prevBudgetVal = (prevBudgetSnap.data() as MonthlyBudget).budgetAmount;
         const prevSpent = await getMonthlySpending(firestore, userId, prevMonth, prevYear);
-        if (prevSpent > prevBudgetVal) {
-          setLastMonthDebt(prevSpent - prevBudgetVal);
-        } else {
-          setLastMonthDebt(0);
-        }
-      } else {
-        setLastMonthDebt(0);
-      }
+        if (prevSpent > prevBudgetVal) setLastMonthDebt(prevSpent - prevBudgetVal);
+        else setLastMonthDebt(0);
+      } else setLastMonthDebt(0);
     }
     checkCarryover();
   }, [firestore, userId, month, year]);
@@ -64,23 +55,13 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
   const handleSetBudget = async () => {
     const val = parseFloat(newBudget);
     if (!isNaN(val) && firestore) {
-      // Pass the specific month/year if we wanted historical budget updates, 
-      // but usually budgets are set for the current context.
-      // For simplicity, we update the budget for the selected view.
-      const now = new Date();
-      const isCurrentMonth = month === (now.getMonth() + 1) && year === now.getFullYear();
-      
       const res = await updateMonthlyBudget(firestore, userId, val, month, year);
       if (res.success) {
         setOpen(false);
         setNewBudget("");
         toast({ title: "Success", description: "Budget updated!" });
       } else {
-        toast({ 
-          variant: "destructive", 
-          title: t.limitReached, 
-          description: t.limitDesc 
-        });
+        toast({ variant: "destructive", title: t.limitReached, description: t.limitDesc });
       }
     }
   };
@@ -90,109 +71,68 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
   const overspentAmount = Math.max(totalSpent - budget, 0);
 
   return (
-    <div className="space-y-4">
-      {/* Percentage Alerts */}
-      {percentage >= 100 && budget > 0 && (
-        <Alert variant="destructive" className="animate-pulse rounded-2xl border-2">
-          <AlertTriangle className="h-5 w-5" />
-          <AlertTitle className="font-bold">{t.alerts.exhausted}</AlertTitle>
-          <AlertDescription>
-            {t.overspent}: <span className="font-bold text-lg">₹{overspentAmount.toLocaleString()}</span>
+    <div className="space-y-3">
+      {percentage >= 75 && budget > 0 && (
+        <Alert className="py-2 px-4 rounded-xl border bg-destructive/5 text-destructive border-destructive/20">
+          <AlertTriangle className="h-4 w-4" />
+          <AlertDescription className="text-xs font-bold">
+            {percentage >= 100 ? t.alerts.exhausted : t.alerts.critical}
           </AlertDescription>
         </Alert>
       )}
-      {percentage >= 75 && percentage < 100 && (
-        <Alert className="bg-orange-500/10 text-orange-600 border-orange-500/50 rounded-2xl border-2">
-          <AlertTriangle className="h-5 w-5" />
-          <AlertTitle className="font-bold">{t.alerts.critical}</AlertTitle>
-        </Alert>
-      )}
-      {percentage >= 50 && percentage < 75 && (
-        <Alert className="bg-blue-500/10 text-blue-600 border-blue-500/50 rounded-2xl border-2">
-          <Info className="h-5 w-5" />
-          <AlertTitle className="font-bold">{t.alerts.halfway}</AlertTitle>
-        </Alert>
-      )}
 
-      {/* Carryover Alert */}
       {lastMonthDebt > 0 && (
-        <Card className="bg-destructive/10 border-destructive/20 rounded-2xl border-2">
-          <CardContent className="p-4 flex items-center gap-3">
-            <History className="w-6 h-6 text-destructive" />
-            <div>
-              <p className="text-xs font-bold text-destructive uppercase tracking-widest">{t.overspentLastMonth}</p>
-              <p className="text-lg font-headline font-bold text-destructive">-₹{lastMonthDebt.toLocaleString()}</p>
-              <p className="text-[10px] text-muted-foreground">Manage your spending carefully this month.</p>
-            </div>
-          </CardContent>
-        </Card>
+        <div className="bg-destructive/10 border-destructive/20 rounded-xl p-2 flex items-center gap-2">
+          <History className="w-4 h-4 text-destructive" />
+          <p className="text-[10px] font-bold text-destructive uppercase tracking-tight">Debt: -₹{lastMonthDebt.toLocaleString()}</p>
+        </div>
       )}
 
-      <div className="grid gap-4 grid-cols-1 md:grid-cols-3">
-        <Card className="bg-primary text-primary-foreground border-none shadow-lg">
-          <CardContent className="p-5">
-            <div className="flex justify-between items-start mb-4">
-              <div className="p-2 bg-white/10 rounded-lg">
-                <TrendingUp className="w-5 h-5" />
-              </div>
+      <div className="grid gap-3 grid-cols-1 md:grid-cols-3">
+        <Card className="bg-primary text-primary-foreground border-none shadow-md overflow-hidden">
+          <CardContent className="p-4">
+            <div className="flex justify-between items-center mb-1">
+              <p className="text-[9px] font-black opacity-70 uppercase tracking-widest">{t.budget}</p>
               <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
-                  <Button variant="ghost" size="sm" className="h-8 px-2 text-xs bg-white/10 hover:bg-white/20 text-white">
-                    <Edit2 className="w-3 h-3 mr-1" /> {t.actions.setBudget} ({updateCount}/2)
+                  <Button variant="ghost" size="icon" className="h-6 w-6 bg-white/10 hover:bg-white/20">
+                    <Edit2 className="w-3 h-3 text-white" />
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="max-w-[350px]">
-                  <DialogHeader>
-                    <DialogTitle>{t.actions.setBudget}</DialogTitle>
-                  </DialogHeader>
+                  <DialogHeader><DialogTitle>{t.actions.setBudget}</DialogTitle></DialogHeader>
                   <div className="flex flex-col gap-4 py-4">
                     <p className="text-sm text-muted-foreground">{t.limitDesc}</p>
-                    <Input 
-                      type="number" 
-                      placeholder="Enter monthly goal" 
-                      value={newBudget} 
-                      onChange={(e) => setNewBudget(e.target.value)}
-                    />
+                    <Input type="number" placeholder="Enter amount" value={newBudget} onChange={(e) => setNewBudget(e.target.value)} />
                     <Button onClick={handleSetBudget} className="w-full">{t.actions.save}</Button>
                   </div>
                 </DialogContent>
               </Dialog>
             </div>
-            <p className="text-xs font-medium opacity-70 mb-1 uppercase tracking-wider">{t.budget}</p>
-            <p className="text-3xl font-headline font-bold">₹{budget.toLocaleString()}</p>
+            <p className="text-2xl font-headline font-black">₹{budget.toLocaleString()}</p>
           </CardContent>
         </Card>
 
-        <Card className="bg-card border-none shadow-sm">
-          <CardContent className="p-5">
-            <div className="flex justify-between items-start mb-4">
-              <div className="p-2 bg-accent/20 rounded-lg">
-                <PiggyBank className="w-5 h-5 text-accent-foreground" />
-              </div>
-            </div>
-            <p className="text-xs font-medium text-muted-foreground mb-1 uppercase tracking-wider">{t.spent}</p>
-            <p className="text-2xl font-headline font-bold">₹{totalSpent.toLocaleString()}</p>
-            <div className="mt-4 space-y-2">
-              <Progress value={percentage} className={`h-1.5 ${percentage >= 100 ? 'bg-destructive/20 [&>div]:bg-destructive' : ''}`} />
-              <div className="flex justify-between text-[10px] text-muted-foreground font-medium">
+        <Card className="bg-card border-none shadow-sm overflow-hidden">
+          <CardContent className="p-4">
+            <p className="text-[9px] font-black text-muted-foreground mb-1 uppercase tracking-widest">{t.spent}</p>
+            <p className="text-xl font-headline font-black">₹{totalSpent.toLocaleString()}</p>
+            <div className="mt-2 space-y-1">
+              <Progress value={percentage} className="h-1 bg-muted" />
+              <div className="flex justify-between text-[8px] text-muted-foreground font-black">
                 <span>{percentage.toFixed(0)}%</span>
-                <span>₹{budget.toLocaleString()} CAP</span>
+                <span>{budget.toLocaleString()} LIMIT</span>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-card border-none shadow-sm">
-          <CardContent className="p-5">
-            <div className="flex justify-between items-start mb-4">
-              <div className={`p-2 rounded-lg ${remaining > 0 ? 'bg-green-500/10' : 'bg-destructive/10'}`}>
-                {overspentAmount > 0 ? <ArrowUpCircle className="w-5 h-5 text-destructive" /> : <Target className="w-5 h-5 text-green-500" />}
-              </div>
-            </div>
-            <p className="text-xs font-medium text-muted-foreground mb-1 uppercase tracking-wider">
+        <Card className="bg-card border-none shadow-sm overflow-hidden">
+          <CardContent className="p-4">
+            <p className="text-[9px] font-black text-muted-foreground mb-1 uppercase tracking-widest">
               {overspentAmount > 0 ? t.overspent : t.remaining}
             </p>
-            <p className={`text-2xl font-headline font-bold ${overspentAmount > 0 ? 'text-destructive' : 'text-green-500'}`}>
+            <p className={`text-xl font-headline font-black ${overspentAmount > 0 ? 'text-destructive' : 'text-green-500'}`}>
               ₹{(overspentAmount > 0 ? overspentAmount : remaining).toLocaleString()}
             </p>
           </CardContent>

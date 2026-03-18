@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from 'react';
@@ -36,12 +35,10 @@ export default function Home() {
   const [password, setPassword] = useState("");
   const [isAuthLoading, setIsAuthLoading] = useState(false);
 
-  // Month Switcher State
   const now = new Date();
   const [selectedMonth, setSelectedMonth] = useState((now.getMonth() + 1).toString().padStart(2, '0'));
   const [selectedYear, setSelectedYear] = useState(now.getFullYear().toString());
 
-  // Memoized query for expenses
   const expensesQuery = useMemoFirebase(() => {
     if (!firestore || !user?.uid) return null;
     return query(
@@ -172,23 +169,11 @@ export default function Home() {
               </Tabs>
             </CardContent>
           </Card>
-
-          <div className="flex items-center gap-6 pt-8 text-muted-foreground">
-            <div className="flex items-center gap-2">
-              <ShieldCheck className="w-4 h-4 text-green-500" />
-              <span className="text-sm font-medium">Safe & Secure</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-amber-500" />
-              <span className="text-sm font-medium">AI Powered</span>
-            </div>
-          </div>
         </main>
       </div>
     );
   }
 
-  // Filter expenses for selected month/year
   const selectedMonthExpenses = expenses?.filter(exp => {
     const expDate = new Date(exp.transactionDate);
     return (expDate.getMonth() + 1).toString().padStart(2, '0') === selectedMonth && expDate.getFullYear().toString() === selectedYear;
@@ -215,71 +200,69 @@ export default function Home() {
     <div className="min-h-screen bg-background flex flex-col">
       <Header />
       
-      <div className="flex-1 flex flex-col md:flex-row container max-w-6xl mx-auto md:gap-8 px-4 pb-24 md:pb-8">
-        {/* Desktop Sidebar */}
-        <nav className="hidden md:flex flex-col gap-2 py-8 w-64 shrink-0">
+      <div className="flex-1 flex flex-col md:flex-row container max-w-6xl mx-auto md:gap-4 px-4 pb-20 md:pb-4">
+        <nav className="hidden md:flex flex-col gap-1 py-4 w-48 shrink-0">
           <button
             onClick={() => setActiveTab('dashboard')}
             className={cn(
-              "flex items-center gap-3 px-6 py-4 rounded-2xl font-bold transition-all",
-              activeTab === 'dashboard' ? "bg-primary text-primary-foreground shadow-xl shadow-primary/20" : "hover:bg-muted text-muted-foreground"
+              "flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all text-sm",
+              activeTab === 'dashboard' ? "bg-primary text-primary-foreground shadow-lg" : "hover:bg-muted text-muted-foreground"
             )}
           >
-            <LayoutDashboard className="w-5 h-5" />
+            <LayoutDashboard className="w-4 h-4" />
             {t.dashboard}
           </button>
           <button
             onClick={() => setActiveTab('history')}
             className={cn(
-              "flex items-center gap-3 px-6 py-4 rounded-2xl font-bold transition-all",
-              activeTab === 'history' ? "bg-primary text-primary-foreground shadow-xl shadow-primary/20" : "hover:bg-muted text-muted-foreground"
+              "flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all text-sm",
+              activeTab === 'history' ? "bg-primary text-primary-foreground shadow-lg" : "hover:bg-muted text-muted-foreground"
             )}
           >
-            <History className="w-5 h-5" />
+            <History className="w-4 h-4" />
             {t.history}
           </button>
           <button
             onClick={() => setActiveTab('splitter')}
             className={cn(
-              "flex items-center gap-3 px-6 py-4 rounded-2xl font-bold transition-all",
-              activeTab === 'splitter' ? "bg-primary text-primary-foreground shadow-xl shadow-primary/20" : "hover:bg-muted text-muted-foreground"
+              "flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all text-sm",
+              activeTab === 'splitter' ? "bg-primary text-primary-foreground shadow-lg" : "hover:bg-muted text-muted-foreground"
             )}
           >
-            <Calculator className="w-5 h-5" />
+            <Calculator className="w-4 h-4" />
             {t.billSplitter}
           </button>
         </nav>
 
-        {/* Main Content Area */}
-        <main className="flex-1 py-6 space-y-6 min-w-0">
+        <main className="flex-1 py-4 space-y-4 min-w-0">
           {activeTab === 'dashboard' && (
-            <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-              <section className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="space-y-4 animate-in fade-in duration-300">
+              <section className="flex items-center justify-between">
                 <div className="space-y-0.5">
-                  <p className="text-muted-foreground text-[10px] font-black uppercase tracking-widest">
+                  <p className="text-muted-foreground text-[9px] font-black uppercase tracking-widest">
                     {t.welcome} 👋
                   </p>
-                  <h2 className="text-2xl font-headline font-bold tracking-tight">{t.dashboard}</h2>
+                  <h2 className="text-xl font-headline font-black tracking-tight">{t.dashboard}</h2>
                 </div>
                 
-                <div className="flex items-center gap-2 bg-muted p-1 rounded-2xl w-fit">
+                <div className="flex items-center gap-1 bg-muted p-0.5 rounded-xl">
                   <Select value={selectedMonth} onValueChange={setSelectedMonth}>
-                    <SelectTrigger className="w-[110px] h-9 bg-transparent border-none font-bold text-xs">
+                    <SelectTrigger className="w-[90px] h-7 bg-transparent border-none font-black text-[10px]">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
                       {Object.entries(t.months).map(([key, value]) => (
-                        <SelectItem key={key} value={key} className="text-xs">{value}</SelectItem>
+                        <SelectItem key={key} value={key} className="text-[10px] font-bold">{value}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
                   <Select value={selectedYear} onValueChange={setSelectedYear}>
-                    <SelectTrigger className="w-[80px] h-9 bg-transparent border-none font-bold text-xs">
+                    <SelectTrigger className="w-[65px] h-7 bg-transparent border-none font-black text-[10px]">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
                       {[now.getFullYear() - 1, now.getFullYear(), now.getFullYear() + 1].map(y => (
-                        <SelectItem key={y} value={y.toString()} className="text-xs">{y}</SelectItem>
+                        <SelectItem key={y} value={y.toString()} className="text-[10px] font-bold">{y}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -293,7 +276,7 @@ export default function Home() {
                 year={parseInt(selectedYear)}
               />
 
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 <SpendingChart expenses={selectedMonthExpenses} />
                 <MonthlyHistory expenses={expenses || []} />
               </div>
@@ -303,23 +286,22 @@ export default function Home() {
           )}
 
           {activeTab === 'history' && (
-            <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-              <h2 className="text-3xl font-headline font-bold">{t.history}</h2>
+            <div className="space-y-4 animate-in fade-in duration-300">
+              <h2 className="text-2xl font-headline font-black">{t.history}</h2>
               <ExpenseList expenses={expenses || []} isLoading={isExpensesLoading} />
             </div>
           )}
 
           {activeTab === 'splitter' && (
-            <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-2xl mx-auto">
-              <h2 className="text-3xl font-headline font-bold">{t.billSplitter}</h2>
+            <div className="space-y-4 animate-in fade-in duration-300 max-w-2xl mx-auto">
+              <h2 className="text-2xl font-headline font-black">{t.billSplitter}</h2>
               <BillSplitTool />
             </div>
           )}
         </main>
       </div>
 
-      {/* Mobile Bottom Navigation */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 h-20 bg-background/80 backdrop-blur-lg border-t z-50 px-6 flex items-center justify-between">
+      <div className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-background/80 backdrop-blur-lg border-t z-50 px-6 flex items-center justify-between">
         <NavItem id="dashboard" icon={LayoutDashboard} label={t.dashboard} />
         <NavItem id="history" icon={History} label={t.history} />
         <NavItem id="splitter" icon={Calculator} label={t.billSplitter} />

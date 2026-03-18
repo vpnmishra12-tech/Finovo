@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useLanguage } from '@/lib/contexts/language-context';
@@ -37,12 +36,12 @@ export function SpendingChart({ expenses }: { expenses: Expense[] }) {
 
   return (
     <Card className="border-none bg-card shadow-sm overflow-hidden">
-      <CardHeader className="pb-2">
-        <CardTitle className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">
+      <CardHeader className="pb-1 pt-3">
+        <CardTitle className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">
           {t.expenses}
         </CardTitle>
       </CardHeader>
-      <CardContent className="h-[200px]">
+      <CardContent className="h-[180px] p-0">
         {data.length > 0 ? (
           <ChartContainer config={config} className="h-full w-full">
             <PieChart>
@@ -50,9 +49,9 @@ export function SpendingChart({ expenses }: { expenses: Expense[] }) {
                 data={data}
                 cx="50%"
                 cy="50%"
-                innerRadius={50}
-                outerRadius={70}
-                paddingAngle={5}
+                innerRadius={40}
+                outerRadius={60}
+                paddingAngle={4}
                 dataKey="value"
               >
                 {data.map((entry, index) => (
@@ -63,7 +62,7 @@ export function SpendingChart({ expenses }: { expenses: Expense[] }) {
             </PieChart>
           </ChartContainer>
         ) : (
-          <div className="flex items-center justify-center h-full text-muted-foreground text-xs italic">
+          <div className="flex items-center justify-center h-full text-muted-foreground text-[10px] italic">
             {t.noExpenses}
           </div>
         )}
