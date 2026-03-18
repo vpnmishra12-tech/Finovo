@@ -16,6 +16,7 @@ export const translations = {
     loginWithGoogle: "Sign in with Google",
     welcome: "Welcome back",
     noExpenses: "No expenses recorded yet.",
+    confirmDelete: "Are you sure you want to delete this expense?",
     categories: {
       Food: "Food",
       Transport: "Transport",
@@ -36,6 +37,7 @@ export const translations = {
     actions: {
       save: "Save Expense",
       cancel: "Cancel",
+      delete: "Delete",
       extracting: "AI Extracting...",
       setBudget: "Set Budget"
     }
@@ -57,6 +59,7 @@ export const translations = {
     loginWithGoogle: "गूगल के साथ साइन इन करें",
     welcome: "वापसी पर स्वागत है",
     noExpenses: "अभी तक कोई खर्च दर्ज नहीं किया गया है।",
+    confirmDelete: "क्या आप वाकई इस खर्च को हटाना चाहते हैं?",
     categories: {
       Food: "भोजन",
       Transport: "परिवहन",
@@ -77,6 +80,7 @@ export const translations = {
     actions: {
       save: "खर्च सहेजें",
       cancel: "रद्द करें",
+      delete: "हटाएं",
       extracting: "AI जानकारी निकाल रहा है...",
       setBudget: "बजट सेट करें"
     }

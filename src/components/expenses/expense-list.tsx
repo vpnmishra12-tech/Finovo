@@ -1,12 +1,25 @@
-
 "use client";
 
 import { useLanguage } from '@/lib/contexts/language-context';
-import { Expense } from '@/lib/expenses';
+import { useAuth } from '@/lib/contexts/auth-context';
+import { Expense, deleteExpense } from '@/lib/expenses';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { ShoppingBag, Utensils, Bus, Receipt, CreditCard, ChevronRight, Loader2, PlusCircle } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { ShoppingBag, Utensils, Bus, Receipt, CreditCard, Loader2, PlusCircle, Trash2 } from 'lucide-react';
 import { format } from 'date-fns';
+import { useFirestore } from '@/firebase';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 const CategoryIcon = ({ category, className }: { category: string, className?: string }) => {
   switch (category) {
@@ -30,6 +43,14 @@ const CategoryColor = (category: string) => {
 
 export function ExpenseList({ expenses, isLoading }: { expenses: Expense[], isLoading: boolean }) {
   const { t } = useLanguage();
+  const { user } = useAuth();
+  const firestore = useFirestore();
+
+  const handleDelete = (id: string) => {
+    if (firestore && user?.uid) {
+      deleteExpense(firestore, user.uid, id);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -61,7 +82,7 @@ export function ExpenseList({ expenses, isLoading }: { expenses: Expense[], isLo
       </div>
       <div className="grid gap-3">
         {expenses.map((expense) => (
-          <Card key={expense.id} className="border-none shadow-sm hover:shadow-md transition-all active:scale-[0.99] cursor-pointer group rounded-2xl">
+          <Card key={expense.id} className="border-none shadow-sm hover:shadow-md transition-all group rounded-2xl overflow-hidden">
             <CardContent className="p-4 flex items-center gap-4">
               <div className={`p-3 rounded-xl transition-transform group-hover:scale-105 ${CategoryColor(expense.category)}`}>
                 <CategoryIcon category={expense.category} className="w-6 h-6" />
@@ -80,7 +101,31 @@ export function ExpenseList({ expenses, isLoading }: { expenses: Expense[], isLo
                   </span>
                 </div>
               </div>
-              <ChevronRight className="w-4 h-4 text-muted-foreground/30 group-hover:text-primary transition-colors" />
+              
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant="ghost" size="icon" className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-destructive">
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent className="rounded-2xl">
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>{t.actions.delete}?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      {t.confirmDelete}
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel className="rounded-xl">{t.actions.cancel}</AlertDialogCancel>
+                    <AlertDialogAction 
+                      onClick={() => handleDelete(expense.id)}
+                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-xl"
+                    >
+                      {t.actions.delete}
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             </CardContent>
           </Card>
         ))}

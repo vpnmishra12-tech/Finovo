@@ -1,6 +1,5 @@
-
 import { Firestore, collection, doc, serverTimestamp, Timestamp } from 'firebase/firestore';
-import { addDocumentNonBlocking, setDocumentNonBlocking } from '@/firebase';
+import { addDocumentNonBlocking, setDocumentNonBlocking, deleteDocumentNonBlocking } from '@/firebase';
 
 export interface Expense {
   id: string;
@@ -32,6 +31,14 @@ export function saveExpense(db: Firestore, userId: string, data: Omit<Expense, '
     createdAt: serverTimestamp(),
   };
   addDocumentNonBlocking(colRef, expenseData);
+}
+
+/**
+ * Deletes an expense from Firestore.
+ */
+export function deleteExpense(db: Firestore, userId: string, expenseId: string) {
+  const docRef = doc(db, 'users', userId, 'expenses', expenseId);
+  deleteDocumentNonBlocking(docRef);
 }
 
 /**
