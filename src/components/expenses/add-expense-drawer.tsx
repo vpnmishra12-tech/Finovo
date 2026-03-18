@@ -90,7 +90,7 @@ export function AddExpenseDrawer() {
           <Plus className="w-8 h-8" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-md w-[95%] rounded-3xl p-0 overflow-hidden border-none shadow-2xl z-[100]">
+      <DialogContent className="max-w-md w-[95%] max-h-[85vh] rounded-3xl p-0 overflow-hidden border-none shadow-2xl z-[100] flex flex-col">
         <DialogHeader className="p-6 bg-primary text-primary-foreground shrink-0">
           <DialogTitle className="font-headline text-2xl flex items-center gap-2">
             <Sparkles className="w-6 h-6" />
@@ -98,8 +98,8 @@ export function AddExpenseDrawer() {
           </DialogTitle>
         </DialogHeader>
 
-        <ScrollArea className="max-h-[80vh]">
-          <div className="p-6 space-y-6 pb-12">
+        <ScrollArea className="flex-1 overflow-y-auto">
+          <div className="p-6 space-y-6 pb-20">
             <Tabs defaultValue="text" className="w-full">
               <TabsList className="grid w-full grid-cols-3 bg-muted h-12 rounded-xl p-1 mb-6">
                 <TabsTrigger value="text" className="rounded-lg gap-2">
@@ -176,7 +176,7 @@ export function AddExpenseDrawer() {
                 />
               </div>
 
-              <div className="flex gap-3 pt-6">
+              <div className="flex gap-3 pt-4">
                 <Button className="w-full rounded-xl h-14 text-lg font-bold shadow-lg shadow-primary/20" onClick={handleSave} disabled={!amount || !description}>
                   {t.actions.save}
                 </Button>

@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from 'react';
@@ -11,7 +12,7 @@ import { AdBanner } from '@/components/dashboard/ad-banner';
 import { BillSplitTool } from '@/components/bill-split/bill-split-tool';
 import { ExpenseList } from '@/components/expenses/expense-list';
 import { AddExpenseDrawer } from '@/components/expenses/add-expense-drawer';
-import { Loader2, Sparkles, Wallet, ShieldCheck, Mail, Lock, UserPlus, LogIn, Info, Download, LayoutDashboard, History, Calculator } from 'lucide-react';
+import { Loader2, Wallet, Mail, Lock, UserPlus, LogIn, Info, Download, LayoutDashboard, History, Calculator } from 'lucide-react';
 import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import { collection, query, orderBy, limit } from 'firebase/firestore';
 import { Expense } from '@/lib/expenses';
@@ -276,9 +277,8 @@ export default function Home() {
                 year={parseInt(selectedYear)}
               />
 
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <div className="w-full">
                 <SpendingChart expenses={selectedMonthExpenses} />
-                <MonthlyHistory expenses={expenses || []} />
               </div>
               
               <AdBanner />
@@ -288,6 +288,7 @@ export default function Home() {
           {activeTab === 'history' && (
             <div className="space-y-4 animate-in fade-in duration-300">
               <h2 className="text-2xl font-headline font-black">{t.history}</h2>
+              <MonthlyHistory expenses={expenses || []} />
               <ExpenseList expenses={expenses || []} isLoading={isExpensesLoading} />
             </div>
           )}
@@ -307,7 +308,7 @@ export default function Home() {
         <NavItem id="splitter" icon={Calculator} label={t.billSplitter} />
       </div>
       
-      {activeTab !== 'splitter' && <AddExpenseDrawer />}
+      <AddExpenseDrawer />
     </div>
   );
 }
