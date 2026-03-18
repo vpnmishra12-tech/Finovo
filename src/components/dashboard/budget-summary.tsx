@@ -12,7 +12,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { PiggyBank, Target, TrendingUp, Edit2, AlertTriangle, Info, History } from 'lucide-react';
 import { useFirestore, useDoc, useMemoFirebase } from '@/firebase';
-import { doc } from 'firebase/firestore';
+import { doc, getDoc } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 
 export function BudgetSummary({ userId, totalSpent }: { userId: string, totalSpent: number }) {
@@ -47,10 +47,10 @@ export function BudgetSummary({ userId, totalSpent }: { userId: string, totalSpe
       
       const prevBudgetId = `${prevYear}-${prevMonth}`;
       const prevBudgetRef = doc(firestore, 'users', userId, 'monthlyBudgets', prevBudgetId);
-      const prevBudgetSnap = await (getDoc(prevBudgetRef) as any);
+      const prevBudgetSnap = await getDoc(prevBudgetRef);
       
       if (prevBudgetSnap.exists()) {
-        const prevBudgetVal = prevBudgetSnap.data().budgetAmount;
+        const prevBudgetVal = (prevBudgetSnap.data() as MonthlyBudget).budgetAmount;
         const prevSpent = await getMonthlySpending(firestore, userId, prevMonth, prevYear);
         if (prevSpent > prevBudgetVal) {
           setLastMonthDebt(prevSpent - prevBudgetVal);
