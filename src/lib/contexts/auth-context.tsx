@@ -46,12 +46,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (error.code === 'auth/unauthorized-domain') {
           toast({
             title: "Domain Not Authorized",
-            description: "Please check your Firebase Console settings for Authorized Domains.",
+            description: "Please check your Firebase Console settings for Authorized Domains. See README.md for steps.",
             variant: "destructive",
           });
         } else if (error.code !== 'auth/popup-closed-by-user') {
-          // General error handling (ignoring popup errors since we use redirect now)
+          // General error handling
           console.error("Auth error:", error);
+          toast({
+            title: "Login Error",
+            description: error.message || "An unexpected error occurred.",
+            variant: "destructive",
+          });
         }
       });
   }, [auth, toast]);
@@ -63,7 +68,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch (error: any) {
       toast({
         title: "Login Error",
-        description: "Could not start sign-in process.",
+        description: "Could not start sign-in process. Please try again.",
         variant: "destructive",
       });
     }
