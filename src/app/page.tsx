@@ -10,7 +10,7 @@ import { SpendingChart } from '@/components/dashboard/spending-chart';
 import { MonthlyHistory } from '@/components/dashboard/monthly-history';
 import { ExpenseList } from '@/components/expenses/expense-list';
 import { AddExpenseDrawer } from '@/components/expenses/add-expense-drawer';
-import { Loader2, Sparkles, Wallet, ShieldCheck, Phone, CheckCircle2, Info, UserCircle, Download } from 'lucide-react';
+import { Loader2, Sparkles, Wallet, ShieldCheck, Mail, Lock, UserPlus, LogIn, Info, Download } from 'lucide-react';
 import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import { collection, query, orderBy, limit } from 'firebase/firestore';
 import { Expense } from '@/lib/expenses';
@@ -19,16 +19,16 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export default function Home() {
-  const { user, loading, sendOtp, verifyOtp, loginAsGuest, isOtpSent } = useAuth();
-  const { t, language } = useLanguage();
+  const { user, loading, login, signup } = useAuth();
+  const { t } = useLanguage();
   const firestore = useFirestore();
   
-  const [phoneNumber, setPhoneNumber] = useState("+91");
-  const [otp, setOtp] = useState("");
-  const [isVerifying, setIsVerifying] = useState(false);
-  const [isGuestLoading, setIsGuestLoading] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isAuthLoading, setIsAuthLoading] = useState(false);
 
   // Month Switcher State
   const now = new Date();
@@ -47,22 +47,18 @@ export default function Home() {
 
   const { data: expenses, isLoading: isExpensesLoading } = useCollection<Expense>(expensesQuery);
 
-  const handleSendOtp = async () => {
-    if (phoneNumber.length < 13) return;
-    await sendOtp(phoneNumber);
+  const handleLogin = async () => {
+    if (!email || !password) return;
+    setIsAuthLoading(true);
+    await login(email, password);
+    setIsAuthLoading(false);
   };
 
-  const handleVerifyOtp = async () => {
-    if (otp.length !== 6) return;
-    setIsVerifying(true);
-    await verifyOtp(otp);
-    setIsVerifying(false);
-  };
-
-  const handleGuestLogin = async () => {
-    setIsGuestLoading(true);
-    await loginAsGuest();
-    setIsGuestLoading(false);
+  const handleSignup = async () => {
+    if (!email || !password) return;
+    setIsAuthLoading(true);
+    await signup(email, password);
+    setIsAuthLoading(false);
   };
 
   if (loading) {
@@ -89,7 +85,7 @@ export default function Home() {
               Control your money with <span className="text-primary">AI</span>
             </h1>
             <p className="text-lg text-muted-foreground leading-relaxed">
-              Track expenses using voice, text, or bill scans. Log in to sync or try Guest Mode.
+              Create a secure account to track expenses using voice, text, or bill scans.
             </p>
           </div>
 
@@ -102,71 +98,72 @@ export default function Home() {
           </Alert>
 
           <Card className="w-full max-w-sm border-none shadow-2xl rounded-3xl overflow-hidden bg-card">
-            <CardContent className="p-8 space-y-6">
-              {!isOtpSent ? (
-                <div className="space-y-4 text-left">
-                  <div className="space-y-2">
-                    <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Phone Number</label>
-                    <div className="relative">
-                      <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                      <Input 
-                        type="tel" 
-                        placeholder="+91 98765 43210" 
-                        value={phoneNumber}
-                        onChange={(e) => setPhoneNumber(e.target.value)}
-                        className="pl-12 h-14 rounded-2xl bg-muted border-none text-lg font-bold"
-                      />
+            <CardContent className="p-0">
+              <Tabs defaultValue="login" className="w-full">
+                <TabsList className="grid w-full grid-cols-2 rounded-none h-14 bg-muted/50">
+                  <TabsTrigger value="login" className="data-[state=active]:bg-card rounded-none h-full font-bold">
+                    Login
+                  </TabsTrigger>
+                  <TabsTrigger value="signup" className="data-[state=active]:bg-card rounded-none h-full font-bold">
+                    Sign Up
+                  </TabsTrigger>
+                </TabsList>
+                
+                <div className="p-8 space-y-4">
+                  <div className="space-y-4 text-left">
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Username / Email</label>
+                      <div className="relative">
+                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                        <Input 
+                          type="email" 
+                          placeholder="name@example.com" 
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          className="pl-12 h-14 rounded-2xl bg-muted border-none font-medium"
+                        />
+                      </div>
                     </div>
-                    <p className="text-[10px] text-muted-foreground font-medium flex items-center gap-1">
-                      <Info className="w-3 h-3" /> Note: Blaze Plan required for SMS
-                    </p>
-                  </div>
-                  <Button 
-                    onClick={handleSendOtp}
-                    className="w-full h-14 rounded-2xl text-lg font-bold gap-2 shadow-xl shadow-primary/20"
-                    disabled={phoneNumber.length < 13}
-                  >
-                    Send OTP <CheckCircle2 className="w-5 h-5" />
-                  </Button>
-                  
-                  <div className="relative py-2">
-                    <div className="absolute inset-0 flex items-center"><span className="w-full border-t" /></div>
-                    <div className="relative flex justify-center text-xs uppercase"><span className="bg-card px-2 text-muted-foreground">Or</span></div>
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Password</label>
+                      <div className="relative">
+                        <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                        <Input 
+                          type="password" 
+                          placeholder="••••••••" 
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          className="pl-12 h-14 rounded-2xl bg-muted border-none font-medium"
+                        />
+                      </div>
+                    </div>
                   </div>
 
-                  <Button 
-                    variant="outline"
-                    onClick={handleGuestLogin}
-                    className="w-full h-14 rounded-2xl text-lg font-bold gap-2 border-2 border-primary/20 hover:bg-primary/5"
-                    disabled={isGuestLoading}
-                  >
-                    {isGuestLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <><UserCircle className="w-5 h-5" /> Try Guest Mode</>}
-                  </Button>
+                  <TabsContent value="login" className="m-0">
+                    <Button 
+                      onClick={handleLogin}
+                      className="w-full h-14 rounded-2xl text-lg font-bold gap-2 shadow-xl shadow-primary/20"
+                      disabled={isAuthLoading || !email || !password}
+                    >
+                      {isAuthLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <><LogIn className="w-5 h-5" /> Login</>}
+                    </Button>
+                  </TabsContent>
+
+                  <TabsContent value="signup" className="m-0">
+                    <Button 
+                      onClick={handleSignup}
+                      className="w-full h-14 rounded-2xl text-lg font-bold gap-2 shadow-xl shadow-primary/20"
+                      disabled={isAuthLoading || !email || !password}
+                    >
+                      {isAuthLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <><UserPlus className="w-5 h-5" /> Create Account</>}
+                    </Button>
+                  </TabsContent>
+
+                  <p className="text-[10px] text-muted-foreground text-center flex items-center justify-center gap-1">
+                    <Info className="w-3 h-3" /> Secure login via Firebase Auth
+                  </p>
                 </div>
-              ) : (
-                <div className="space-y-4 text-left">
-                  <div className="space-y-2">
-                    <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Enter OTP</label>
-                    <Input 
-                      type="number" 
-                      placeholder="6-digit code" 
-                      value={otp}
-                      onChange={(e) => setOtp(e.target.value)}
-                      className="h-14 rounded-2xl bg-muted border-none text-center text-2xl font-bold tracking-[1em]"
-                    />
-                  </div>
-                  <Button 
-                    onClick={handleVerifyOtp}
-                    className="w-full h-14 rounded-2xl text-lg font-bold gap-2 shadow-xl shadow-primary/20"
-                    disabled={otp.length !== 6 || isVerifying}
-                  >
-                    {isVerifying ? <Loader2 className="w-5 h-5 animate-spin" /> : "Verify & Login"}
-                  </Button>
-                  <Button variant="link" onClick={() => window.location.reload()} className="w-full text-muted-foreground">
-                    Edit phone number
-                  </Button>
-                </div>
-              )}
+              </Tabs>
             </CardContent>
           </Card>
 

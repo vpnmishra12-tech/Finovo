@@ -1,14 +1,12 @@
 
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import { 
   signOut, 
   User,
-  RecaptchaVerifier,
-  signInWithPhoneNumber,
-  ConfirmationResult,
-  signInAnonymously
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword
 } from 'firebase/auth';
 import { useAuth as useFirebaseServiceAuth, useUser } from '@/firebase';
 import { useToast } from '@/hooks/use-toast';
@@ -16,11 +14,9 @@ import { useToast } from '@/hooks/use-toast';
 interface AuthContextType {
   user: User | null;
   loading: boolean;
-  sendOtp: (phoneNumber: string) => Promise<void>;
-  verifyOtp: (otp: string) => Promise<void>;
-  loginAsGuest: () => Promise<void>;
+  login: (email: string, password: string) => Promise<void>;
+  signup: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
-  isOtpSent: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -29,122 +25,43 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const auth = useFirebaseServiceAuth();
   const { user, isUserLoading } = useUser();
   const { toast } = useToast();
-  const [confirmationResult, setConfirmationResult] = useState<ConfirmationResult | null>(null);
-  const [isOtpSent, setIsOtpSent] = useState(false);
 
-  // Initialize Recaptcha
-  const setupRecaptcha = (containerId: string) => {
-    if (!auth) return null;
-    try {
-      if (typeof window !== 'undefined' && (window as any).recaptchaVerifier) {
-        return (window as any).recaptchaVerifier;
-      }
-      
-      const verifier = new RecaptchaVerifier(auth, containerId, {
-        size: 'invisible',
-        callback: () => {
-          // reCAPTCHA solved
-        }
-      });
-      if (typeof window !== 'undefined') {
-        (window as any).recaptchaVerifier = verifier;
-      }
-      return verifier;
-    } catch (error) {
-      console.error("Recaptcha setup error:", error);
-      return null;
-    }
-  };
-
-  const sendOtp = async (phoneNumber: string) => {
+  const login = async (email: string, password: string) => {
     if (!auth) return;
-
-    // Basic format check
-    if (!phoneNumber.startsWith('+')) {
-      toast({
-        variant: "destructive",
-        title: "Format Error",
-        description: "Please use +91 format (e.g., +91 9876543210)",
-      });
-      return;
-    }
-
     try {
-      toast({ title: "Sending OTP...", description: `Sending code to ${phoneNumber}` });
-      
-      const appVerifier = setupRecaptcha('recaptcha-container');
-      if (!appVerifier) throw new Error("Recaptcha not initialized");
-
-      const result = await signInWithPhoneNumber(auth, phoneNumber, appVerifier);
-      setConfirmationResult(result);
-      setIsOtpSent(true);
-      
-      toast({
-        title: "OTP Sent!",
-        description: "Please check your messages.",
-      });
+      toast({ title: "Logging in...", description: "Please wait" });
+      await signInWithEmailAndPassword(auth, email, password);
+      toast({ title: "Login Successful!", description: "Welcome back!" });
     } catch (error: any) {
-      console.error("OTP Error Details:", error);
+      console.error("Login Error:", error);
+      let message = "Invalid email or password.";
+      if (error.code === 'auth/user-not-found') message = "Account not found. Please sign up.";
+      if (error.code === 'auth/wrong-password') message = "Incorrect password.";
       
-      let errorMessage = "Something went wrong. Please check your network.";
-      
-      if (error.code === 'auth/operation-not-allowed') {
-        errorMessage = "IMPORTANT: Phone Auth is NOT ACTIVE in Firebase Console. Please enable it and SAVE.";
-      } else if (error.code === 'auth/billing-not-enabled') {
-        errorMessage = "BILLING REQUIRED: Phone Auth needs a 'Blaze Plan'. Please use 'Guest Mode' for now.";
-      } else if (error.code === 'auth/invalid-phone-number') {
-        errorMessage = "Invalid phone number. Use +91 followed by 10 digits.";
-      } else if (error.code === 'auth/too-many-requests') {
-        errorMessage = "Too many attempts. Wait 10 minutes and try again.";
-      }
-
       toast({
         variant: "destructive",
         title: "Login Failed",
-        description: errorMessage,
+        description: message,
       });
     }
   };
 
-  const verifyOtp = async (otp: string) => {
-    if (!confirmationResult) return;
-
-    try {
-      toast({ title: "Verifying...", description: "Checking your code" });
-      const result = await confirmationResult.confirm(otp);
-      if (result.user) {
-        toast({
-          title: "Login Successful!",
-          description: "Welcome to SmartKharcha AI",
-        });
-        setIsOtpSent(false);
-        setConfirmationResult(null);
-      }
-    } catch (error: any) {
-      console.error("Verification Error:", error);
-      toast({
-        variant: "destructive",
-        title: "Invalid OTP",
-        description: "Please check the code and try again.",
-      });
-    }
-  };
-
-  const loginAsGuest = async () => {
+  const signup = async (email: string, password: string) => {
     if (!auth) return;
     try {
-      toast({ title: "Entering Guest Mode...", description: "Setting up your workspace" });
-      await signInAnonymously(auth);
-      toast({
-        title: "Welcome Guest!",
-        description: "You can now track your expenses.",
-      });
+      toast({ title: "Creating Account...", description: "Please wait" });
+      await createUserWithEmailAndPassword(auth, email, password);
+      toast({ title: "Success!", description: "Account created successfully." });
     } catch (error: any) {
-      console.error("Guest Login Error:", error);
+      console.error("Signup Error:", error);
+      let message = "Could not create account.";
+      if (error.code === 'auth/email-already-in-use') message = "This email is already registered.";
+      if (error.code === 'auth/weak-password') message = "Password should be at least 6 characters.";
+      
       toast({
         variant: "destructive",
-        title: "Guest Mode Failed",
-        description: "Please check your internet connection.",
+        title: "Signup Failed",
+        description: message,
       });
     }
   };
@@ -166,9 +83,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading: isUserLoading, sendOtp, verifyOtp, loginAsGuest, logout, isOtpSent }}>
+    <AuthContext.Provider value={{ user, loading: isUserLoading, login, signup, logout }}>
       {children}
-      <div id="recaptcha-container"></div>
     </AuthContext.Provider>
   );
 }
