@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from 'react';
@@ -11,7 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Plus, Send, Keyboard, Mic, Camera, Loader2, Sparkles, X } from 'lucide-react';
+import { Plus, Send, Keyboard, Mic, Camera, Loader2, Sparkles } from 'lucide-react';
 import { extractTextExpense } from '@/ai/flows/extract-text-expense';
 import { VoiceInput } from './capture-modes/voice-input';
 import { CameraInput } from './capture-modes/camera-input';
@@ -41,9 +40,12 @@ export function AddExpenseDrawer() {
   };
 
   const handleSave = () => {
-    if (!user || !amount || !description || !firestore) return;
+    if (!firestore) return;
     
-    saveExpense(firestore, user.uid, {
+    // Use user ID or fallback demo ID for preview
+    const userId = user?.uid || "demo-user-id";
+    
+    saveExpense(firestore, userId, {
       amount: parseFloat(amount),
       category: category as any,
       description,
@@ -143,7 +145,7 @@ export function AddExpenseDrawer() {
                 />
               </div>
               <div className="space-y-2">
-                <Label className="text-xs uppercase font-bold text-muted-foreground">{t.language === 'en' ? 'Category' : 'श्रेणी'}</Label>
+                <Label className="text-xs uppercase font-bold text-muted-foreground">Category</Label>
                 <Select value={category} onValueChange={setCategory}>
                   <SelectTrigger className="bg-muted border-none rounded-xl h-12">
                     <SelectValue />
@@ -160,7 +162,7 @@ export function AddExpenseDrawer() {
             </div>
             
             <div className="space-y-2">
-              <Label className="text-xs uppercase font-bold text-muted-foreground">{t.language === 'en' ? 'Description' : 'विवरण'}</Label>
+              <Label className="text-xs uppercase font-bold text-muted-foreground">Description</Label>
               <Input 
                 placeholder="What was this for?" 
                 value={description} 
