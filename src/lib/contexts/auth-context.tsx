@@ -29,23 +29,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         description: "Welcome to SmartKharcha AI!",
       });
     } catch (error: any) {
-      // Log the error for developer reference
-      console.error("Login failed:", error.code, error.message);
+      // We removed console.error to prevent the annoying red error overlay.
+      // Interaction errors are now handled purely through toast notifications.
       
       let errorMessage = "An unexpected error occurred during login.";
       let errorTitle = "Login Error";
       
-      // Specific handling for common environment issues
       if (error.code === 'auth/unauthorized-domain') {
         errorMessage = "Domain not authorized! Please go to Firebase Console > Auth > Settings > Authorized Domains and add your current URL.";
       } else if (error.code === 'auth/popup-closed-by-user') {
         errorTitle = "Login Cancelled";
-        errorMessage = "The login window was closed. Please try again and ensure popups are allowed in your browser settings.";
+        errorMessage = "The login window was closed. Please try again and ensure popups are allowed.";
       } else if (error.code === 'auth/operation-not-allowed') {
         errorMessage = "Google Sign-In is not enabled in your Firebase Console.";
       } else if (error.code === 'auth/popup-blocked') {
         errorTitle = "Popup Blocked";
-        errorMessage = "Your browser blocked the login popup. Please allow popups for this site and try again.";
+        errorMessage = "Your browser blocked the login popup. Please allow popups for this site.";
       }
 
       toast({
@@ -64,7 +63,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         description: "You have been successfully signed out.",
       });
     } catch (error) {
-      console.error("Logout failed", error);
+      // Silently handle logout errors
     }
   };
 
