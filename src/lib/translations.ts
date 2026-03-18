@@ -39,6 +39,7 @@ export const translations = {
     noPayment: "Settled up!",
     remainingToSplit: "Remaining to assign",
     personShare: "Share of",
+    enterNames: "Please enter names for everyone",
     alerts: {
       halfway: "Warning: You have spent 50% of your budget!",
       critical: "Urgent: 75% budget used. Watch your spending!",
@@ -124,6 +125,7 @@ export const translations = {
     noPayment: "सब बराबर है!",
     remainingToSplit: "बचे हुए पैसे",
     personShare: "हिसा (Share)",
+    enterNames: "कृपया सभी के नाम लिखें",
     alerts: {
       halfway: "चेतावनी: आपने अपने बजट का 50% खर्च कर दिया है!",
       critical: "ज़रूरी: 75% budget खत्म। अब थोड़ा संभल कर चलें!",

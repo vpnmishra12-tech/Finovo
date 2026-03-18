@@ -37,8 +37,8 @@ export function BillSplitTool() {
   const [totalBill, setTotalBill] = useState<string>("");
   const [splitType, setSplitType] = useState<'equal' | 'custom'>('equal');
   const [participants, setParticipants] = useState<Participant[]>([
-    { id: '1', name: 'Me', paid: 0 },
-    { id: '2', name: 'Friend 1', paid: 0 }
+    { id: '1', name: '', paid: 0 },
+    { id: '2', name: '', paid: 0 }
   ]);
   const [payerId, setPayerId] = useState<string>('1');
 
@@ -46,13 +46,16 @@ export function BillSplitTool() {
   const participantCount = participants.length;
   const equalShare = billValue > 0 ? parseFloat((billValue / participantCount).toFixed(2)) : 0;
 
+  // Validation: Check if all names are entered
+  const allNamesEntered = participants.every(p => p.name.trim().length > 0);
+
   // Track total paid in custom mode
   const totalPaidAtVenue = participants.reduce((sum, p) => sum + p.paid, 0);
   const isPaymentMismatch = splitType === 'custom' && billValue > 0 && Math.abs(totalPaidAtVenue - billValue) > 0.01;
 
   const addPerson = () => {
     const newId = Date.now().toString();
-    setParticipants([...participants, { id: newId, name: `Person ${participants.length + 1}`, paid: 0 }]);
+    setParticipants([...participants, { id: newId, name: '', paid: 0 }]);
   };
 
   const removePerson = (id: string) => {
@@ -72,27 +75,26 @@ export function BillSplitTool() {
 
   // Logic for Equal Mode (One person paid everything)
   const equalSettlements = useMemo(() => {
-    if (splitType !== 'equal' || billValue <= 0) return [];
+    if (splitType !== 'equal' || billValue <= 0 || !allNamesEntered) return [];
     const mainPayer = participants.find(p => p.id === payerId);
-    if (!mainPayer) return [];
+    if (!mainPayer || !mainPayer.name.trim()) return [];
 
     return participants
       .filter(p => p.id !== payerId)
       .map(p => ({
-        from: p.name.trim() || "Someone",
-        to: mainPayer.name.trim() || "Payer",
+        from: p.name.trim(),
+        to: mainPayer.name.trim(),
         amount: equalShare
       }));
-  }, [participants, billValue, splitType, payerId, equalShare]);
+  }, [participants, billValue, splitType, payerId, equalShare, allNamesEntered]);
 
   // Logic for Custom Mode (Multiple people paid different amounts, but share is equal)
   const customSettlements = useMemo(() => {
-    if (splitType !== 'custom' || billValue <= 0 || isPaymentMismatch) return [];
+    if (splitType !== 'custom' || billValue <= 0 || isPaymentMismatch || !allNamesEntered) return [];
     
     // Each person's debt is (Their Share - Their Paid)
-    // Share is always equal as per user request
     let balances = participants.map((p) => ({
-      name: p.name.trim() || "Someone",
+      name: p.name.trim(),
       balance: p.paid - equalShare
     }));
 
@@ -121,14 +123,14 @@ export function BillSplitTool() {
       if (Math.abs(creditor.balance) < 0.01) cIdx++;
     }
     return results;
-  }, [participants, billValue, splitType, equalShare, isPaymentMismatch]);
+  }, [participants, billValue, splitType, equalShare, isPaymentMismatch, allNamesEntered]);
 
   const finalSettlements = splitType === 'equal' ? equalSettlements : customSettlements;
 
   const handleSaveMyShare = () => {
     if (!firestore || !user?.uid) return;
-    if (equalShare <= 0 || isPaymentMismatch) {
-      toast({ variant: "destructive", title: "Error", description: "Please check the bill details" });
+    if (equalShare <= 0 || isPaymentMismatch || !allNamesEntered) {
+      toast({ variant: "destructive", title: "Error", description: !allNamesEntered ? t.enterNames : "Please check the bill details" });
       return;
     }
 
@@ -174,20 +176,6 @@ export function BillSplitTool() {
           </TabsList>
 
           <TabsContent value="equal" className="space-y-6 m-0">
-            <div className="space-y-2">
-              <Label className="text-xs font-bold uppercase text-muted-foreground">{t.whoPaid}</Label>
-              <Select value={payerId} onValueChange={setPayerId}>
-                <SelectTrigger className="h-12 bg-muted border-none rounded-xl font-bold">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {participants.map(p => (
-                    <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
             <div className="space-y-4">
               <Label className="text-xs font-bold uppercase text-muted-foreground">Names</Label>
               <div className="grid gap-3">
@@ -196,8 +184,8 @@ export function BillSplitTool() {
                     <Input 
                       value={p.name} 
                       onChange={(e) => updateParticipant(p.id, 'name', e.target.value)}
-                      placeholder="Name"
-                      className="h-10 bg-muted/50 border-none rounded-xl font-bold px-4 flex-1"
+                      placeholder="Enter Name"
+                      className="h-12 bg-muted/50 border-none rounded-xl font-bold px-4 flex-1"
                     />
                     <Button 
                       variant="ghost" 
@@ -212,6 +200,22 @@ export function BillSplitTool() {
                 ))}
               </div>
             </div>
+
+            {allNamesEntered && (
+              <div className="space-y-2 pt-2 animate-in fade-in slide-in-from-top-2">
+                <Label className="text-xs font-bold uppercase text-muted-foreground">{t.whoPaid}</Label>
+                <Select value={payerId} onValueChange={setPayerId}>
+                  <SelectTrigger className="h-12 bg-muted border-none rounded-xl font-bold">
+                    <SelectValue placeholder="Select Payer" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {participants.map(p => (
+                      <SelectItem key={p.id} value={p.id}>{p.name || `Person ${p.id}`}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
           </TabsContent>
 
           <TabsContent value="custom" className="space-y-4 m-0">
@@ -226,7 +230,7 @@ export function BillSplitTool() {
                     <Input 
                       value={p.name} 
                       onChange={(e) => updateParticipant(p.id, 'name', e.target.value)}
-                      placeholder="Name"
+                      placeholder="Enter Name"
                       className="h-10 bg-card border-none rounded-xl font-bold px-4 flex-1"
                     />
                     <Button 
@@ -245,7 +249,7 @@ export function BillSplitTool() {
                       type="number"
                       value={p.paid || ""}
                       onChange={(e) => updateParticipant(p.id, 'paid', e.target.value)}
-                      placeholder="How much did they pay?"
+                      placeholder="Amount paid"
                       className="h-10 rounded-xl bg-card border-none font-bold text-sm text-green-600"
                     />
                   </div>
@@ -273,8 +277,17 @@ export function BillSplitTool() {
           {t.addPerson}
         </Button>
 
-        {billValue > 0 && !isPaymentMismatch && (
-          <div className="space-y-4 pt-4 border-t border-dashed">
+        {!allNamesEntered && billValue > 0 && (
+          <Alert className="rounded-2xl bg-amber-500/10 border-amber-500/20 text-amber-600">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription className="text-xs font-bold">
+              {t.enterNames}
+            </AlertDescription>
+          </Alert>
+        )}
+
+        {billValue > 0 && !isPaymentMismatch && allNamesEntered && (
+          <div className="space-y-4 pt-4 border-t border-dashed animate-in slide-in-from-bottom-4 duration-500">
             <h4 className="text-xs font-black uppercase text-muted-foreground flex items-center gap-2 tracking-widest">
               <ArrowRightLeft className="w-4 h-4 text-primary" />
               {t.settlement}
@@ -286,9 +299,9 @@ export function BillSplitTool() {
                     <div className="w-2 h-2 rounded-full bg-primary/40 shrink-0" />
                     <p className="text-sm font-medium leading-relaxed">
                       <span className="font-bold text-primary">{s.from}</span>
-                      <span className="mx-1.5 text-muted-foreground font-bold">will pay</span>
+                      <span className="mx-1.5 text-muted-foreground font-bold">{t.owes}</span>
                       <span className="font-headline font-black text-primary mx-1">₹{s.amount.toLocaleString()}</span>
-                      <span className="mx-1.5 text-muted-foreground font-bold">to</span>
+                      <span className="mx-1.5 text-muted-foreground font-bold">{t.to}</span>
                       <span className="font-bold text-primary bg-primary/10 px-2 py-0.5 rounded">{s.to}</span>
                     </p>
                   </div>
@@ -311,7 +324,7 @@ export function BillSplitTool() {
             </div>
             <Button 
               onClick={handleSaveMyShare} 
-              disabled={billValue <= 0 || isPaymentMismatch}
+              disabled={billValue <= 0 || isPaymentMismatch || !allNamesEntered}
               className="rounded-2xl h-14 px-8 bg-white text-primary hover:bg-white/90 font-black gap-2 shadow-xl relative z-10"
             >
               <CheckCircle2 className="w-5 h-5" />
