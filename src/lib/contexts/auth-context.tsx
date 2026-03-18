@@ -36,7 +36,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         description: "Welcome to SmartKharcha AI!",
       });
     } catch (error: any) {
-      // We handle errors gracefully without triggering the red console error screen
+      // Handle errors gracefully without triggering the red console error screen
       let errorMessage = "An unexpected error occurred during login.";
       let errorTitle = "Login Failed";
       
@@ -45,7 +45,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         errorMessage = "CRITICAL: This domain is not in your Firebase 'Authorized Domains' list. Go to Firebase Console > Auth > Settings and add this URL.";
       } else if (error.code === 'auth/popup-closed-by-user') {
         errorTitle = "Login Window Closed";
-        errorMessage = "The login popup was closed before completion. Please try again.";
+        errorMessage = "The login popup was closed before completion. This usually happens if popups are blocked or the domain isn't authorized. Check the README for the fix.";
       } else if (error.code === 'auth/operation-not-allowed') {
         errorMessage = "Google Sign-In is not enabled in your Firebase Console.";
       } else if (error.code === 'auth/popup-blocked') {

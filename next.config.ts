@@ -1,3 +1,4 @@
+
 import type {NextConfig} from 'next';
 
 const nextConfig: NextConfig = {
@@ -35,7 +36,9 @@ const nextConfig: NextConfig = {
     allowedDevOrigins: [
       '9000-firebase-studio-1773832578527.cluster-ubrd2huk7jh6otbgyei4h62ope.cloudworkstations.dev',
       '*.cloudworkstations.dev',
-      '*.google.com'
+      '*.google.com',
+      '*.web.app',
+      '*.firebaseapp.com'
     ]
   }
 };
