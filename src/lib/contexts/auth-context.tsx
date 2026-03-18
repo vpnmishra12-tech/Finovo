@@ -23,12 +23,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = async () => {
     try {
-      // We trigger the popup immediately to ensure it's seen as a direct user action
+      // We trigger the popup immediately to ensure it's seen as a direct user action.
+      // Do NOT put any async calls before this.
       const loginPromise = signInWithPopup(auth, googleProvider);
       
       toast({
         title: "Login Started",
-        description: "Please complete the sign-in in the new window.",
+        description: "A new window is opening. Please sign in there.",
       });
 
       await loginPromise;
@@ -47,10 +48,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         errorMessage = "Go to Firebase Console > Auth > Settings > Authorized Domains and add this domain. See README.md for details.";
       } else if (error.code === 'auth/popup-closed-by-user') {
         errorTitle = "Window Closed";
-        errorMessage = "The login window was closed. Please ensure you finish the sign-in process in the popup.";
+        errorMessage = "The login window was closed. On mobile, look for a 'Pop-up blocked' bar at the bottom and click 'Always show'.";
       } else if (error.code === 'auth/popup-blocked') {
         errorTitle = "Popup Blocked";
-        errorMessage = "Browser blocked the login window. Look for the 'Blocked Popup' icon in your address bar (top right) and select 'Always allow'.";
+        errorMessage = "Browser blocked the login window. Look for a small icon in your address bar (top right) and select 'Always allow'.";
       } else if (error.code === 'auth/cancelled-popup-request') {
         return; // Ignore multiple clicks
       }

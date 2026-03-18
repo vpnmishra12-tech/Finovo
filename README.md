@@ -21,11 +21,10 @@ Firebase blocks requests from unknown domains for security. You must authorize y
 2. Paste your URL (e.g., `9002-firebase-studio-123.cluster-xyz.cloudworkstations.dev`).
 3. **IMPORTANT**: Remove `https://` and anything after `.dev`. It should look exactly like the example above.
 
-### 3. Allow Popups (Important!)
+### 3. Allow Popups (Important for Mobile!)
 Even if you allowed popups in browser settings, browsers often block them for new sites.
-- When you click Login, look at the **right side of your address bar** (where you type URLs).
-- Look for a small icon with a red 'X' or a "Popup Blocked" icon.
-- Click it and select **"Always allow popups from..."** then click Done.
+- **On Mobile Chrome**: When you click Login, look at the **BOTTOM** of your screen. A small bar might appear saying "Pop-up blocked". Click **"Always show"**.
+- **On Desktop**: Look at the **right side of your address bar** (where you type URLs). Look for a small icon with a red 'X'. Click it and select **"Always allow popups from..."** then click Done.
 - **Refresh the page** and try Login again.
 
 ## 🔗 How to get your Public Link
