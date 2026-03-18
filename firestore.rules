@@ -1,0 +1,105 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /**
+     * SMARTKHARCHA AI SECURITY RULES
+     *
+     * Core Philosophy:
+     * This ruleset enforces a strict User-Ownership model. Access to data is partitioned by 
+     * Firebase Authentication UIDs, ensuring that users can only interact with their own 
+     * financial data (expenses, budgets, and profiles).
+     *
+     * Data Structure:
+     * - /users/{userId}: Private user profile and settings.
+     * - /users/{userId}/expenses/{expenseId}: Private expense records owned by the user.
+     * - /users/{userId}/monthlyBudgets/{budgetId}: Private budget goals owned by the user.
+     * - /categories: Global, read-only collection for classifying expenses.
+     *
+     * Key Security Decisions:
+     * 1. Authorization Independence: The system uses path-based wildcards ({userId}) 
+     *    and denormalized 'userId' fields within documents to allow for instant 
+     *    authorization without expensive cross-document lookups (get() calls).
+     * 2. Strict Scoping: Users are forbidden from listing other users' profiles or data.
+     * 3. Immutability: Critical relational fields (like ownership IDs) are enforced as 
+     *    immutable after creation to prevent data hijacking or accidental orphans.
+     * 4. Public Lookups: The 'categories' collection is readable by any authenticated 
+     *    user to facilitate the classification process.
+     */
+
+    // --- Global Helper Functions ---
+
+    /** Checks if the request is from an authenticated user. */
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    /** Checks if the authenticated user's UID matches the provided userId. */
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    /** Combines ownership check with a check for document existence for destructive operations. */
+    function isExistingOwner(userId) {
+      return resource != null && isOwner(userId);
+    }
+
+    // --- Collection Rules ---
+
+    /**
+     * @description Rules for UserProfile documents. Allows users to manage their own profile.
+     * @path /users/{userId}
+     * @allow (get) If the user is the owner of the profile.
+     * @deny (create) If the internal 'id' field does not match the user's UID.
+     * @principle Restricts access to a user's own data tree and enforces path consistency.
+     */
+    match /users/{userId} {
+      allow get, list: if isOwner(userId);
+      allow create: if isOwner(userId) && request.resource.data.id == userId;
+      allow update: if isExistingOwner(userId) && request.resource.data.id == resource.data.id;
+      allow delete: if isExistingOwner(userId);
+
+      /**
+       * @description Rules for Expense records. Strictly owned by the parent user.
+       * @path /users/{userId}/expenses/{expenseId}
+       * @allow (list) Owner listing their own expenses.
+       * @deny (update) Attempting to change the 'userId' field of an existing expense.
+       * @principle Enforces document ownership for writes and validates relational integrity.
+       */
+      match /expenses/{expenseId} {
+        allow get, list: if isOwner(userId);
+        allow create: if isOwner(userId) && request.resource.data.userId == userId;
+        allow update: if isExistingOwner(userId) && request.resource.data.userId == resource.data.userId;
+        allow delete: if isExistingOwner(userId);
+      }
+
+      /**
+       * @description Rules for MonthlyBudget records. Strictly owned by the parent user.
+       * @path /users/{userId}/monthlyBudgets/{monthlyBudgetId}
+       * @allow (create) Owner creating a budget record with their UID in the data.
+       * @deny (get) Unauthenticated users or different users attempting to read a budget.
+       * @principle Enforces path-based authorization for user-specific subcollections.
+       */
+      match /monthlyBudgets/{monthlyBudgetId} {
+        allow get, list: if isOwner(userId);
+        allow create: if isOwner(userId) && request.resource.data.userId == userId;
+        allow update: if isExistingOwner(userId) && request.resource.data.userId == resource.data.userId;
+        allow delete: if isExistingOwner(userId);
+      }
+    }
+
+    /**
+     * @description Rules for the Category collection. Predefined global data.
+     * @path /categories/{categoryId}
+     * @allow (get, list) Any authenticated user reading available categories.
+     * @deny (create, update, delete) All client-side writes. Categories are system-managed.
+     * @principle Public read access for lookup data with restricted write access.
+     */
+    match /categories/{categoryId} {
+      allow get, list: if isSignedIn();
+      // CRITICAL: This collection represents global system data. 
+      // No ownership field exists for users to modify these records.
+      allow create, update, delete: if false; // TODO: Add administrative role check if UI-based management is required.
+    }
+  }
+}
