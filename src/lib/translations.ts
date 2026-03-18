@@ -33,8 +33,8 @@ export const translations = {
     yourShare: "Your Personal Share",
     saveMyShare: "Save My Share",
     whoPaid: "Who paid the full bill?",
-    settlement: "Settlement Summary (Who pays whom?)",
-    owes: "owes",
+    settlement: "Money Exchange (Who pays whom?)",
+    owes: "will pay",
     to: "to",
     noPayment: "Settled up!",
     remainingToSplit: "Remaining to assign",
@@ -118,7 +118,7 @@ export const translations = {
     yourShare: "आपका व्यक्तिगत हिस्सा",
     saveMyShare: "अपना हिस्सा सेव करें",
     whoPaid: "पूरा पैसा किसने भरा?",
-    settlement: "कौन किसको कितने पैसे देगा?",
+    settlement: "पैसे का लेनदेन (किसको कितने देने हैं?)",
     owes: "देंगे",
     to: "को",
     noPayment: "सब बराबर है!",
@@ -126,7 +126,7 @@ export const translations = {
     personShare: "हिसा (Share)",
     alerts: {
       halfway: "चेतावनी: आपने अपने बजट का 50% खर्च कर दिया है!",
-      critical: "ज़रूरी: 75% बजट खत्म। अब थोड़ा संभल कर चलें!",
+      critical: "ज़रूरी: 75% budget खत्म। अब थोड़ा संभल कर चलें!",
       exhausted: "अलर्ट: 100% बजट पूरा। आप ज़रूरत से ज़्यादा खर्च कर रहे हैं!"
     },
     categories: {

@@ -22,7 +22,7 @@ interface Participant {
 }
 
 export function BillSplitTool() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { user } = useAuth();
   const firestore = useFirestore();
   const { toast } = useToast();
@@ -68,7 +68,7 @@ export function BillSplitTool() {
   };
 
   const remainingToSplit = billValue - getCustomTotal();
-  const isCustomValid = splitMode === 'custom' && Math.abs(remainingToSplit) < 0.01;
+  const isCustomValid = splitMode === 'equal' ? billValue > 0 : (billValue > 0 && Math.abs(remainingToSplit) < 0.01);
   const payer = participants.find(p => p.id === paidById);
 
   const handleSaveShare = () => {
@@ -195,14 +195,14 @@ export function BillSplitTool() {
           </Button>
 
           {splitMode === 'custom' && billValue > 0 && (
-            <div className={`mt-4 p-4 rounded-2xl flex justify-between items-center transition-colors ${isCustomValid ? 'bg-green-500/10 border border-green-500/20' : 'bg-destructive/5 border border-destructive/10'}`}>
+            <div className={`mt-4 p-4 rounded-2xl flex justify-between items-center transition-colors ${Math.abs(remainingToSplit) < 0.01 ? 'bg-green-500/10 border border-green-500/20' : 'bg-destructive/5 border border-destructive/10'}`}>
               <div className="flex flex-col">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{t.remainingToSplit}</span>
-                <span className={`text-sm font-headline font-bold ${isCustomValid ? 'text-green-500' : 'text-destructive'}`}>
+                <span className={`text-sm font-headline font-bold ${Math.abs(remainingToSplit) < 0.01 ? 'text-green-500' : 'text-destructive'}`}>
                   ₹{remainingToSplit.toFixed(2)}
                 </span>
               </div>
-              {!isCustomValid && (
+              {Math.abs(remainingToSplit) >= 0.01 && (
                 <div className="flex items-center gap-1 text-destructive animate-pulse">
                   <AlertCircle className="w-4 h-4" />
                   <span className="text-[10px] font-bold">Total mismatch</span>
@@ -212,8 +212,8 @@ export function BillSplitTool() {
           )}
         </Tabs>
 
-        {/* Settlement Summary Section - HIGHLIGHTED */}
-        {billValue > 0 && (splitMode === 'equal' || isCustomValid) && (
+        {/* Settlement Summary Section - CLEAR SENTENCE FORMAT */}
+        {isCustomValid && (
           <div className="space-y-4 pt-4 border-t border-dashed">
             <h4 className="text-xs font-black uppercase text-muted-foreground flex items-center gap-2 tracking-widest">
               <ArrowRightLeft className="w-4 h-4 text-primary" />
@@ -224,18 +224,17 @@ export function BillSplitTool() {
                 if (p.id === paidById) return null;
                 const share = splitMode === 'equal' ? getEqualShare() : p.amount;
                 if (share <= 0) return null;
+                
                 return (
-                  <div key={`settle-${p.id}`} className="flex flex-wrap items-center justify-between gap-2 p-3 bg-card rounded-xl shadow-sm border border-primary/5">
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full bg-destructive animate-pulse" />
-                      <span className="font-bold text-sm">{p.name}</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-sm font-medium">
-                      <span className="text-muted-foreground lowercase">{t.owes}</span>
-                      <span className="text-primary font-headline font-black text-base">₹{share.toLocaleString()}</span>
-                      <span className="text-muted-foreground lowercase">{t.to}</span>
-                      <span className="font-bold text-sm bg-primary/10 px-2 py-0.5 rounded text-primary">{payer?.name || 'Payer'}</span>
-                    </div>
+                  <div key={`settle-${p.id}`} className="flex items-center gap-2 p-3 bg-card rounded-xl shadow-sm border border-primary/5">
+                    <div className="w-2 h-2 rounded-full bg-primary/40 shrink-0" />
+                    <p className="text-sm font-medium leading-relaxed">
+                      <span className="font-bold text-primary">{p.name}</span>
+                      <span className="mx-1.5 text-muted-foreground lowercase">{t.owes}</span>
+                      <span className="font-headline font-black text-primary mx-1">₹{share.toLocaleString()}</span>
+                      <span className="mx-1.5 text-muted-foreground lowercase">{t.to}</span>
+                      <span className="font-bold text-primary bg-primary/10 px-2 py-0.5 rounded">{payer?.name || 'Payer'}</span>
+                    </p>
                   </div>
                 );
               })}
@@ -258,7 +257,7 @@ export function BillSplitTool() {
             </div>
             <Button 
               onClick={handleSaveShare} 
-              disabled={billValue <= 0 || (splitMode === 'custom' && !isCustomValid)}
+              disabled={billValue <= 0 || (splitMode === 'custom' && Math.abs(remainingToSplit) >= 0.01)}
               className="rounded-2xl h-14 px-6 bg-white text-primary hover:bg-white/90 font-bold gap-2 shadow-lg"
             >
               <CheckCircle2 className="w-5 h-5" />
