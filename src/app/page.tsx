@@ -9,13 +9,14 @@ import { BudgetSummary } from '@/components/dashboard/budget-summary';
 import { SpendingChart } from '@/components/dashboard/spending-chart';
 import { ExpenseList } from '@/components/expenses/expense-list';
 import { AddExpenseDrawer } from '@/components/expenses/add-expense-drawer';
-import { Loader2, Sparkles, Wallet, ShieldCheck, Phone, CheckCircle2 } from 'lucide-react';
+import { Loader2, Sparkles, Wallet, ShieldCheck, Phone, CheckCircle2, Info } from 'lucide-react';
 import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import { collection, query, orderBy, limit } from 'firebase/firestore';
 import { Expense } from '@/lib/expenses';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 export default function Home() {
   const { user, loading, sendOtp, verifyOtp, isOtpSent } = useAuth();
@@ -39,7 +40,8 @@ export default function Home() {
   const { data: expenses, isLoading: isExpensesLoading } = useCollection<Expense>(expensesQuery);
 
   const handleSendOtp = async () => {
-    if (phoneNumber.length < 10) return;
+    // Basic validation
+    if (phoneNumber.length < 13) return;
     await sendOtp(phoneNumber);
   };
 
@@ -89,17 +91,20 @@ export default function Home() {
                       <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                       <Input 
                         type="tel" 
-                        placeholder="+91 XXXXX XXXXX" 
+                        placeholder="+91 98765 43210" 
                         value={phoneNumber}
                         onChange={(e) => setPhoneNumber(e.target.value)}
                         className="pl-12 h-14 rounded-2xl bg-muted border-none text-lg font-bold"
                       />
                     </div>
+                    <p className="text-[10px] text-muted-foreground font-medium flex items-center gap-1">
+                      <Info className="w-3 h-3" /> Important: Always include +91 prefix
+                    </p>
                   </div>
                   <Button 
                     onClick={handleSendOtp}
                     className="w-full h-14 rounded-2xl text-lg font-bold gap-2 shadow-xl shadow-primary/20"
-                    disabled={phoneNumber.length < 10}
+                    disabled={phoneNumber.length < 13}
                   >
                     Send OTP <CheckCircle2 className="w-5 h-5" />
                   </Button>

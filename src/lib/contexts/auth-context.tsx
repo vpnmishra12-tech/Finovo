@@ -34,7 +34,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const setupRecaptcha = (containerId: string) => {
     if (!auth) return null;
     try {
-      // Check if already initialized to avoid duplicate element errors in dev mode
       if (typeof window !== 'undefined' && (window as any).recaptchaVerifier) {
         return (window as any).recaptchaVerifier;
       }
@@ -58,6 +57,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const sendOtp = async (phoneNumber: string) => {
     if (!auth) return;
 
+    // Basic format check
+    if (!phoneNumber.startsWith('+')) {
+      toast({
+        variant: "destructive",
+        title: "Format Error",
+        description: "Please use +91 format (e.g., +91 9876543210)",
+      });
+      return;
+    }
+
     try {
       toast({ title: "Sending OTP...", description: `Sending code to ${phoneNumber}` });
       
@@ -73,21 +82,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         description: "Please check your messages.",
       });
     } catch (error: any) {
-      console.error("OTP Error:", error);
+      console.error("OTP Error Details:", error);
       
-      let errorMessage = "Ensure Phone Auth is enabled in Firebase Console.";
-      // Catch specific 'operation-not-allowed' error
+      let errorMessage = "Something went wrong. Please check your network.";
+      
       if (error.code === 'auth/operation-not-allowed') {
-        errorMessage = "Phone Authentication is NOT ENABLED in your Firebase Console. Go to Authentication > Sign-in method to enable it.";
+        errorMessage = "IMPORTANT: Phone Auth is NOT ACTIVE. In Firebase Console, click the 'Save' or 'Done' button inside the Phone provider card to activate it.";
       } else if (error.code === 'auth/invalid-phone-number') {
-        errorMessage = "The phone number is invalid. Please use international format (e.g., +91 98765 43210).";
+        errorMessage = "Invalid phone number. Use +91 followed by 10 digits.";
       } else if (error.code === 'auth/too-many-requests') {
-        errorMessage = "Too many attempts. Please try again later.";
+        errorMessage = "Too many attempts. Wait 10 minutes and try again.";
+      } else if (error.code === 'auth/network-request-failed') {
+        errorMessage = "Network error. Check your internet connection.";
       }
 
       toast({
         variant: "destructive",
-        title: "Setup Required",
+        title: "Login Failed",
         description: errorMessage,
       });
     }
