@@ -30,7 +30,7 @@ export function AdBanner() {
         </div>
         
         <div className="min-h-[100px] w-full bg-gradient-to-br from-primary/5 to-accent/5 rounded-xl border-2 border-dashed border-muted flex flex-col items-center justify-center text-center p-2 relative">
-          {/* STEP 3: Ad Unit Code (AdSense for Content) */}
+          {/* STEP 3: Ad Unit Code */}
           {/* Niche wala 'ins' tag uncomment karein aur data-ad-client aur data-ad-slot apni asli IDs se badlein */}
           
           {/* 

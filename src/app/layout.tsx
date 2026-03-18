@@ -47,7 +47,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <link rel="apple-touch-icon" href="https://images.unsplash.com/photo-1580519542036-c47de6196ba5?w=180&h=180&fit=crop&q=80" />
         
-        {/* STEP 1: AdSense Global Script (AdSense for Content) */}
+        {/* STEP 1: AdSense Global Script */}
         {/* Jab aapka AdSense account approve ho jaye, niche wala code uncomment karein aur 'ca-pub-...' apni ID se badlein */}
         {/* 
         <Script
