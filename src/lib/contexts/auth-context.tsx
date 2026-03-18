@@ -34,12 +34,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const setupRecaptcha = (containerId: string) => {
     if (!auth) return null;
     try {
-      return new RecaptchaVerifier(auth, containerId, {
+      // Check if already initialized to avoid duplicate element errors in dev mode
+      if (typeof window !== 'undefined' && (window as any).recaptchaVerifier) {
+        return (window as any).recaptchaVerifier;
+      }
+      
+      const verifier = new RecaptchaVerifier(auth, containerId, {
         size: 'invisible',
         callback: () => {
-          // reCAPTCHA solved, allow signInWithPhoneNumber.
+          // reCAPTCHA solved
         }
       });
+      if (typeof window !== 'undefined') {
+        (window as any).recaptchaVerifier = verifier;
+      }
+      return verifier;
     } catch (error) {
       console.error("Recaptcha setup error:", error);
       return null;
@@ -65,10 +74,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
     } catch (error: any) {
       console.error("OTP Error:", error);
+      
+      let errorMessage = "Ensure Phone Auth is enabled in Firebase Console.";
+      // Catch specific 'operation-not-allowed' error
+      if (error.code === 'auth/operation-not-allowed') {
+        errorMessage = "Phone Authentication is NOT ENABLED in your Firebase Console. Go to Authentication > Sign-in method to enable it.";
+      } else if (error.code === 'auth/invalid-phone-number') {
+        errorMessage = "The phone number is invalid. Please use international format (e.g., +91 98765 43210).";
+      } else if (error.code === 'auth/too-many-requests') {
+        errorMessage = "Too many attempts. Please try again later.";
+      }
+
       toast({
         variant: "destructive",
-        title: "Failed to send OTP",
-        description: error.message || "Ensure Phone Auth is enabled in Firebase Console.",
+        title: "Setup Required",
+        description: errorMessage,
       });
     }
   };

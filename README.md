@@ -17,11 +17,11 @@ App tabhi kaam karegi jab aap Firebase Console mein ise enable karenge:
 
 1. App ke landing page par apna mobile number daalein (Jaise: `+91 9876543210`).
 2. **"Send OTP"** par click karein.
-3. Aapke phone par ek 6-digit ka SMS aayega (Kabhi kabhi Invisible Recaptcha verification ke liye ek-do second lagte hain).
+3. Aapke phone par ek 6-digit ka SMS aayega (Recaptcha verification ke liye 1-2 second lag sakte hain).
 4. Code daalein aur **"Verify & Login"** click karein.
 
 ## ⚠️ Troubleshooting
 
-- **OTP nahi aa raha?** Check karein ki aapne Firebase mein Phone Auth enable kiya hai (Step 1).
-- **Recaptcha Error?** Page ko refresh karein aur check karein ki aapka internet sahi chal raha hai.
-- **Unauthorized Domain?** Check karein ki aapka domain `Authorized domains` list mein added hai (pichhle steps ki tarah).
+- **Error: auth/operation-not-allowed?** Iska matlab hai ki aapne Step 1 (Phone Auth enable karna) nahi kiya hai. 
+- **Recaptcha Error?** Page ko refresh karein.
+- **OTP nahi aa raha?** Check karein ki number sahi format mein hai (+91...).
