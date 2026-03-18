@@ -36,66 +36,54 @@ export function BillSplitTool() {
 
   const [totalBill, setTotalBill] = useState<string>("");
   const [splitType, setSplitType] = useState<'equal' | 'custom'>('equal');
-  const [participants, setParticipants] = useState<Participant[]>([
-    { id: '1', name: '', paid: 0 },
-    { id: '2', name: '', paid: 0 }
+
+  // Separate states for Equal Split
+  const [equalParticipants, setEqualParticipants] = useState<Participant[]>([
+    { id: 'e1', name: '', paid: 0 },
+    { id: 'e2', name: '', paid: 0 }
   ]);
-  const [payerId, setPayerId] = useState<string>('1');
+  const [equalPayerId, setEqualPayerId] = useState<string>('e1');
+
+  // Separate states for Custom Split
+  const [customParticipants, setCustomParticipants] = useState<Participant[]>([
+    { id: 'c1', name: '', paid: 0 },
+    { id: 'c2', name: '', paid: 0 }
+  ]);
 
   const billValue = parseFloat(totalBill) || 0;
-  const participantCount = participants.length;
-  const equalShare = billValue > 0 ? parseFloat((billValue / participantCount).toFixed(2)) : 0;
 
-  // Validation: Check if all names are entered
-  const allNamesEntered = participants.every(p => p.name.trim().length > 0);
-
-  // Track total paid in custom mode
-  const totalPaidAtVenue = participants.reduce((sum, p) => sum + p.paid, 0);
-  const isPaymentMismatch = splitType === 'custom' && billValue > 0 && Math.abs(totalPaidAtVenue - billValue) > 0.01;
-
-  const addPerson = () => {
-    const newId = Date.now().toString();
-    setParticipants([...participants, { id: newId, name: '', paid: 0 }]);
-  };
-
-  const removePerson = (id: string) => {
-    if (participants.length <= 2) return;
-    setParticipants(participants.filter(p => p.id !== id));
-    if (payerId === id) setPayerId(participants[0].id);
-  };
-
-  const updateParticipant = (id: string, field: keyof Participant, value: string | number) => {
-    setParticipants(prev => prev.map(p => {
-      if (p.id === id) {
-        return { ...p, [field]: typeof value === 'string' ? (field === 'name' ? value : (parseFloat(value) || 0)) : value };
-      }
-      return p;
-    }));
-  };
-
-  // Logic for Equal Mode (One person paid everything)
+  // Equal Mode Logic
+  const equalShare = billValue > 0 ? parseFloat((billValue / equalParticipants.length).toFixed(2)) : 0;
+  const equalNamesEntered = equalParticipants.every(p => p.name.trim().length > 0);
+  
   const equalSettlements = useMemo(() => {
-    if (splitType !== 'equal' || billValue <= 0 || !allNamesEntered) return [];
-    const mainPayer = participants.find(p => p.id === payerId);
+    if (splitType !== 'equal' || billValue <= 0 || !equalNamesEntered) return [];
+    const mainPayer = equalParticipants.find(p => p.id === equalPayerId);
     if (!mainPayer || !mainPayer.name.trim()) return [];
 
-    return participants
-      .filter(p => p.id !== payerId)
+    return equalParticipants
+      .filter(p => p.id !== equalPayerId)
       .map(p => ({
         from: p.name.trim(),
         to: mainPayer.name.trim(),
         amount: equalShare
       }));
-  }, [participants, billValue, splitType, payerId, equalShare, allNamesEntered]);
+  }, [equalParticipants, billValue, splitType, equalPayerId, equalShare, equalNamesEntered]);
 
-  // Logic for Custom Mode (Multiple people paid different amounts, but share is equal)
+  // Custom Mode Logic
+  const customShare = billValue > 0 ? parseFloat((billValue / customParticipants.length).toFixed(2)) : 0;
+  const customNamesEntered = customParticipants.every(p => p.name.trim().length > 0);
+  const customTotalPaid = customParticipants.reduce((sum, p) => sum + p.paid, 0);
+  const isCustomMismatch = splitType === 'custom' && billValue > 0 && Math.abs(customTotalPaid - billValue) > 0.01;
+
   const customSettlements = useMemo(() => {
-    if (splitType !== 'custom' || billValue <= 0 || isPaymentMismatch || !allNamesEntered) return [];
+    if (splitType !== 'custom' || billValue <= 0 || isCustomMismatch || !customNamesEntered) return [];
     
     // Each person's debt is (Their Share - Their Paid)
-    let balances = participants.map((p) => ({
+    // Share is equal for everyone in Custom mode as per requirement
+    let balances = customParticipants.map((p) => ({
       name: p.name.trim(),
-      balance: p.paid - equalShare
+      balance: p.paid - customShare
     }));
 
     const results: Settlement[] = [];
@@ -123,19 +111,51 @@ export function BillSplitTool() {
       if (Math.abs(creditor.balance) < 0.01) cIdx++;
     }
     return results;
-  }, [participants, billValue, splitType, equalShare, isPaymentMismatch, allNamesEntered]);
+  }, [customParticipants, billValue, splitType, customShare, isCustomMismatch, customNamesEntered]);
 
-  const finalSettlements = splitType === 'equal' ? equalSettlements : customSettlements;
+  // Helper functions for Equal Mode
+  const addEqualPerson = () => {
+    setEqualParticipants([...equalParticipants, { id: Date.now().toString(), name: '', paid: 0 }]);
+  };
+  const removeEqualPerson = (id: string) => {
+    if (equalParticipants.length <= 2) return;
+    setEqualParticipants(equalParticipants.filter(p => p.id !== id));
+    if (equalPayerId === id) setEqualPayerId(equalParticipants[0].id);
+  };
+  const updateEqualName = (id: string, name: string) => {
+    setEqualParticipants(prev => prev.map(p => p.id === id ? { ...p, name } : p));
+  };
+
+  // Helper functions for Custom Mode
+  const addCustomPerson = () => {
+    setCustomParticipants([...customParticipants, { id: Date.now().toString(), name: '', paid: 0 }]);
+  };
+  const removeCustomPerson = (id: string) => {
+    if (customParticipants.length <= 2) return;
+    setCustomParticipants(customParticipants.filter(p => p.id !== id));
+  };
+  const updateCustomParticipant = (id: string, field: keyof Participant, value: string | number) => {
+    setCustomParticipants(prev => prev.map(p => {
+      if (p.id === id) {
+        return { ...p, [field]: typeof value === 'string' ? (field === 'name' ? value : (parseFloat(value) || 0)) : value };
+      }
+      return p;
+    }));
+  };
 
   const handleSaveMyShare = () => {
     if (!firestore || !user?.uid) return;
-    if (equalShare <= 0 || isPaymentMismatch || !allNamesEntered) {
-      toast({ variant: "destructive", title: "Error", description: !allNamesEntered ? t.enterNames : "Please check the bill details" });
+    const shareToSave = splitType === 'equal' ? equalShare : customShare;
+    const namesReady = splitType === 'equal' ? equalNamesEntered : customNamesEntered;
+    const mismatch = splitType === 'custom' && isCustomMismatch;
+
+    if (shareToSave <= 0 || mismatch || !namesReady) {
+      toast({ variant: "destructive", title: "Error", description: !namesReady ? t.enterNames : "Check bill details" });
       return;
     }
 
     saveExpense(firestore, user.uid, {
-      amount: equalShare,
+      amount: shareToSave,
       category: 'Food',
       description: `Split Bill: ${totalBill}`,
       transactionDate: new Date().toISOString().split('T')[0],
@@ -179,66 +199,91 @@ export function BillSplitTool() {
             <div className="space-y-4">
               <Label className="text-xs font-bold uppercase text-muted-foreground">Names</Label>
               <div className="grid gap-3">
-                {participants.map((p) => (
+                {equalParticipants.map((p) => (
                   <div key={p.id} className="flex items-center gap-2">
                     <Input 
                       value={p.name} 
-                      onChange={(e) => updateParticipant(p.id, 'name', e.target.value)}
+                      onChange={(e) => updateEqualName(p.id, e.target.value)}
                       placeholder="Enter Name"
                       className="h-12 bg-muted/50 border-none rounded-xl font-bold px-4 flex-1"
                     />
                     <Button 
                       variant="ghost" 
                       size="icon" 
-                      onClick={() => removePerson(p.id)}
+                      onClick={() => removeEqualPerson(p.id)}
                       className="h-10 w-10 text-muted-foreground"
-                      disabled={participants.length <= 2}
+                      disabled={equalParticipants.length <= 2}
                     >
                       <Trash2 className="w-4 h-4" />
                     </Button>
                   </div>
                 ))}
               </div>
+              <Button variant="outline" onClick={addEqualPerson} className="w-full h-12 rounded-2xl border-dashed border-2 gap-2">
+                <UserPlus className="w-4 h-4" /> {t.addPerson}
+              </Button>
             </div>
 
-            {allNamesEntered && (
-              <div className="space-y-2 pt-2 animate-in fade-in slide-in-from-top-2">
-                <Label className="text-xs font-bold uppercase text-muted-foreground">{t.whoPaid}</Label>
-                <Select value={payerId} onValueChange={setPayerId}>
-                  <SelectTrigger className="h-12 bg-muted border-none rounded-xl font-bold">
-                    <SelectValue placeholder="Select Payer" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {participants.map(p => (
-                      <SelectItem key={p.id} value={p.id}>{p.name || `Person ${p.id}`}</SelectItem>
+            {equalNamesEntered && billValue > 0 && (
+              <div className="space-y-4 animate-in fade-in slide-in-from-top-2">
+                <div className="space-y-2">
+                  <Label className="text-xs font-bold uppercase text-muted-foreground">{t.whoPaid}</Label>
+                  <Select value={equalPayerId} onValueChange={setEqualPayerId}>
+                    <SelectTrigger className="h-12 bg-muted border-none rounded-xl font-bold">
+                      <SelectValue placeholder="Select Payer" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {equalParticipants.map(p => (
+                        <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="pt-4 border-t border-dashed">
+                  <h4 className="text-xs font-black uppercase text-muted-foreground flex items-center gap-2 tracking-widest mb-3">
+                    <ArrowRightLeft className="w-4 h-4 text-primary" />
+                    {t.settlement}
+                  </h4>
+                  <div className="bg-primary/5 rounded-3xl p-5 space-y-3">
+                    {equalSettlements.map((s, idx) => (
+                      <div key={`equal-s-${idx}`} className="flex items-center gap-2 p-4 bg-card rounded-2xl shadow-sm border border-primary/5">
+                        <p className="text-sm font-medium">
+                          <span className="font-bold text-primary">{s.from}</span>
+                          <span className="mx-1.5 text-muted-foreground font-bold">{t.owes}</span>
+                          <span className="font-headline font-black text-primary mx-1">₹{s.amount.toLocaleString()}</span>
+                          <span className="mx-1.5 text-muted-foreground font-bold">{t.to}</span>
+                          <span className="font-bold text-primary bg-primary/10 px-2 py-0.5 rounded">{s.to}</span>
+                        </p>
+                      </div>
                     ))}
-                  </SelectContent>
-                </Select>
+                  </div>
+                </div>
               </div>
             )}
           </TabsContent>
 
           <TabsContent value="custom" className="space-y-4 m-0">
             <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest mb-2 italic">
-              Each Person's Share: ₹{equalShare.toLocaleString()}
+              Each Person's Share: ₹{customShare.toLocaleString()}
             </p>
             
             <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
-              {participants.map((p) => (
+              {customParticipants.map((p) => (
                 <div key={p.id} className="flex flex-col gap-2 bg-muted/30 p-4 rounded-2xl border border-primary/5">
                   <div className="flex items-center gap-3">
                     <Input 
                       value={p.name} 
-                      onChange={(e) => updateParticipant(p.id, 'name', e.target.value)}
+                      onChange={(e) => updateCustomParticipant(p.id, 'name', e.target.value)}
                       placeholder="Enter Name"
                       className="h-10 bg-card border-none rounded-xl font-bold px-4 flex-1"
                     />
                     <Button 
                       variant="ghost" 
                       size="icon" 
-                      onClick={() => removePerson(p.id)}
+                      onClick={() => removeCustomPerson(p.id)}
                       className="text-muted-foreground h-10 w-10 shrink-0"
-                      disabled={participants.length <= 2}
+                      disabled={customParticipants.length <= 2}
                     >
                       <Trash2 className="w-4 h-4" />
                     </Button>
@@ -248,7 +293,7 @@ export function BillSplitTool() {
                     <Input 
                       type="number"
                       value={p.paid || ""}
-                      onChange={(e) => updateParticipant(p.id, 'paid', e.target.value)}
+                      onChange={(e) => updateCustomParticipant(p.id, 'paid', e.target.value)}
                       placeholder="Amount paid"
                       className="h-10 rounded-xl bg-card border-none font-bold text-sm text-green-600"
                     />
@@ -257,27 +302,50 @@ export function BillSplitTool() {
               ))}
             </div>
 
-            {isPaymentMismatch && (
+            <Button variant="outline" onClick={addCustomPerson} className="w-full h-12 rounded-2xl border-dashed border-2 gap-2">
+              <UserPlus className="w-4 h-4" /> {t.addPerson}
+            </Button>
+
+            {isCustomMismatch && (
               <Alert variant="destructive" className="rounded-2xl border-2">
                 <AlertCircle className="h-4 w-4" />
                 <AlertDescription className="text-xs font-bold">
-                  Mismatch: Total Paid (₹{totalPaidAtVenue.toLocaleString()}) does not match Bill (₹{billValue.toLocaleString()})
+                  Mismatch: Total Paid (₹{customTotalPaid.toLocaleString()}) does not match Bill (₹{billValue.toLocaleString()})
                 </AlertDescription>
               </Alert>
+            )}
+
+            {customNamesEntered && billValue > 0 && !isCustomMismatch && (
+              <div className="space-y-4 pt-4 border-t border-dashed">
+                <h4 className="text-xs font-black uppercase text-muted-foreground flex items-center gap-2 tracking-widest">
+                  <ArrowRightLeft className="w-4 h-4 text-primary" />
+                  {t.settlement}
+                </h4>
+                <div className="bg-primary/5 rounded-3xl p-5 space-y-3">
+                  {customSettlements.length > 0 ? (
+                    customSettlements.map((s, idx) => (
+                      <div key={`custom-s-${idx}`} className="flex items-center gap-2 p-4 bg-card rounded-2xl shadow-sm border border-primary/5">
+                        <p className="text-sm font-medium">
+                          <span className="font-bold text-primary">{s.from}</span>
+                          <span className="mx-1.5 text-muted-foreground font-bold">{t.owes}</span>
+                          <span className="font-headline font-black text-primary mx-1">₹{s.amount.toLocaleString()}</span>
+                          <span className="mx-1.5 text-muted-foreground font-bold">{t.to}</span>
+                          <span className="font-bold text-primary bg-primary/10 px-2 py-0.5 rounded">{s.to}</span>
+                        </p>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-center py-4">
+                      <p className="text-muted-foreground text-sm font-medium">{t.noPayment}</p>
+                    </div>
+                  )}
+                </div>
+              </div>
             )}
           </TabsContent>
         </Tabs>
 
-        <Button 
-          variant="outline" 
-          onClick={addPerson} 
-          className="w-full h-12 rounded-2xl border-dashed border-2 gap-2 hover:bg-primary/5 transition-all"
-        >
-          <UserPlus className="w-4 h-4" />
-          {t.addPerson}
-        </Button>
-
-        {!allNamesEntered && billValue > 0 && (
+        {((splitType === 'equal' && !equalNamesEntered) || (splitType === 'custom' && !customNamesEntered)) && billValue > 0 && (
           <Alert className="rounded-2xl bg-amber-500/10 border-amber-500/20 text-amber-600">
             <AlertCircle className="h-4 w-4" />
             <AlertDescription className="text-xs font-bold">
@@ -286,45 +354,16 @@ export function BillSplitTool() {
           </Alert>
         )}
 
-        {billValue > 0 && !isPaymentMismatch && allNamesEntered && (
-          <div className="space-y-4 pt-4 border-t border-dashed animate-in slide-in-from-bottom-4 duration-500">
-            <h4 className="text-xs font-black uppercase text-muted-foreground flex items-center gap-2 tracking-widest">
-              <ArrowRightLeft className="w-4 h-4 text-primary" />
-              {t.settlement}
-            </h4>
-            <div className="bg-primary/5 rounded-3xl p-5 space-y-3 border border-primary/10 shadow-inner">
-              {finalSettlements.length > 0 ? (
-                finalSettlements.map((s, idx) => (
-                  <div key={`settle-${idx}`} className="flex items-center gap-2 p-4 bg-card rounded-2xl shadow-sm border border-primary/5 animate-in slide-in-from-bottom-2 duration-300">
-                    <div className="w-2 h-2 rounded-full bg-primary/40 shrink-0" />
-                    <p className="text-sm font-medium leading-relaxed">
-                      <span className="font-bold text-primary">{s.from}</span>
-                      <span className="mx-1.5 text-muted-foreground font-bold">{t.owes}</span>
-                      <span className="font-headline font-black text-primary mx-1">₹{s.amount.toLocaleString()}</span>
-                      <span className="mx-1.5 text-muted-foreground font-bold">{t.to}</span>
-                      <span className="font-bold text-primary bg-primary/10 px-2 py-0.5 rounded">{s.to}</span>
-                    </p>
-                  </div>
-                ))
-              ) : (
-                <div className="text-center py-4">
-                  <p className="text-muted-foreground text-sm font-medium">{t.noPayment}</p>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
         <div className="pt-6">
-          <div className="flex items-center justify-between p-6 bg-primary rounded-[2rem] text-primary-foreground shadow-2xl shadow-primary/30 relative overflow-hidden">
+          <div className="flex items-center justify-between p-6 bg-primary rounded-[2rem] text-primary-foreground shadow-2xl relative overflow-hidden">
             <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-16 -mt-16" />
             <div className="flex flex-col relative z-10">
               <span className="text-[10px] font-black uppercase tracking-widest opacity-80">{t.yourShare}</span>
-              <span className="text-3xl font-headline font-black">₹{equalShare.toLocaleString()}</span>
+              <span className="text-3xl font-headline font-black">₹{(splitType === 'equal' ? equalShare : customShare).toLocaleString()}</span>
             </div>
             <Button 
               onClick={handleSaveMyShare} 
-              disabled={billValue <= 0 || isPaymentMismatch || !allNamesEntered}
+              disabled={billValue <= 0 || (splitType === 'custom' && isCustomMismatch) || (splitType === 'equal' ? !equalNamesEntered : !customNamesEntered)}
               className="rounded-2xl h-14 px-8 bg-white text-primary hover:bg-white/90 font-black gap-2 shadow-xl relative z-10"
             >
               <CheckCircle2 className="w-5 h-5" />
