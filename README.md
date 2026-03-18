@@ -1,28 +1,41 @@
+
 # SmartKharcha AI - Expense Tracker
 
 This is a fully functional, AI-powered expense tracker built with Next.js, Firebase, and Genkit.
 
-## How to Enable Real Google Sign-In
+## 🚀 Key Features
 
-Currently, the app is in **Demo Mode** to allow immediate preview. To enable real Google Authentication, follow these steps:
+- **Smart Dashboard**: Real-time spending visualization with Recharts.
+- **AI Text Entry**: Type natural sentences and Gemini will extract details.
+- **Voice Commands**: Integrated speech recognition with AI parsing.
+- **Bill Scanning**: Vision-powered receipt extraction using Gemini 1.5 Flash.
+- **Bilingual**: Full support for English and Hindi.
 
-1. **Enable Google Provider**:
-   - Go to the [Firebase Console](https://console.firebase.google.com/).
-   - Select your project.
-   - Go to **Build > Authentication > Sign-in method**.
-   - Click **Add new provider** and select **Google**. Enable it and save.
+## 🛠️ Next Steps for Development
 
-2. **Authorize the Workstation Domain**:
-   - In the same **Authentication** section, click on the **Settings** tab.
-   - Click on **Authorized domains**.
-   - Add the domain of your current preview (e.g., `*.cloudworkstations.dev`).
+### 1. Enable Real Google Sign-In
+Currently, the app is in **Demo Mode** for preview. To enable real security:
+1. Go to [Firebase Console](https://console.firebase.google.com/).
+2. Enable **Google Auth Provider**.
+3. Add your current preview domain (e.g., `*.cloudworkstations.dev`) to **Authorized Domains** in Auth Settings.
+4. Remove the `"demo-user-id"` fallback in `src/app/page.tsx`.
 
-3. **Re-enable Login Check**:
-   - In `src/app/page.tsx`, you can remove the `demo-user-id` fallback logic to force users to sign in.
+### 2. Testing the AI
+To test the bill scan:
+1. Click the `+` button in the preview.
+2. Go to the **Camera** tab.
+3. Upload a sample receipt image (JPEG/PNG).
+4. Watch Gemini extract the merchant name, amount, and category.
 
-## Features
+### 3. Deployment
+This app is ready for **Firebase App Hosting**. 
+- Push your code to a GitHub repository.
+- Connect the repository to Firebase App Hosting in the console.
+- It will automatically build and deploy your Next.js 15 app.
 
-- **AI Text Entry**: Type "Lunch for 500" and let Gemini categorize it.
-- **Voice Commands**: Tap the mic and speak your expense.
-- **Bill Scanning**: Take a photo of a receipt to extract the merchant and amount automatically.
-- **Monthly Budgeting**: Set a goal and track your progress in real-time.
+## 📦 Tech Stack
+- **Framework**: Next.js 15 (App Router)
+- **Database**: Firebase Firestore
+- **Auth**: Firebase Authentication
+- **AI**: Genkit with Google Gemini 1.5 Flash
+- **UI**: ShadCN UI + Tailwind CSS
