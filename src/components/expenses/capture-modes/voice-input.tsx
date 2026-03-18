@@ -1,0 +1,83 @@
+"use client";
+
+import { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { Mic, MicOff, Loader2 } from 'lucide-react';
+import { useLanguage } from '@/lib/contexts/language-context';
+import { extractVoiceExpense } from '@/ai/flows/extract-voice-expense';
+
+export function VoiceInput({ onExtracted }: { onExtracted: (data: any) => void }) {
+  const { t } = useLanguage();
+  const [isListening, setIsListening] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [recognition, setRecognition] = useState<any>(null);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
+      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      const rec = new SpeechRecognition();
+      rec.continuous = false;
+      rec.interimResults = false;
+      rec.lang = 'en-IN'; // Better support for Indian accents
+
+      rec.onresult = async (event: any) => {
+        const transcript = event.results[0][0].transcript;
+        setIsListening(false);
+        setIsProcessing(true);
+        try {
+          const result = await extractVoiceExpense({ transcribedText: transcript });
+          onExtracted(result);
+        } catch (error) {
+          console.error("Voice extraction error", error);
+        } finally {
+          setIsProcessing(false);
+        }
+      };
+
+      rec.onerror = () => {
+        setIsListening(false);
+      };
+
+      setRecognition(rec);
+    }
+  }, [onExtracted]);
+
+  const toggleListening = () => {
+    if (!recognition) return;
+    if (isListening) {
+      recognition.stop();
+      setIsListening(false);
+    } else {
+      recognition.start();
+      setIsListening(true);
+    }
+  };
+
+  return (
+    <div className="flex flex-col items-center justify-center py-8 gap-6">
+      <div className="relative">
+        {isListening && (
+          <div className="absolute inset-0 bg-primary/20 rounded-full animate-ping" />
+        )}
+        <Button
+          size="icon"
+          variant={isListening ? "destructive" : "primary"}
+          className="w-20 h-20 rounded-full shadow-2xl relative z-10 transition-all active:scale-95"
+          onClick={toggleListening}
+          disabled={isProcessing}
+        >
+          {isProcessing ? (
+            <Loader2 className="w-8 h-8 animate-spin" />
+          ) : isListening ? (
+            <MicOff className="w-8 h-8" />
+          ) : (
+            <Mic className="w-8 h-8" />
+          )}
+        </Button>
+      </div>
+      <p className="text-sm text-center text-muted-foreground px-8">
+        {isProcessing ? t.actions.extracting : isListening ? "Listening..." : t.captions.voice}
+      </p>
+    </div>
+  );
+}
