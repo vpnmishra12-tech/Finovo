@@ -17,6 +17,14 @@ export const translations = {
     welcome: "Welcome back",
     noExpenses: "No expenses recorded yet.",
     confirmDelete: "Are you sure you want to delete this expense?",
+    overspentLastMonth: "Last Month Debt",
+    limitReached: "Limit Reached",
+    limitDesc: "You can only change your budget twice a month.",
+    alerts: {
+      halfway: "Warning: You have spent 50% of your budget!",
+      critical: "Urgent: 75% budget used. Watch your spending!",
+      exhausted: "Alert: 100% budget reached. You are overspending!"
+    },
     categories: {
       Food: "Food",
       Transport: "Transport",
@@ -60,6 +68,14 @@ export const translations = {
     welcome: "वापसी पर स्वागत है",
     noExpenses: "अभी तक कोई खर्च दर्ज नहीं किया गया है।",
     confirmDelete: "क्या आप वाकई इस खर्च को हटाना चाहते हैं?",
+    overspentLastMonth: "पिछले महीने का कर्ज",
+    limitReached: "सीमा पूरी हुई",
+    limitDesc: "आप महीने में केवल दो बार ही बजट बदल सकते हैं।",
+    alerts: {
+      halfway: "चेतावनी: आपने अपने बजट का 50% खर्च कर दिया है!",
+      critical: "ज़रूरी: 75% बजट खत्म। अब थोड़ा संभल कर चलें!",
+      exhausted: "अलर्ट: 100% बजट पूरा। आप ज़रूरत से ज़्यादा खर्च कर रहे हैं!"
+    },
     categories: {
       Food: "भोजन",
       Transport: "परिवहन",

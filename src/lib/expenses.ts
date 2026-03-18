@@ -1,5 +1,5 @@
-import { Firestore, collection, doc, serverTimestamp, Timestamp } from 'firebase/firestore';
-import { addDocumentNonBlocking, setDocumentNonBlocking, deleteDocumentNonBlocking } from '@/firebase';
+import { Firestore, collection, doc, serverTimestamp, Timestamp, getDoc, setDoc, query, where, getDocs } from 'firebase/firestore';
+import { addDocumentNonBlocking, deleteDocumentNonBlocking } from '@/firebase';
 
 export interface Expense {
   id: string;
@@ -18,6 +18,8 @@ export interface MonthlyBudget {
   budgetAmount: number;
   month: number;
   year: number;
+  updateCount: number;
+  updatedAt: Timestamp;
 }
 
 /**
@@ -43,21 +45,52 @@ export function deleteExpense(db: Firestore, userId: string, expenseId: string) 
 
 /**
  * Updates or sets the monthly budget for the current month.
+ * Limit: Only 2 updates per month.
  */
-export function updateMonthlyBudget(db: Firestore, userId: string, amount: number) {
+export async function updateMonthlyBudget(db: Firestore, userId: string, amount: number): Promise<{ success: boolean; message?: string }> {
   const now = new Date();
   const month = now.getMonth() + 1;
   const year = now.getFullYear();
   const budgetId = `${year}-${month}`;
   const docRef = doc(db, 'users', userId, 'monthlyBudgets', budgetId);
 
+  const budgetSnap = await getDoc(docRef);
+  const currentData = budgetSnap.exists() ? budgetSnap.data() as MonthlyBudget : null;
+
+  if (currentData && currentData.updateCount >= 2) {
+    return { success: false, message: "Budget change limit reached (Max 2 per month)" };
+  }
+
   const budgetData = {
     userId,
     budgetAmount: amount,
     month,
     year,
+    updateCount: (currentData?.updateCount || 0) + 1,
     updatedAt: serverTimestamp(),
   };
 
-  setDocumentNonBlocking(docRef, budgetData, { merge: true });
+  await setDoc(docRef, budgetData, { merge: true });
+  return { success: true };
+}
+
+/**
+ * Fetches total spent for a specific month/year.
+ */
+export async function getMonthlySpending(db: Firestore, userId: string, month: number, year: number): Promise<number> {
+  const start = new Date(year, month - 1, 1).toISOString().split('T')[0];
+  const end = new Date(year, month, 0).toISOString().split('T')[0];
+  
+  const q = query(
+    collection(db, 'users', userId, 'expenses'),
+    where('transactionDate', '>=', start),
+    where('transactionDate', '<=', end)
+  );
+  
+  const snap = await getDocs(q);
+  let total = 0;
+  snap.forEach(doc => {
+    total += (doc.data() as Expense).amount;
+  });
+  return total;
 }
