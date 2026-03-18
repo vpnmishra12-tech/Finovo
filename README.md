@@ -4,18 +4,20 @@
 Your app is ready! Follow these steps to fix the login issues and share your app.
 
 ## 🛠 CRITICAL: Fix "Login Issue" (One-time Setup)
-If you see a login error, it is because Firebase blocks requests from unknown domains or popups are restricted.
+If you see a login error or the page simply reloads without logging you in, it is because Firebase blocks requests from unknown domains.
 
 ### 1. Authorize Your Domain
-1. Copy the URL of your app (e.g., `https://9002-firebase-studio...cloudworkstations.dev`).
+1. Copy the URL of your app from the browser address bar (e.g., `https://9002-firebase-studio...cloudworkstations.dev`).
 2. Go to the [Firebase Console](https://console.firebase.google.com/).
 3. Select your project: **studio-4253837572-72734**.
 4. Go to **Build > Authentication > Settings > Authorized Domains**.
-5. Click **"Add Domain"** and paste your URL (remove everything after `.dev`).
+5. Click **"Add Domain"** and paste your URL (remove everything after `.dev`, just the domain like `9002-firebase...cloudworkstations.dev`).
 6. Also, go to the **Sign-in method** tab and ensure **Google** is enabled.
 
 ### 2. Allow Popups
-Ensure your browser is not blocking popups for this site. If you see an icon in the address bar indicating a blocked popup, click it and select **"Always allow popups from..."**.
+**Important**: Cloud Workstations and many browsers block popups by default. 
+- Look for a "blocked popup" icon in your browser's address bar (usually on the right side).
+- Click it and select **"Always allow popups from..."**.
 
 ## 🔗 How to get your Public Link
 The current link is a **Private Preview Link**. To get a link for everyone else:
