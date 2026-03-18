@@ -29,21 +29,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         description: "Welcome to SmartKharcha AI!",
       });
     } catch (error: any) {
+      // Log the error for developer reference
       console.error("Login failed:", error.code, error.message);
       
       let errorMessage = "An unexpected error occurred during login.";
+      let errorTitle = "Login Error";
       
-      // Specific handling for common Firebase Studio / Workstation errors
+      // Specific handling for common environment issues
       if (error.code === 'auth/unauthorized-domain') {
         errorMessage = "Domain not authorized! Please go to Firebase Console > Auth > Settings > Authorized Domains and add your current URL.";
       } else if (error.code === 'auth/popup-closed-by-user') {
-        errorMessage = "The login popup was closed before completion.";
+        errorTitle = "Login Cancelled";
+        errorMessage = "The login window was closed. Please try again and ensure popups are allowed in your browser settings.";
       } else if (error.code === 'auth/operation-not-allowed') {
         errorMessage = "Google Sign-In is not enabled in your Firebase Console.";
+      } else if (error.code === 'auth/popup-blocked') {
+        errorTitle = "Popup Blocked";
+        errorMessage = "Your browser blocked the login popup. Please allow popups for this site and try again.";
       }
 
       toast({
-        title: "Login Error",
+        title: errorTitle,
         description: errorMessage,
         variant: "destructive",
       });
