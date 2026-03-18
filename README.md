@@ -21,10 +21,12 @@ Firebase blocks requests from unknown domains for security. You must authorize y
 2. Paste your URL (e.g., `9002-firebase-studio-123.cluster-xyz.cloudworkstations.dev`).
 3. **IMPORTANT**: Remove `https://` and anything after `.dev`. It should look exactly like the example above.
 
-### 3. Allow Popups
-**Important**: Cloud Workstations block popups by default. 
-- Look for a "blocked popup" icon in your browser's address bar (usually on the far right).
-- Click it and select **"Always allow popups from..."**.
+### 3. Allow Popups (Important!)
+Even if you allowed popups in browser settings, browsers often block them for new sites.
+- When you click Login, look at the **right side of your address bar** (where you type URLs).
+- Look for a small icon with a red 'X' or a "Popup Blocked" icon.
+- Click it and select **"Always allow popups from..."** then click Done.
+- **Refresh the page** and try Login again.
 
 ## 🔗 How to get your Public Link
 To get a link for everyone else (Production):

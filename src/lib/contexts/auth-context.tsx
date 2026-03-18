@@ -23,12 +23,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = async () => {
     try {
+      // We trigger the popup immediately to ensure it's seen as a direct user action
+      const loginPromise = signInWithPopup(auth, googleProvider);
+      
       toast({
-        title: "Starting Login...",
-        description: "Checking popup and domain authorization. Please allow popups.",
+        title: "Login Started",
+        description: "Please complete the sign-in in the new window.",
       });
 
-      await signInWithPopup(auth, googleProvider);
+      await loginPromise;
       
       toast({
         title: "Login Successful",
@@ -44,13 +47,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         errorMessage = "Go to Firebase Console > Auth > Settings > Authorized Domains and add this domain. See README.md for details.";
       } else if (error.code === 'auth/popup-closed-by-user') {
         errorTitle = "Window Closed";
-        errorMessage = "The login popup was closed. Please ensure popups are ALLOWED in your browser settings and try again.";
+        errorMessage = "The login window was closed. Please ensure you finish the sign-in process in the popup.";
       } else if (error.code === 'auth/popup-blocked') {
         errorTitle = "Popup Blocked";
-        errorMessage = "Browser blocked the window. Click the 'Blocked Popup' icon in your address bar and select 'Always allow'.";
+        errorMessage = "Browser blocked the login window. Look for the 'Blocked Popup' icon in your address bar (top right) and select 'Always allow'.";
+      } else if (error.code === 'auth/cancelled-popup-request') {
+        return; // Ignore multiple clicks
       }
 
-      // We use toast instead of console.error to avoid the Next.js error overlay in dev
       toast({
         title: errorTitle,
         description: errorMessage,
