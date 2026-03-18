@@ -9,7 +9,7 @@ import { BudgetSummary } from '@/components/dashboard/budget-summary';
 import { SpendingChart } from '@/components/dashboard/spending-chart';
 import { ExpenseList } from '@/components/expenses/expense-list';
 import { AddExpenseDrawer } from '@/components/expenses/add-expense-drawer';
-import { Loader2, Sparkles, Wallet, ShieldCheck, Phone, CheckCircle2, Info } from 'lucide-react';
+import { Loader2, Sparkles, Wallet, ShieldCheck, Phone, CheckCircle2, Info, UserCircle } from 'lucide-react';
 import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import { collection, query, orderBy, limit } from 'firebase/firestore';
 import { Expense } from '@/lib/expenses';
@@ -19,13 +19,14 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
 export default function Home() {
-  const { user, loading, sendOtp, verifyOtp, isOtpSent } = useAuth();
+  const { user, loading, sendOtp, verifyOtp, loginAsGuest, isOtpSent } = useAuth();
   const { t } = useLanguage();
   const firestore = useFirestore();
   
   const [phoneNumber, setPhoneNumber] = useState("+91");
   const [otp, setOtp] = useState("");
   const [isVerifying, setIsVerifying] = useState(false);
+  const [isGuestLoading, setIsGuestLoading] = useState(false);
 
   // Memoized query for expenses
   const expensesQuery = useMemoFirebase(() => {
@@ -40,7 +41,6 @@ export default function Home() {
   const { data: expenses, isLoading: isExpensesLoading } = useCollection<Expense>(expensesQuery);
 
   const handleSendOtp = async () => {
-    // Basic validation
     if (phoneNumber.length < 13) return;
     await sendOtp(phoneNumber);
   };
@@ -50,6 +50,12 @@ export default function Home() {
     setIsVerifying(true);
     await verifyOtp(otp);
     setIsVerifying(false);
+  };
+
+  const handleGuestLogin = async () => {
+    setIsGuestLoading(true);
+    await loginAsGuest();
+    setIsGuestLoading(false);
   };
 
   if (loading) {
@@ -63,7 +69,6 @@ export default function Home() {
     );
   }
 
-  // Landing Page for Unauthenticated Users
   if (!user) {
     return (
       <div className="min-h-screen bg-background flex flex-col">
@@ -77,7 +82,7 @@ export default function Home() {
               Control your money with <span className="text-primary">AI</span>
             </h1>
             <p className="text-lg text-muted-foreground leading-relaxed">
-              Track expenses using voice, text, or bill scans. Log in with your phone to sync across devices.
+              Track expenses using voice, text, or bill scans. Log in to sync or try Guest Mode.
             </p>
           </div>
 
@@ -98,7 +103,7 @@ export default function Home() {
                       />
                     </div>
                     <p className="text-[10px] text-muted-foreground font-medium flex items-center gap-1">
-                      <Info className="w-3 h-3" /> Important: Always include +91 prefix
+                      <Info className="w-3 h-3" /> Note: Blaze Plan required for SMS
                     </p>
                   </div>
                   <Button 
@@ -107,6 +112,20 @@ export default function Home() {
                     disabled={phoneNumber.length < 13}
                   >
                     Send OTP <CheckCircle2 className="w-5 h-5" />
+                  </Button>
+                  
+                  <div className="relative py-2">
+                    <div className="absolute inset-0 flex items-center"><span className="w-full border-t" /></div>
+                    <div className="relative flex justify-center text-xs uppercase"><span className="bg-card px-2 text-muted-foreground">Or</span></div>
+                  </div>
+
+                  <Button 
+                    variant="outline"
+                    onClick={handleGuestLogin}
+                    className="w-full h-14 rounded-2xl text-lg font-bold gap-2 border-2 border-primary/20 hover:bg-primary/5"
+                    disabled={isGuestLoading}
+                  >
+                    {isGuestLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <><UserCircle className="w-5 h-5" /> Try Guest Mode</>}
                   </Button>
                 </div>
               ) : (
@@ -151,7 +170,6 @@ export default function Home() {
     );
   }
 
-  // Dashboard for Authenticated Users
   return (
     <div className="min-h-screen bg-background pb-32">
       <Header />

@@ -7,7 +7,8 @@ import {
   User,
   RecaptchaVerifier,
   signInWithPhoneNumber,
-  ConfirmationResult
+  ConfirmationResult,
+  signInAnonymously
 } from 'firebase/auth';
 import { useAuth as useFirebaseServiceAuth, useUser } from '@/firebase';
 import { useToast } from '@/hooks/use-toast';
@@ -17,6 +18,7 @@ interface AuthContextType {
   loading: boolean;
   sendOtp: (phoneNumber: string) => Promise<void>;
   verifyOtp: (otp: string) => Promise<void>;
+  loginAsGuest: () => Promise<void>;
   logout: () => Promise<void>;
   isOtpSent: boolean;
 }
@@ -87,13 +89,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       let errorMessage = "Something went wrong. Please check your network.";
       
       if (error.code === 'auth/operation-not-allowed') {
-        errorMessage = "IMPORTANT: Phone Auth is NOT ACTIVE. In Firebase Console, click the 'Save' or 'Done' button inside the Phone provider card to activate it.";
+        errorMessage = "IMPORTANT: Phone Auth is NOT ACTIVE in Firebase Console. Please enable it and SAVE.";
+      } else if (error.code === 'auth/billing-not-enabled') {
+        errorMessage = "BILLING REQUIRED: Phone Auth needs a 'Blaze Plan'. Please use 'Guest Mode' for now.";
       } else if (error.code === 'auth/invalid-phone-number') {
         errorMessage = "Invalid phone number. Use +91 followed by 10 digits.";
       } else if (error.code === 'auth/too-many-requests') {
         errorMessage = "Too many attempts. Wait 10 minutes and try again.";
-      } else if (error.code === 'auth/network-request-failed') {
-        errorMessage = "Network error. Check your internet connection.";
       }
 
       toast({
@@ -128,6 +130,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const loginAsGuest = async () => {
+    if (!auth) return;
+    try {
+      toast({ title: "Entering Guest Mode...", description: "Setting up your workspace" });
+      await signInAnonymously(auth);
+      toast({
+        title: "Welcome Guest!",
+        description: "You can now track your expenses.",
+      });
+    } catch (error: any) {
+      console.error("Guest Login Error:", error);
+      toast({
+        variant: "destructive",
+        title: "Guest Mode Failed",
+        description: "Please check your internet connection.",
+      });
+    }
+  };
+
   const logout = async () => {
     try {
       await signOut(auth);
@@ -145,7 +166,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading: isUserLoading, sendOtp, verifyOtp, logout, isOtpSent }}>
+    <AuthContext.Provider value={{ user, loading: isUserLoading, sendOtp, verifyOtp, loginAsGuest, logout, isOtpSent }}>
       {children}
       <div id="recaptcha-container"></div>
     </AuthContext.Provider>

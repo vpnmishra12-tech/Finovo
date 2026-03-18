@@ -1,25 +1,22 @@
 
-# SmartKharcha AI - Phone Login Instructions 📱
+# SmartKharcha AI - Login Fixes 📱
 
-Humne login ko **Phone Number (OTP)** par shift kar diya hai. Agar aapko `auth/operation-not-allowed` error aa raha hai, toh iska matlab hai ki configuration incomplete hai.
+Agar aapko login mein problem aa rahi hai, toh neeche diye gaye solution ko follow karein:
 
-## 🛠 Step 1: Firebase Console mein Activation (Zaroori)
+## 🚀 Solution 1: Guest Mode (Fastest)
+Aap landing page par **"Try Guest Mode"** button ka use karke bina OTP ke app mein enter kar sakte hain. Ye sabse asaan tareeka hai app ko check karne ka.
 
-1. [Firebase Console](https://console.firebase.google.com/project/studio-4253837572-72734/authentication/providers) par "Phone" provider ko edit karein.
-2. Toggle ko **ON** karein.
-3. **IMP:** Screen par sabse niche ek blue color ka **"Save"** ya **"Done"** button hoga. Agar nahi dikh raha, toh browser ko full-screen karein ya card ko niche scroll karein. Us button ko click karna **zaroori** hai.
-4. Bina Save kiye Phone Auth kaam nahi karega.
+## 🛠 Solution 2: Fix Phone Auth (Billing Issue)
+Agar aapko `auth/billing-not-enabled` error aa raha hai, toh iska matlab hai ki aapke Firebase Project par **"Blaze Plan"** enabled nahi hai. SMS bhejne ke liye Firebase billing mangta hai.
 
-## 📱 Step 2: App mein Login Kaise Karein
+**Steps to Fix:**
+1. [Firebase Console](https://console.firebase.google.com/project/_/usage/details) par jayein.
+2. "Modify Plan" par click karke use **Blaze** par switch karein.
+3. Iske baad OTP SMS aana shuru ho jayega.
 
-1. App ke landing page par apna number daalein.
-2. **Format:** Hamesha `+91` laga hona chahiye (Jaise: `+91 9876543210`). Bina prefix ke OTP nahi jayega.
-3. **"Send OTP"** par click karein.
-4. Aapke phone par ek 6-digit ka SMS aayega.
-5. Code daalein aur **"Verify & Login"** click karein.
+## ⚠️ OTP Nahi Aa Raha?
+1. Hamesha `+91` laga kar apna 10-digit number daalein.
+2. Check karein ki Firebase Console mein "Phone" provider **Enabled** hai aur niche **Save** button click kiya gaya hai.
 
-## ⚠️ Troubleshooting
-
-- **Error: Operation Not Allowed?** Iska matlab Step 1 (Save button) miss ho gaya hai. Dobara check karein.
-- **Recaptcha?** Mobile par OTP bhejne se pehle browser ek chhota sa "I am not a robot" check kar sakta hai, use tick karein.
-- **OTP nahi aa raha?** Phone number bilkul sahi country code (+91) ke saath daalein.
+---
+*SmartKharcha AI - Track your expenses with the power of AI.*
