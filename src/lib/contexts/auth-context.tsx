@@ -1,7 +1,14 @@
+
 "use client";
 
-import React, { createContext, useContext, useState } from 'react';
-import { GoogleAuthProvider, signInWithPopup, signOut, User } from 'firebase/auth';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { 
+  GoogleAuthProvider, 
+  signInWithRedirect, 
+  getRedirectResult,
+  signOut, 
+  User 
+} from 'firebase/auth';
 import { useAuth as useFirebaseServiceAuth, useUser } from '@/firebase';
 import { useToast } from '@/hooks/use-toast';
 
@@ -24,45 +31,39 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return provider;
   });
 
+  // Handle the redirect result when the component mounts
+  useEffect(() => {
+    getRedirectResult(auth)
+      .then((result) => {
+        if (result) {
+          toast({
+            title: "Success",
+            description: "Welcome back!",
+          });
+        }
+      })
+      .catch((error: any) => {
+        if (error.code === 'auth/unauthorized-domain') {
+          toast({
+            title: "Domain Not Authorized",
+            description: "Please check your Firebase Console settings for Authorized Domains.",
+            variant: "destructive",
+          });
+        } else if (error.code !== 'auth/popup-closed-by-user') {
+          // General error handling (ignoring popup errors since we use redirect now)
+          console.error("Auth error:", error);
+        }
+      });
+  }, [auth, toast]);
+
   const login = async () => {
     try {
-      // CRITICAL: We trigger the popup as the VERY FIRST ACTION.
-      // Any delay (like state updates or toasts) before this can cause 
-      // mobile browsers to block the popup even if "allowed" in settings.
-      const loginPromise = signInWithPopup(auth, googleProvider);
-      
-      // Now we can show a hint to the user
-      toast({
-        title: "Sign-in Started",
-        description: "Please complete the login in the new window.",
-      });
-
-      await loginPromise;
-      
-      toast({
-        title: "Success",
-        description: "Welcome back!",
-      });
+      // Use signInWithRedirect instead of signInWithPopup for maximum reliability on mobile
+      await signInWithRedirect(auth, googleProvider);
     } catch (error: any) {
-      let errorMessage = "Login failed. Please try again.";
-      let errorTitle = "Authentication Error";
-      
-      if (error.code === 'auth/unauthorized-domain') {
-        errorTitle = "Domain Not Authorized";
-        errorMessage = "You must whitelist this domain in Firebase Console > Auth > Settings > Authorized Domains.";
-      } else if (error.code === 'auth/popup-closed-by-user') {
-        errorTitle = "Login Cancelled";
-        errorMessage = "The login window was closed. On mobile, look for a small 'Pop-up blocked' bar at the BOTTOM and click 'Always show'.";
-      } else if (error.code === 'auth/popup-blocked') {
-        errorTitle = "Popup Blocked";
-        errorMessage = "Your browser blocked the login window. Please allow popups for this site.";
-      } else if (error.code === 'auth/cancelled-popup-request') {
-        return; 
-      }
-
       toast({
-        title: errorTitle,
-        description: errorMessage,
+        title: "Login Error",
+        description: "Could not start sign-in process.",
         variant: "destructive",
       });
     }
