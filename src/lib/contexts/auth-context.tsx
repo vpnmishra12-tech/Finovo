@@ -34,17 +34,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Handle the redirect result when the component mounts
   useEffect(() => {
     const checkRedirect = async () => {
+      // Check if we previously initiated a login
+      const loginStarted = sessionStorage.getItem('login_initiated');
+
       try {
-        // Attempt to get the result of the redirect
         const result = await getRedirectResult(auth);
         
         if (result) {
+          sessionStorage.removeItem('login_initiated');
           toast({
             title: "Login Successful!",
             description: `Welcome, ${result.user.displayName}`,
           });
+        } else if (loginStarted && !user && !isUserLoading) {
+          // This case happens when you are redirected back but the handshake failed
+          // Usually due to cookies or unauthorized domain
+          toast({
+            variant: "destructive",
+            duration: 10000,
+            title: "CRITICAL: Handshake Failed",
+            description: "Redirect returned with NO user. 1. Ensure Third-Party Cookies are ALLOWED (NOT Blocked). 2. Double check Authorized Domains in Firebase Console.",
+          });
+          sessionStorage.removeItem('login_initiated');
         }
       } catch (error: any) {
+        sessionStorage.removeItem('login_initiated');
         console.error("Redirect Error:", error);
         
         let errorTitle = "Login Error";
@@ -52,14 +66,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         if (error.code === 'auth/unauthorized-domain') {
           errorTitle = "Domain Not Authorized";
-          errorDescription = "Ensure your workstation URL is added to 'Authorized Domains' in Firebase Console Settings.";
+          errorDescription = "Go to Firebase Console -> Authentication -> Settings -> Authorized Domains and add this exact URL.";
         } else if (error.code === 'auth/network-request-failed') {
-          errorTitle = "Network/Cookie Issue";
-          errorDescription = "Please ensure 'Third-Party Cookies' are ALLOWED in your browser settings.";
+          errorTitle = "Cookie Blocked";
+          errorDescription = "Your browser is blocking the login cookie. Go to Browser Settings -> Privacy -> Third-Party Cookies -> ALLOW ALL.";
         }
 
         toast({
           variant: "destructive",
+          duration: 10000,
           title: errorTitle,
           description: errorDescription,
         });
@@ -69,23 +84,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (auth) {
       checkRedirect();
     }
-  }, [auth, toast]);
+  }, [auth, user, isUserLoading, toast]);
 
   const login = async () => {
     try {
       toast({
-        title: "Starting Login...",
-        description: "Redirecting you to Google Account selection.",
+        title: "Redirecting...",
+        description: "Taking you to Google Login page.",
       });
       
-      // Redirect is essential for reliable operation in restricted environments
+      // Mark that we started the login process
+      sessionStorage.setItem('login_initiated', 'true');
+      
       await signInWithRedirect(auth, googleProvider);
     } catch (error: any) {
+      sessionStorage.removeItem('login_initiated');
       console.error("Login Trigger Error:", error);
       toast({
         variant: "destructive",
-        title: "Login Failed to Start",
-        description: error.message || "Could not initiate redirect.",
+        title: "Redirect Failed",
+        description: error.message || "Could not initiate login redirect.",
       });
     }
   };
@@ -95,7 +113,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       await signOut(auth);
       toast({
         title: "Logged Out",
-        description: "You have been successfully signed out.",
+        description: "See you next time!",
       });
     } catch (error) {
       toast({
