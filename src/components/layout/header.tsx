@@ -14,19 +14,34 @@ export function Header() {
   const { t, language, setLanguage } = useLanguage();
   const { toast } = useToast();
 
-  const handleShare = () => {
-    if (navigator.share) {
-      navigator.share({
-        title: 'SmartKharcha AI',
-        text: 'Check out my smart expense tracker!',
-        url: window.location.href,
-      }).catch(console.error);
-    } else {
-      navigator.clipboard.writeText(window.location.href);
-      toast({
-        title: "Link Copied!",
-        description: "App URL copied to clipboard. Share it with anyone!",
-      });
+  const handleShare = async () => {
+    const shareData = {
+      title: 'SmartKharcha AI',
+      text: 'Check out my smart expense tracker!',
+      url: window.location.href,
+    };
+
+    try {
+      if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+        await navigator.share(shareData);
+      } else {
+        throw new Error('Web Share not supported');
+      }
+    } catch (error) {
+      // Fallback: Copy to clipboard if sharing fails or isn't supported
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        toast({
+          title: "Link Copied!",
+          description: "App link copied to clipboard. Share it with your friends!",
+        });
+      } catch (clipError) {
+        toast({
+          variant: "destructive",
+          title: "Share Failed",
+          description: "Could not share or copy the link.",
+        });
+      }
     }
   };
 
@@ -45,7 +60,7 @@ export function Header() {
         </div>
 
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" onClick={handleShare} className="h-9 w-9">
+          <Button variant="ghost" size="icon" onClick={handleShare} className="h-9 w-9" title="Share App">
             <Share2 className="w-4 h-4" />
           </Button>
 
