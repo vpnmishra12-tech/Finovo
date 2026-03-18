@@ -33,49 +33,58 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Handle the redirect result when the component mounts
   useEffect(() => {
-    getRedirectResult(auth)
-      .then((result) => {
+    const checkRedirect = async () => {
+      try {
+        const result = await getRedirectResult(auth);
         if (result) {
           toast({
-            title: "Success",
-            description: `Logged in as ${result.user.displayName}`,
+            title: "Login Successful",
+            description: `Welcome, ${result.user.displayName}!`,
           });
         }
-      })
-      .catch((error: any) => {
-        console.error("Redirect Result Error:", error.code, error.message);
+      } catch (error: any) {
+        console.error("Auth Redirect Error:", error.code, error.message);
         
         if (error.code === 'auth/unauthorized-domain') {
           toast({
-            title: "Domain Not Authorized",
-            description: "CRITICAL: You must add your current URL to the Firebase Authorized Domains list. Check README.md for steps.",
             variant: "destructive",
+            title: "Domain Not Authorized",
+            description: "Please double check your Firebase Console 'Authorized Domains' list. It must exactly match the URL in your browser without https://.",
+          });
+        } else if (error.code === 'auth/internal-error') {
+          toast({
+            variant: "destructive",
+            title: "Auth Error",
+            description: "Try clearing your browser cache or using a non-private window.",
           });
         } else {
           toast({
-            title: "Login Error",
-            description: error.message || "An unexpected error occurred during redirection.",
             variant: "destructive",
+            title: "Login Failed",
+            description: error.message || "An error occurred during the login redirect.",
           });
         }
-      });
+      }
+    };
+
+    checkRedirect();
   }, [auth, toast]);
 
   const login = async () => {
     try {
       toast({
         title: "Starting Login",
-        description: "Redirecting to Google...",
+        description: "Redirecting to Google. Please wait...",
       });
       
-      // Redirect is much more reliable on mobile and workstations than popups
+      // Redirect is the most reliable method for workstations and mobile
       await signInWithRedirect(auth, googleProvider);
     } catch (error: any) {
       console.error("Login Initiation Error:", error.code, error.message);
       toast({
-        title: "Login Error",
-        description: "Could not start sign-in process. Check your internet connection.",
         variant: "destructive",
+        title: "Login Error",
+        description: "Could not initiate the sign-in process.",
       });
     }
   };
@@ -85,10 +94,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       await signOut(auth);
       toast({
         title: "Logged Out",
-        description: "See you soon!",
+        description: "You have been successfully signed out.",
       });
     } catch (error) {
-      // Silently handle logout errors
+      console.error("Logout Error:", error);
     }
   };
 

@@ -1,39 +1,36 @@
 
-# SmartKharcha AI - Installation & Configuration Guide 📱
+# SmartKharcha AI - Final Login Fix 🚀
 
-Your app is ready! To fix the login issue, you MUST perform this one-time security configuration in the Firebase Console.
+If your login is still not working, follow these exact steps.
 
-## 🛠 CRITICAL: Fix "Login Issue" (One-time Setup)
+## 🛠 Authorized Domain Fix
 
-Firebase blocks requests from unknown domains for security. You must authorize your current development domain.
+Firebase blocks login requests if the domain is not in its whitelist.
 
-### 1. Copy your App URL
-Look at your browser's address bar. Your URL looks like this:
+### 1. Identify your exact Domain
+Look at your browser tab's address bar. Your URL looks like this:
 `https://9002-firebase-studio-123.cluster-abc.cloudworkstations.dev/`
 
-**Copy ONLY this part**: `9002-firebase-studio-123.cluster-abc.cloudworkstations.dev`
-(Remove `https://` and anything after `.dev`)
+**Copy ONLY the text between `https://` and the last `/`**:
+`9002-firebase-studio-123.cluster-abc.cloudworkstations.dev`
 
-### 2. Add it to Firebase Console
-1. Click this direct link: [Authorized Domains Settings](https://console.firebase.google.com/project/studio-4253837572-72734/authentication/settings)
-2. **Navigation Path**:
-   - Make sure you are on the **Settings** tab.
-   - Click **"Authorized domains"** in the left sidebar menu.
-   - Click the **"Add domain"** button.
-3. **Paste the URL** you copied in Step 1.
-4. Click **"Add"**.
+### 2. Update Firebase Console
+1. Open this link: [Authorized Domains Settings](https://console.firebase.google.com/project/studio-4253837572-72734/authentication/settings)
+2. Go to the **Settings** tab.
+3. Click **"Authorized domains"** in the left menu.
+4. Click **"Add domain"**.
+5. **Paste the domain** you copied in Step 1.
+   - ⚠️ **IMPORTANT**: Ensure there is NO `https://` at the start and NO `/` at the end.
+6. Click **"Add"**.
 
-### 3. Restart the App
-Go back to your app tab, **Refresh the page**, and click **Login**. It will now work!
+### 3. Restart & Login
+1. Go back to your app tab and **Refresh the page**.
+2. Click **Login**. It will now redirect you to Google and back to the app.
 
 ---
 
-## 🚀 How to Install as an App (FREE)
-1. Open your **Preview URL** in your phone's browser (Chrome for Android, Safari for iOS).
-2. Tap the menu/share button and select **"Add to Home Screen"**.
-3. The app will now appear on your home screen with its own icon. No APK required!
-
-## 🔗 Getting a Public Link
-1. Click the **"Deploy"** button in the Firebase Studio sidebar.
-2. Once finished, you will get a **Production URL**.
-3. **Remember**: You must also add this Production URL to the "Authorized Domains" list mentioned above!
+## 📱 Mobile Troubleshooting
+If you are on a phone:
+- **Pop-up Blocked?**: The app now uses "Redirect Mode", so popups are NOT required.
+- **Cookies**: Ensure "Block Third-Party Cookies" is turned OFF in your mobile browser settings.
+- **Incognito**: Do not use private/incognito mode, as it often blocks the login handshake.
