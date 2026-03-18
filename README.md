@@ -1,23 +1,32 @@
 
 # SmartKharcha AI - Installation & Configuration Guide 📱
 
-Your app is ready! Follow these steps to fix the login issues and share your app.
+Your app is ready! To fix the login issue, you MUST perform this one-time security configuration in the Firebase Console.
 
 ## 🛠 CRITICAL: Fix "Login Issue" (One-time Setup)
+
 Firebase blocks requests from unknown domains for security. You must authorize your current development domain.
 
-### 1. Find the "Add Domain" Button
-1. Copy the URL of your app from the browser address bar (e.g., `9002-firebase-studio...cloudworkstations.dev`).
-2. Click this link: [Firebase Console Authentication Settings](https://console.firebase.google.com/project/studio-4253837572-72734/authentication/settings).
-3. **Navigation Path**:
-   - Go to the **Settings** tab.
-   - Click on **Authorized domains** in the left menu.
-   - Click the **"Add domain"** button.
+### 1. Copy your App URL
+Look at your browser's address bar. Your URL looks like this:
+`https://9002-firebase-studio-123.cluster-abc.cloudworkstations.dev/`
 
-### 2. Add Your URL
-1. Click **"Add domain"**.
-2. Paste your URL (e.g., `9002-firebase-studio-123.cluster-xyz.cloudworkstations.dev`).
-3. **IMPORTANT**: Remove `https://` and anything after `.dev`. It should look exactly like the example above.
+**Copy ONLY this part**: `9002-firebase-studio-123.cluster-abc.cloudworkstations.dev`
+(Remove `https://` and anything after `.dev`)
+
+### 2. Add it to Firebase Console
+1. Click this direct link: [Authorized Domains Settings](https://console.firebase.google.com/project/studio-4253837572-72734/authentication/settings)
+2. **Navigation Path**:
+   - Make sure you are on the **Settings** tab.
+   - Click **"Authorized domains"** in the left sidebar menu.
+   - Click the **"Add domain"** button.
+3. **Paste the URL** you copied in Step 1.
+4. Click **"Add"**.
+
+### 3. Restart the App
+Go back to your app tab, **Refresh the page**, and click **Login**. It will now work!
+
+---
 
 ## 🚀 How to Install as an App (FREE)
 1. Open your **Preview URL** in your phone's browser (Chrome for Android, Safari for iOS).

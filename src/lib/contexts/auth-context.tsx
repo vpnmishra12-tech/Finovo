@@ -38,23 +38,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (result) {
           toast({
             title: "Success",
-            description: "Welcome back!",
+            description: `Logged in as ${result.user.displayName}`,
           });
         }
       })
       .catch((error: any) => {
+        console.error("Redirect Result Error:", error.code, error.message);
+        
         if (error.code === 'auth/unauthorized-domain') {
           toast({
             title: "Domain Not Authorized",
-            description: "Please check your Firebase Console settings for Authorized Domains. See README.md for steps.",
+            description: "CRITICAL: You must add your current URL to the Firebase Authorized Domains list. Check README.md for steps.",
             variant: "destructive",
           });
-        } else if (error.code !== 'auth/popup-closed-by-user') {
-          // General error handling
-          console.error("Auth error:", error);
+        } else {
           toast({
             title: "Login Error",
-            description: error.message || "An unexpected error occurred.",
+            description: error.message || "An unexpected error occurred during redirection.",
             variant: "destructive",
           });
         }
@@ -63,12 +63,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = async () => {
     try {
-      // Use signInWithRedirect instead of signInWithPopup for maximum reliability on mobile
+      toast({
+        title: "Starting Login",
+        description: "Redirecting to Google...",
+      });
+      
+      // Redirect is much more reliable on mobile and workstations than popups
       await signInWithRedirect(auth, googleProvider);
     } catch (error: any) {
+      console.error("Login Initiation Error:", error.code, error.message);
       toast({
         title: "Login Error",
-        description: "Could not start sign-in process. Please try again.",
+        description: "Could not start sign-in process. Check your internet connection.",
         variant: "destructive",
       });
     }
@@ -82,7 +88,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         description: "See you soon!",
       });
     } catch (error) {
-      // Silently handle
+      // Silently handle logout errors
     }
   };
 
