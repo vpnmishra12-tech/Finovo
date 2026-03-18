@@ -34,7 +34,10 @@ export default function Home() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
-        <Loader2 className="w-8 h-8 text-primary animate-spin" />
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="w-10 h-10 text-primary animate-spin" />
+          <p className="text-muted-foreground font-medium animate-pulse">Authenticating...</p>
+        </div>
       </div>
     );
   }
@@ -58,7 +61,7 @@ export default function Home() {
           </div>
           <div className="flex flex-col w-full sm:flex-row gap-4 pt-4">
             <Button size="lg" onClick={login} className="h-14 rounded-2xl text-lg gap-2 shadow-xl shadow-primary/20 flex-1">
-              Get Started for Free <ArrowRight className="w-5 h-5" />
+              Login with Google to Start <ArrowRight className="w-5 h-5" />
             </Button>
           </div>
           <div className="flex items-center gap-6 pt-8 text-muted-foreground">
