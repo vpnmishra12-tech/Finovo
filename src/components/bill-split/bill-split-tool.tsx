@@ -12,8 +12,9 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Users, UserPlus, Trash2, Calculator, CheckCircle2, ArrowRightLeft, Coins } from 'lucide-react';
+import { Users, UserPlus, Trash2, Calculator, CheckCircle2, ArrowRightLeft, Coins, AlertCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 interface Participant {
   id: string;
@@ -36,14 +37,18 @@ export function BillSplitTool() {
   const [totalBill, setTotalBill] = useState<string>("");
   const [splitType, setSplitType] = useState<'equal' | 'custom'>('equal');
   const [participants, setParticipants] = useState<Participant[]>([
-    { id: '1', name: 'Person 1', paid: 0 },
-    { id: '2', name: 'Person 2', paid: 0 }
+    { id: '1', name: 'Me', paid: 0 },
+    { id: '2', name: 'Friend 1', paid: 0 }
   ]);
   const [payerId, setPayerId] = useState<string>('1');
 
   const billValue = parseFloat(totalBill) || 0;
   const participantCount = participants.length;
   const equalShare = billValue > 0 ? parseFloat((billValue / participantCount).toFixed(2)) : 0;
+
+  // Track total paid in custom mode
+  const totalPaidAtVenue = participants.reduce((sum, p) => sum + p.paid, 0);
+  const isPaymentMismatch = splitType === 'custom' && billValue > 0 && Math.abs(totalPaidAtVenue - billValue) > 0.01;
 
   const addPerson = () => {
     const newId = Date.now().toString();
@@ -82,11 +87,10 @@ export function BillSplitTool() {
 
   // Logic for Custom Mode (Multiple people paid different amounts, but share is equal)
   const customSettlements = useMemo(() => {
-    if (splitType !== 'custom' || billValue <= 0) return [];
+    if (splitType !== 'custom' || billValue <= 0 || isPaymentMismatch) return [];
     
     // Each person's debt is (Their Share - Their Paid)
-    // If negative, they are owed money. If positive, they owe money.
-    // We use (Paid - Share) to find Creditors (>0) and Debtors (<0)
+    // Share is always equal as per user request
     let balances = participants.map((p) => ({
       name: p.name.trim() || "Someone",
       balance: p.paid - equalShare
@@ -117,14 +121,14 @@ export function BillSplitTool() {
       if (Math.abs(creditor.balance) < 0.01) cIdx++;
     }
     return results;
-  }, [participants, billValue, splitType, equalShare]);
+  }, [participants, billValue, splitType, equalShare, isPaymentMismatch]);
 
   const finalSettlements = splitType === 'equal' ? equalSettlements : customSettlements;
 
   const handleSaveMyShare = () => {
     if (!firestore || !user?.uid) return;
-    if (equalShare <= 0) {
-      toast({ variant: "destructive", title: "Error", description: "Bill amount must be greater than 0" });
+    if (equalShare <= 0 || isPaymentMismatch) {
+      toast({ variant: "destructive", title: "Error", description: "Please check the bill details" });
       return;
     }
 
@@ -212,8 +216,9 @@ export function BillSplitTool() {
 
           <TabsContent value="custom" className="space-y-4 m-0">
             <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest mb-2 italic">
-              Share for everyone: ₹{equalShare.toLocaleString()}
+              Each Person's Share: ₹{equalShare.toLocaleString()}
             </p>
+            
             <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
               {participants.map((p) => (
                 <div key={p.id} className="flex flex-col gap-2 bg-muted/30 p-4 rounded-2xl border border-primary/5">
@@ -240,13 +245,22 @@ export function BillSplitTool() {
                       type="number"
                       value={p.paid || ""}
                       onChange={(e) => updateParticipant(p.id, 'paid', e.target.value)}
-                      placeholder="How much they paid?"
+                      placeholder="How much did they pay?"
                       className="h-10 rounded-xl bg-card border-none font-bold text-sm text-green-600"
                     />
                   </div>
                 </div>
               ))}
             </div>
+
+            {isPaymentMismatch && (
+              <Alert variant="destructive" className="rounded-2xl border-2">
+                <AlertCircle className="h-4 w-4" />
+                <AlertDescription className="text-xs font-bold">
+                  Mismatch: Total Paid (₹{totalPaidAtVenue.toLocaleString()}) does not match Bill (₹{billValue.toLocaleString()})
+                </AlertDescription>
+              </Alert>
+            )}
           </TabsContent>
         </Tabs>
 
@@ -259,7 +273,7 @@ export function BillSplitTool() {
           {t.addPerson}
         </Button>
 
-        {billValue > 0 && (
+        {billValue > 0 && !isPaymentMismatch && (
           <div className="space-y-4 pt-4 border-t border-dashed">
             <h4 className="text-xs font-black uppercase text-muted-foreground flex items-center gap-2 tracking-widest">
               <ArrowRightLeft className="w-4 h-4 text-primary" />
@@ -297,7 +311,7 @@ export function BillSplitTool() {
             </div>
             <Button 
               onClick={handleSaveMyShare} 
-              disabled={billValue <= 0}
+              disabled={billValue <= 0 || isPaymentMismatch}
               className="rounded-2xl h-14 px-8 bg-white text-primary hover:bg-white/90 font-black gap-2 shadow-xl relative z-10"
             >
               <CheckCircle2 className="w-5 h-5" />
