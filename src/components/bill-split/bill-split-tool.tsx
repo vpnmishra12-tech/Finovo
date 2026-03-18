@@ -11,14 +11,14 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Users, UserPlus, Trash2, Calculator, CheckCircle2, ArrowRightLeft, AlertCircle, TrendingUp, User, Coins } from 'lucide-react';
+import { Users, UserPlus, Trash2, Calculator, CheckCircle2, ArrowRightLeft, AlertCircle, TrendingUp, Coins } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface Participant {
   id: string;
   name: string;
-  paid: number;   // Money they paid at the venue
-  share: number;  // Their portion of the bill (consumption)
+  paid: number;   // Money they actually paid at the venue
+  share: number;  // Their consumption portion (only used in Custom mode)
 }
 
 interface Settlement {
@@ -42,7 +42,7 @@ export function BillSplitTool() {
 
   const billValue = parseFloat(totalBill) || 0;
 
-  // Calculate equal share if in equal mode
+  // Calculate equal share for display in Equal mode
   const calculatedEqualShare = billValue > 0 ? parseFloat((billValue / participants.length).toFixed(2)) : 0;
 
   const addPerson = () => {
@@ -64,8 +64,8 @@ export function BillSplitTool() {
     }));
   };
 
-  const totalSharesAssigned = participants.reduce((sum, p) => sum + p.share, 0);
   const totalPaidAtVenue = participants.reduce((sum, p) => sum + p.paid, 0);
+  const totalSharesAssigned = participants.reduce((sum, p) => sum + p.share, 0);
   
   const isPaidValid = Math.abs(totalPaidAtVenue - billValue) < 1; 
   const isSharesValid = splitType === 'equal' ? true : Math.abs(totalSharesAssigned - billValue) < 1;
@@ -115,8 +115,6 @@ export function BillSplitTool() {
   const handleSaveMyShare = () => {
     if (!firestore || !user?.uid) return;
     
-    // Assume the first participant is usually the user if not named, 
-    // or just let them pick. For now, we save the first one's share.
     const myShare = splitType === 'equal' ? calculatedEqualShare : participants[0].share;
 
     if (myShare <= 0) {
@@ -144,7 +142,6 @@ export function BillSplitTool() {
         </CardTitle>
       </CardHeader>
       <CardContent className="p-6 space-y-6">
-        {/* Step 1: Total Bill */}
         <div className="space-y-2">
           <Label className="text-xs font-bold uppercase text-muted-foreground">{t.totalAmount}</Label>
           <Input 
@@ -156,7 +153,6 @@ export function BillSplitTool() {
           />
         </div>
 
-        {/* Step 2: Split Type */}
         <Tabs value={splitType} onValueChange={(v) => setSplitType(v as any)} className="w-full">
           <TabsList className="grid w-full grid-cols-2 bg-muted h-12 rounded-xl p-1 mb-6">
             <TabsTrigger value="equal" className="rounded-lg gap-2 font-bold">
@@ -169,7 +165,7 @@ export function BillSplitTool() {
 
           <div className="space-y-4">
             <div className="flex items-center justify-between px-1">
-              <Label className="text-xs font-bold uppercase text-muted-foreground">{t.whoPaid}</Label>
+              <Label className="text-xs font-bold uppercase text-muted-foreground">Participants</Label>
               {splitType === 'equal' && billValue > 0 && (
                 <span className="text-[10px] bg-primary/10 text-primary px-2 py-1 rounded-full font-bold">
                   Equal Share: ₹{calculatedEqualShare.toLocaleString()}
@@ -198,12 +194,10 @@ export function BillSplitTool() {
                     </Button>
                   </div>
                   
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className={`grid ${splitType === 'custom' ? 'grid-cols-2' : 'grid-cols-1'} gap-3`}>
                     {splitType === 'custom' && (
                       <div className="space-y-1">
-                        <Label className="text-[10px] font-black uppercase text-muted-foreground flex items-center gap-1 ml-1">
-                          {t.personShare}
-                        </Label>
+                        <Label className="text-[10px] font-black uppercase text-muted-foreground ml-1">Consumption (Share)</Label>
                         <div className="relative">
                           <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-xs">₹</span>
                           <Input 
@@ -216,7 +210,7 @@ export function BillSplitTool() {
                         </div>
                       </div>
                     )}
-                    <div className={`space-y-1 ${splitType === 'equal' ? 'col-span-2' : ''}`}>
+                    <div className="space-y-1">
                       <Label className="text-[10px] font-black uppercase text-muted-foreground flex items-center gap-1 ml-1">
                         <TrendingUp className="w-3 h-3 text-green-500" /> Paid at Venue
                       </Label>
@@ -247,7 +241,6 @@ export function BillSplitTool() {
           {t.addPerson}
         </Button>
 
-        {/* Validation Alerts */}
         <div className="space-y-2">
           {!isPaidValid && billValue > 0 && (
             <div className="p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl flex items-center gap-2 text-[11px] font-bold text-amber-600">
@@ -263,7 +256,6 @@ export function BillSplitTool() {
           )}
         </div>
 
-        {/* Settlement Summary */}
         {billValue > 0 && isPaidValid && isSharesValid && (
           <div className="space-y-4 pt-4 border-t border-dashed">
             <h4 className="text-xs font-black uppercase text-muted-foreground flex items-center gap-2 tracking-widest">
@@ -277,9 +269,9 @@ export function BillSplitTool() {
                     <div className="w-2 h-2 rounded-full bg-primary/40 shrink-0" />
                     <p className="text-sm font-medium leading-relaxed">
                       <span className="font-bold text-primary">{s.from}</span>
-                      <span className="mx-1.5 text-muted-foreground font-normal">{t.owes}</span>
+                      <span className="mx-1.5 text-muted-foreground font-normal">will pay</span>
                       <span className="font-headline font-black text-primary mx-1">₹{s.amount.toLocaleString()}</span>
-                      <span className="mx-1.5 text-muted-foreground font-normal">{t.to}</span>
+                      <span className="mx-1.5 text-muted-foreground font-normal">to</span>
                       <span className="font-bold text-primary bg-primary/10 px-2 py-0.5 rounded">{s.to}</span>
                     </p>
                   </div>
