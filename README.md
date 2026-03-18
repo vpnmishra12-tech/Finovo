@@ -1,7 +1,12 @@
-
 # SmartKharcha AI - Expense Tracker
 
 A production-ready, AI-powered expense tracker built with Next.js, Firebase, and Gemini.
+
+## 📱 Mobile App (Android/iOS)
+Ye ek Progressive Web App (PWA) hai. Ise mobile par APK ki tarah install karne ke liye:
+1. Apne phone ke **Chrome** ya **Safari** browser mein app link open karein.
+2. **Chrome (Android)**: Menu (3 dots) par click karein aur **"Add to Home Screen"** ya **"Install App"** select karein.
+3. **Safari (iPhone)**: Share button par click karein aur **"Add to Home Screen"** select karein.
 
 ## 🚀 Getting Started
 
