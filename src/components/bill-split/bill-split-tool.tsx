@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useMemo } from 'react';
@@ -34,30 +33,30 @@ export function BillSplitTool() {
   const firestore = useFirestore();
   const { toast } = useToast();
 
-  const [totalBill, setTotalBill] = useState<string>("");
   const [splitType, setSplitType] = useState<'equal' | 'custom'>('equal');
 
-  // Separate states for Equal Split
+  // Independent state for Equal Split
+  const [equalTotalBill, setEqualTotalBill] = useState<string>("");
   const [equalParticipants, setEqualParticipants] = useState<Participant[]>([
     { id: 'e1', name: '', paid: 0 },
     { id: 'e2', name: '', paid: 0 }
   ]);
   const [equalPayerId, setEqualPayerId] = useState<string>('e1');
 
-  // Separate states for Custom Split
+  // Independent state for Custom Split
+  const [customTotalBill, setCustomTotalBill] = useState<string>("");
   const [customParticipants, setCustomParticipants] = useState<Participant[]>([
     { id: 'c1', name: '', paid: 0 },
     { id: 'c2', name: '', paid: 0 }
   ]);
 
-  const billValue = parseFloat(totalBill) || 0;
-
-  // Equal Mode Logic
-  const equalShare = billValue > 0 ? parseFloat((billValue / equalParticipants.length).toFixed(2)) : 0;
+  // Equal Mode Calculations
+  const equalBillVal = parseFloat(equalTotalBill) || 0;
+  const equalShare = equalBillVal > 0 ? parseFloat((equalBillVal / equalParticipants.length).toFixed(2)) : 0;
   const equalNamesEntered = equalParticipants.every(p => p.name.trim().length > 0);
   
   const equalSettlements = useMemo(() => {
-    if (splitType !== 'equal' || billValue <= 0 || !equalNamesEntered) return [];
+    if (splitType !== 'equal' || equalBillVal <= 0 || !equalNamesEntered) return [];
     const mainPayer = equalParticipants.find(p => p.id === equalPayerId);
     if (!mainPayer || !mainPayer.name.trim()) return [];
 
@@ -68,19 +67,18 @@ export function BillSplitTool() {
         to: mainPayer.name.trim(),
         amount: equalShare
       }));
-  }, [equalParticipants, billValue, splitType, equalPayerId, equalShare, equalNamesEntered]);
+  }, [equalParticipants, equalBillVal, splitType, equalPayerId, equalShare, equalNamesEntered]);
 
-  // Custom Mode Logic
-  const customShare = billValue > 0 ? parseFloat((billValue / customParticipants.length).toFixed(2)) : 0;
+  // Custom Mode Calculations
+  const customBillVal = parseFloat(customTotalBill) || 0;
+  const customShare = customBillVal > 0 ? parseFloat((customBillVal / customParticipants.length).toFixed(2)) : 0;
   const customNamesEntered = customParticipants.every(p => p.name.trim().length > 0);
   const customTotalPaid = customParticipants.reduce((sum, p) => sum + p.paid, 0);
-  const isCustomMismatch = splitType === 'custom' && billValue > 0 && Math.abs(customTotalPaid - billValue) > 0.01;
+  const isCustomMismatch = splitType === 'custom' && customBillVal > 0 && Math.abs(customTotalPaid - customBillVal) > 0.01;
 
   const customSettlements = useMemo(() => {
-    if (splitType !== 'custom' || billValue <= 0 || isCustomMismatch || !customNamesEntered) return [];
+    if (splitType !== 'custom' || customBillVal <= 0 || isCustomMismatch || !customNamesEntered) return [];
     
-    // Each person's debt is (Their Share - Their Paid)
-    // Share is equal for everyone in Custom mode as per requirement
     let balances = customParticipants.map((p) => ({
       name: p.name.trim(),
       balance: p.paid - customShare
@@ -111,7 +109,7 @@ export function BillSplitTool() {
       if (Math.abs(creditor.balance) < 0.01) cIdx++;
     }
     return results;
-  }, [customParticipants, billValue, splitType, customShare, isCustomMismatch, customNamesEntered]);
+  }, [customParticipants, customBillVal, splitType, customShare, isCustomMismatch, customNamesEntered]);
 
   // Helper functions for Equal Mode
   const addEqualPerson = () => {
@@ -146,6 +144,7 @@ export function BillSplitTool() {
   const handleSaveMyShare = () => {
     if (!firestore || !user?.uid) return;
     const shareToSave = splitType === 'equal' ? equalShare : customShare;
+    const billToSave = splitType === 'equal' ? equalTotalBill : customTotalBill;
     const namesReady = splitType === 'equal' ? equalNamesEntered : customNamesEntered;
     const mismatch = splitType === 'custom' && isCustomMismatch;
 
@@ -157,7 +156,7 @@ export function BillSplitTool() {
     saveExpense(firestore, user.uid, {
       amount: shareToSave,
       category: 'Food',
-      description: `Split Bill: ${totalBill}`,
+      description: `Split Bill: ${billToSave}`,
       transactionDate: new Date().toISOString().split('T')[0],
       captureMethod: 'Text',
     });
@@ -174,17 +173,6 @@ export function BillSplitTool() {
         </CardTitle>
       </CardHeader>
       <CardContent className="p-6 space-y-6">
-        <div className="space-y-2">
-          <Label className="text-xs font-bold uppercase text-muted-foreground">{t.totalAmount}</Label>
-          <Input 
-            type="number" 
-            placeholder="0.00" 
-            value={totalBill} 
-            onChange={(e) => setTotalBill(e.target.value)}
-            className="h-14 rounded-2xl bg-muted border-none font-headline font-bold text-2xl text-primary"
-          />
-        </div>
-
         <Tabs value={splitType} onValueChange={(v) => setSplitType(v as any)} className="w-full">
           <TabsList className="grid w-full grid-cols-2 bg-muted h-12 rounded-xl p-1 mb-6">
             <TabsTrigger value="equal" className="rounded-lg gap-2 font-bold">
@@ -195,7 +183,19 @@ export function BillSplitTool() {
             </TabsTrigger>
           </TabsList>
 
+          {/* EQUAL SPLIT TAB */}
           <TabsContent value="equal" className="space-y-6 m-0">
+            <div className="space-y-2">
+              <Label className="text-xs font-bold uppercase text-muted-foreground">{t.totalAmount}</Label>
+              <Input 
+                type="number" 
+                placeholder="0.00" 
+                value={equalTotalBill} 
+                onChange={(e) => setEqualTotalBill(e.target.value)}
+                className="h-14 rounded-2xl bg-muted border-none font-headline font-bold text-2xl text-primary"
+              />
+            </div>
+
             <div className="space-y-4">
               <Label className="text-xs font-bold uppercase text-muted-foreground">Names</Label>
               <div className="grid gap-3">
@@ -224,7 +224,7 @@ export function BillSplitTool() {
               </Button>
             </div>
 
-            {equalNamesEntered && billValue > 0 && (
+            {equalNamesEntered && equalBillVal > 0 && (
               <div className="space-y-4 animate-in fade-in slide-in-from-top-2">
                 <div className="space-y-2">
                   <Label className="text-xs font-bold uppercase text-muted-foreground">{t.whoPaid}</Label>
@@ -250,9 +250,9 @@ export function BillSplitTool() {
                       <div key={`equal-s-${idx}`} className="flex items-center gap-2 p-4 bg-card rounded-2xl shadow-sm border border-primary/5">
                         <p className="text-sm font-medium">
                           <span className="font-bold text-primary">{s.from}</span>
-                          <span className="mx-1.5 text-muted-foreground font-bold">{t.owes}</span>
+                          <span className="mx-1.5 text-muted-foreground font-bold">will pay</span>
                           <span className="font-headline font-black text-primary mx-1">₹{s.amount.toLocaleString()}</span>
-                          <span className="mx-1.5 text-muted-foreground font-bold">{t.to}</span>
+                          <span className="mx-1.5 text-muted-foreground font-bold">to</span>
                           <span className="font-bold text-primary bg-primary/10 px-2 py-0.5 rounded">{s.to}</span>
                         </p>
                       </div>
@@ -263,9 +263,21 @@ export function BillSplitTool() {
             )}
           </TabsContent>
 
-          <TabsContent value="custom" className="space-y-4 m-0">
+          {/* CUSTOM SPLIT TAB */}
+          <TabsContent value="custom" className="space-y-6 m-0">
+            <div className="space-y-2">
+              <Label className="text-xs font-bold uppercase text-muted-foreground">{t.totalAmount}</Label>
+              <Input 
+                type="number" 
+                placeholder="0.00" 
+                value={customTotalBill} 
+                onChange={(e) => setCustomTotalBill(e.target.value)}
+                className="h-14 rounded-2xl bg-muted border-none font-headline font-bold text-2xl text-primary"
+              />
+            </div>
+
             <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest mb-2 italic">
-              Each Person's Share: ₹{customShare.toLocaleString()}
+              Equal Share Calculation: ₹{customShare.toLocaleString()}
             </p>
             
             <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
@@ -310,12 +322,12 @@ export function BillSplitTool() {
               <Alert variant="destructive" className="rounded-2xl border-2">
                 <AlertCircle className="h-4 w-4" />
                 <AlertDescription className="text-xs font-bold">
-                  Mismatch: Total Paid (₹{customTotalPaid.toLocaleString()}) does not match Bill (₹{billValue.toLocaleString()})
+                  Mismatch: Total Paid (₹{customTotalPaid.toLocaleString()}) does not match Bill (₹{customBillVal.toLocaleString()})
                 </AlertDescription>
               </Alert>
             )}
 
-            {customNamesEntered && billValue > 0 && !isCustomMismatch && (
+            {customNamesEntered && customBillVal > 0 && !isCustomMismatch && (
               <div className="space-y-4 pt-4 border-t border-dashed">
                 <h4 className="text-xs font-black uppercase text-muted-foreground flex items-center gap-2 tracking-widest">
                   <ArrowRightLeft className="w-4 h-4 text-primary" />
@@ -327,9 +339,9 @@ export function BillSplitTool() {
                       <div key={`custom-s-${idx}`} className="flex items-center gap-2 p-4 bg-card rounded-2xl shadow-sm border border-primary/5">
                         <p className="text-sm font-medium">
                           <span className="font-bold text-primary">{s.from}</span>
-                          <span className="mx-1.5 text-muted-foreground font-bold">{t.owes}</span>
+                          <span className="mx-1.5 text-muted-foreground font-bold">will pay</span>
                           <span className="font-headline font-black text-primary mx-1">₹{s.amount.toLocaleString()}</span>
-                          <span className="mx-1.5 text-muted-foreground font-bold">{t.to}</span>
+                          <span className="mx-1.5 text-muted-foreground font-bold">to</span>
                           <span className="font-bold text-primary bg-primary/10 px-2 py-0.5 rounded">{s.to}</span>
                         </p>
                       </div>
@@ -345,7 +357,7 @@ export function BillSplitTool() {
           </TabsContent>
         </Tabs>
 
-        {((splitType === 'equal' && !equalNamesEntered) || (splitType === 'custom' && !customNamesEntered)) && billValue > 0 && (
+        {((splitType === 'equal' && !equalNamesEntered) || (splitType === 'custom' && !customNamesEntered)) && (equalBillVal > 0 || customBillVal > 0) && (
           <Alert className="rounded-2xl bg-amber-500/10 border-amber-500/20 text-amber-600">
             <AlertCircle className="h-4 w-4" />
             <AlertDescription className="text-xs font-bold">
@@ -363,7 +375,9 @@ export function BillSplitTool() {
             </div>
             <Button 
               onClick={handleSaveMyShare} 
-              disabled={billValue <= 0 || (splitType === 'custom' && isCustomMismatch) || (splitType === 'equal' ? !equalNamesEntered : !customNamesEntered)}
+              disabled={
+                (splitType === 'equal' ? (equalBillVal <= 0 || !equalNamesEntered) : (customBillVal <= 0 || !customNamesEntered || isCustomMismatch))
+              }
               className="rounded-2xl h-14 px-8 bg-white text-primary hover:bg-white/90 font-black gap-2 shadow-xl relative z-10"
             >
               <CheckCircle2 className="w-5 h-5" />
