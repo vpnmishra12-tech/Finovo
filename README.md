@@ -1,38 +1,36 @@
 
-# SmartKharcha AI - Play Store Publishing Guide
+# SmartKharcha AI - Free Installation Guide 📱
 
-A production-ready, AI-powered expense tracker built with Next.js, Firebase, and Gemini.
+Since Play Store requires a $25 fee, you can use the **PWA method** which is **100% FREE** and gives you the exact same app experience.
 
-## 🚀 How to Publish to Google Play Store
+## 🚀 How to Install as an App (Free)
 
-Follow these steps to convert this web app into an Android App (.aab) for the Play Store:
+### For Android (Chrome):
+1. Open your app URL in **Chrome**.
+2. Tap the **three dots (menu)** in the top right.
+3. Select **"Install App"** or **"Add to Home Screen"**.
+4. The app icon will now appear on your phone's home screen!
 
-1. **Deploy the App**: 
-   - Deploy your app to a public URL (e.g., using Firebase App Hosting).
-   - Ensure your domain is HTTPS.
+### For iPhone (Safari):
+1. Open your app URL in **Safari**.
+2. Tap the **Share button** (square with an up arrow) at the bottom.
+3. Scroll down and tap **"Add to Home Screen"**.
+4. Tap **"Add"** in the top right.
 
-2. **Use PWABuilder**:
-   - Go to [PWABuilder.com](https://www.pwabuilder.com/).
-   - Enter your deployed URL.
-   - Click "Package for Stores" and select **Android**.
-   - This will generate a `.aab` (Android App Bundle) file.
+## ✨ Benefits of this method:
+- **No Cost**: 100% Free forever.
+- **No Store Approval**: Your changes update instantly.
+- **Full Screen**: No browser address bar.
+- **Icon on Home Screen**: Just like a real APK.
 
-3. **Google Play Console**:
-   - Create a developer account on [Google Play Console](https://play.google.com/console).
-   - Create a new app and upload the `.aab` file generated in step 2.
+## 📦 Features
+- **AI Text Entry**: "Spent 500 on dinner".
+- **AI Voice**: Tap mic and speak your expense.
+- **Bill Scan**: Upload receipt photos for auto-extraction.
+- **Dashboard**: Real-time spending charts and budget tracking.
 
-4. **Digital Asset Links**:
-   - To remove the browser address bar in your app, you must link your website and app.
-   - Follow the instructions in PWABuilder to generate the `assetlinks.json` file.
-   - Place this file at `public/.well-known/assetlinks.json`.
-
-## 📱 Mobile Installation (PWA)
-If you don't want to use the Play Store, users can still install it:
-1. Open the app link in **Chrome** (Android).
-2. Tap the 3 dots menu > **"Install App"**.
-
-## 📦 Tech Stack
-- **Next.js 15** (App Router)
-- **Firebase Firestore** & **Auth**
-- **Genkit** with **Google Gemini 1.5 Flash**
-- **ShadCN UI** & **Tailwind CSS**
+## 🛠 Setup for Real Auth
+If you are moving from preview to your own Firebase project:
+1. Go to **Firebase Console** > **Authentication** > **Settings**.
+2. Add your workstation domain to **Authorized Domains**.
+3. Enable **Google** in the Sign-in providers.
