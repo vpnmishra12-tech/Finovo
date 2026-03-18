@@ -9,6 +9,7 @@ import { BudgetSummary } from '@/components/dashboard/budget-summary';
 import { SpendingChart } from '@/components/dashboard/spending-chart';
 import { MonthlyHistory } from '@/components/dashboard/monthly-history';
 import { AdBanner } from '@/components/dashboard/ad-banner';
+import { BillSplitTool } from '@/components/bill-split/bill-split-tool';
 import { ExpenseList } from '@/components/expenses/expense-list';
 import { AddExpenseDrawer } from '@/components/expenses/add-expense-drawer';
 import { Loader2, Sparkles, Wallet, ShieldCheck, Mail, Lock, UserPlus, LogIn, Info, Download } from 'lucide-react';
@@ -234,13 +235,23 @@ export default function Home() {
           year={parseInt(selectedYear)}
         />
 
-        <MonthlyHistory expenses={expenses || []} />
+        <Tabs defaultValue="overview" className="w-full">
+          <TabsList className="w-full bg-muted rounded-2xl p-1 h-14 mb-4">
+            <TabsTrigger value="overview" className="flex-1 rounded-xl font-bold">Overview</TabsTrigger>
+            <TabsTrigger value="splitter" className="flex-1 rounded-xl font-bold">Bill Splitter</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="overview" className="space-y-8 mt-0">
+            <MonthlyHistory expenses={expenses || []} />
+            <SpendingChart expenses={selectedMonthExpenses} />
+            <AdBanner />
+            <ExpenseList expenses={selectedMonthExpenses} isLoading={isExpensesLoading} />
+          </TabsContent>
 
-        <SpendingChart expenses={selectedMonthExpenses} />
-
-        <AdBanner />
-
-        <ExpenseList expenses={selectedMonthExpenses} isLoading={isExpensesLoading} />
+          <TabsContent value="splitter" className="mt-0">
+            <BillSplitTool />
+          </TabsContent>
+        </Tabs>
       </main>
       
       <AddExpenseDrawer />
