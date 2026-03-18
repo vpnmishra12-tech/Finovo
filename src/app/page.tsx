@@ -8,6 +8,7 @@ import { Header } from '@/components/layout/header';
 import { BudgetSummary } from '@/components/dashboard/budget-summary';
 import { SpendingChart } from '@/components/dashboard/spending-chart';
 import { MonthlyHistory } from '@/components/dashboard/monthly-history';
+import { AdBanner } from '@/components/dashboard/ad-banner';
 import { ExpenseList } from '@/components/expenses/expense-list';
 import { AddExpenseDrawer } from '@/components/expenses/add-expense-drawer';
 import { Loader2, Sparkles, Wallet, ShieldCheck, Mail, Lock, UserPlus, LogIn, Info, Download } from 'lucide-react';
@@ -236,6 +237,8 @@ export default function Home() {
         <MonthlyHistory expenses={expenses || []} />
 
         <SpendingChart expenses={selectedMonthExpenses} />
+
+        <AdBanner />
 
         <ExpenseList expenses={selectedMonthExpenses} isLoading={isExpensesLoading} />
       </main>

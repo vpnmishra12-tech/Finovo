@@ -23,6 +23,7 @@ export const translations = {
     overspentLastMonth: "Last Month Debt",
     limitReached: "Limit Reached",
     limitDesc: "You can only change your budget twice a month.",
+    sponsored: "Sponsored",
     alerts: {
       halfway: "Warning: You have spent 50% of your budget!",
       critical: "Urgent: 75% budget used. Watch your spending!",
@@ -92,6 +93,7 @@ export const translations = {
     overspentLastMonth: "पिछले महीने का कर्ज",
     limitReached: "सीमा पूरी हुई",
     limitDesc: "आप महीने में केवल दो बार ही बजट बदल सकते हैं।",
+    sponsored: "प्रायोजित (Ad)",
     alerts: {
       halfway: "चेतावनी: आपने अपने बजट का 50% खर्च कर दिया है!",
       critical: "ज़रूरी: 75% बजट खत्म। अब थोड़ा संभल कर चलें!",
