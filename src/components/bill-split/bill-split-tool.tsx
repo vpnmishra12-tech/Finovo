@@ -10,14 +10,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Users, UserPlus, Trash2, Calculator, CheckCircle2, ArrowRightLeft, AlertCircle, TrendingDown, TrendingUp } from 'lucide-react';
+import { Users, UserPlus, Trash2, Calculator, CheckCircle2, ArrowRightLeft, AlertCircle, TrendingUp } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface Participant {
   id: string;
   name: string;
-  share: number; // What they should pay (consumption)
   paid: number;  // What they actually paid at the venue
 }
 
@@ -34,23 +32,21 @@ export function BillSplitTool() {
   const { toast } = useToast();
 
   const [totalBill, setTotalBill] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
   const [participants, setParticipants] = useState<Participant[]>([
-    { id: '1', name: 'Me', share: 0, paid: 0 },
-    { id: '2', name: 'Friend 1', share: 0, paid: 0 }
+    { id: '1', name: 'Me', paid: 0 },
+    { id: '2', name: 'Friend 1', paid: 0 }
   ]);
-  const [splitMode, setSplitMode] = useState<'equal' | 'custom'>('equal');
 
   const billValue = parseFloat(totalBill) || 0;
 
-  // Calculate equal share if in equal mode
+  // Everyone shares equally
   const equalShare = useMemo(() => {
     return billValue > 0 ? parseFloat((billValue / participants.length).toFixed(2)) : 0;
   }, [billValue, participants.length]);
 
   const addPerson = () => {
     const newId = Date.now().toString();
-    setParticipants([...participants, { id: newId, name: `Friend ${participants.length}`, share: 0, paid: 0 }]);
+    setParticipants([...participants, { id: newId, name: `Friend ${participants.length}`, paid: 0 }]);
   };
 
   const removePerson = (id: string) => {
@@ -71,17 +67,11 @@ export function BillSplitTool() {
   const settlements = useMemo(() => {
     if (billValue <= 0) return [];
 
-    // 1. Determine actual shares for everyone
-    const currentParticipants = participants.map(p => ({
-      ...p,
-      actualShare: splitMode === 'equal' ? equalShare : p.share
-    }));
-
-    // 2. Calculate Balance (Paid - Share)
+    // Calculate Balance (Paid - Individual Share)
     // Positive means they are owed money, Negative means they owe money
-    let balances = currentParticipants.map(p => ({
+    let balances = participants.map(p => ({
       name: p.name,
-      balance: p.paid - p.actualShare
+      balance: p.paid - equalShare
     }));
 
     const results: Settlement[] = [];
@@ -113,29 +103,23 @@ export function BillSplitTool() {
     }
 
     return results;
-  }, [participants, billValue, splitMode, equalShare]);
+  }, [participants, billValue, equalShare]);
 
   const totalPaidAtVenue = participants.reduce((sum, p) => sum + p.paid, 0);
-  const totalAssignedShare = splitMode === 'equal' ? billValue : participants.reduce((sum, p) => sum + p.share, 0);
-  
   const isPaidValid = Math.abs(totalPaidAtVenue - billValue) < 0.1;
-  const isShareValid = Math.abs(totalAssignedShare - billValue) < 0.1;
 
   const handleSaveShare = () => {
     if (!firestore || !user?.uid) return;
     
-    const myParticipant = participants.find(p => p.id === '1');
-    const myShare = splitMode === 'equal' ? equalShare : (myParticipant?.share || 0);
-
-    if (myShare <= 0) {
+    if (equalShare <= 0) {
       toast({ variant: "destructive", title: "Error", description: "Share must be greater than 0" });
       return;
     }
 
     saveExpense(firestore, user.uid, {
-      amount: myShare,
+      amount: equalShare,
       category: 'Food',
-      description: description || `Bill Split: ${totalBill}`,
+      description: `Bill Split Share: ${totalBill}`,
       transactionDate: new Date().toISOString().split('T')[0],
       captureMethod: 'Text',
     });
@@ -163,107 +147,78 @@ export function BillSplitTool() {
           />
         </div>
 
-        <Tabs value={splitMode} onValueChange={(v) => setSplitMode(v as any)} className="w-full">
-          <TabsList className="grid w-full grid-cols-2 bg-muted rounded-xl p-1 h-12 mb-6">
-            <TabsTrigger value="equal" className="rounded-lg font-bold">{t.splitEqual}</TabsTrigger>
-            <TabsTrigger value="custom" className="rounded-lg font-bold">{t.splitCustom}</TabsTrigger>
-          </TabsList>
+        {billValue > 0 && (
+          <div className="bg-primary/5 p-4 rounded-2xl flex items-center justify-between">
+            <span className="text-xs font-bold uppercase text-muted-foreground">{t.personShare}</span>
+            <span className="text-xl font-headline font-black text-primary">₹{equalShare.toLocaleString()}</span>
+          </div>
+        )}
 
-          <div className="space-y-4 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
+        <div className="space-y-4">
+          <Label className="text-xs font-bold uppercase text-muted-foreground">{t.whoPaid}</Label>
+          <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
             {participants.map((p, idx) => (
-              <div key={p.id} className="flex flex-col gap-4 bg-muted/30 p-5 rounded-3xl border border-transparent hover:border-primary/10 transition-all">
+              <div key={p.id} className="flex flex-col gap-3 bg-muted/30 p-4 rounded-2xl border border-transparent">
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-bold">
+                  <div className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-bold shrink-0">
                     {idx + 1}
                   </div>
                   <Input 
                     value={p.name} 
                     onChange={(e) => updateParticipant(p.id, 'name', e.target.value)}
                     placeholder="Name"
-                    className="h-8 bg-transparent border-none font-bold p-0 focus-visible:ring-0 text-base"
+                    className="h-8 bg-transparent border-none font-bold p-0 focus-visible:ring-0 text-base flex-1"
                   />
                   <Button 
                     variant="ghost" 
                     size="icon" 
                     onClick={() => removePerson(p.id)}
-                    className="text-muted-foreground hover:text-destructive h-8 w-8 ml-auto"
+                    className="text-muted-foreground hover:text-destructive h-8 w-8"
                     disabled={participants.length <= 2}
                   >
                     <Trash2 className="w-4 h-4" />
                   </Button>
                 </div>
                 
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <Label className="text-[10px] font-black uppercase text-muted-foreground flex items-center gap-1">
-                      <TrendingDown className="w-3 h-3" /> {t.personShare}
-                    </Label>
-                    {splitMode === 'custom' ? (
-                      <div className="relative">
-                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-xs">₹</span>
-                        <Input 
-                          type="number"
-                          value={p.share || ""}
-                          onChange={(e) => updateParticipant(p.id, 'share', e.target.value)}
-                          placeholder="0"
-                          className="h-10 pl-7 rounded-xl bg-card border-none font-bold text-sm"
-                        />
-                      </div>
-                    ) : (
-                      <div className="h-10 flex items-center font-bold text-primary px-1">
-                        ₹{equalShare.toLocaleString()}
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="space-y-1">
-                    <Label className="text-[10px] font-black uppercase text-muted-foreground flex items-center gap-1">
-                      <TrendingUp className="w-3 h-3 text-green-500" /> {t.modes.camera === "Camera" ? "Paid at Venue" : "वहाँ दिया"}
-                    </Label>
-                    <div className="relative">
-                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-xs">₹</span>
-                      <Input 
-                        type="number"
-                        value={p.paid || ""}
-                        onChange={(e) => updateParticipant(p.id, 'paid', e.target.value)}
-                        placeholder="0"
-                        className="h-10 pl-7 rounded-xl bg-card border-none font-bold text-sm text-green-600"
-                      />
-                    </div>
+                <div className="space-y-1">
+                  <Label className="text-[10px] font-black uppercase text-muted-foreground flex items-center gap-1">
+                    <TrendingUp className="w-3 h-3 text-green-500" /> {t.modes.camera === "Camera" ? "Paid at Venue" : "वहाँ दिया"}
+                  </Label>
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-xs">₹</span>
+                    <Input 
+                      type="number"
+                      value={p.paid || ""}
+                      onChange={(e) => updateParticipant(p.id, 'paid', e.target.value)}
+                      placeholder="0"
+                      className="h-10 pl-7 rounded-xl bg-card border-none font-bold text-sm text-green-600"
+                    />
                   </div>
                 </div>
               </div>
             ))}
           </div>
+        </div>
 
-          <Button 
-            variant="outline" 
-            onClick={addPerson} 
-            className="w-full mt-6 h-12 rounded-2xl border-dashed border-2 gap-2 hover:bg-primary/5 transition-all"
-          >
-            <UserPlus className="w-4 h-4" />
-            {t.addPerson}
-          </Button>
+        <Button 
+          variant="outline" 
+          onClick={addPerson} 
+          className="w-full h-12 rounded-2xl border-dashed border-2 gap-2 hover:bg-primary/5 transition-all"
+        >
+          <UserPlus className="w-4 h-4" />
+          {t.addPerson}
+        </Button>
 
-          {/* Validation Messages */}
-          <div className="mt-6 space-y-2">
-            {!isPaidValid && billValue > 0 && (
-              <div className="p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl flex items-center gap-2 text-[11px] font-bold text-amber-600">
-                <AlertCircle className="w-4 h-4" />
-                Payments (₹{totalPaidAtVenue}) must match Bill (₹{billValue})
-              </div>
-            )}
-            {!isShareValid && splitMode === 'custom' && billValue > 0 && (
-              <div className="p-3 bg-destructive/10 border border-destructive/20 rounded-xl flex items-center gap-2 text-[11px] font-bold text-destructive">
-                <AlertCircle className="w-4 h-4" />
-                Shares (₹{totalAssignedShare}) must match Bill (₹{billValue})
-              </div>
-            )}
+        {/* Validation Messages */}
+        {!isPaidValid && billValue > 0 && (
+          <div className="p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl flex items-center gap-2 text-[11px] font-bold text-amber-600">
+            <AlertCircle className="w-4 h-4" />
+            Total Payments (₹{totalPaidAtVenue}) must match Bill (₹{billValue})
           </div>
-        </Tabs>
+        )}
 
         {/* Settlement Summary Section */}
-        {billValue > 0 && isPaidValid && isShareValid && (
+        {billValue > 0 && isPaidValid && (
           <div className="space-y-4 pt-4 border-t border-dashed">
             <h4 className="text-xs font-black uppercase text-muted-foreground flex items-center gap-2 tracking-widest">
               <ArrowRightLeft className="w-4 h-4 text-primary" />
@@ -276,9 +231,9 @@ export function BillSplitTool() {
                     <div className="w-2 h-2 rounded-full bg-primary/40 shrink-0" />
                     <p className="text-sm font-medium leading-relaxed">
                       <span className="font-bold text-primary">{s.from}</span>
-                      <span className="mx-1.5 text-muted-foreground lowercase">{t.owes}</span>
+                      <span className="mx-1.5 text-muted-foreground lowercase">will pay</span>
                       <span className="font-headline font-black text-primary mx-1">₹{s.amount.toLocaleString()}</span>
-                      <span className="mx-1.5 text-muted-foreground lowercase">{t.to}</span>
+                      <span className="mx-1.5 text-muted-foreground lowercase">to</span>
                       <span className="font-bold text-primary bg-primary/10 px-2 py-0.5 rounded">{s.to}</span>
                     </p>
                   </div>
@@ -297,13 +252,11 @@ export function BillSplitTool() {
             <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-16 -mt-16" />
             <div className="flex flex-col relative z-10">
               <span className="text-[10px] font-black uppercase tracking-widest opacity-80">{t.yourShare}</span>
-              <span className="text-3xl font-headline font-black">
-                ₹{(splitMode === 'equal' ? equalShare : (participants.find(p => p.id === '1')?.share || 0)).toLocaleString()}
-              </span>
+              <span className="text-3xl font-headline font-black">₹{equalShare.toLocaleString()}</span>
             </div>
             <Button 
               onClick={handleSaveShare} 
-              disabled={billValue <= 0 || !isPaidValid || !isShareValid}
+              disabled={billValue <= 0 || !isPaidValid}
               className="rounded-2xl h-14 px-8 bg-white text-primary hover:bg-white/90 font-black gap-2 shadow-xl relative z-10"
             >
               <CheckCircle2 className="w-5 h-5" />
