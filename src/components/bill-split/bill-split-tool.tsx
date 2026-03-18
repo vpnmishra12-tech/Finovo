@@ -11,8 +11,9 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Users, UserPlus, Trash2, Calculator, CheckCircle2 } from 'lucide-react';
+import { Users, UserPlus, Trash2, Calculator, CheckCircle2, ArrowRightLeft } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface Participant {
   id: string;
@@ -33,15 +34,17 @@ export function BillSplitTool() {
     { id: '2', name: 'Friend 1', amount: 0 }
   ]);
   const [splitMode, setSplitMode] = useState<'equal' | 'custom'>('equal');
+  const [paidById, setPaidById] = useState<string>('1');
 
   const addPerson = () => {
-    const newId = (participants.length + 1).toString();
+    const newId = Date.now().toString();
     setParticipants([...participants, { id: newId, name: `Friend ${participants.length}`, amount: 0 }]);
   };
 
   const removePerson = (id: string) => {
     if (participants.length <= 2) return;
     setParticipants(participants.filter(p => p.id !== id));
+    if (paidById === id) setPaidById('1');
   };
 
   const updateName = (id: string, name: string) => {
@@ -53,10 +56,10 @@ export function BillSplitTool() {
     setParticipants(participants.map(p => p.id === id ? { ...p, amount: val } : p));
   };
 
-  const calculateEqualSplit = () => {
+  const getEqualShare = () => {
     const bill = parseFloat(totalBill) || 0;
     if (bill === 0) return 0;
-    return (bill / participants.length).toFixed(2);
+    return parseFloat((bill / participants.length).toFixed(2));
   };
 
   const getCustomTotal = () => {
@@ -68,7 +71,7 @@ export function BillSplitTool() {
     
     let myShare = 0;
     if (splitMode === 'equal') {
-      myShare = parseFloat(calculateEqualSplit() as string);
+      myShare = getEqualShare();
     } else {
       myShare = participants.find(p => p.id === '1')?.amount || 0;
     }
@@ -90,6 +93,7 @@ export function BillSplitTool() {
   };
 
   const isCustomValid = splitMode === 'custom' && Math.abs(getCustomTotal() - (parseFloat(totalBill) || 0)) < 1;
+  const payer = participants.find(p => p.id === paidById);
 
   return (
     <Card className="border-none bg-card shadow-sm overflow-hidden rounded-3xl">
@@ -112,13 +116,17 @@ export function BillSplitTool() {
             />
           </div>
           <div className="space-y-2">
-            <Label className="text-xs font-bold uppercase text-muted-foreground">Reason / Description</Label>
-            <Input 
-              placeholder="Trip to Manali, Dinner..." 
-              value={description} 
-              onChange={(e) => setDescription(e.target.value)}
-              className="h-12 rounded-xl bg-muted border-none"
-            />
+            <Label className="text-xs font-bold uppercase text-muted-foreground">{t.whoPaid}</Label>
+            <Select value={paidById} onValueChange={setPaidById}>
+              <SelectTrigger className="h-12 rounded-xl bg-muted border-none font-medium">
+                <SelectValue placeholder="Select Payer" />
+              </SelectTrigger>
+              <SelectContent>
+                {participants.map(p => (
+                  <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </div>
 
@@ -132,7 +140,7 @@ export function BillSplitTool() {
             {participants.map((p, idx) => (
               <div key={p.id} className="flex items-center gap-3 bg-muted/30 p-3 rounded-2xl group">
                 <div className="flex-1 flex gap-2 items-center">
-                  <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-xs font-bold text-primary">
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${paidById === p.id ? 'bg-primary text-white' : 'bg-primary/10 text-primary'}`}>
                     {idx + 1}
                   </div>
                   <Input 
@@ -155,7 +163,7 @@ export function BillSplitTool() {
                   </div>
                 ) : (
                   <div className="text-right font-headline font-bold text-primary">
-                    ₹{calculateEqualSplit()}
+                    ₹{getEqualShare()}
                   </div>
                 )}
 
@@ -191,12 +199,39 @@ export function BillSplitTool() {
           )}
         </Tabs>
 
+        {/* Settlement Summary Section */}
+        {parseFloat(totalBill) > 0 && (splitMode === 'equal' || isCustomValid) && (
+          <div className="space-y-3">
+            <h4 className="text-xs font-bold uppercase text-muted-foreground flex items-center gap-2">
+              <ArrowRightLeft className="w-3 h-3" />
+              {t.settlement}
+            </h4>
+            <div className="bg-primary/5 rounded-2xl p-4 space-y-2 border border-primary/10">
+              {participants.map(p => {
+                if (p.id === paidById) return null;
+                const share = splitMode === 'equal' ? getEqualShare() : p.amount;
+                if (share <= 0) return null;
+                return (
+                  <div key={`settle-${p.id}`} className="flex justify-between items-center text-sm">
+                    <span className="font-bold text-primary">{p.name}</span>
+                    <span className="text-muted-foreground mx-2">{t.owes} <span className="text-primary font-bold">₹{share}</span> {t.to}</span>
+                    <span className="font-bold text-primary">{payer?.name || 'Payer'}</span>
+                  </div>
+                );
+              })}
+              {participants.every(p => p.id === paidById || (splitMode === 'equal' ? getEqualShare() : p.amount) === 0) && (
+                <p className="text-center text-muted-foreground text-xs">{t.noPayment}</p>
+              )}
+            </div>
+          </div>
+        )}
+
         <div className="pt-4 border-t flex flex-col gap-3">
           <div className="flex justify-between items-center p-4 bg-muted/50 rounded-2xl">
             <div className="flex flex-col">
               <span className="text-xs font-bold text-muted-foreground uppercase">{t.yourShare}</span>
               <span className="text-2xl font-headline font-bold text-primary">
-                ₹{splitMode === 'equal' ? calculateEqualSplit() : (participants.find(p => p.id === '1')?.amount || 0)}
+                ₹{splitMode === 'equal' ? getEqualShare() : (participants.find(p => p.id === '1')?.amount || 0)}
               </span>
             </div>
             <Button 

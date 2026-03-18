@@ -32,6 +32,11 @@ export const translations = {
     addPerson: "Add Person",
     yourShare: "Your Share",
     saveMyShare: "Save My Share as Expense",
+    whoPaid: "Who paid the full bill?",
+    settlement: "Settlement Plan",
+    owes: "owes",
+    to: "to",
+    noPayment: "Settled up!",
     alerts: {
       halfway: "Warning: You have spent 50% of your budget!",
       critical: "Urgent: 75% budget used. Watch your spending!",
@@ -110,6 +115,11 @@ export const translations = {
     addPerson: "व्यक्ति जोड़ें",
     yourShare: "आपका हिस्सा",
     saveMyShare: "अपना हिस्सा खर्च में जोड़ें",
+    whoPaid: "पूरा बिल किसने भरा?",
+    settlement: "पैसे का लेनदेन",
+    owes: "देंगे",
+    to: "को",
+    noPayment: "सब बराबर है!",
     alerts: {
       halfway: "चेतावनी: आपने अपने बजट का 50% खर्च कर दिया है!",
       critical: "ज़रूरी: 75% बजट खत्म। अब थोड़ा संभल कर चलें!",
