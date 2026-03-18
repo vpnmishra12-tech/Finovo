@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useLanguage } from '@/lib/contexts/language-context';
@@ -6,7 +7,7 @@ import { Expense, deleteExpense } from '@/lib/expenses';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { ShoppingBag, Utensils, Bus, Receipt, CreditCard, Loader2, PlusCircle, Trash2 } from 'lucide-react';
+import { ShoppingBag, Utensils, Bus, Receipt, CreditCard, Loader2, PlusCircle, Trash2, Smartphone, MoreHorizontal } from 'lucide-react';
 import { format } from 'date-fns';
 import { useFirestore } from '@/firebase';
 import {
@@ -27,6 +28,8 @@ const CategoryIcon = ({ category, className }: { category: string, className?: s
     case 'Transport': return <Bus className={className} />;
     case 'Bills': return <Receipt className={className} />;
     case 'EMI': return <CreditCard className={className} />;
+    case 'Recharge': return <Smartphone className={className} />;
+    case 'Miscellaneous': return <MoreHorizontal className={className} />;
     default: return <ShoppingBag className={className} />;
   }
 };
@@ -37,6 +40,8 @@ const CategoryColor = (category: string) => {
     case 'Transport': return 'bg-blue-500/10 text-blue-500';
     case 'Bills': return 'bg-purple-500/10 text-purple-500';
     case 'EMI': return 'bg-red-500/10 text-red-500';
+    case 'Recharge': return 'bg-cyan-500/10 text-cyan-500';
+    case 'Miscellaneous': return 'bg-pink-500/10 text-pink-500';
     default: return 'bg-green-500/10 text-green-500';
   }
 };

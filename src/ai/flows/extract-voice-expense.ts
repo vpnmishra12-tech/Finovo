@@ -1,3 +1,4 @@
+
 'use server';
 /**
  * @fileOverview A Genkit flow to extract expense details from a transcribed voice input.
@@ -15,10 +16,10 @@ const ExtractVoiceExpenseInputSchema = z.object({
 });
 export type ExtractVoiceExpenseInput = z.infer<typeof ExtractVoiceExpenseInputSchema>;
 
-const expenseCategories = ['Food', 'Transport', 'Bills', 'Shopping', 'EMI'] as const;
+const expenseCategories = ['Food', 'Transport', 'Bills', 'Shopping', 'EMI', 'Recharge', 'Miscellaneous'] as const;
 const ExtractVoiceExpenseOutputSchema = z.object({
   amount: z.number().describe('The numerical amount of the expense.'),
-  category: z.enum(expenseCategories).describe('The category of the expense from the predefined list: Food, Transport, Bills, Shopping, EMI.'),
+  category: z.enum(expenseCategories).describe('The category of the expense from the predefined list: Food, Transport, Bills, Shopping, EMI, Recharge, Miscellaneous.'),
   description: z.string().describe('A brief, concise description of the expense.'),
 });
 export type ExtractVoiceExpenseOutput = z.infer<typeof ExtractVoiceExpenseOutputSchema>;
@@ -31,62 +32,29 @@ const extractVoiceExpensePrompt = ai.definePrompt({
 
 You need to identify the following:
 1. The numerical amount of the expense.
-2. The most relevant category for the expense from this strict list: Food, Transport, Bills, Shopping, EMI.
+2. The most relevant category for the expense from this strict list: Food, Transport, Bills, Shopping, EMI, Recharge, Miscellaneous.
 3. A brief, concise description of the expense based on the user's input.
 
-If an amount is not explicitly mentioned, infer a reasonable amount based on the context if possible, otherwise use 0.
-If a category is not explicitly mentioned, assign the most appropriate one from the list. If none are suitable, default to 'Shopping'.
+Category Rules:
+- 'Recharge': Mobile top-up, DTH, data packs.
+- 'Miscellaneous': Cigarettes, Paan, Gutkha, Alcohol, snacks, or unspecified small items.
+- 'Bills': Rent, Electricity, Water, Internet bills (not mobile recharge).
 
 User's transcribed voice input: "{{{transcribedText}}}"
 
 Example:
-Input: "Paid 350 for a bus ticket"
+Input: "Recharged my phone for 299"
 Output: {
-  "amount": 350,
-  "category": "Transport",
-  "description": "Bus ticket"
+  "amount": 299,
+  "category": "Recharge",
+  "description": "Mobile Recharge"
 }
 
-Input: "I bought groceries for 500 rupees yesterday"
+Input: "Bought a pack of cigarettes for 180"
 Output: {
-  "amount": 500,
-  "category": "Food",
-  "description": "Groceries"
-}
-
-Input: "Electric bill payment of 1200"
-Output: {
-  "amount": 1200,
-  "category": "Bills",
-  "description": "Electric bill"
-}
-
-Input: "New shoes, 2500"
-Output: {
-  "amount": 2500,
-  "category": "Shopping",
-  "description": "New shoes"
-}
-
-Input: "Monthly loan installment"
-Output: {
-  "amount": 0,
-  "category": "EMI",
-  "description": "Monthly loan installment"
-}
-
-Input: "Coffee, 150"
-Output: {
-  "amount": 150,
-  "category": "Food",
-  "description": "Coffee"
-}
-
-Input: "I went out for dinner"
-Output: {
-  "amount": 0,
-  "category": "Food",
-  "description": "Dinner"
+  "amount": 180,
+  "category": "Miscellaneous",
+  "description": "Cigarettes"
 }
 `,
 });

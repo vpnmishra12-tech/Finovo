@@ -1,3 +1,4 @@
+
 export const translations = {
   en: {
     appName: "SmartKharcha AI",
@@ -32,7 +33,9 @@ export const translations = {
       Transport: "Transport",
       Bills: "Bills",
       Shopping: "Shopping",
-      EMI: "EMI"
+      EMI: "EMI",
+      Recharge: "Recharge",
+      Miscellaneous: "Misc/Others"
     },
     months: {
       "01": "January",
@@ -99,7 +102,9 @@ export const translations = {
       Transport: "परिवहन",
       Bills: "बिल",
       Shopping: "खरीदारी",
-      EMI: "ईएमआई"
+      EMI: "ईएमआई",
+      Recharge: "रिचार्ज",
+      Miscellaneous: "अन्य/नशा आदि"
     },
     months: {
       "01": "जनवरी",

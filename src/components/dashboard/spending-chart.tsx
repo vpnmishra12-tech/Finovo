@@ -1,10 +1,11 @@
+
 "use client";
 
 import { useLanguage } from '@/lib/contexts/language-context';
 import { Expense } from '@/lib/expenses';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
-import { Pie, PieChart, Cell, ResponsiveContainer } from 'recharts';
+import { Pie, PieChart, Cell } from 'recharts';
 
 export function SpendingChart({ expenses }: { expenses: Expense[] }) {
   const { t } = useLanguage();
@@ -26,6 +27,8 @@ export function SpendingChart({ expenses }: { expenses: Expense[] }) {
     Bills: 'hsl(var(--chart-3))',
     Shopping: 'hsl(var(--chart-4))',
     EMI: 'hsl(var(--chart-5))',
+    Recharge: 'hsl(190, 90%, 50%)',
+    Miscellaneous: 'hsl(330, 90%, 60%)',
   };
 
   const config: ChartConfig = {

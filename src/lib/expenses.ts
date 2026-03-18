@@ -1,3 +1,4 @@
+
 import { Firestore, collection, doc, serverTimestamp, Timestamp, getDoc, setDoc, query, where, getDocs } from 'firebase/firestore';
 import { addDocumentNonBlocking, deleteDocumentNonBlocking } from '@/firebase';
 
@@ -5,7 +6,7 @@ export interface Expense {
   id: string;
   userId: string;
   amount: number;
-  category: 'Food' | 'Transport' | 'Bills' | 'Shopping' | 'EMI';
+  category: 'Food' | 'Transport' | 'Bills' | 'Shopping' | 'EMI' | 'Recharge' | 'Miscellaneous';
   description: string;
   transactionDate: string;
   captureMethod: 'Text' | 'Voice' | 'Camera';
