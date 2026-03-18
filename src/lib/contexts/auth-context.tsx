@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { createContext, useContext, useState } from 'react';
@@ -19,41 +18,46 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const auth = useFirebaseServiceAuth();
   const { user, isUserLoading } = useUser();
   const { toast } = useToast();
-  const [googleProvider] = useState(() => new GoogleAuthProvider());
+  const [googleProvider] = useState(() => {
+    const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: 'select_account' });
+    return provider;
+  });
 
   const login = async () => {
     try {
-      // We trigger the popup immediately to ensure it's seen as a direct user action.
-      // Do NOT put any async calls before this.
+      // CRITICAL: We trigger the popup as the VERY FIRST ACTION.
+      // Any delay (like state updates or toasts) before this can cause 
+      // mobile browsers to block the popup even if "allowed" in settings.
       const loginPromise = signInWithPopup(auth, googleProvider);
       
+      // Now we can show a hint to the user
       toast({
-        title: "Login Started",
-        description: "A new window is opening. Please sign in there.",
+        title: "Sign-in Started",
+        description: "Please complete the login in the new window.",
       });
 
       await loginPromise;
       
       toast({
-        title: "Login Successful",
-        description: "Welcome to SmartKharcha AI!",
+        title: "Success",
+        description: "Welcome back!",
       });
     } catch (error: any) {
-      let errorMessage = "An unexpected error occurred during login.";
-      let errorTitle = "Login Failed";
+      let errorMessage = "Login failed. Please try again.";
+      let errorTitle = "Authentication Error";
       
-      // Map Firebase auth errors to helpful user messages
       if (error.code === 'auth/unauthorized-domain') {
         errorTitle = "Domain Not Authorized";
-        errorMessage = "Go to Firebase Console > Auth > Settings > Authorized Domains and add this domain. See README.md for details.";
+        errorMessage = "You must whitelist this domain in Firebase Console > Auth > Settings > Authorized Domains.";
       } else if (error.code === 'auth/popup-closed-by-user') {
-        errorTitle = "Window Closed";
-        errorMessage = "The login window was closed. On mobile, look for a 'Pop-up blocked' bar at the bottom and click 'Always show'.";
+        errorTitle = "Login Cancelled";
+        errorMessage = "The login window was closed. On mobile, look for a small 'Pop-up blocked' bar at the BOTTOM and click 'Always show'.";
       } else if (error.code === 'auth/popup-blocked') {
         errorTitle = "Popup Blocked";
-        errorMessage = "Browser blocked the login window. Look for a small icon in your address bar (top right) and select 'Always allow'.";
+        errorMessage = "Your browser blocked the login window. Please allow popups for this site.";
       } else if (error.code === 'auth/cancelled-popup-request') {
-        return; // Ignore multiple clicks
+        return; 
       }
 
       toast({
@@ -69,10 +73,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       await signOut(auth);
       toast({
         title: "Logged Out",
-        description: "You have been successfully signed out.",
+        description: "See you soon!",
       });
     } catch (error) {
-      // Silently handle logout errors
+      // Silently handle
     }
   };
 
