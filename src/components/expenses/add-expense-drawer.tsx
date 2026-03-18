@@ -15,9 +15,11 @@ import { extractTextExpense } from '@/ai/flows/extract-text-expense';
 import { VoiceInput } from './capture-modes/voice-input';
 import { CameraInput } from './capture-modes/camera-input';
 import { useToast } from '@/hooks/use-toast';
+import { useFirestore } from '@/firebase';
 
 export function AddExpenseDrawer() {
   const { user } = useAuth();
+  const db = useFirestore();
   const { t } = useLanguage();
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
@@ -39,15 +41,14 @@ export function AddExpenseDrawer() {
   };
 
   const handleManualSave = async () => {
-    if (!user || !amount || !description) return;
+    if (!user || !amount || !description || !db) return;
     setIsSaving(true);
     try {
-      await saveExpense({
+      await saveExpense(db, {
         userId: user.uid,
         amount: parseFloat(amount),
         category: category as any,
         description,
-        date: new Date() as any
       });
       toast({ title: "Success", description: "Expense saved successfully!" });
       setOpen(false);

@@ -11,23 +11,24 @@ import { ExpenseList } from '@/components/expenses/expense-list';
 import { AddExpenseDrawer } from '@/components/expenses/add-expense-drawer';
 import { Button } from '@/components/ui/button';
 import { LogIn, Wallet } from 'lucide-react';
-import { Skeleton } from '@/components/ui/skeleton';
+import { useFirestore } from '@/firebase';
 
 export default function Home() {
   const { user, loading, login } = useAuth();
   const { t } = useLanguage();
+  const db = useFirestore();
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [fetching, setFetching] = useState(true);
 
   useEffect(() => {
-    if (user) {
-      const unsubscribe = subscribeToExpenses(user.uid, (data) => {
+    if (user && db) {
+      const unsubscribe = subscribeToExpenses(db, user.uid, (data) => {
         setExpenses(data);
         setFetching(false);
       });
       return unsubscribe;
     }
-  }, [user]);
+  }, [user, db]);
 
   if (loading) {
     return (

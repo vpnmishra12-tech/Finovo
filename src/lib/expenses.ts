@@ -1,5 +1,4 @@
-import { db } from './firebase';
-import { collection, addDoc, query, where, orderBy, onSnapshot, Timestamp, doc, setDoc, getDoc } from 'firebase/firestore';
+import { Firestore, collection, query, where, orderBy, onSnapshot, Timestamp, doc, setDoc, getDoc, addDoc } from 'firebase/firestore';
 
 export interface Expense {
   id?: string;
@@ -8,6 +7,10 @@ export interface Expense {
   category: 'Food' | 'Transport' | 'Bills' | 'Shopping' | 'EMI';
   description: string;
   date: Timestamp;
+  createdAt: string;
+  updatedAt: string;
+  transactionDate: string;
+  captureMethod: string;
 }
 
 export interface UserProfile {
@@ -15,17 +18,25 @@ export interface UserProfile {
   language: string;
 }
 
-export const saveExpense = async (expense: Omit<Expense, 'id'>) => {
-  return await addDoc(collection(db, 'expenses'), {
+// Save expense to the user's specific subcollection as per backend.json
+export const saveExpense = async (db: Firestore, expense: Omit<Expense, 'id' | 'createdAt' | 'updatedAt' | 'transactionDate' | 'captureMethod'>) => {
+  const now = new Date().toISOString();
+  const expenseData = {
     ...expense,
-    date: Timestamp.now()
-  });
+    date: Timestamp.now(),
+    createdAt: now,
+    updatedAt: now,
+    transactionDate: now.split('T')[0],
+    captureMethod: 'Text' // Default, can be overridden
+  };
+  
+  return await addDoc(collection(db, 'users', expense.userId, 'expenses'), expenseData);
 };
 
-export const subscribeToExpenses = (userId: string, callback: (expenses: Expense[]) => void) => {
+// Subscribe to user's expenses subcollection
+export const subscribeToExpenses = (db: Firestore, userId: string, callback: (expenses: Expense[]) => void) => {
   const q = query(
-    collection(db, 'expenses'),
-    where('userId', '==', userId),
+    collection(db, 'users', userId, 'expenses'),
     orderBy('date', 'desc')
   );
 
@@ -38,16 +49,25 @@ export const subscribeToExpenses = (userId: string, callback: (expenses: Expense
   });
 };
 
-export const getBudget = async (userId: string): Promise<number> => {
-  const docRef = doc(db, 'userProfiles', userId);
+export const getBudget = async (db: Firestore, userId: string): Promise<number> => {
+  const docRef = doc(db, 'users', userId, 'monthlyBudgets', 'current');
   const docSnap = await getDoc(docRef);
   if (docSnap.exists()) {
-    return docSnap.data().budget || 0;
+    return docSnap.data().budgetAmount || 0;
   }
   return 0;
 };
 
-export const setBudget = async (userId: string, budget: number) => {
-  const docRef = doc(db, 'userProfiles', userId);
-  return await setDoc(docRef, { budget }, { merge: true });
+export const setBudget = async (db: Firestore, userId: string, budget: number) => {
+  const docRef = doc(db, 'users', userId, 'monthlyBudgets', 'current');
+  const now = new Date();
+  return await setDoc(docRef, { 
+    userId,
+    budgetAmount: budget,
+    month: now.getMonth() + 1,
+    year: now.getFullYear(),
+    createdAt: now.toISOString(),
+    updatedAt: now.toISOString(),
+    id: 'current'
+  }, { merge: true });
 };

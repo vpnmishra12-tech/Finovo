@@ -9,21 +9,25 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { PiggyBank, Target, TrendingUp } from 'lucide-react';
+import { useFirestore } from '@/firebase';
 
 export function BudgetSummary({ userId, totalSpent }: { userId: string, totalSpent: number }) {
   const { t } = useLanguage();
+  const db = useFirestore();
   const [budget, setBudgetState] = useState(0);
   const [newBudget, setNewBudget] = useState("");
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    getBudget(userId).then(setBudgetState);
-  }, [userId]);
+    if (db) {
+      getBudget(db, userId).then(setBudgetState);
+    }
+  }, [userId, db]);
 
   const handleSetBudget = async () => {
     const b = parseFloat(newBudget);
-    if (!isNaN(b)) {
-      await setFirebaseBudget(userId, b);
+    if (!isNaN(b) && db) {
+      await setFirebaseBudget(db, userId, b);
       setBudgetState(b);
       setOpen(false);
     }
