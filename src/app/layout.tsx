@@ -10,15 +10,17 @@ export const metadata: Metadata = {
   title: 'SmartKharcha AI - Smart Expense Tracker',
   description: 'An AI-powered expense tracker for modern Indian users.',
   manifest: '/manifest.json',
+  icons: {
+    apple: [
+      { url: 'https://images.unsplash.com/photo-1580519542036-c47de6196ba5?w=180&h=180&fit=crop&q=80', sizes: '180x180', type: 'image/png' },
+    ],
+  },
   appleWebApp: {
     capable: true,
-    statusBarStyle: 'default',
+    statusBarStyle: 'black-translucent',
     title: 'SmartKharcha AI',
   },
   applicationName: 'SmartKharcha AI',
-  formatDetection: {
-    telephone: false,
-  },
 };
 
 export const viewport: Viewport = {
@@ -43,6 +45,7 @@ export default function RootLayout({
         <link rel="manifest" href="/manifest.json" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <link rel="apple-touch-icon" href="https://images.unsplash.com/photo-1580519542036-c47de6196ba5?w=180&h=180&fit=crop&q=80" />
       </head>
       <body className="font-body antialiased min-h-screen">
         <FirebaseClientProvider>
