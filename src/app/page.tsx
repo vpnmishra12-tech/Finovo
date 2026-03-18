@@ -251,35 +251,35 @@ export default function Home() {
         </nav>
 
         {/* Main Content Area */}
-        <main className="flex-1 py-8 space-y-8 min-w-0">
+        <main className="flex-1 py-6 space-y-6 min-w-0">
           {activeTab === 'dashboard' && (
-            <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
               <section className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div className="space-y-1">
-                  <p className="text-muted-foreground text-sm font-medium">
+                <div className="space-y-0.5">
+                  <p className="text-muted-foreground text-[10px] font-black uppercase tracking-widest">
                     {t.welcome} 👋
                   </p>
-                  <h2 className="text-3xl font-headline font-bold">{t.dashboard}</h2>
+                  <h2 className="text-2xl font-headline font-bold tracking-tight">{t.dashboard}</h2>
                 </div>
                 
                 <div className="flex items-center gap-2 bg-muted p-1 rounded-2xl w-fit">
                   <Select value={selectedMonth} onValueChange={setSelectedMonth}>
-                    <SelectTrigger className="w-[120px] bg-transparent border-none font-bold">
+                    <SelectTrigger className="w-[110px] h-9 bg-transparent border-none font-bold text-xs">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
                       {Object.entries(t.months).map(([key, value]) => (
-                        <SelectItem key={key} value={key}>{value}</SelectItem>
+                        <SelectItem key={key} value={key} className="text-xs">{value}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
                   <Select value={selectedYear} onValueChange={setSelectedYear}>
-                    <SelectTrigger className="w-[100px] bg-transparent border-none font-bold">
+                    <SelectTrigger className="w-[80px] h-9 bg-transparent border-none font-bold text-xs">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
                       {[now.getFullYear() - 1, now.getFullYear(), now.getFullYear() + 1].map(y => (
-                        <SelectItem key={y} value={y.toString()}>{y}</SelectItem>
+                        <SelectItem key={y} value={y.toString()} className="text-xs">{y}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -293,7 +293,7 @@ export default function Home() {
                 year={parseInt(selectedYear)}
               />
 
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <SpendingChart expenses={selectedMonthExpenses} />
                 <MonthlyHistory expenses={expenses || []} />
               </div>
@@ -329,4 +329,3 @@ export default function Home() {
     </div>
   );
 }
-
