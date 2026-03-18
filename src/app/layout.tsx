@@ -1,10 +1,10 @@
-
 import type {Metadata, Viewport} from 'next';
 import './globals.css';
 import { FirebaseClientProvider } from '@/firebase/client-provider';
 import { AuthProvider } from '@/lib/contexts/auth-context';
 import { LanguageProvider } from '@/lib/contexts/language-context';
 import { Toaster } from '@/components/ui/toaster';
+import Script from 'next/script';
 
 export const metadata: Metadata = {
   title: 'SmartKharcha AI - Smart Expense Tracker',
@@ -46,6 +46,17 @@ export default function RootLayout({
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <link rel="apple-touch-icon" href="https://images.unsplash.com/photo-1580519542036-c47de6196ba5?w=180&h=180&fit=crop&q=80" />
+        
+        {/* STEP 1: Google AdSense Global Script */}
+        {/* Apni Client ID (ca-pub-XXXXXXXXXXXXXXXX) niche 'src' aur 'data-ad-client' mein bharein jab aapke paas ho */}
+        {/* 
+        <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        /> 
+        */}
       </head>
       <body className="font-body antialiased min-h-screen">
         <FirebaseClientProvider>
