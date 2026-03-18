@@ -1,21 +1,25 @@
+
 {
-  "name": "SmartKharcha AI",
+  "name": "SmartKharcha AI - Expense Tracker",
   "short_name": "SmartKharcha",
-  "description": "AI-powered expense tracker",
+  "description": "An AI-powered expense tracker for modern users. Track spending using voice, text, and bill scans.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#1F1F2E",
   "theme_color": "#5252E0",
+  "orientation": "portrait",
   "icons": [
     {
-      "src": "https://picsum.photos/seed/appicon/192/192",
+      "src": "https://picsum.photos/seed/icon1/192/192",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
-      "src": "https://picsum.photos/seed/appicon/512/512",
+      "src": "https://picsum.photos/seed/icon2/512/512",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
