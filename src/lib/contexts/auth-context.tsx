@@ -35,35 +35,36 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const checkRedirect = async () => {
       try {
+        // Step 1: Tell the user we are checking the result
         const result = await getRedirectResult(auth);
+        
         if (result) {
           toast({
-            title: "Login Successful",
-            description: `Welcome, ${result.user.displayName}!`,
-          });
-        }
-      } catch (error: any) {
-        console.error("Auth Redirect Error:", error.code, error.message);
-        
-        if (error.code === 'auth/unauthorized-domain') {
-          toast({
-            variant: "destructive",
-            title: "Domain Not Authorized",
-            description: "Please double check your Firebase Console 'Authorized Domains' list. It must exactly match the URL in your browser without https://.",
-          });
-        } else if (error.code === 'auth/internal-error') {
-          toast({
-            variant: "destructive",
-            title: "Auth Error",
-            description: "Try clearing your browser cache or using a non-private window.",
+            title: "Success!",
+            description: `Logged in as ${result.user.displayName}`,
           });
         } else {
-          toast({
-            variant: "destructive",
-            title: "Login Failed",
-            description: error.message || "An error occurred during the login redirect.",
-          });
+          // If result is null, it means no login was attempted or it's a fresh load
+          // We don't show a message here to avoid annoying the user on every refresh
         }
+      } catch (error: any) {
+        // Step 2: Catch every possible error and show it in a Red Toast
+        let errorTitle = "Login Failed";
+        let errorDescription = error.message || "An error occurred.";
+
+        if (error.code === 'auth/unauthorized-domain') {
+          errorTitle = "Domain Not Authorized";
+          errorDescription = "Go to Firebase Console > Auth > Settings > Authorized Domains and add your current workstation URL (without https://).";
+        } else if (error.code === 'auth/network-request-failed') {
+          errorTitle = "Network Error";
+          errorDescription = "Check your internet connection or browser privacy settings.";
+        }
+
+        toast({
+          variant: "destructive",
+          title: errorTitle,
+          description: errorDescription,
+        });
       }
     };
 
@@ -73,18 +74,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = async () => {
     try {
       toast({
-        title: "Starting Login",
-        description: "Redirecting to Google. Please wait...",
+        title: "Redirecting...",
+        description: "Opening Google Sign-in. Please wait...",
       });
       
-      // Redirect is the most reliable method for workstations and mobile
+      // Redirect is the only method that works reliably in Cloud Workstations
       await signInWithRedirect(auth, googleProvider);
     } catch (error: any) {
-      console.error("Login Initiation Error:", error.code, error.message);
       toast({
         variant: "destructive",
         title: "Login Error",
-        description: "Could not initiate the sign-in process.",
+        description: error.message || "Could not start the login process.",
       });
     }
   };
@@ -94,10 +94,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       await signOut(auth);
       toast({
         title: "Logged Out",
-        description: "You have been successfully signed out.",
+        description: "Goodbye!",
       });
     } catch (error) {
-      console.error("Logout Error:", error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Could not log out.",
+      });
     }
   };
 
