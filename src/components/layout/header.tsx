@@ -6,11 +6,29 @@ import { useLanguage } from '@/lib/contexts/language-context';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Languages, LogOut, Settings, Wallet, LogIn } from 'lucide-react';
+import { Languages, LogOut, Settings, Wallet, LogIn, Share2 } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 export function Header() {
   const { user, logout, login } = useAuth();
   const { t, language, setLanguage } = useLanguage();
+  const { toast } = useToast();
+
+  const handleShare = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: 'SmartKharcha AI',
+        text: 'Check out my smart expense tracker!',
+        url: window.location.href,
+      }).catch(console.error);
+    } else {
+      navigator.clipboard.writeText(window.location.href);
+      toast({
+        title: "Link Copied!",
+        description: "App URL copied to clipboard. Share it with anyone!",
+      });
+    }
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-md">
@@ -26,7 +44,11 @@ export function Header() {
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" size="icon" onClick={handleShare} className="h-9 w-9">
+            <Share2 className="w-4 h-4" />
+          </Button>
+
           <Button 
             variant="ghost" 
             size="sm" 
