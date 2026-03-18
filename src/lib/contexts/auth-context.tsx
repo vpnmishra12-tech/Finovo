@@ -23,10 +23,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = async () => {
     try {
-      // Show an initial feedback toast so user knows something started
       toast({
         title: "Starting Login...",
-        description: "A Google login popup should appear. Please allow popups if blocked.",
+        description: "Checking popup and domain authorization. Please allow popups.",
       });
 
       await signInWithPopup(auth, googleProvider);
@@ -36,24 +35,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         description: "Welcome to SmartKharcha AI!",
       });
     } catch (error: any) {
-      // Handle errors gracefully without triggering the red console error screen
       let errorMessage = "An unexpected error occurred during login.";
       let errorTitle = "Login Failed";
       
       if (error.code === 'auth/unauthorized-domain') {
         errorTitle = "Domain Not Authorized";
-        errorMessage = "CRITICAL: This domain is not in your Firebase 'Authorized Domains' list. Go to Firebase Console > Auth > Settings and add this URL.";
+        errorMessage = "Go to Firebase Console > Auth > Settings > Authorized Domains and add this domain. See README.md for details.";
       } else if (error.code === 'auth/popup-closed-by-user') {
-        errorTitle = "Login Window Closed";
-        errorMessage = "The login popup was closed before completion. This usually happens if popups are blocked or the domain isn't authorized. Check the README for the fix.";
-      } else if (error.code === 'auth/operation-not-allowed') {
-        errorMessage = "Google Sign-In is not enabled in your Firebase Console.";
+        errorTitle = "Window Closed";
+        errorMessage = "The login popup was closed. Please ensure popups are ALLOWED in your browser settings and try again.";
       } else if (error.code === 'auth/popup-blocked') {
         errorTitle = "Popup Blocked";
-        errorMessage = "Your browser blocked the login popup. Please click the 'Lock' icon in the address bar to allow popups.";
-      } else if (error.message?.includes('cross-origin')) {
-        errorTitle = "Browser Restriction";
-        errorMessage = "Cross-origin issue detected. Ensure you are using the correct production URL and popups are enabled.";
+        errorMessage = "Browser blocked the window. Click the 'Blocked Popup' icon in your address bar and select 'Always allow'.";
       }
 
       toast({
