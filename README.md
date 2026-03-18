@@ -1,9 +1,9 @@
 
 # SmartKharcha AI - Final Login Fix 🚀
 
-If your login is still not working, follow these exact steps.
+If your login is still not working after the redirect, follow these exact steps.
 
-## 🛠 Authorized Domain Fix
+## 🛠 Step 1: Authorized Domain Fix (Mandatory)
 
 Firebase blocks login requests if the domain is not in its whitelist.
 
@@ -23,14 +23,28 @@ Look at your browser tab's address bar. Your URL looks like this:
    - ⚠️ **IMPORTANT**: Ensure there is NO `https://` at the start and NO `/` at the end.
 6. Click **"Add"**.
 
-### 3. Restart & Login
-1. Go back to your app tab and **Refresh the page**.
-2. Click **Login**. It will now redirect you to Google and back to the app.
+---
+
+## 🍪 Step 2: Third-Party Cookies (CRITICAL)
+
+If you are redirected back to the app but NOT logged in, it's because your browser is blocking the "handshake" cookie.
+
+### For Chrome (Mobile/Desktop):
+1. Go to Browser **Settings**.
+2. Go to **Privacy and security**.
+3. Go to **Third-party cookies**.
+4. Select **"Allow third-party cookies"** (or ensure "Block" is turned OFF).
+   - ⚠️ **SABSE ZAROORI**: Agar aapne cookies ko "Block" kar diya hai, toh login kaam nahi karega. Inhe **ALLOW** karein.
+
+### For iPhone (Safari):
+1. Go to iPhone **Settings**.
+2. Scroll down to **Safari**.
+3. Turn OFF **"Prevent Cross-Site Tracking"**.
+4. Turn OFF **"Block All Cookies"**.
 
 ---
 
 ## 📱 Mobile Troubleshooting
-If you are on a phone:
-- **Pop-up Blocked?**: The app now uses "Redirect Mode", so popups are NOT required.
-- **Cookies**: Ensure "Block Third-Party Cookies" is turned OFF in your mobile browser settings.
-- **Incognito**: Do not use private/incognito mode, as it often blocks the login handshake.
+If you are still stuck:
+- **Incognito**: Private/Incognito mode ka use na karein, wahan cookies automatically block ho jati hain.
+- **Refresh**: Settings change karne ke baad page ko **Refresh** zaroor karein.
