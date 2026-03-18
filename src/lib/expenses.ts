@@ -1,73 +1,56 @@
-import { Firestore, collection, query, where, orderBy, onSnapshot, Timestamp, doc, setDoc, getDoc, addDoc } from 'firebase/firestore';
+
+import { Firestore, collection, doc, serverTimestamp, Timestamp } from 'firebase/firestore';
+import { addDocumentNonBlocking, setDocumentNonBlocking } from '@/firebase';
 
 export interface Expense {
-  id?: string;
+  id: string;
   userId: string;
   amount: number;
   category: 'Food' | 'Transport' | 'Bills' | 'Shopping' | 'EMI';
   description: string;
-  date: Timestamp;
-  createdAt: string;
-  updatedAt: string;
   transactionDate: string;
-  captureMethod: string;
+  captureMethod: 'Text' | 'Voice' | 'Camera';
+  createdAt: Timestamp;
 }
 
-export interface UserProfile {
-  budget: number;
-  language: string;
+export interface MonthlyBudget {
+  id: string;
+  userId: string;
+  budgetAmount: number;
+  month: number;
+  year: number;
 }
 
-// Save expense to the user's specific subcollection as per backend.json
-export const saveExpense = async (db: Firestore, expense: Omit<Expense, 'id' | 'createdAt' | 'updatedAt' | 'transactionDate' | 'captureMethod'>) => {
-  const now = new Date().toISOString();
+/**
+ * Saves a new expense to Firestore using non-blocking updates.
+ */
+export function saveExpense(db: Firestore, userId: string, data: Omit<Expense, 'id' | 'userId' | 'createdAt'>) {
+  const colRef = collection(db, 'users', userId, 'expenses');
   const expenseData = {
-    ...expense,
-    date: Timestamp.now(),
-    createdAt: now,
-    updatedAt: now,
-    transactionDate: now.split('T')[0],
-    captureMethod: 'Text' // Default, can be overridden
-  };
-  
-  return await addDoc(collection(db, 'users', expense.userId, 'expenses'), expenseData);
-};
-
-// Subscribe to user's expenses subcollection
-export const subscribeToExpenses = (db: Firestore, userId: string, callback: (expenses: Expense[]) => void) => {
-  const q = query(
-    collection(db, 'users', userId, 'expenses'),
-    orderBy('date', 'desc')
-  );
-
-  return onSnapshot(q, (snapshot) => {
-    const expenses = snapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    })) as Expense[];
-    callback(expenses);
-  });
-};
-
-export const getBudget = async (db: Firestore, userId: string): Promise<number> => {
-  const docRef = doc(db, 'users', userId, 'monthlyBudgets', 'current');
-  const docSnap = await getDoc(docRef);
-  if (docSnap.exists()) {
-    return docSnap.data().budgetAmount || 0;
-  }
-  return 0;
-};
-
-export const setBudget = async (db: Firestore, userId: string, budget: number) => {
-  const docRef = doc(db, 'users', userId, 'monthlyBudgets', 'current');
-  const now = new Date();
-  return await setDoc(docRef, { 
+    ...data,
     userId,
-    budgetAmount: budget,
-    month: now.getMonth() + 1,
-    year: now.getFullYear(),
-    createdAt: now.toISOString(),
-    updatedAt: now.toISOString(),
-    id: 'current'
-  }, { merge: true });
-};
+    createdAt: serverTimestamp(),
+  };
+  addDocumentNonBlocking(colRef, expenseData);
+}
+
+/**
+ * Updates or sets the monthly budget for the current month.
+ */
+export function updateMonthlyBudget(db: Firestore, userId: string, amount: number) {
+  const now = new Date();
+  const month = now.getMonth() + 1;
+  const year = now.getFullYear();
+  const budgetId = `${year}-${month}`;
+  const docRef = doc(db, 'users', userId, 'monthlyBudgets', budgetId);
+
+  const budgetData = {
+    userId,
+    budgetAmount: amount,
+    month,
+    year,
+    updatedAt: serverTimestamp(),
+  };
+
+  setDocumentNonBlocking(docRef, budgetData, { merge: true });
+}

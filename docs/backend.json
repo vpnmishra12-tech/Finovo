@@ -2,257 +2,62 @@
 {
   "entities": {
     "UserProfile": {
-      "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "UserProfile",
       "type": "object",
-      "description": "Stores user-specific settings and preferences for the SmartKharcha AI app. This entity is linked to an external authentication system.",
+      "description": "User preferences and settings.",
       "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the UserProfile entity, typically derived from the external authentication system."
-        },
-        "preferredLanguage": {
-          "type": "string",
-          "description": "User's preferred language for the app (e.g., 'en' for English, 'hi' for Hindi)."
-        },
-        "themePreference": {
-          "type": "string",
-          "description": "User's preferred UI theme ('light' or 'dark')."
-        },
-        "createdAt": {
-          "type": "string",
-          "description": "Timestamp when the user profile was first created.",
-          "format": "date-time"
-        },
-        "updatedAt": {
-          "type": "string",
-          "description": "Timestamp when the user profile was last updated.",
-          "format": "date-time"
-        }
+        "id": { "type": "string" },
+        "preferredLanguage": { "type": "string", "enum": ["en", "hi"] },
+        "themePreference": { "type": "string", "enum": ["light", "dark"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
       },
-      "required": [
-        "id",
-        "preferredLanguage",
-        "themePreference",
-        "createdAt",
-        "updatedAt"
-      ]
-    },
-    "Category": {
-      "$schema": "http://json-schema.org/draft-07/schema#",
-      "title": "Category",
-      "type": "object",
-      "description": "Defines predefined categories for classifying expenses in the SmartKharcha AI app (e.g., Food, Transport, Bills).",
-      "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the Category entity."
-        },
-        "name": {
-          "type": "string",
-          "description": "Name of the expense category (e.g., 'Food', 'Transport', 'Bills', 'Shopping', 'EMI')."
-        },
-        "description": {
-          "type": "string",
-          "description": "An optional brief description of the category."
-        },
-        "iconUrl": {
-          "type": "string",
-          "description": "URL to an icon representing the category for UI display. Optional.",
-          "format": "uri"
-        }
-      },
-      "required": [
-        "id",
-        "name"
-      ]
+      "required": ["id", "preferredLanguage", "themePreference", "createdAt", "updatedAt"]
     },
     "Expense": {
-      "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "Expense",
       "type": "object",
-      "description": "Represents a single expense record made by a user in the SmartKharcha AI app.",
+      "description": "A single spending record.",
       "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the Expense entity."
-        },
-        "userId": {
-          "type": "string",
-          "description": "Reference to the UserProfile who recorded this expense. (Relationship: UserProfile 1:N Expense)"
-        },
-        "categoryId": {
-          "type": "string",
-          "description": "Reference to the Category this expense belongs to. (Relationship: Category 1:N Expense)"
-        },
-        "amount": {
-          "type": "number",
-          "description": "The monetary amount of the expense."
-        },
-        "description": {
-          "type": "string",
-          "description": "An optional detailed description or note about the expense."
-        },
-        "transactionDate": {
-          "type": "string",
-          "description": "The calendar date when the expense occurred.",
-          "format": "date"
-        },
-        "captureMethod": {
-          "type": "string",
-          "description": "The method used to capture the expense (e.g., 'Text', 'Voice', 'Camera Bill Photo')."
-        },
-        "billPhotoUrl": {
-          "type": "string",
-          "description": "URL to the uploaded bill photo, if the expense was captured via camera. Optional.",
-          "format": "uri"
-        },
-        "createdAt": {
-          "type": "string",
-          "description": "Timestamp when the expense record was first created.",
-          "format": "date-time"
-        },
-        "updatedAt": {
-          "type": "string",
-          "description": "Timestamp when the expense record was last updated.",
-          "format": "date-time"
-        }
+        "userId": { "type": "string" },
+        "amount": { "type": "number" },
+        "category": { "type": "string", "enum": ["Food", "Transport", "Bills", "Shopping", "EMI"] },
+        "description": { "type": "string" },
+        "transactionDate": { "type": "string", "format": "date" },
+        "captureMethod": { "type": "string", "enum": ["Text", "Voice", "Camera"] },
+        "createdAt": { "type": "string", "format": "date-time" }
       },
-      "required": [
-        "id",
-        "userId",
-        "categoryId",
-        "amount",
-        "transactionDate",
-        "captureMethod",
-        "createdAt",
-        "updatedAt"
-      ]
+      "required": ["userId", "amount", "category", "description", "transactionDate", "captureMethod", "createdAt"]
     },
     "MonthlyBudget": {
-      "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "MonthlyBudget",
       "type": "object",
-      "description": "Allows users to set and track their monthly spending budget against financial goals in the SmartKharcha AI app.",
+      "description": "Monthly spending target.",
       "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the MonthlyBudget entity."
-        },
-        "userId": {
-          "type": "string",
-          "description": "Reference to the UserProfile who set this budget. (Relationship: UserProfile 1:N MonthlyBudget)"
-        },
-        "month": {
-          "type": "number",
-          "description": "The month for which the budget is set (1 for January, 12 for December)."
-        },
-        "year": {
-          "type": "number",
-          "description": "The year for which the budget is set (e.g., 2023)."
-        },
-        "budgetAmount": {
-          "type": "number",
-          "description": "The total monetary budget allocated for the specified month and year."
-        },
-        "createdAt": {
-          "type": "string",
-          "description": "Timestamp when the monthly budget was first set.",
-          "format": "date-time"
-        },
-        "updatedAt": {
-          "type": "string",
-          "description": "Timestamp when the monthly budget was last updated.",
-          "format": "date-time"
-        }
+        "userId": { "type": "string" },
+        "budgetAmount": { "type": "number" },
+        "month": { "type": "number" },
+        "year": { "type": "number" },
+        "updatedAt": { "type": "string", "format": "date-time" }
       },
-      "required": [
-        "id",
-        "userId",
-        "month",
-        "year",
-        "budgetAmount",
-        "createdAt",
-        "updatedAt"
-      ]
+      "required": ["userId", "budgetAmount", "month", "year", "updatedAt"]
     }
   },
   "auth": {
-    "providers": [
-      "google",
-      "password",
-      "anonymous"
-    ]
+    "providers": ["google"]
   },
   "firestore": {
-    "structure": [
-      {
-        "path": "/users/{userId}",
-        "definition": {
-          "entityName": "UserProfile",
-          "schema": {
-            "$ref": "#/backend/entities/UserProfile"
-          },
-          "description": "Stores individual user profiles and settings for the SmartKharcha AI app. The document ID for each UserProfile document MUST match the Firebase Authentication UID of the user. Includes denormalized 'id' field matching path parameter for authorization independence and invariant checks.",
-          "params": [
-            {
-              "name": "userId",
-              "description": "The unique ID of the user, matching Firebase Authentication UID. This acts as the document ID."
-            }
-          ]
-        }
-      },
-      {
-        "path": "/categories",
-        "definition": {
-          "entityName": "Category",
-          "schema": {
-            "$ref": "#/backend/entities/Category"
-          },
-          "description": "Contains predefined global expense categories (e.g., Food, Transport, Bills). These categories are publicly readable by all authenticated users. No specific authorization fields are needed within the document as access is global read."
-        }
-      },
-      {
-        "path": "/users/{userId}/expenses/{expenseId}",
-        "definition": {
-          "entityName": "Expense",
-          "schema": {
-            "$ref": "#/backend/entities/Expense"
-          },
-          "description": "Stores individual expense records for a specific user. Each document is owned by the user specified in the path. Includes a denormalized 'userId' field matching the path parameter for authorization independence and invariant checks.",
-          "params": [
-            {
-              "name": "userId",
-              "description": "The unique ID of the user who owns this expense record, matching Firebase Authentication UID."
-            },
-            {
-              "name": "expenseId",
-              "description": "The unique ID for the expense record."
-            }
-          ]
-        }
-      },
-      {
-        "path": "/users/{userId}/monthlyBudgets/{monthlyBudgetId}",
-        "definition": {
-          "entityName": "MonthlyBudget",
-          "schema": {
-            "$ref": "#/backend/entities/MonthlyBudget"
-          },
-          "description": "Stores monthly budget settings for a specific user. Each document is owned by the user specified in the path. Includes a denormalized 'userId' field matching the path parameter for authorization independence and invariant checks.",
-          "params": [
-            {
-              "name": "userId",
-              "description": "The unique ID of the user who owns this monthly budget record, matching Firebase Authentication UID."
-            },
-            {
-              "name": "monthlyBudgetId",
-              "description": "The unique ID for the monthly budget record."
-            }
-          ]
-        }
-      }
-    ],
-    "reasoning": "The recommended Firestore structure for SmartKharcha AI prioritizes security, scalability, and debuggability by strictly adhering to the core design principles."
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "User profile document."
+    },
+    "/users/{userId}/expenses/{expenseId}": {
+      "schema": { "$ref": "#/entities/Expense" },
+      "description": "User's individual expenses."
+    },
+    "/users/{userId}/monthlyBudgets/{monthlyBudgetId}": {
+      "schema": { "$ref": "#/entities/MonthlyBudget" },
+      "description": "User's monthly budgets."
+    }
   }
 }

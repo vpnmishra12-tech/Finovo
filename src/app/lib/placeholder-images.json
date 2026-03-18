@@ -1,0 +1,17 @@
+
+{
+  "placeholderImages": [
+    {
+      "id": "hero-wallet",
+      "description": "A futuristic digital wallet glowing with financial energy",
+      "imageUrl": "https://picsum.photos/seed/finance1/800/600",
+      "imageHint": "digital wallet finance"
+    },
+    {
+      "id": "empty-state",
+      "description": "A clean, minimal illustration of a piggy bank",
+      "imageUrl": "https://picsum.photos/seed/empty1/400/300",
+      "imageHint": "piggy bank savings"
+    }
+  ]
+}
