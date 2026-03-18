@@ -6,14 +6,22 @@ Your app is ready! Follow these steps to fix the login issues and share your app
 ## 🛠 CRITICAL: Fix "Login Issue" (One-time Setup)
 Firebase blocks requests from unknown domains for security. You must authorize your current development domain.
 
-### 1. Authorize Your Domain
+### 1. Find the "Add Domain" Button
 1. Copy the URL of your app from the browser address bar (e.g., `9002-firebase-studio...cloudworkstations.dev`).
-2. Go to the [Firebase Console Settings](https://console.firebase.google.com/project/studio-4253837572-72734/authentication/settings).
-3. **Navigation Path**: Build > Authentication > **Settings (Tab)** > **Authorized domains (Left Menu)**.
-4. Click **"Add domain"** and paste your URL.
-5. **IMPORTANT**: Remove `https://` and anything after `.dev`. It should look like: `9002-firebase-studio-123.cluster-xyz.cloudworkstations.dev`.
+2. Click this link: [Firebase Console Authentication Settings](https://console.firebase.google.com/project/studio-4253837572-72734/authentication/settings).
+3. **Navigation Path**:
+   - Look at the top center of the page. You will see three tabs: `Users`, `Sign-in method`, and **Settings**.
+   - Click on the **Settings** tab.
+   - Now look at the left-hand sidebar (under the word 'Settings').
+   - Click on **Authorized domains**.
+   - Now, on the main part of the screen, you will see a list of domains and an **"Add domain"** button on the right side.
 
-### 2. Allow Popups
+### 2. Add Your URL
+1. Click **"Add domain"**.
+2. Paste your URL (e.g., `9002-firebase-studio-123.cluster-xyz.cloudworkstations.dev`).
+3. **IMPORTANT**: Remove `https://` and anything after `.dev`. It should look exactly like the example above.
+
+### 3. Allow Popups
 **Important**: Cloud Workstations block popups by default. 
 - Look for a "blocked popup" icon in your browser's address bar (usually on the far right).
 - Click it and select **"Always allow popups from..."**.

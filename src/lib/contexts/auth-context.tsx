@@ -38,6 +38,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       let errorMessage = "An unexpected error occurred during login.";
       let errorTitle = "Login Failed";
       
+      // Map Firebase auth errors to helpful user messages
       if (error.code === 'auth/unauthorized-domain') {
         errorTitle = "Domain Not Authorized";
         errorMessage = "Go to Firebase Console > Auth > Settings > Authorized Domains and add this domain. See README.md for details.";
@@ -49,6 +50,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         errorMessage = "Browser blocked the window. Click the 'Blocked Popup' icon in your address bar and select 'Always allow'.";
       }
 
+      // We use toast instead of console.error to avoid the Next.js error overlay in dev
       toast({
         title: errorTitle,
         description: errorMessage,
