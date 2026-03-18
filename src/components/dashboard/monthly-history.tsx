@@ -37,29 +37,29 @@ export function MonthlyHistory({ expenses }: { expenses: Expense[] }) {
   if (sortedMonths.length === 0) return null;
 
   return (
-    <Card className="border-none bg-card shadow-sm overflow-hidden flex flex-col h-[320px]">
+    <Card className="border-none bg-card shadow-sm overflow-hidden flex flex-col h-[280px]">
       <CardHeader className="pb-2 shrink-0">
-        <CardTitle className="text-sm font-medium text-muted-foreground uppercase tracking-wider flex items-center gap-2">
+        <CardTitle className="text-[10px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
           <CalendarDays className="w-4 h-4" />
           {t.monthlyTrends}
         </CardTitle>
       </CardHeader>
       <CardContent className="pt-0 flex-1 overflow-hidden p-0">
         <ScrollArea className="h-full px-6 pb-6">
-          <div className="space-y-3">
+          <div className="space-y-2">
             {sortedMonths.map((item) => (
-              <div key={`${item.year}-${item.month}`} className="flex items-center justify-between p-3 bg-muted/30 rounded-xl hover:bg-muted/50 transition-colors">
+              <div key={`${item.year}-${item.month}`} className="flex items-center justify-between p-2.5 bg-muted/30 rounded-xl hover:bg-muted/50 transition-colors">
                 <div className="flex flex-col">
-                  <span className="font-bold text-sm">
+                  <span className="font-bold text-xs">
                     {t.months[item.month as keyof typeof t.months]} {item.year}
                   </span>
-                  <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-tight">
+                  <span className="text-[9px] text-muted-foreground font-medium uppercase tracking-tight">
                     {expenses.filter(e => e.transactionDate.startsWith(`${item.year}-${item.month}`)).length} {t.expenses}
                   </span>
                 </div>
-                <div className="flex items-center gap-3">
-                  <span className="font-headline font-bold text-lg">₹{item.total.toLocaleString()}</span>
-                  <ArrowRight className="w-4 h-4 text-muted-foreground/30" />
+                <div className="flex items-center gap-2">
+                  <span className="font-headline font-bold text-base">₹{item.total.toLocaleString()}</span>
+                  <ArrowRight className="w-3 h-3 text-muted-foreground/30" />
                 </div>
               </div>
             ))}

@@ -38,11 +38,11 @@ export function SpendingChart({ expenses }: { expenses: Expense[] }) {
   return (
     <Card className="border-none bg-card shadow-sm overflow-hidden">
       <CardHeader className="pb-2">
-        <CardTitle className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
+        <CardTitle className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">
           {t.expenses}
         </CardTitle>
       </CardHeader>
-      <CardContent className="h-[240px]">
+      <CardContent className="h-[200px]">
         {data.length > 0 ? (
           <ChartContainer config={config} className="h-full w-full">
             <PieChart>
@@ -50,8 +50,8 @@ export function SpendingChart({ expenses }: { expenses: Expense[] }) {
                 data={data}
                 cx="50%"
                 cy="50%"
-                innerRadius={60}
-                outerRadius={80}
+                innerRadius={50}
+                outerRadius={70}
                 paddingAngle={5}
                 dataKey="value"
               >
@@ -63,7 +63,7 @@ export function SpendingChart({ expenses }: { expenses: Expense[] }) {
             </PieChart>
           </ChartContainer>
         ) : (
-          <div className="flex items-center justify-center h-full text-muted-foreground text-sm italic">
+          <div className="flex items-center justify-center h-full text-muted-foreground text-xs italic">
             {t.noExpenses}
           </div>
         )}
