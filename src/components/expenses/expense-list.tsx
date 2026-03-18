@@ -5,7 +5,7 @@ import { useLanguage } from '@/lib/contexts/language-context';
 import { Expense } from '@/lib/expenses';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { ShoppingBag, Utensils, Bus, Receipt, CreditCard, ChevronRight, Loader2 } from 'lucide-react';
+import { ShoppingBag, Utensils, Bus, Receipt, CreditCard, ChevronRight, Loader2, PlusCircle } from 'lucide-react';
 import { format } from 'date-fns';
 
 const CategoryIcon = ({ category, className }: { category: string, className?: string }) => {
@@ -42,12 +42,14 @@ export function ExpenseList({ expenses, isLoading }: { expenses: Expense[], isLo
 
   if (expenses.length === 0) {
     return (
-      <div className="text-center py-16 px-4 bg-muted/30 rounded-3xl border-2 border-dashed border-muted">
-        <div className="w-12 h-12 bg-muted rounded-2xl flex items-center justify-center mx-auto mb-4">
-          <Receipt className="text-muted-foreground w-6 h-6" />
+      <div className="text-center py-16 px-6 bg-muted/20 rounded-3xl border-2 border-dashed border-muted/50">
+        <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+          <PlusCircle className="text-muted-foreground/50 w-8 h-8" />
         </div>
-        <h3 className="font-headline font-bold text-lg mb-1">{t.noExpenses}</h3>
-        <p className="text-sm text-muted-foreground">Start by tapping the plus button below.</p>
+        <h3 className="font-headline font-bold text-xl mb-2">{t.noExpenses}</h3>
+        <p className="text-sm text-muted-foreground max-w-[240px] mx-auto leading-relaxed">
+          Your expense history will appear here. Try adding one using the magic button below!
+        </p>
       </div>
     );
   }
