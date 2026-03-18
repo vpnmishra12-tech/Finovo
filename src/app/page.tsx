@@ -9,18 +9,18 @@ import { SpendingChart } from '@/components/dashboard/spending-chart';
 import { MonthlyHistory } from '@/components/dashboard/monthly-history';
 import { ExpenseList } from '@/components/expenses/expense-list';
 import { AddExpenseDrawer } from '@/components/expenses/add-expense-drawer';
-import { Loader2, Sparkles, Wallet, ShieldCheck, Phone, CheckCircle2, Info, UserCircle } from 'lucide-react';
+import { Loader2, Sparkles, Wallet, ShieldCheck, Phone, CheckCircle2, Info, UserCircle, Calendar } from 'lucide-react';
 import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import { collection, query, orderBy, limit } from 'firebase/firestore';
 import { Expense } from '@/lib/expenses';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 export default function Home() {
   const { user, loading, sendOtp, verifyOtp, loginAsGuest, isOtpSent } = useAuth();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const firestore = useFirestore();
   
   const [phoneNumber, setPhoneNumber] = useState("+91");
@@ -28,13 +28,18 @@ export default function Home() {
   const [isVerifying, setIsVerifying] = useState(false);
   const [isGuestLoading, setIsGuestLoading] = useState(false);
 
+  // Month Switcher State
+  const now = new Date();
+  const [selectedMonth, setSelectedMonth] = useState((now.getMonth() + 1).toString().padStart(2, '0'));
+  const [selectedYear, setSelectedYear] = useState(now.getFullYear().toString());
+
   // Memoized query for expenses
   const expensesQuery = useMemoFirebase(() => {
     if (!firestore || !user?.uid) return null;
     return query(
       collection(firestore, 'users', user.uid, 'expenses'),
       orderBy('createdAt', 'desc'),
-      limit(100)
+      limit(200) // Increased limit to ensure we have enough history
     );
   }, [firestore, user?.uid]);
 
@@ -170,37 +175,62 @@ export default function Home() {
     );
   }
 
-  const currentMonthExpenses = expenses?.filter(exp => {
-    const d = new Date();
-    const month = d.getMonth() + 1;
-    const year = d.getFullYear();
+  // Filter expenses for selected month/year
+  const selectedMonthExpenses = expenses?.filter(exp => {
     const expDate = new Date(exp.transactionDate);
-    return (expDate.getMonth() + 1) === month && expDate.getFullYear() === year;
+    return (expDate.getMonth() + 1).toString().padStart(2, '0') === selectedMonth && expDate.getFullYear().toString() === selectedYear;
   }) || [];
 
-  const totalSpentThisMonth = currentMonthExpenses.reduce((sum, exp) => sum + exp.amount, 0);
+  const totalSpentSelectedMonth = selectedMonthExpenses.reduce((sum, exp) => sum + exp.amount, 0);
 
   return (
     <div className="min-h-screen bg-background pb-32">
       <Header />
       <main className="container max-w-2xl mx-auto px-4 py-8 space-y-8">
-        <section className="space-y-1">
-          <p className="text-muted-foreground text-sm font-medium">
-            {t.welcome} 👋
-          </p>
-          <h2 className="text-3xl font-headline font-bold">{t.dashboard}</h2>
+        <section className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="space-y-1">
+            <p className="text-muted-foreground text-sm font-medium">
+              {t.welcome} 👋
+            </p>
+            <h2 className="text-3xl font-headline font-bold">{t.dashboard}</h2>
+          </div>
+          
+          <div className="flex items-center gap-2 bg-muted p-1 rounded-2xl">
+            <Select value={selectedMonth} onValueChange={setSelectedMonth}>
+              <SelectTrigger className="w-[120px] bg-transparent border-none font-bold">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {Object.entries(t.months).map(([key, value]) => (
+                  <SelectItem key={key} value={key}>{value}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select value={selectedYear} onValueChange={setSelectedYear}>
+              <SelectTrigger className="w-[100px] bg-transparent border-none font-bold">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {[now.getFullYear() - 1, now.getFullYear(), now.getFullYear() + 1].map(y => (
+                  <SelectItem key={y} value={y.toString()}>{y}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </section>
 
         <BudgetSummary 
           userId={user.uid} 
-          totalSpent={totalSpentThisMonth} 
+          totalSpent={totalSpentSelectedMonth}
+          month={parseInt(selectedMonth)}
+          year={parseInt(selectedYear)}
         />
 
         <MonthlyHistory expenses={expenses || []} />
 
-        <SpendingChart expenses={expenses || []} />
+        <SpendingChart expenses={selectedMonthExpenses} />
 
-        <ExpenseList expenses={expenses || []} isLoading={isExpensesLoading} />
+        <ExpenseList expenses={selectedMonthExpenses} isLoading={isExpensesLoading} />
       </main>
       
       <AddExpenseDrawer />

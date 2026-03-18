@@ -14,7 +14,7 @@ import { useFirestore, useDoc, useMemoFirebase } from '@/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 
-export function BudgetSummary({ userId, totalSpent }: { userId: string, totalSpent: number }) {
+export function BudgetSummary({ userId, totalSpent, month, year }: { userId: string, totalSpent: number, month: number, year: number }) {
   const { t } = useLanguage();
   const firestore = useFirestore();
   const { toast } = useToast();
@@ -22,8 +22,7 @@ export function BudgetSummary({ userId, totalSpent }: { userId: string, totalSpe
   const [open, setOpen] = useState(false);
   const [lastMonthDebt, setLastMonthDebt] = useState(0);
 
-  const now = new Date();
-  const budgetId = `${now.getFullYear()}-${now.getMonth() + 1}`;
+  const budgetId = `${year}-${month}`;
   
   const budgetRef = useMemoFirebase(() => {
     if (!firestore || !userId) return null;
@@ -39,8 +38,7 @@ export function BudgetSummary({ userId, totalSpent }: { userId: string, totalSpe
     async function checkCarryover() {
       if (!firestore || !userId) return;
       
-      const prevDate = new Date();
-      prevDate.setMonth(prevDate.getMonth() - 1);
+      const prevDate = new Date(year, month - 2, 1);
       const prevMonth = prevDate.getMonth() + 1;
       const prevYear = prevDate.getFullYear();
       
@@ -53,16 +51,26 @@ export function BudgetSummary({ userId, totalSpent }: { userId: string, totalSpe
         const prevSpent = await getMonthlySpending(firestore, userId, prevMonth, prevYear);
         if (prevSpent > prevBudgetVal) {
           setLastMonthDebt(prevSpent - prevBudgetVal);
+        } else {
+          setLastMonthDebt(0);
         }
+      } else {
+        setLastMonthDebt(0);
       }
     }
     checkCarryover();
-  }, [firestore, userId]);
+  }, [firestore, userId, month, year]);
 
   const handleSetBudget = async () => {
     const val = parseFloat(newBudget);
     if (!isNaN(val) && firestore) {
-      const res = await updateMonthlyBudget(firestore, userId, val);
+      // Pass the specific month/year if we wanted historical budget updates, 
+      // but usually budgets are set for the current context.
+      // For simplicity, we update the budget for the selected view.
+      const now = new Date();
+      const isCurrentMonth = month === (now.getMonth() + 1) && year === now.getFullYear();
+      
+      const res = await updateMonthlyBudget(firestore, userId, val, month, year);
       if (res.success) {
         setOpen(false);
         setNewBudget("");
@@ -84,7 +92,7 @@ export function BudgetSummary({ userId, totalSpent }: { userId: string, totalSpe
   return (
     <div className="space-y-4">
       {/* Percentage Alerts */}
-      {percentage >= 100 && (
+      {percentage >= 100 && budget > 0 && (
         <Alert variant="destructive" className="animate-pulse rounded-2xl border-2">
           <AlertTriangle className="h-5 w-5" />
           <AlertTitle className="font-bold">{t.alerts.exhausted}</AlertTitle>

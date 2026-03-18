@@ -1,4 +1,3 @@
-
 import { Firestore, collection, doc, serverTimestamp, Timestamp, getDoc, setDoc, query, where, getDocs } from 'firebase/firestore';
 import { addDocumentNonBlocking, deleteDocumentNonBlocking } from '@/firebase';
 
@@ -45,14 +44,14 @@ export function deleteExpense(db: Firestore, userId: string, expenseId: string) 
 }
 
 /**
- * Updates or sets the monthly budget for the current month.
+ * Updates or sets the monthly budget for a specific month.
  * Limit: Only 2 updates per month.
  */
-export async function updateMonthlyBudget(db: Firestore, userId: string, amount: number): Promise<{ success: boolean; message?: string }> {
+export async function updateMonthlyBudget(db: Firestore, userId: string, amount: number, month?: number, year?: number): Promise<{ success: boolean; message?: string }> {
   const now = new Date();
-  const month = now.getMonth() + 1;
-  const year = now.getFullYear();
-  const budgetId = `${year}-${month}`;
+  const m = month || now.getMonth() + 1;
+  const y = year || now.getFullYear();
+  const budgetId = `${y}-${m}`;
   const docRef = doc(db, 'users', userId, 'monthlyBudgets', budgetId);
 
   const budgetSnap = await getDoc(docRef);
@@ -65,8 +64,8 @@ export async function updateMonthlyBudget(db: Firestore, userId: string, amount:
   const budgetData = {
     userId,
     budgetAmount: amount,
-    month,
-    year,
+    month: m,
+    year: y,
     updateCount: (currentData?.updateCount || 0) + 1,
     updatedAt: serverTimestamp(),
   };
