@@ -30,6 +30,14 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  // Fix for "Cross origin request detected" in cloud workstations
+  experimental: {
+    allowedDevOrigins: [
+      '9000-firebase-studio-1773832578527.cluster-ubrd2huk7jh6otbgyei4h62ope.cloudworkstations.dev',
+      '*.cloudworkstations.dev',
+      '*.google.com'
+    ]
+  }
 };
 
 export default nextConfig;
