@@ -12,7 +12,7 @@ import { AdBanner } from '@/components/dashboard/ad-banner';
 import { BillSplitTool } from '@/components/bill-split/bill-split-tool';
 import { ExpenseList } from '@/components/expenses/expense-list';
 import { AddExpenseDrawer } from '@/components/expenses/add-expense-drawer';
-import { Loader2, Sparkles, Wallet, ShieldCheck, Mail, Lock, UserPlus, LogIn, Info, Download } from 'lucide-react';
+import { Loader2, Sparkles, Wallet, ShieldCheck, Mail, Lock, UserPlus, LogIn, Info, Download, LayoutDashboard, History, Calculator } from 'lucide-react';
 import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import { collection, query, orderBy, limit } from 'firebase/firestore';
 import { Expense } from '@/lib/expenses';
@@ -22,12 +22,16 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { cn } from '@/lib/utils';
+
+type NavTab = 'dashboard' | 'history' | 'splitter';
 
 export default function Home() {
   const { user, loading, login, signup } = useAuth();
   const { t } = useLanguage();
   const firestore = useFirestore();
   
+  const [activeTab, setActiveTab] = useState<NavTab>('dashboard');
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isAuthLoading, setIsAuthLoading] = useState(false);
@@ -192,69 +196,137 @@ export default function Home() {
 
   const totalSpentSelectedMonth = selectedMonthExpenses.reduce((sum, exp) => sum + exp.amount, 0);
 
+  const NavItem = ({ id, icon: Icon, label }: { id: NavTab, icon: any, label: string }) => (
+    <button
+      onClick={() => setActiveTab(id)}
+      className={cn(
+        "flex flex-col items-center justify-center gap-1 px-4 py-2 rounded-2xl transition-all",
+        activeTab === id 
+          ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20" 
+          : "text-muted-foreground hover:bg-muted"
+      )}
+    >
+      <Icon className="w-5 h-5" />
+      <span className="text-[10px] font-bold uppercase tracking-widest">{label}</span>
+    </button>
+  );
+
   return (
-    <div className="min-h-screen bg-background pb-32">
+    <div className="min-h-screen bg-background flex flex-col">
       <Header />
-      <main className="container max-w-2xl mx-auto px-4 py-8 space-y-8">
-        <section className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="space-y-1">
-            <p className="text-muted-foreground text-sm font-medium">
-              {t.welcome} 👋
-            </p>
-            <h2 className="text-3xl font-headline font-bold">{t.dashboard}</h2>
-          </div>
-          
-          <div className="flex items-center gap-2 bg-muted p-1 rounded-2xl">
-            <Select value={selectedMonth} onValueChange={setSelectedMonth}>
-              <SelectTrigger className="w-[120px] bg-transparent border-none font-bold">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {Object.entries(t.months).map(([key, value]) => (
-                  <SelectItem key={key} value={key}>{value}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Select value={selectedYear} onValueChange={setSelectedYear}>
-              <SelectTrigger className="w-[100px] bg-transparent border-none font-bold">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {[now.getFullYear() - 1, now.getFullYear(), now.getFullYear() + 1].map(y => (
-                  <SelectItem key={y} value={y.toString()}>{y}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-        </section>
-
-        <BudgetSummary 
-          userId={user.uid} 
-          totalSpent={totalSpentSelectedMonth}
-          month={parseInt(selectedMonth)}
-          year={parseInt(selectedYear)}
-        />
-
-        <Tabs defaultValue="overview" className="w-full">
-          <TabsList className="w-full bg-muted rounded-2xl p-1 h-14 mb-4">
-            <TabsTrigger value="overview" className="flex-1 rounded-xl font-bold">Overview</TabsTrigger>
-            <TabsTrigger value="splitter" className="flex-1 rounded-xl font-bold">Bill Splitter</TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="overview" className="space-y-8 mt-0">
-            <MonthlyHistory expenses={expenses || []} />
-            <SpendingChart expenses={selectedMonthExpenses} />
-            <AdBanner />
-            <ExpenseList expenses={selectedMonthExpenses} isLoading={isExpensesLoading} />
-          </TabsContent>
-
-          <TabsContent value="splitter" className="mt-0">
-            <BillSplitTool />
-          </TabsContent>
-        </Tabs>
-      </main>
       
-      <AddExpenseDrawer />
+      <div className="flex-1 flex flex-col md:flex-row container max-w-6xl mx-auto md:gap-8 px-4 pb-24 md:pb-8">
+        {/* Desktop Sidebar */}
+        <nav className="hidden md:flex flex-col gap-2 py-8 w-64 shrink-0">
+          <button
+            onClick={() => setActiveTab('dashboard')}
+            className={cn(
+              "flex items-center gap-3 px-6 py-4 rounded-2xl font-bold transition-all",
+              activeTab === 'dashboard' ? "bg-primary text-primary-foreground shadow-xl shadow-primary/20" : "hover:bg-muted text-muted-foreground"
+            )}
+          >
+            <LayoutDashboard className="w-5 h-5" />
+            {t.dashboard}
+          </button>
+          <button
+            onClick={() => setActiveTab('history')}
+            className={cn(
+              "flex items-center gap-3 px-6 py-4 rounded-2xl font-bold transition-all",
+              activeTab === 'history' ? "bg-primary text-primary-foreground shadow-xl shadow-primary/20" : "hover:bg-muted text-muted-foreground"
+            )}
+          >
+            <History className="w-5 h-5" />
+            {t.history}
+          </button>
+          <button
+            onClick={() => setActiveTab('splitter')}
+            className={cn(
+              "flex items-center gap-3 px-6 py-4 rounded-2xl font-bold transition-all",
+              activeTab === 'splitter' ? "bg-primary text-primary-foreground shadow-xl shadow-primary/20" : "hover:bg-muted text-muted-foreground"
+            )}
+          >
+            <Calculator className="w-5 h-5" />
+            {t.billSplitter}
+          </button>
+        </nav>
+
+        {/* Main Content Area */}
+        <main className="flex-1 py-8 space-y-8 min-w-0">
+          {activeTab === 'dashboard' && (
+            <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <section className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="space-y-1">
+                  <p className="text-muted-foreground text-sm font-medium">
+                    {t.welcome} 👋
+                  </p>
+                  <h2 className="text-3xl font-headline font-bold">{t.dashboard}</h2>
+                </div>
+                
+                <div className="flex items-center gap-2 bg-muted p-1 rounded-2xl w-fit">
+                  <Select value={selectedMonth} onValueChange={setSelectedMonth}>
+                    <SelectTrigger className="w-[120px] bg-transparent border-none font-bold">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Object.entries(t.months).map(([key, value]) => (
+                        <SelectItem key={key} value={key}>{value}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <Select value={selectedYear} onValueChange={setSelectedYear}>
+                    <SelectTrigger className="w-[100px] bg-transparent border-none font-bold">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {[now.getFullYear() - 1, now.getFullYear(), now.getFullYear() + 1].map(y => (
+                        <SelectItem key={y} value={y.toString()}>{y}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </section>
+
+              <BudgetSummary 
+                userId={user.uid} 
+                totalSpent={totalSpentSelectedMonth}
+                month={parseInt(selectedMonth)}
+                year={parseInt(selectedYear)}
+              />
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <SpendingChart expenses={selectedMonthExpenses} />
+                <MonthlyHistory expenses={expenses || []} />
+              </div>
+              
+              <AdBanner />
+            </div>
+          )}
+
+          {activeTab === 'history' && (
+            <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <h2 className="text-3xl font-headline font-bold">{t.history}</h2>
+              <ExpenseList expenses={expenses || []} isLoading={isExpensesLoading} />
+            </div>
+          )}
+
+          {activeTab === 'splitter' && (
+            <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-2xl mx-auto">
+              <h2 className="text-3xl font-headline font-bold">{t.billSplitter}</h2>
+              <BillSplitTool />
+            </div>
+          )}
+        </main>
+      </div>
+
+      {/* Mobile Bottom Navigation */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 h-20 bg-background/80 backdrop-blur-lg border-t z-50 px-6 flex items-center justify-between">
+        <NavItem id="dashboard" icon={LayoutDashboard} label={t.dashboard} />
+        <NavItem id="history" icon={History} label={t.history} />
+        <NavItem id="splitter" icon={Calculator} label={t.billSplitter} />
+      </div>
+      
+      {activeTab !== 'splitter' && <AddExpenseDrawer />}
     </div>
   );
 }
+
