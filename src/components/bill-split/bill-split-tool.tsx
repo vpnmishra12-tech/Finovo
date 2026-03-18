@@ -12,14 +12,13 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Users, UserPlus, Trash2, Calculator, CheckCircle2, ArrowRightLeft, AlertCircle, TrendingUp, Coins } from 'lucide-react';
+import { Users, UserPlus, Trash2, Calculator, CheckCircle2, ArrowRightLeft, Coins } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface Participant {
   id: string;
   name: string;
-  paid: number;   // Amount paid at venue (used in Custom mode)
-  share: number;  // Consumption portion (used in Custom mode)
+  paid: number;   // Amount paid at venue
 }
 
 interface Settlement {
@@ -37,19 +36,18 @@ export function BillSplitTool() {
   const [totalBill, setTotalBill] = useState<string>("");
   const [splitType, setSplitType] = useState<'equal' | 'custom'>('equal');
   const [participants, setParticipants] = useState<Participant[]>([
-    { id: '1', name: 'Me', paid: 0, share: 0 },
-    { id: '2', name: 'Friend 1', paid: 0, share: 0 }
+    { id: '1', name: 'Person 1', paid: 0 },
+    { id: '2', name: 'Person 2', paid: 0 }
   ]);
   const [payerId, setPayerId] = useState<string>('1');
 
   const billValue = parseFloat(totalBill) || 0;
-
-  // Calculate equal share
-  const calculatedEqualShare = billValue > 0 ? parseFloat((billValue / participants.length).toFixed(2)) : 0;
+  const participantCount = participants.length;
+  const equalShare = billValue > 0 ? parseFloat((billValue / participantCount).toFixed(2)) : 0;
 
   const addPerson = () => {
     const newId = Date.now().toString();
-    setParticipants([...participants, { id: newId, name: `Friend ${participants.length}`, paid: 0, share: 0 }]);
+    setParticipants([...participants, { id: newId, name: `Person ${participants.length + 1}`, paid: 0 }]);
   };
 
   const removePerson = (id: string) => {
@@ -67,18 +65,31 @@ export function BillSplitTool() {
     }));
   };
 
-  // Advanced calculation for Custom Mode
+  // Logic for Equal Mode (One person paid everything)
+  const equalSettlements = useMemo(() => {
+    if (splitType !== 'equal' || billValue <= 0) return [];
+    const mainPayer = participants.find(p => p.id === payerId);
+    if (!mainPayer) return [];
+
+    return participants
+      .filter(p => p.id !== payerId)
+      .map(p => ({
+        from: p.name.trim() || "Someone",
+        to: mainPayer.name.trim() || "Payer",
+        amount: equalShare
+      }));
+  }, [participants, billValue, splitType, payerId, equalShare]);
+
+  // Logic for Custom Mode (Multiple people paid different amounts, but share is equal)
   const customSettlements = useMemo(() => {
     if (splitType !== 'custom' || billValue <= 0) return [];
     
-    const totalPaid = participants.reduce((sum, p) => sum + p.paid, 0);
-    const totalShares = participants.reduce((sum, p) => sum + p.share, 0);
-    
-    if (Math.abs(totalPaid - billValue) > 1 || Math.abs(totalShares - billValue) > 1) return [];
-
+    // Each person's debt is (Their Share - Their Paid)
+    // If negative, they are owed money. If positive, they owe money.
+    // We use (Paid - Share) to find Creditors (>0) and Debtors (<0)
     let balances = participants.map((p) => ({
       name: p.name.trim() || "Someone",
-      balance: p.paid - p.share
+      balance: p.paid - equalShare
     }));
 
     const results: Settlement[] = [];
@@ -90,47 +101,37 @@ export function BillSplitTool() {
       const debtor = debtors[dIdx];
       const creditor = creditors[cIdx];
       const amount = Math.min(Math.abs(debtor.balance), creditor.balance);
+      
       if (amount > 0.01) {
-        results.push({ from: debtor.name, to: creditor.name, amount: parseFloat(amount.toFixed(2)) });
+        results.push({ 
+          from: debtor.name, 
+          to: creditor.name, 
+          amount: parseFloat(amount.toFixed(2)) 
+        });
       }
+      
       debtor.balance += amount;
       creditor.balance -= amount;
+      
       if (Math.abs(debtor.balance) < 0.01) dIdx++;
       if (Math.abs(creditor.balance) < 0.01) cIdx++;
     }
     return results;
-  }, [participants, billValue, splitType]);
-
-  // Simple calculation for Equal Mode
-  const equalSettlements = useMemo(() => {
-    if (splitType !== 'equal' || billValue <= 0) return [];
-    const payer = participants.find(p => p.id === payerId);
-    if (!payer) return [];
-
-    return participants
-      .filter(p => p.id !== payerId)
-      .map(p => ({
-        from: p.name.trim() || "Someone",
-        to: payer.name.trim() || "Payer",
-        amount: calculatedEqualShare
-      }));
-  }, [participants, billValue, splitType, payerId, calculatedEqualShare]);
+  }, [participants, billValue, splitType, equalShare]);
 
   const finalSettlements = splitType === 'equal' ? equalSettlements : customSettlements;
 
   const handleSaveMyShare = () => {
     if (!firestore || !user?.uid) return;
-    const myShare = splitType === 'equal' ? calculatedEqualShare : (participants.find(p => p.id === '1')?.share || 0);
-
-    if (myShare <= 0) {
-      toast({ variant: "destructive", title: "Error", description: "Your share must be greater than 0" });
+    if (equalShare <= 0) {
+      toast({ variant: "destructive", title: "Error", description: "Bill amount must be greater than 0" });
       return;
     }
 
     saveExpense(firestore, user.uid, {
-      amount: myShare,
+      amount: equalShare,
       category: 'Food',
-      description: `Bill Split: ${totalBill}`,
+      description: `Split Bill: ${totalBill}`,
       transactionDate: new Date().toISOString().split('T')[0],
       captureMethod: 'Text',
     });
@@ -184,7 +185,7 @@ export function BillSplitTool() {
             </div>
 
             <div className="space-y-4">
-              <Label className="text-xs font-bold uppercase text-muted-foreground">Participants</Label>
+              <Label className="text-xs font-bold uppercase text-muted-foreground">Names</Label>
               <div className="grid gap-3">
                 {participants.map((p) => (
                   <div key={p.id} className="flex items-center gap-2">
@@ -210,9 +211,12 @@ export function BillSplitTool() {
           </TabsContent>
 
           <TabsContent value="custom" className="space-y-4 m-0">
+            <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest mb-2 italic">
+              Share for everyone: ₹{equalShare.toLocaleString()}
+            </p>
             <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
               {participants.map((p) => (
-                <div key={p.id} className="flex flex-col gap-3 bg-muted/30 p-4 rounded-2xl border border-primary/5">
+                <div key={p.id} className="flex flex-col gap-2 bg-muted/30 p-4 rounded-2xl border border-primary/5">
                   <div className="flex items-center gap-3">
                     <Input 
                       value={p.name} 
@@ -230,27 +234,15 @@ export function BillSplitTool() {
                       <Trash2 className="w-4 h-4" />
                     </Button>
                   </div>
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="space-y-1">
-                      <Label className="text-[10px] font-black uppercase text-muted-foreground ml-1">{t.personShare}</Label>
-                      <Input 
-                        type="number"
-                        value={p.share || ""}
-                        onChange={(e) => updateParticipant(p.id, 'share', e.target.value)}
-                        placeholder="Share"
-                        className="h-10 rounded-xl bg-card border-none font-bold text-sm text-primary"
-                      />
-                    </div>
-                    <div className="space-y-1">
-                      <Label className="text-[10px] font-black uppercase text-muted-foreground ml-1">Paid at Venue</Label>
-                      <Input 
-                        type="number"
-                        value={p.paid || ""}
-                        onChange={(e) => updateParticipant(p.id, 'paid', e.target.value)}
-                        placeholder="Paid"
-                        className="h-10 rounded-xl bg-card border-none font-bold text-sm text-green-600"
-                      />
-                    </div>
+                  <div className="space-y-1">
+                    <Label className="text-[10px] font-black uppercase text-muted-foreground ml-1">Paid at Venue</Label>
+                    <Input 
+                      type="number"
+                      value={p.paid || ""}
+                      onChange={(e) => updateParticipant(p.id, 'paid', e.target.value)}
+                      placeholder="How much they paid?"
+                      className="h-10 rounded-xl bg-card border-none font-bold text-sm text-green-600"
+                    />
                   </div>
                 </div>
               ))}
@@ -280,9 +272,9 @@ export function BillSplitTool() {
                     <div className="w-2 h-2 rounded-full bg-primary/40 shrink-0" />
                     <p className="text-sm font-medium leading-relaxed">
                       <span className="font-bold text-primary">{s.from}</span>
-                      <span className="mx-1.5 text-muted-foreground font-normal">{t.owes}</span>
+                      <span className="mx-1.5 text-muted-foreground font-bold">will pay</span>
                       <span className="font-headline font-black text-primary mx-1">₹{s.amount.toLocaleString()}</span>
-                      <span className="mx-1.5 text-muted-foreground font-normal">{t.to}</span>
+                      <span className="mx-1.5 text-muted-foreground font-bold">to</span>
                       <span className="font-bold text-primary bg-primary/10 px-2 py-0.5 rounded">{s.to}</span>
                     </p>
                   </div>
@@ -301,7 +293,7 @@ export function BillSplitTool() {
             <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-16 -mt-16" />
             <div className="flex flex-col relative z-10">
               <span className="text-[10px] font-black uppercase tracking-widest opacity-80">{t.yourShare}</span>
-              <span className="text-3xl font-headline font-black">₹{calculatedEqualShare.toLocaleString()}</span>
+              <span className="text-3xl font-headline font-black">₹{equalShare.toLocaleString()}</span>
             </div>
             <Button 
               onClick={handleSaveMyShare} 
