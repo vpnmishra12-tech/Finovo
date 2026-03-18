@@ -1,3 +1,4 @@
+
 {
   "entities": {
     "UserProfile": {
@@ -178,6 +179,7 @@
   },
   "auth": {
     "providers": [
+      "google",
       "password",
       "anonymous"
     ]
@@ -251,6 +253,6 @@
         }
       }
     ],
-    "reasoning": "The recommended Firestore structure for SmartKharcha AI prioritizes security, scalability, and debuggability by strictly adhering to the core design principles. Authorization independence is achieved through consistent denormalization and a hierarchical path structure, eliminating the need for complex `get()` operations in security rules. \n\n1.  **Authorization Independence (Mandate A):**\n    *   For user-specific data (`UserProfile`, `Expense`, `MonthlyBudget`), the `userId` field within each document directly corresponds to the `{userId}` wildcard in its respective path (`/users/{userId}`, `/users/{userId}/expenses/{expenseId}`, `/users/{userId}/monthlyBudgets/{monthlyBudgetId}`). This denormalization means that security rules can always verify ownership by comparing `request.auth.uid` with the path segment and the document's `userId` field, without ever performing a `get()` operation on a parent document. This enables atomic writes and significantly simplifies rule logic, making it robust against race conditions and easier to debug.\n\n2.  **Structural Segregation & QAPs (Mandate B & C):**\n    *   **`/users/{userId}` (UserProfile):** This top-level collection for user profiles ensures that each user's settings are privately owned and isolated. QAPs are naturally supported as users can only read/write their own profile document, whose ID matches their `request.auth.uid`. Rules can simply check `request.auth.uid == userId` in the path.\n    *   **`/categories` (Category):** This is a global, top-level collection for predefined categories. It has a homogeneous security posture: publicly readable by all authenticated users, but likely only writeable by administrators (if an admin role is introduced). This segregation ensures category data is easily accessible for lookup without interfering with user-specific data. QAPs are met because the collection is intended for broad access; rules simply allow `read` for `request.auth != null`.\n    *   **`/users/{userId}/expenses/{expenseId}` (Expense):** Expenses are stored in a subcollection under the specific user's path. This enforces strong ownership. The `userId` field in each expense document denormalizes the owner information. QAPs are guaranteed because a user can only perform `list` operations on their own `/users/{userId}/expenses` subcollection. The `userId` in the path ensures that queries are automatically scoped to the owner.\n    *   **`/users/{userId}/monthlyBudgets/{monthlyBudgetId}` (MonthlyBudget):** Similar to expenses, monthly budgets are user-specific and reside in a subcollection under the user's path. The `userId` field within the budget document provides the necessary denormalization for authorization checks. QAPs are supported by limiting `list` operations to the user's own subcollection.\n\nBy implementing these strategies, the SmartKharcha AI app's Firestore structure is inherently secure, performant for common access patterns (especially `list` operations), and highly debuggable due to explicit authorization contexts within each document and path."
+    "reasoning": "The recommended Firestore structure for SmartKharcha AI prioritizes security, scalability, and debuggability by strictly adhering to the core design principles."
   }
 }

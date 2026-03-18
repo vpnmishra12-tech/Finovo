@@ -1,6 +1,7 @@
+
 "use client";
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import { GoogleAuthProvider, signInWithPopup, signOut, User } from 'firebase/auth';
 import { useAuth as useFirebaseServiceAuth, useUser } from '@/firebase';
 
@@ -20,9 +21,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = async () => {
     try {
+      // Ensure we use the correct auth instance from the provider
       await signInWithPopup(auth, googleProvider);
-    } catch (error) {
-      console.error("Login failed", error);
+    } catch (error: any) {
+      console.error("Login failed:", error.message);
     }
   };
 
