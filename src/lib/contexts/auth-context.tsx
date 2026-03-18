@@ -33,12 +33,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       let errorMessage = "An unexpected error occurred during login.";
       
+      // Specific handling for common Firebase Studio / Workstation errors
       if (error.code === 'auth/unauthorized-domain') {
-        errorMessage = "This domain is not authorized in Firebase Console. Please follow the steps in README.md.";
+        errorMessage = "Domain not authorized! Please go to Firebase Console > Auth > Settings > Authorized Domains and add your current URL.";
       } else if (error.code === 'auth/popup-closed-by-user') {
-        errorMessage = "Login popup was closed. Please try again.";
-      } else if (error.code === 'auth/cancelled-popup-request') {
-        errorMessage = "Another login request is already in progress.";
+        errorMessage = "The login popup was closed before completion.";
+      } else if (error.code === 'auth/operation-not-allowed') {
+        errorMessage = "Google Sign-In is not enabled in your Firebase Console.";
       }
 
       toast({
