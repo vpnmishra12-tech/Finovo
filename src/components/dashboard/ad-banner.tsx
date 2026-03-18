@@ -8,7 +8,7 @@ import { ExternalLink, Info } from 'lucide-react';
 export function AdBanner() {
   const { t } = useLanguage();
 
-  // STEP 2: AdSense initialization
+  // STEP 2: AdSense Push (Ads initialize karne ke liye)
   useEffect(() => {
     try {
       // @ts-ignore
@@ -29,9 +29,9 @@ export function AdBanner() {
           <ExternalLink className="w-3 h-3 text-muted-foreground/50" />
         </div>
         
-        <div className="min-h-[100px] w-full bg-gradient-to-br from-primary/5 to-accent/5 rounded-xl border-2 border-dashed border-muted flex flex-col items-center justify-center text-center p-2">
-          {/* STEP 3: Your AdSense Ad Unit Code */}
-          {/* Niche diye gaye 'ins' tag mein apni details bharein aur comment hata dein jab asli ads lagane hon */}
+        <div className="min-h-[100px] w-full bg-gradient-to-br from-primary/5 to-accent/5 rounded-xl border-2 border-dashed border-muted flex flex-col items-center justify-center text-center p-2 relative">
+          {/* STEP 3: Ad Unit Code (AdSense for Content) */}
+          {/* Niche wala 'ins' tag uncomment karein aur data-ad-client aur data-ad-slot apni asli IDs se badlein */}
           
           {/* 
           <ins className="adsbygoogle"
@@ -47,7 +47,7 @@ export function AdBanner() {
               Your Professional Ad Here
             </p>
             <p className="text-[10px] text-muted-foreground/60 mt-1">
-              Insert your AdSense Ad Unit code in this component.
+              Google AdSense for Content (No subs needed, just site approval)
             </p>
           </div>
         </div>
