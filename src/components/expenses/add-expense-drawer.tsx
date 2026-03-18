@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from 'react';
@@ -40,12 +41,12 @@ export function AddExpenseDrawer() {
   };
 
   const handleSave = () => {
-    if (!firestore) return;
+    if (!firestore || !user?.uid) {
+      toast({ title: "Error", description: "You must be logged in to save expenses.", variant: "destructive" });
+      return;
+    }
     
-    // Use user ID or fallback demo ID for preview
-    const userId = user?.uid || "demo-user-id";
-    
-    saveExpense(firestore, userId, {
+    saveExpense(firestore, user.uid, {
       amount: parseFloat(amount),
       category: category as any,
       description,

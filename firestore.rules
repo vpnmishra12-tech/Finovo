@@ -1,61 +1,39 @@
+
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
     /**
-     * SMARTKHARCHA AI SECURITY RULES
+     * SMARTKHARCHA AI PRODUCTION SECURITY RULES
      *
      * Core Philosophy:
-     * This ruleset enforces a strict User-Ownership model. Access to data is partitioned by 
-     * Firebase Authentication UIDs, ensuring that users can only interact with their own 
-     * financial data (expenses, budgets, and profiles).
-     *
-     * DEMO MODE: For previewing purposes, the "demo-user-id" path is allowed public access.
+     * Strict User-Ownership model. Access to data is partitioned by 
+     * Firebase Authentication UIDs.
      */
 
-    // --- Global Helper Functions ---
-
-    /** Checks if the request is from an authenticated user. */
     function isSignedIn() {
       return request.auth != null;
     }
 
-    /** Checks if the authenticated user's UID matches the provided userId or if it's the demo account. */
     function isOwner(userId) {
-      return (isSignedIn() && request.auth.uid == userId) || userId == "demo-user-id";
+      return isSignedIn() && request.auth.uid == userId;
     }
-
-    /** Combines ownership check with a check for document existence for destructive operations. */
-    function isExistingOwner(userId) {
-      return (resource != null && isOwner(userId)) || userId == "demo-user-id";
-    }
-
-    // --- Collection Rules ---
 
     match /users/{userId} {
-      allow get, list: if isOwner(userId);
-      allow create: if isOwner(userId);
-      allow update: if isExistingOwner(userId);
-      allow delete: if isExistingOwner(userId);
+      allow get, list, create, update, delete: if isOwner(userId);
 
       match /expenses/{expenseId} {
-        allow get, list: if isOwner(userId);
-        allow create: if isOwner(userId);
-        allow update: if isExistingOwner(userId);
-        allow delete: if isExistingOwner(userId);
+        allow get, list, create, update, delete: if isOwner(userId);
       }
 
       match /monthlyBudgets/{monthlyBudgetId} {
-        allow get, list: if isOwner(userId);
-        allow create: if isOwner(userId);
-        allow update: if isExistingOwner(userId);
-        allow delete: if isExistingOwner(userId);
+        allow get, list, create, update, delete: if isOwner(userId);
       }
     }
 
     match /categories/{categoryId} {
-      allow get, list: if true; // Categories are public for the demo
-      allow create, update, delete: if false;
+      allow read: if true;
+      allow write: if false;
     }
   }
 }

@@ -1,12 +1,12 @@
+
 "use client";
 
 import { useAuth } from '@/lib/contexts/auth-context';
 import { useLanguage } from '@/lib/contexts/language-context';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Languages, LogOut, Settings, Wallet, LogIn, Sparkles } from 'lucide-react';
+import { Languages, LogOut, Settings, Wallet, LogIn } from 'lucide-react';
 
 export function Header() {
   const { user, logout, login } = useAuth();
@@ -23,11 +23,6 @@ export function Header() {
             <h1 className="font-headline font-bold text-lg leading-tight tracking-tight bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
               {t.appName}
             </h1>
-            {!user && (
-              <Badge variant="secondary" className="w-fit h-4 text-[8px] px-1 py-0 font-bold uppercase tracking-widest bg-amber-500/10 text-amber-500 border-amber-500/20">
-                Demo Mode
-              </Badge>
-            )}
           </div>
         </div>
 
