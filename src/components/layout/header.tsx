@@ -4,8 +4,9 @@ import { useAuth } from '@/lib/contexts/auth-context';
 import { useLanguage } from '@/lib/contexts/language-context';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Languages, LogOut, Settings, User, Wallet, LogIn } from 'lucide-react';
+import { Languages, LogOut, Settings, Wallet, LogIn, Sparkles } from 'lucide-react';
 
 export function Header() {
   const { user, logout, login } = useAuth();
@@ -18,9 +19,16 @@ export function Header() {
           <div className="bg-primary p-1.5 rounded-lg shadow-lg">
             <Wallet className="w-5 h-5 text-white" />
           </div>
-          <h1 className="font-headline font-bold text-xl tracking-tight bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-            {t.appName}
-          </h1>
+          <div className="flex flex-col">
+            <h1 className="font-headline font-bold text-lg leading-tight tracking-tight bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+              {t.appName}
+            </h1>
+            {!user && (
+              <Badge variant="secondary" className="w-fit h-4 text-[8px] px-1 py-0 font-bold uppercase tracking-widest bg-amber-500/10 text-amber-500 border-amber-500/20">
+                Demo Mode
+              </Badge>
+            )}
+          </div>
         </div>
 
         <div className="flex items-center gap-3">
@@ -28,7 +36,7 @@ export function Header() {
             variant="ghost" 
             size="sm" 
             onClick={() => setLanguage(language === 'en' ? 'hi' : 'en')}
-            className="hidden sm:flex"
+            className="hidden sm:flex h-8"
           >
             <Languages className="w-4 h-4 mr-2" />
             {language === 'en' ? 'हिन्दी' : 'English'}
@@ -68,9 +76,9 @@ export function Header() {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <Button variant="outline" size="sm" onClick={login} className="rounded-xl gap-2">
+            <Button variant="outline" size="sm" onClick={login} className="rounded-xl gap-2 h-9 border-primary/20 hover:bg-primary/5">
               <LogIn className="w-4 h-4" />
-              {t.loginWithGoogle}
+              <span className="hidden xs:inline">{t.loginWithGoogle}</span>
             </Button>
           )}
         </div>
