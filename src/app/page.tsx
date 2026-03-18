@@ -277,17 +277,17 @@ export default function Home() {
                 year={parseInt(selectedYear)}
               />
 
-              {/* Monthly breakdown moved to Dashboard per user request */}
               <MonthlyHistory expenses={expenses || []} />
               
               <AdBanner />
+
+              <AddExpenseDrawer />
             </div>
           )}
 
           {activeTab === 'history' && (
             <div className="space-y-4 animate-in fade-in duration-300">
               <h2 className="text-2xl font-headline font-black">{t.history}</h2>
-              {/* Pie Chart (Gola) moved to History per user request */}
               <SpendingChart expenses={selectedMonthExpenses} />
               <ExpenseList expenses={expenses || []} isLoading={isExpensesLoading} />
             </div>
@@ -307,8 +307,6 @@ export default function Home() {
         <NavItem id="history" icon={History} label={t.history} />
         <NavItem id="splitter" icon={Calculator} label={t.billSplitter} />
       </div>
-      
-      <AddExpenseDrawer />
     </div>
   );
 }
