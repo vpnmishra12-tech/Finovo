@@ -1,11 +1,10 @@
 
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import { 
   GoogleAuthProvider, 
-  signInWithRedirect, 
-  getRedirectResult,
+  signInWithPopup, 
   signOut, 
   User 
 } from 'firebase/auth';
@@ -31,79 +30,41 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return provider;
   });
 
-  // Handle the redirect result when the component mounts
-  useEffect(() => {
-    const checkRedirect = async () => {
-      // Check if we previously initiated a login
-      const loginStarted = sessionStorage.getItem('login_initiated');
+  const login = async () => {
+    if (!auth) return;
 
-      try {
-        const result = await getRedirectResult(auth);
-        
-        if (result) {
-          sessionStorage.removeItem('login_initiated');
-          toast({
-            title: "Login Successful!",
-            description: `Welcome, ${result.user.displayName}`,
-          });
-        } else if (loginStarted && !user && !isUserLoading) {
-          // This case happens when you are redirected back but the handshake failed
-          // Usually due to cookies or unauthorized domain
-          toast({
-            variant: "destructive",
-            duration: 10000,
-            title: "CRITICAL: Handshake Failed",
-            description: "Redirect returned with NO user. 1. Ensure Third-Party Cookies are ALLOWED (NOT Blocked). 2. Double check Authorized Domains in Firebase Console.",
-          });
-          sessionStorage.removeItem('login_initiated');
-        }
-      } catch (error: any) {
-        sessionStorage.removeItem('login_initiated');
-        console.error("Redirect Error:", error);
-        
-        let errorTitle = "Login Error";
-        let errorDescription = error.message || "An unknown error occurred.";
-
-        if (error.code === 'auth/unauthorized-domain') {
-          errorTitle = "Domain Not Authorized";
-          errorDescription = "Go to Firebase Console -> Authentication -> Settings -> Authorized Domains and add this exact URL.";
-        } else if (error.code === 'auth/network-request-failed') {
-          errorTitle = "Cookie Blocked";
-          errorDescription = "Your browser is blocking the login cookie. Go to Browser Settings -> Privacy -> Third-Party Cookies -> ALLOW ALL.";
-        }
-
+    try {
+      // Directly initiate popup to satisfy browser security
+      const result = await signInWithPopup(auth, googleProvider);
+      if (result.user) {
         toast({
-          variant: "destructive",
-          duration: 10000,
-          title: errorTitle,
-          description: errorDescription,
+          title: "Login Successful!",
+          description: `Welcome, ${result.user.displayName}`,
         });
       }
-    };
-
-    if (auth) {
-      checkRedirect();
-    }
-  }, [auth, user, isUserLoading, toast]);
-
-  const login = async () => {
-    try {
-      toast({
-        title: "Redirecting...",
-        description: "Taking you to Google Login page.",
-      });
-      
-      // Mark that we started the login process
-      sessionStorage.setItem('login_initiated', 'true');
-      
-      await signInWithRedirect(auth, googleProvider);
     } catch (error: any) {
-      sessionStorage.removeItem('login_initiated');
-      console.error("Login Trigger Error:", error);
+      console.error("Login Error:", error);
+      
+      let errorTitle = "Login Failed";
+      let errorDescription = error.message || "An unknown error occurred.";
+
+      // Specific error handling for Cloud Workstations
+      if (error.code === 'auth/unauthorized-domain') {
+        errorTitle = "Domain Not Authorized";
+        errorDescription = "Please ensure the current URL (without https://) is added to Firebase Console -> Auth -> Settings -> Authorized Domains.";
+      } else if (error.code === 'auth/popup-blocked') {
+        errorTitle = "Popup Blocked";
+        errorDescription = "Please click the icon in your address bar to allow popups for this site.";
+      } else if (error.code === 'auth/network-request-failed') {
+        errorTitle = "Network/Cookie Error";
+        errorDescription = "Please ensure Third-party cookies are ALLOWED in your browser settings.";
+      }
+
       toast({
         variant: "destructive",
-        title: "Redirect Failed",
-        description: error.message || "Could not initiate login redirect.",
+        duration: 10000,
+        title: errorTitle,
+        description: errorDescription,
       });
     }
   };

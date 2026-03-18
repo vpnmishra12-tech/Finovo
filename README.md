@@ -1,50 +1,42 @@
 
 # SmartKharcha AI - Final Login Fix 🚀
 
-If your login is still not working after the redirect, follow these exact steps.
+Agar aapka login abhi bhi nahi chal raha hai, toh ye 2 steps bilkul dhyan se follow kijiye.
 
-## 🛠 Step 1: Authorized Domain Fix (Mandatory)
+## 🛠 Step 1: Authorized Domain (Sabse Zaroori)
 
-Firebase blocks login requests if the domain is not in its whitelist.
+Firebase sirf unhi domains ko allow karta hai jo list mein hote hain.
 
-### 1. Identify your exact Domain
-Look at your browser tab's address bar. Your URL looks like this:
-`https://9002-firebase-studio-123.cluster-abc.cloudworkstations.dev/`
-
-**Copy ONLY the text between `https://` and the last `/`**:
-`9002-firebase-studio-123.cluster-abc.cloudworkstations.dev`
-
-### 2. Update Firebase Console
-1. Open this link: [Authorized Domains Settings](https://console.firebase.google.com/project/studio-4253837572-72734/authentication/settings)
-2. Go to the **Settings** tab.
-3. Click **"Authorized domains"** in the left menu.
-4. Click **"Add domain"**.
-5. **Paste the domain** you copied in Step 1.
-   - ⚠️ **IMPORTANT**: Ensure there is NO `https://` at the start and NO `/` at the end.
-6. Click **"Add"**.
+### Kaise check karein:
+1. Apne browser tab mein URL dekhiye. Wo kuch aisa hoga:
+   `https://9002-firebase-studio-123.cluster-abc.cloudworkstations.dev/`
+2. **Sirf is hisse ko copy karein** (bina `https://` aur bina aakhri `/` ke):
+   `9002-firebase-studio-123.cluster-abc.cloudworkstations.dev`
+3. [Firebase Console Settings](https://console.firebase.google.com/project/studio-4253837572-72734/authentication/settings) par jaiye.
+4. **Settings** tab -> **Authorized domains** mein ise **Add** kijiye.
+   - ⚠️ **Dhyan dein**: Agar list mein pehle se koi domain hai jisme `https://` laga hai, toh use delete karke naya add karein.
 
 ---
 
-## 🍪 Step 2: Third-Party Cookies (CRITICAL)
+## 🍪 Step 2: Third-Party Cookies (Mobile Users ke liye)
 
-If you are redirected back to the app but NOT logged in (Handshake Failed), it's because your browser is blocking the "handshake" cookie.
+Agar aap Google login par jaate hain aur wapas aakar login nahi hota, toh iska matlab hai cookies block hain.
 
-### For Chrome (Mobile/Desktop):
-1. Go to Browser **Settings**.
-2. Go to **Privacy and security**.
-3. Go to **Third-party cookies**.
-4. Select **"Allow third-party cookies"** (or ensure "Block" is turned OFF).
-   - ⚠️ **SABSE ZAROORI**: Agar aapne cookies ko "Block" kar diya hai, toh login kaam nahi karega. Inhe **ALLOW** karein.
+### Chrome (Android/Desktop):
+1. Browser ki **Settings** mein jaiye.
+2. **Privacy and security** par click karein.
+3. **Third-party cookies** par jaiye.
+4. **"Allow third-party cookies"** select kijiye.
 
-### For iPhone (Safari):
-1. Go to iPhone **Settings**.
-2. Scroll down to **Safari**.
-3. Turn OFF **"Prevent Cross-Site Tracking"**.
-4. Turn OFF **"Block All Cookies"**.
+### iPhone (Safari):
+1. iPhone ki **Settings** mein jaiye.
+2. **Safari** dhoondiye.
+3. **"Prevent Cross-Site Tracking"** ko **OFF** kar dijiye.
+4. **"Block All Cookies"** ko **OFF** kar dijiye.
 
 ---
 
-## 📱 Mobile Troubleshooting
-If you are still stuck:
-- **Incognito**: Private/Incognito mode ka use na karein, wahan cookies automatically block ho jati hain.
-- **Refresh**: Settings change karne ke baad page ko **Refresh** zaroor karein.
+## 📱 Popup Blocked Fix
+Agar login par click karne ke baad kuch nahi khul raha:
+1. Browser ke **Address Bar** (uupar jahan URL hota hai) ke right side mein ek chhota red icon dekhiye.
+2. Us par click karke **"Always allow popups"** select kijiye.
