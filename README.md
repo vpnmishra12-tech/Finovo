@@ -7,11 +7,9 @@ Agar aapko install karte waqt abhi bhi purana icon dikh raha hai, toh iska matla
 2. **Settings (⚙️)** > **Site Settings** > **All Sites**.
 3. Apne app ka link (cloudworkstations.dev wala) dhundein.
 4. **"Clear & Reset"** ya **"Delete all data"** par click karein.
-5. Ab link ko phir se refresh karein. Ab naya **PREMIUM 3D Wallet** (v100) dikhega!
+5. Ab link ko phir se refresh karein. Ab naya **ULTRA-PREMIUM 3D Wallet** (v200) dikhega!
 
-## 🚀 GitHub Export:
-1. **Desktop Site**: Mobile Chrome mein **"Desktop Site"** mode on karein.
-2. Toolbar mein **Billi (Cat)** logo par click karein.
-3. **Push** dabayein.
+## 🚀 PWA Install (Home Screen) Refresh:
+Agar aapne app pehle hi "Add to Home Screen" kar liya tha, toh use **Uninstall** karein, Chrome mein **Site Data Clear** karein (upar wale steps), aur phir se **Install** karein.
 
-*Finovo - Updated to ULTRA PREMIUM 3D Wallet (v100 - Hard Refresh Required).*
+*Finovo - Updated to ULTRA-PREMIUM 3D Wallet (v200 - Force Refresh Applied).*
