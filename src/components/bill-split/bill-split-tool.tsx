@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useMemo } from 'react';
@@ -11,7 +10,6 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Users, UserPlus, Trash2, Calculator, CheckCircle2, ArrowRightLeft, Coins, AlertCircle, Plane } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -19,7 +17,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 interface Participant {
   id: string;
   name: string;
-  paid: number;   // Amount paid at venue
+  paid: number;   
 }
 
 interface Settlement {
@@ -36,29 +34,24 @@ export function BillSplitTool() {
 
   const [splitType, setSplitType] = useState<'equal' | 'custom' | 'group'>('equal');
 
-  // mode: Equal Split (Simplified)
   const [equalTotalBill, setEqualTotalBill] = useState<string>("");
   const [equalNumPeople, setEqualNumPeople] = useState<string>("2");
 
-  // mode: Custom Split
   const [customTotalBill, setCustomTotalBill] = useState<string>("");
   const [customParticipants, setCustomParticipants] = useState<Participant[]>([
     { id: 'c1', name: '', paid: 0 },
     { id: 'c2', name: '', paid: 0 }
   ]);
 
-  // mode: Group Trip
   const [groupParticipants, setGroupParticipants] = useState<Participant[]>([
     { id: 'g1', name: '', paid: 0 },
     { id: 'g2', name: '', paid: 0 }
   ]);
 
-  // Calculations for Equal Split
   const equalBillVal = parseFloat(equalTotalBill) || 0;
   const equalPeopleCount = parseInt(equalNumPeople) || 1;
   const equalShare = equalBillVal > 0 ? parseFloat((equalBillVal / equalPeopleCount).toFixed(2)) : 0;
 
-  // Calculations for Custom Split
   const customBillVal = parseFloat(customTotalBill) || 0;
   const customShare = customBillVal > 0 ? parseFloat((customBillVal / customParticipants.length).toFixed(2)) : 0;
   const customNamesEntered = customParticipants.every(p => p.name.trim().length > 0);
@@ -100,7 +93,6 @@ export function BillSplitTool() {
     return results;
   }, [customParticipants, customBillVal, splitType, customShare, isCustomMismatch, customNamesEntered]);
 
-  // Calculations for Group Trip
   const groupTotalPaid = groupParticipants.reduce((sum, p) => sum + p.paid, 0);
   const groupShare = groupParticipants.length > 0 ? parseFloat((groupTotalPaid / groupParticipants.length).toFixed(2)) : 0;
   const groupNamesEntered = groupParticipants.every(p => p.name.trim().length > 0);
@@ -176,7 +168,7 @@ export function BillSplitTool() {
 
     if (splitType === 'equal') {
       shareToSave = equalShare;
-      billDesc = `Equal Split: ${equalTotalBill} amongst ${equalPeopleCount}`;
+      billDesc = `Equal Split: ${equalTotalBill} / ${equalPeopleCount}`;
       canSave = equalBillVal > 0 && equalPeopleCount > 0;
     } else if (splitType === 'custom') {
       shareToSave = customShare;
@@ -207,7 +199,7 @@ export function BillSplitTool() {
   return (
     <Card className="border-none bg-card shadow-sm overflow-hidden rounded-3xl">
       <CardHeader className="bg-primary/5 pb-4">
-        <CardTitle className="text-xl font-headline font-bold flex items-center gap-2">
+        <CardTitle className="text-xl font-headline font-black uppercase tracking-tight flex items-center gap-2">
           <Calculator className="w-5 h-5 text-primary" />
           {t.splitTitle}
         </CardTitle>
@@ -215,13 +207,13 @@ export function BillSplitTool() {
       <CardContent className="p-6 space-y-6">
         <Tabs value={splitType} onValueChange={(v) => setSplitType(v as any)} className="w-full">
           <TabsList className="grid w-full grid-cols-3 bg-muted h-12 rounded-xl p-1 mb-6">
-            <TabsTrigger value="equal" className="rounded-lg gap-2 font-bold text-xs sm:text-sm">
+            <TabsTrigger value="equal" className="rounded-lg gap-2 font-black text-[10px] uppercase">
               <Users className="w-3 h-3" /> {t.splitEqual}
             </TabsTrigger>
-            <TabsTrigger value="custom" className="rounded-lg gap-2 font-bold text-xs sm:text-sm">
+            <TabsTrigger value="custom" className="rounded-lg gap-2 font-black text-[10px] uppercase">
               <Coins className="w-3 h-3" /> {t.splitCustom}
             </TabsTrigger>
-            <TabsTrigger value="group" className="rounded-lg gap-2 font-bold text-xs sm:text-sm">
+            <TabsTrigger value="group" className="rounded-lg gap-2 font-black text-[10px] uppercase">
               <Plane className="w-3 h-3" /> {t.splitGroup}
             </TabsTrigger>
           </TabsList>
@@ -229,30 +221,30 @@ export function BillSplitTool() {
           <TabsContent value="equal" className="space-y-6 m-0">
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label className="text-xs font-bold uppercase text-muted-foreground">{t.totalAmount}</Label>
+                <Label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">{t.totalAmount}</Label>
                 <Input 
                   type="number" 
                   placeholder="0.00" 
                   value={equalTotalBill} 
                   onChange={(e) => setEqualTotalBill(e.target.value)}
-                  className="h-14 rounded-2xl bg-muted border-none font-headline font-bold text-2xl text-primary"
+                  className="h-14 rounded-2xl bg-muted border-none font-headline font-black text-2xl text-primary"
                 />
               </div>
               <div className="space-y-2">
-                <Label className="text-xs font-bold uppercase text-muted-foreground">{t.numPeople}</Label>
+                <Label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">{t.numPeople}</Label>
                 <Input 
                   type="number" 
                   placeholder="2" 
                   value={equalNumPeople} 
                   onChange={(e) => setEqualNumPeople(e.target.value)}
-                  className="h-12 bg-muted/50 border-none rounded-xl font-bold px-4"
+                  className="h-12 bg-muted/50 border-none rounded-xl font-black px-4"
                   min="1"
                 />
               </div>
             </div>
             {equalBillVal > 0 && (
               <div className="bg-primary/5 rounded-3xl p-6 text-center border border-primary/10">
-                <p className="text-xs font-black uppercase text-muted-foreground tracking-widest mb-1">{t.personShare}</p>
+                <p className="text-[10px] font-black uppercase text-muted-foreground tracking-widest mb-1">{t.personShare}</p>
                 <p className="text-4xl font-headline font-black text-primary">₹{equalShare.toLocaleString()}</p>
               </div>
             )}
@@ -260,10 +252,10 @@ export function BillSplitTool() {
 
           <TabsContent value="custom" className="space-y-6 m-0">
             <div className="space-y-2">
-              <Label className="text-xs font-bold uppercase text-muted-foreground">{t.totalAmount}</Label>
-              <Input type="number" placeholder="0.00" value={customTotalBill} onChange={(e) => setCustomTotalBill(e.target.value)} className="h-14 rounded-2xl bg-muted border-none font-headline font-bold text-2xl text-primary" />
+              <Label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">{t.totalAmount}</Label>
+              <Input type="number" placeholder="0.00" value={customTotalBill} onChange={(e) => setCustomTotalBill(e.target.value)} className="h-14 rounded-2xl bg-muted border-none font-headline font-black text-2xl text-primary" />
             </div>
-            <p className="text-[10px] text-muted-foreground font-bold italic uppercase tracking-widest">Share per person: ₹{customShare.toLocaleString()}</p>
+            <p className="text-[10px] text-muted-foreground font-black uppercase tracking-widest">Share per person: ₹{customShare.toLocaleString()}</p>
             <div className="space-y-3 max-h-[300px] overflow-y-auto pr-1">
               {customParticipants.map((p) => (
                 <div key={p.id} className="flex flex-col gap-2 bg-muted/30 p-4 rounded-2xl border border-primary/5">
@@ -275,23 +267,23 @@ export function BillSplitTool() {
                 </div>
               ))}
             </div>
-            <Button variant="outline" onClick={addCustomPerson} className="w-full h-12 rounded-2xl border-dashed border-2 gap-2"><UserPlus className="w-4 h-4" /> {t.addPerson}</Button>
+            <Button variant="outline" onClick={addCustomPerson} className="w-full h-12 rounded-2xl border-dashed border-2 gap-2 font-black text-[10px] uppercase"><UserPlus className="w-4 h-4" /> {t.addPerson}</Button>
             {isCustomMismatch && (
-              <Alert variant="destructive" className="rounded-2xl border-2">
+              <Alert variant="destructive" className="rounded-2xl">
                 <AlertCircle className="h-4 w-4" />
-                <AlertDescription className="text-xs font-bold">Mismatch: Total Paid (₹{customTotalPaid.toLocaleString()}) does not match Bill (₹{customBillVal.toLocaleString()})</AlertDescription>
+                <AlertDescription className="text-xs font-bold uppercase tracking-tighter">Mismatch: Total Paid does not match Bill</AlertDescription>
               </Alert>
             )}
             {customNamesEntered && customBillVal > 0 && !isCustomMismatch && (
               <div className="bg-primary/5 rounded-3xl p-5 space-y-3">
                 {customSettlements.map((s, idx) => (
                   <div key={`custom-s-${idx}`} className="flex items-center gap-2 p-4 bg-card rounded-2xl shadow-sm border border-primary/5">
-                    <p className="text-sm font-medium">
-                      <span className="font-bold text-primary">{s.from}</span>
+                    <p className="text-[11px] font-bold">
+                      <span className="text-primary uppercase tracking-widest">{s.from}</span>
                       <span className="mx-1 text-muted-foreground">{t.owes}</span>
-                      <span className="font-headline font-black text-primary mx-1">₹{s.amount.toLocaleString()}</span>
+                      <span className="font-headline font-black text-primary mx-1 text-sm">₹{s.amount.toLocaleString()}</span>
                       <span className="mx-1 text-muted-foreground">{t.to}</span>
-                      <span className="font-bold text-primary bg-primary/10 px-2 py-0.5 rounded">{s.to}</span>
+                      <span className="text-primary uppercase tracking-widest font-black">{s.to}</span>
                     </p>
                   </div>
                 ))}
@@ -301,9 +293,9 @@ export function BillSplitTool() {
 
           <TabsContent value="group" className="space-y-6 m-0">
             <div className="bg-primary/10 p-4 rounded-2xl space-y-1">
-              <p className="text-xs font-black uppercase text-primary tracking-widest">{t.totalGroupExpense}</p>
+              <p className="text-[10px] font-black uppercase text-primary tracking-widest">{t.totalGroupExpense}</p>
               <p className="text-3xl font-headline font-black text-primary">₹{groupTotalPaid.toLocaleString()}</p>
-              <p className="text-[10px] text-muted-foreground font-medium">{t.groupDesc}</p>
+              <p className="text-[9px] text-muted-foreground font-bold uppercase">{t.groupDesc}</p>
             </div>
             <div className="space-y-3 max-h-[300px] overflow-y-auto pr-1">
               {groupParticipants.map((p) => (
@@ -313,44 +305,39 @@ export function BillSplitTool() {
                     <Button variant="ghost" size="icon" onClick={() => removeGroupPerson(p.id)} disabled={groupParticipants.length <= 2}><Trash2 className="w-4 h-4" /></Button>
                   </div>
                   <div className="flex flex-col gap-1">
-                    <Label className="text-[10px] font-bold uppercase text-muted-foreground ml-1">He/She Paid</Label>
+                    <Label className="text-[10px] font-black uppercase text-muted-foreground ml-1">He/She Paid</Label>
                     <Input type="number" value={p.paid || ""} onChange={(e) => updateGroupParticipant(p.id, 'paid', e.target.value)} placeholder="0.00" className="h-10 rounded-xl bg-card border-none font-bold text-sm text-green-600" />
                   </div>
                 </div>
               ))}
             </div>
-            <Button variant="outline" onClick={addGroupPerson} className="w-full h-12 rounded-2xl border-dashed border-2 gap-2"><UserPlus className="w-4 h-4" /> {t.addPerson}</Button>
+            <Button variant="outline" onClick={addGroupPerson} className="w-full h-12 rounded-2xl border-dashed border-2 gap-2 font-black text-[10px] uppercase"><UserPlus className="w-4 h-4" /> {t.addPerson}</Button>
             {groupNamesEntered && groupTotalPaid > 0 && (
               <div className="space-y-4 pt-4 border-t border-dashed">
-                <h4 className="text-xs font-black uppercase text-muted-foreground flex items-center gap-2"><ArrowRightLeft className="w-4 h-4" /> {t.settlement}</h4>
+                <h4 className="text-[10px] font-black uppercase text-muted-foreground flex items-center gap-2"><ArrowRightLeft className="w-4 h-4" /> {t.settlement}</h4>
                 <div className="bg-primary/5 rounded-3xl p-5 space-y-3">
                   {groupSettlements.map((s, idx) => (
                     <div key={`group-s-${idx}`} className="flex items-center gap-2 p-4 bg-card rounded-2xl shadow-sm border border-primary/5">
-                      <p className="text-sm font-medium">
-                        <span className="font-bold text-primary">{s.from}</span>
+                      <p className="text-[11px] font-bold">
+                        <span className="text-primary uppercase tracking-widest">{s.from}</span>
                         <span className="mx-1 text-muted-foreground">{t.owes}</span>
-                        <span className="font-headline font-black text-primary mx-1">₹{s.amount.toLocaleString()}</span>
+                        <span className="font-headline font-black text-primary mx-1 text-sm">₹{s.amount.toLocaleString()}</span>
                         <span className="mx-1 text-muted-foreground">{t.to}</span>
-                        <span className="font-bold text-primary bg-primary/10 px-2 py-0.5 rounded">{s.to}</span>
+                        <span className="text-primary uppercase tracking-widest font-black">{s.to}</span>
                       </p>
                     </div>
                   ))}
-                  {groupSettlements.length === 0 && <p className="text-center text-sm text-muted-foreground">{t.noPayment}</p>}
                 </div>
               </div>
             )}
           </TabsContent>
         </Tabs>
 
-        {((splitType === 'custom' && !customNamesEntered && customBillVal > 0) || (splitType === 'group' && !groupNamesEntered && groupTotalPaid > 0)) && (
-          <Alert className="rounded-2xl bg-amber-500/10 border-amber-500/20 text-amber-600"><AlertCircle className="h-4 w-4" /><AlertDescription className="text-xs font-bold">{t.enterNames}</AlertDescription></Alert>
-        )}
-
         <div className="pt-6">
           <div className="flex items-center justify-between p-6 bg-primary rounded-[2rem] text-primary-foreground shadow-2xl relative overflow-hidden">
             <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-16 -mt-16" />
             <div className="flex flex-col relative z-10">
-              <span className="text-[10px] font-black uppercase tracking-widest opacity-80">{t.yourShare}</span>
+              <span className="text-[9px] font-black uppercase tracking-widest opacity-80">{t.yourShare}</span>
               <span className="text-3xl font-headline font-black">₹{(splitType === 'equal' ? equalShare : splitType === 'custom' ? customShare : groupShare).toLocaleString()}</span>
             </div>
             <Button 
@@ -360,7 +347,7 @@ export function BillSplitTool() {
                 splitType === 'custom' ? (customBillVal <= 0 || !customNamesEntered || isCustomMismatch) : 
                 (groupTotalPaid <= 0 || !groupNamesEntered)
               } 
-              className="rounded-2xl h-14 px-8 bg-white text-primary hover:bg-white/90 font-black gap-2 shadow-xl relative z-10"
+              className="rounded-2xl h-14 px-8 bg-white text-primary hover:bg-white/90 font-black uppercase tracking-widest text-[10px] gap-2 shadow-xl relative z-10"
             >
               <CheckCircle2 className="w-5 h-5" /> {t.saveMyShare}
             </Button>

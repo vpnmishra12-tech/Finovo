@@ -11,7 +11,7 @@ import { AdBanner } from '@/components/dashboard/ad-banner';
 import { BillSplitTool } from '@/components/bill-split/bill-split-tool';
 import { ExpenseList } from '@/components/expenses/expense-list';
 import { AddExpenseDrawer } from '@/components/expenses/add-expense-drawer';
-import { Loader2, Wallet, Mail, Lock, UserPlus, LogIn, Info, Download, LayoutDashboard, History, Calculator, Smartphone } from 'lucide-react';
+import { Loader2, Wallet, Mail, Lock, UserPlus, LogIn, Info, Smartphone, LayoutDashboard, History, Calculator } from 'lucide-react';
 import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import { collection, query, orderBy, limit } from 'firebase/firestore';
 import { Expense } from '@/lib/expenses';
@@ -44,7 +44,7 @@ export default function Home() {
     return query(
       collection(firestore, 'users', user.uid, 'expenses'),
       orderBy('createdAt', 'desc'),
-      limit(200)
+      limit(100)
     );
   }, [firestore, user?.uid]);
 
@@ -69,7 +69,7 @@ export default function Home() {
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="flex flex-col items-center gap-4">
           <Loader2 className="w-10 h-10 text-primary animate-spin" />
-          <p className="text-muted-foreground font-medium animate-pulse">Fast Booting SmartKharcha...</p>
+          <p className="text-sm font-bold animate-pulse uppercase tracking-widest text-muted-foreground">Booting SmartKharcha...</p>
         </div>
       </div>
     );
@@ -84,20 +84,20 @@ export default function Home() {
             <Wallet className="w-16 h-16 text-primary" />
           </div>
           <div className="space-y-4">
-            <h1 className="text-4xl sm:text-5xl font-headline font-bold tracking-tight">
+            <h1 className="text-3xl sm:text-5xl font-headline font-black tracking-tight">
               Control your money with <span className="text-primary">AI</span>
             </h1>
-            <p className="text-lg text-muted-foreground leading-relaxed">
-              Create a secure account to track expenses using voice, text, or bill scans.
+            <p className="text-sm text-muted-foreground font-medium leading-relaxed">
+              Track expenses using voice, text, or bill scans. Secure and private.
             </p>
           </div>
 
           <Alert className="max-w-sm bg-blue-500/10 border-blue-500/20 text-blue-600 rounded-2xl text-left">
             <Smartphone className="w-5 h-5 mb-2" />
-            <AlertTitle className="text-sm font-bold">iPhone / Android Install Tip</AlertTitle>
-            <AlertDescription className="text-xs space-y-1">
-              <p>• <b>iPhone:</b> Tap Share 📤 & scroll to <b>'Add to Home Screen'</b></p>
-              <p>• <b>Android:</b> Tap 3 dots & select <b>'Install App'</b></p>
+            <AlertTitle className="text-xs font-black uppercase">iPhone / Android Tip</AlertTitle>
+            <AlertDescription className="text-[10px] space-y-1 font-bold">
+              <p>• <b>iPhone:</b> Tap Share 📤 & <b>'Add to Home Screen'</b></p>
+              <p>• <b>Android:</b> Tap 3 dots & <b>'Install App'</b></p>
             </AlertDescription>
           </Alert>
 
@@ -105,18 +105,18 @@ export default function Home() {
             <CardContent className="p-0">
               <Tabs defaultValue="login" className="w-full">
                 <TabsList className="grid w-full grid-cols-2 rounded-none h-14 bg-muted/50">
-                  <TabsTrigger value="login" className="data-[state=active]:bg-card rounded-none h-full font-bold">
+                  <TabsTrigger value="login" className="data-[state=active]:bg-card rounded-none h-full font-black text-xs uppercase">
                     Login
                   </TabsTrigger>
-                  <TabsTrigger value="signup" className="data-[state=active]:bg-card rounded-none h-full font-bold">
+                  <TabsTrigger value="signup" className="data-[state=active]:bg-card rounded-none h-full font-black text-xs uppercase">
                     Sign Up
                   </TabsTrigger>
                 </TabsList>
                 
                 <div className="p-8 space-y-4">
                   <div className="space-y-4 text-left">
-                    <div className="space-y-2">
-                      <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Username / Email</label>
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Email Address</label>
                       <div className="relative">
                         <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                         <Input 
@@ -124,12 +124,12 @@ export default function Home() {
                           placeholder="name@example.com" 
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
-                          className="pl-12 h-14 rounded-2xl bg-muted border-none font-medium"
+                          className="pl-12 h-12 rounded-xl bg-muted border-none font-bold text-sm"
                         />
                       </div>
                     </div>
-                    <div className="space-y-2">
-                      <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Password</label>
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Password</label>
                       <div className="relative">
                         <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                         <Input 
@@ -137,7 +137,7 @@ export default function Home() {
                           placeholder="••••••••" 
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
-                          className="pl-12 h-14 rounded-2xl bg-muted border-none font-medium"
+                          className="pl-12 h-12 rounded-xl bg-muted border-none font-bold text-sm"
                         />
                       </div>
                     </div>
@@ -146,25 +146,25 @@ export default function Home() {
                   <TabsContent value="login" className="m-0">
                     <Button 
                       onClick={handleLogin}
-                      className="w-full h-14 rounded-2xl text-lg font-bold gap-2 shadow-xl shadow-primary/20"
+                      className="w-full h-12 rounded-xl text-sm font-black uppercase tracking-widest gap-2"
                       disabled={isAuthLoading || !email || !password}
                     >
-                      {isAuthLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <><LogIn className="w-5 h-5" /> Login</>}
+                      {isAuthLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <><LogIn className="w-4 h-4" /> Login</>}
                     </Button>
                   </TabsContent>
 
                   <TabsContent value="signup" className="m-0">
                     <Button 
                       onClick={handleSignup}
-                      className="w-full h-14 rounded-2xl text-lg font-bold gap-2 shadow-xl shadow-primary/20"
+                      className="w-full h-12 rounded-xl text-sm font-black uppercase tracking-widest gap-2"
                       disabled={isAuthLoading || !email || !password}
                     >
-                      {isAuthLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <><UserPlus className="w-5 h-5" /> Create Account</>}
+                      {isAuthLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <><UserPlus className="w-4 h-4" /> Sign Up</>}
                     </Button>
                   </TabsContent>
 
-                  <p className="text-[10px] text-muted-foreground text-center flex items-center justify-center gap-1">
-                    <Info className="w-3 h-3" /> Secure login via Firebase Auth
+                  <p className="text-[9px] text-muted-foreground text-center font-bold flex items-center justify-center gap-1 uppercase">
+                    <Info className="w-3 h-3" /> Secure Google Auth
                   </p>
                 </div>
               </Tabs>
@@ -188,17 +188,17 @@ export default function Home() {
       className={cn(
         "flex flex-col items-center justify-center gap-1 px-4 py-2 rounded-2xl transition-all",
         activeTab === id 
-          ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20" 
+          ? "bg-primary text-primary-foreground shadow-lg" 
           : "text-muted-foreground hover:bg-muted"
       )}
     >
       <Icon className="w-5 h-5" />
-      <span className="text-[10px] font-bold uppercase tracking-widest">{label}</span>
+      <span className="text-[9px] font-black uppercase tracking-widest">{label}</span>
     </button>
   );
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col overflow-x-hidden">
       <Header />
       
       <div className="flex-1 flex flex-col md:flex-row container max-w-6xl mx-auto md:gap-4 px-4 pb-20 md:pb-4">
@@ -206,7 +206,7 @@ export default function Home() {
           <button
             onClick={() => setActiveTab('dashboard')}
             className={cn(
-              "flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all text-sm",
+              "flex items-center gap-3 px-4 py-3 rounded-xl font-black uppercase tracking-widest transition-all text-[10px]",
               activeTab === 'dashboard' ? "bg-primary text-primary-foreground shadow-lg" : "hover:bg-muted text-muted-foreground"
             )}
           >
@@ -216,7 +216,7 @@ export default function Home() {
           <button
             onClick={() => setActiveTab('history')}
             className={cn(
-              "flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all text-sm",
+              "flex items-center gap-3 px-4 py-3 rounded-xl font-black uppercase tracking-widest transition-all text-[10px]",
               activeTab === 'history' ? "bg-primary text-primary-foreground shadow-lg" : "hover:bg-muted text-muted-foreground"
             )}
           >
@@ -226,7 +226,7 @@ export default function Home() {
           <button
             onClick={() => setActiveTab('splitter')}
             className={cn(
-              "flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all text-sm",
+              "flex items-center gap-3 px-4 py-3 rounded-xl font-black uppercase tracking-widest transition-all text-[10px]",
               activeTab === 'splitter' ? "bg-primary text-primary-foreground shadow-lg" : "hover:bg-muted text-muted-foreground"
             )}
           >
@@ -243,17 +243,17 @@ export default function Home() {
                   <p className="text-muted-foreground text-[9px] font-black uppercase tracking-widest">
                     {t.welcome} 👋
                   </p>
-                  <h2 className="text-xl font-headline font-black tracking-tight">{t.dashboard}</h2>
+                  <h2 className="text-xl font-headline font-black tracking-tight uppercase">{t.dashboard}</h2>
                 </div>
                 
                 <div className="flex items-center gap-1 bg-muted p-0.5 rounded-xl">
                   <Select value={selectedMonth} onValueChange={setSelectedMonth}>
-                    <SelectTrigger className="w-[90px] h-7 bg-transparent border-none font-black text-[10px]">
+                    <SelectTrigger className="w-[90px] h-7 bg-transparent border-none font-black text-[10px] uppercase">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
                       {Object.entries(t.months).map(([key, value]) => (
-                        <SelectItem key={key} value={key} className="text-[10px] font-bold">{value}</SelectItem>
+                        <SelectItem key={key} value={key} className="text-[10px] font-bold uppercase">{value}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -287,7 +287,7 @@ export default function Home() {
 
           {activeTab === 'history' && (
             <div className="space-y-4 animate-in fade-in duration-300">
-              <h2 className="text-2xl font-headline font-black">{t.history}</h2>
+              <h2 className="text-xl font-headline font-black uppercase tracking-tight">{t.history}</h2>
               <SpendingChart expenses={selectedMonthExpenses} />
               <ExpenseList expenses={expenses || []} isLoading={isExpensesLoading} />
             </div>
