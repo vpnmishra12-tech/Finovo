@@ -4,27 +4,26 @@
 
 @layer base {
   :root {
-    /* Updated to Neon Orange-Pink theme with Blue accents */
-    --background: 210 40% 98%;
+    --background: 222 47% 98%;
     --foreground: 222 47% 11%;
     --card: 0 0% 100%;
     --card-foreground: 222 47% 11%;
     --popover: 0 0% 100%;
     --popover-foreground: 222 47% 11%;
-    --primary: 327 73% 55%; /* Vivid Pink */
+    --primary: 327 73% 55%;
     --primary-foreground: 0 0% 100%;
     --secondary: 210 40% 90%;
     --secondary-foreground: 222 47% 20%;
     --muted: 210 40% 95%;
     --muted-foreground: 215 16% 47%;
-    --accent: 38 92% 50%; /* Vibrant Orange */
+    --accent: 38 92% 50%;
     --accent-foreground: 222 47% 11%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
     --border: 214 32% 91%;
     --input: 214 32% 91%;
     --ring: 327 73% 55%;
-    --radius: 1rem;
+    --radius: 1.25rem;
     --chart-1: 38 92% 50%;
     --chart-2: 327 73% 55%;
     --chart-3: 221 83% 53%;
@@ -33,25 +32,25 @@
   }
 
   .dark {
-    /* "Bich me black hai usko blue kr do" -> Deep Blue Background */
-    --background: 222 47% 11%; 
+    /* Bich me black tha usko Deep Blue kar diya */
+    --background: 222 47% 8%; 
     --foreground: 210 40% 98%;
-    --card: 222 47% 15%;
+    --card: 222 47% 12%;
     --card-foreground: 210 40% 98%;
-    --popover: 222 47% 12%;
+    --popover: 222 47% 10%;
     --popover-foreground: 210 40% 98%;
-    --primary: 327 73% 55%;
+    --primary: 327 73% 55%; /* Vivid Pink */
     --primary-foreground: 210 40% 98%;
-    --secondary: 222 47% 20%;
+    --secondary: 222 47% 18%;
     --secondary-foreground: 210 40% 98%;
-    --muted: 222 47% 20%;
+    --muted: 222 47% 15%;
     --muted-foreground: 215 20% 65%;
-    --accent: 38 92% 50%;
+    --accent: 38 92% 50%; /* Vibrant Orange */
     --accent-foreground: 222 47% 11%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
-    --border: 222 47% 25%;
-    --input: 222 47% 25%;
+    --border: 222 47% 20%;
+    --input: 222 47% 20%;
     --ring: 327 73% 55%;
   }
 }
