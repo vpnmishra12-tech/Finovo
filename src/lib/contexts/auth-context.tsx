@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import { 
   signOut, 
   User,
@@ -25,18 +25,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const auth = useFirebaseServiceAuth();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const isMounted = useRef(true);
   const { toast } = useToast();
 
   useEffect(() => {
     if (!auth) return;
     
-    // Efficiently listen for auth state with zero overhead
+    // High-speed auth listener
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
-      setUser(firebaseUser);
-      setLoading(false);
+      if (isMounted.current) {
+        setUser(firebaseUser);
+        setLoading(false);
+      }
     });
 
-    return () => unsubscribe();
+    return () => {
+      isMounted.current = false;
+      unsubscribe();
+    };
   }, [auth]);
 
   const login = async (email: string, password: string) => {
@@ -80,6 +86,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const logout = async () => {
+    if (!auth) return;
     try {
       await signOut(auth);
       toast({

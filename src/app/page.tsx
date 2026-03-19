@@ -67,9 +67,11 @@ export default function Home() {
   if (loading) {
     return (
       <div className="h-[100dvh] flex items-center justify-center bg-background">
-        <div className="flex flex-col items-center gap-4">
-          <Loader2 className="w-10 h-10 text-primary animate-spin" />
-          <p className="text-sm font-bold animate-pulse uppercase tracking-widest text-muted-foreground">Booting {t.appName}...</p>
+        <div className="flex flex-col items-center gap-2">
+          <Loader2 className="w-8 h-8 text-primary animate-spin" />
+          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground animate-pulse">
+            Finovo Fast Boot...
+          </p>
         </div>
       </div>
     );
