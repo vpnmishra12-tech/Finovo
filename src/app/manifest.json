@@ -1,7 +1,7 @@
 {
   "name": "SmartKharcha AI",
   "short_name": "SmartKharcha",
-  "description": "Professional AI-powered expense tracker with Purple Wallet Theme.",
+  "description": "Professional AI-powered expense tracker with 3D Purple Wallet Theme.",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",
@@ -9,19 +9,19 @@
   "theme_color": "#7C3AED",
   "icons": [
     {
-      "src": "https://images.unsplash.com/photo-1620714223084-8fcacc6dfd8d?w=192&h=192&fit=crop&q=80&v=walletv5",
+      "src": "https://images.unsplash.com/photo-1620714223084-8fcacc6dfd8d?w=192&h=192&fit=crop&q=80&v=walletv6",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "https://images.unsplash.com/photo-1620714223084-8fcacc6dfd8d?w=192&h=192&fit=crop&q=80&v=walletv5",
+      "src": "https://images.unsplash.com/photo-1620714223084-8fcacc6dfd8d?w=192&h=192&fit=crop&q=80&v=walletv6",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "https://images.unsplash.com/photo-1620714223084-8fcacc6dfd8d?w=512&h=512&fit=crop&q=80&v=walletv5",
+      "src": "https://images.unsplash.com/photo-1620714223084-8fcacc6dfd8d?w=512&h=512&fit=crop&q=80&v=walletv6",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"

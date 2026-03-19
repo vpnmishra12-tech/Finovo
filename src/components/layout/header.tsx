@@ -16,7 +16,7 @@ export function Header() {
   const handleShare = async () => {
     const shareData = {
       title: 'SmartKharcha AI',
-      text: 'Track your expenses smartly with SmartKharcha AI! 💸✨',
+      text: 'Manage your money smartly with SmartKharcha AI! 💸 Try this 3D Wallet edition.',
       url: window.location.href,
     };
 
