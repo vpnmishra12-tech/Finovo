@@ -295,7 +295,6 @@ export default function Home() {
 
           {activeTab === 'splitter' && (
             <div className="space-y-4 animate-in fade-in duration-300 max-w-2xl mx-auto">
-              <h2 className="text-2xl font-headline font-black">{t.billSplitter}</h2>
               <BillSplitTool />
             </div>
           )}
