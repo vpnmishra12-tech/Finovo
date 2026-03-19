@@ -9,7 +9,7 @@ const APP_ICON_URL = 'https://images.unsplash.com/photo-1620714223084-8fcacc6df3
 
 export const metadata: Metadata = {
   title: 'Finovo - Smart Expense Tracker',
-  description: 'Manage your money smartly with AI - Neon Orange-Pink Edition',
+  description: 'Manage your money smartly with AI - Professional Edition',
   manifest: '/manifest.json',
   icons: {
     icon: APP_ICON_URL,
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'Finovo',
-    description: 'Manage your money smartly with AI - Neon Orange-Pink Edition',
+    description: 'Manage your money smartly with AI - Professional Edition',
     images: [{ url: APP_ICON_URL, width: 512, height: 512 }],
     type: 'website',
   },
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#E91E63',
+  themeColor: '#3B82F6',
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,

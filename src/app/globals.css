@@ -10,48 +10,47 @@
     --card-foreground: 222 47% 11%;
     --popover: 0 0% 100%;
     --popover-foreground: 222 47% 11%;
-    --primary: 327 73% 55%;
+    --primary: 221 83% 53%;
     --primary-foreground: 0 0% 100%;
     --secondary: 210 40% 90%;
     --secondary-foreground: 222 47% 20%;
     --muted: 210 40% 95%;
     --muted-foreground: 215 16% 47%;
-    --accent: 38 92% 50%;
+    --accent: 142 71% 45%;
     --accent-foreground: 222 47% 11%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
     --border: 214 32% 91%;
     --input: 214 32% 91%;
-    --ring: 327 73% 55%;
+    --ring: 221 83% 53%;
     --radius: 1.25rem;
-    --chart-1: 38 92% 50%;
-    --chart-2: 327 73% 55%;
-    --chart-3: 221 83% 53%;
+    --chart-1: 221 83% 53%;
+    --chart-2: 142 71% 45%;
+    --chart-3: 199 89% 48%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
   }
 
   .dark {
-    /* Bich me black tha usko Deep Blue kar diya */
     --background: 222 47% 8%; 
     --foreground: 210 40% 98%;
     --card: 222 47% 12%;
     --card-foreground: 210 40% 98%;
     --popover: 222 47% 10%;
     --popover-foreground: 210 40% 98%;
-    --primary: 327 73% 55%; /* Vivid Pink */
+    --primary: 221 83% 53%; /* Professional Royal Blue */
     --primary-foreground: 210 40% 98%;
     --secondary: 222 47% 18%;
     --secondary-foreground: 210 40% 98%;
     --muted: 222 47% 15%;
     --muted-foreground: 215 20% 65%;
-    --accent: 38 92% 50%; /* Vibrant Orange */
+    --accent: 142 71% 45%; /* Professional Emerald Green */
     --accent-foreground: 222 47% 11%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
     --border: 222 47% 20%;
     --input: 222 47% 20%;
-    --ring: 327 73% 55%;
+    --ring: 221 83% 53%;
   }
 }
 
@@ -73,5 +72,5 @@
 }
 
 .neon-gradient {
-  background: linear-gradient(135deg, #FF9D00 0%, #E91E63 50%, #7C3AED 100%);
+  background: linear-gradient(135deg, #3B82F6 0%, #10B981 50%, #06B6D4 100%);
 }
