@@ -9,7 +9,7 @@ SmartKharcha AI ek **Progressive Web App (PWA)** hai. Aap ise bina Play Store/Ap
 3. Dashboard khul jayega.
 
 ## 📲 Install on iPhone (Safari):
-1. **Safari Browser** mein app kholiye.
+1. **Safari Browser** mein app ka link kholiye.
 2. Neeche **"Share"** button (square box with arrow 📤) par tap karein.
 3. List mein neeche jayein aur **"Add to Home Screen"** (+) select karein.
 4. Ye aapke iPhone mein asli app ki tarah icon ban jayega.
@@ -21,9 +21,9 @@ SmartKharcha AI ek **Progressive Web App (PWA)** hai. Aap ise bina Play Store/Ap
 
 ## 📦 How to get .APK (Without Laptop):
 Agar aapko laptop ke bina APK chahiye, toh:
-1. Apni app ko host karein (e.g. Vercel ya Firebase Hosting).
+1. Apni app ko free host karein (e.g. Vercel.com ya Firebase Hosting).
 2. [PWA2APK](https://www.pwa2apk.com/) jaisi online sites par jayein.
-3. Apni app ka URL daalein.
+3. Apni app ka public URL daalein.
 4. Wo aapko ek `.apk` file download karke de denge.
 
 ## 💰 Monetization (Ads):
@@ -31,4 +31,4 @@ Is app mein **AdSense** ka upyog karein.
 - `src/app/layout.tsx` mein apni Client ID daalein.
 - `src/components/dashboard/ad-banner.tsx` mein apni Slot ID daalein.
 
-*SmartKharcha AI - Professional tracking with AI.*
+*SmartKharcha AI - Smart tracking with Wallet Icon.*
