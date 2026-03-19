@@ -1,20 +1,19 @@
 # SmartKharcha AI - User Guide 📱
 
-Agar aapko GitHub icon nahi dikh raha, toh mobile browser mein **"Desktop Site"** mode on karein.
+Agar aapko GitHub ya Export ka option nahi dikh raha, toh niche diye gaye steps ko dhyan se padhein:
 
-## 🚀 Export to GitHub (Bina Laptop ke):
-1. **GitHub Icon**: Top-right corner mein **Billi (Cat)** jaisa logo dekhiye. Agar nahi dikh raha, toh Chrome settings mein **"Desktop Site"** on karein.
-2. **Connect**: Us par click karke apna free GitHub account connect karein.
-3. **Push**: "Push" button dabayein. Aapka code GitHub par chala jayega.
+## 🚀 GitHub Export (Mobile/Desktop):
+1. **GitHub Icon**: Editor ke sabse upar, daayein (top-right) kone mein ek **Billi (Cat)** jaisa logo dekhiye. Ye "Publish" button ke bagal mein hota hai.
+2. **Nahi dikh raha?**: Agar screen chhoti hai, toh Chrome settings mein **"Desktop Site"** on karein. Phir bhi nahi dikh raha, toh top-right mein **"..." (3 dots)** ya **More** button par click karein, wahan "Export to GitHub" likha hoga.
+3. **Connect**: GitHub account link karein aur **"Push"** dabayein.
 
-## 🚀 Sabse Simple Free Hosting (Vercel):
-1. **GitHub Link**: GitHub par code jaane ke baad, `vercel.com` par jayein.
-2. **Login**: "Continue with GitHub" karein. 
-3. **Deploy**: Apne repository ko select karein aur "Deploy" dabayein. 
-4. **Public URL**: Aapko ek free link milega (jaise `kharcha.vercel.app`). Ise kisi bhi mobile par WhatsApp karein!
+## 🚀 Free Hosting (Bina Laptop ke):
+1. Code GitHub par jaane ke baad, `vercel.com` par jayein.
+2. "Continue with GitHub" karke apna project select karein.
+3. **Deploy** dabayein. 2 minute mein aapko ek public link (`.vercel.app`) mil jayega.
 
 ## 📲 Install on Mobile:
-1. **iPhone**: Safari mein link kholein -> **Share (📤)** -> **"Add to Home Screen"**.
-2. **Android**: Chrome mein link kholein -> **3 dots** -> **"Install App"**.
+- **iPhone**: Safari mein link kholein -> **Share (📤)** -> **"Add to Home Screen"**.
+- **Android**: Chrome mein link kholein -> **3 dots** -> **"Install App"**.
 
-*SmartKharcha AI - Premium Purple Wallet Theme.*
+*SmartKharcha AI - Professional Purple 3D Wallet Icon Updated.*
