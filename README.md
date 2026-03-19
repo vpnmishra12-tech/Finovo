@@ -2,9 +2,14 @@
 
 Agar Firebase Studio ka "Publish" button billing maang raha hai, toh ye **100% FREE** tarika follow karein:
 
-## 🚀 Sabse Simple Free Hosting (Mobile se):
-1. **GitHub Account**: Mobile browser mein `github.com` par jayein aur free account banayein. Is project ko wahan "Push" ya upload karein.
-2. **Vercel Connect**: `vercel.com` par jayein aur "Continue with GitHub" karein. 
+## 🚀 Export to GitHub (Laptop ki zaroorat nahi):
+1. **GitHub Icon**: Top-right corner mein GitHub ka icon dekhiye.
+2. **Connect**: Us par click karke apna GitHub account connect karein.
+3. **Push**: "Push to GitHub" par click karein. Aapka sara code GitHub par chala jayega.
+
+## 🚀 Sabse Simple Free Hosting:
+1. **GitHub Repository**: GitHub par code jaane ke baad, `vercel.com` par jayein.
+2. **Vercel Connect**: "Continue with GitHub" karein. 
 3. **Deploy**: Apne project ko select karein aur "Deploy" par click karein. 
 4. **Link Mil Jayega**: 2 minute mein aapko ek free link milega (jaise `my-app.vercel.app`). Ise kisi bhi mobile par share karein!
 
