@@ -16,7 +16,7 @@ export function Header() {
   const handleShare = async () => {
     const shareData = {
       title: 'Finovo',
-      text: 'Manage your money smartly with Finovo! 💸 Professional Blue Edition.',
+      text: 'Manage your money smartly with Finovo! 💸 Professional Neon Blue Edition.',
       url: window.location.href,
     };
 
@@ -47,12 +47,12 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-md">
       <div className="container flex h-16 items-center justify-between px-4 max-w-2xl mx-auto">
         <div className="flex items-center gap-2">
-          {/* Professional Blue/Green Gradient Wallet Icon Container */}
-          <div className="bg-gradient-to-br from-[#3B82F6] via-[#10B981] to-[#06B6D4] p-2 rounded-xl shadow-lg shadow-primary/20">
+          {/* Professional Neon Blue Gradient Wallet Icon Container */}
+          <div className="bg-gradient-to-br from-[#00D2FF] to-[#3a7bd5] p-2 rounded-xl shadow-lg shadow-primary/30 border border-white/10">
             <Wallet className="w-5 h-5 text-white" />
           </div>
           <div className="flex flex-col">
-            <h1 className="font-headline font-black text-lg leading-tight tracking-tight bg-gradient-to-r from-[#3B82F6] to-[#10B981] bg-clip-text text-transparent uppercase">
+            <h1 className="font-headline font-black text-lg leading-tight tracking-tight bg-gradient-to-r from-[#00D2FF] to-[#3a7bd5] bg-clip-text text-transparent uppercase neon-text-glow">
               {t.appName}
             </h1>
           </div>
