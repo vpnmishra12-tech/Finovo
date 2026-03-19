@@ -69,7 +69,7 @@ export default function Home() {
       <div className="h-[100dvh] flex items-center justify-center bg-background">
         <div className="flex flex-col items-center gap-4">
           <Loader2 className="w-10 h-10 text-primary animate-spin" />
-          <p className="text-sm font-bold animate-pulse uppercase tracking-widest text-muted-foreground">Booting SmartKharcha...</p>
+          <p className="text-sm font-bold animate-pulse uppercase tracking-widest text-muted-foreground">Booting {t.appName}...</p>
         </div>
       </div>
     );
