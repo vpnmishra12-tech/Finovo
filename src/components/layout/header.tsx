@@ -16,7 +16,7 @@ export function Header() {
   const handleShare = async () => {
     const shareData = {
       title: 'Finovo',
-      text: 'Manage your money smartly with Finovo! 💸 Professional Neon Blue Edition.',
+      text: 'Manage your money smartly with Finovo! 💸 Professional 3D Neon Blue Edition.',
       url: window.location.href,
     };
 
@@ -47,7 +47,7 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-md">
       <div className="container flex h-16 items-center justify-between px-4 max-w-2xl mx-auto">
         <div className="flex items-center gap-2">
-          {/* Professional Neon Blue Gradient Wallet Icon Container */}
+          {/* Professional 3D Neon Blue Gradient Wallet Icon Container */}
           <div className="bg-gradient-to-br from-[#00D2FF] to-[#3a7bd5] p-2 rounded-xl shadow-lg shadow-primary/30 border border-white/10">
             <Wallet className="w-5 h-5 text-white" />
           </div>
