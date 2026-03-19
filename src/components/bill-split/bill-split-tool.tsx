@@ -34,9 +34,11 @@ export function BillSplitTool() {
 
   const [splitType, setSplitType] = useState<'equal' | 'custom' | 'group'>('equal');
 
+  // Equal split - Simplified: only amount and people
   const [equalTotalBill, setEqualTotalBill] = useState<string>("");
   const [equalNumPeople, setEqualNumPeople] = useState<string>("2");
 
+  // Custom and Group - kept for advanced usage
   const [customTotalBill, setCustomTotalBill] = useState<string>("");
   const [customParticipants, setCustomParticipants] = useState<Participant[]>([
     { id: 'c1', name: '', paid: 0 },
@@ -48,10 +50,12 @@ export function BillSplitTool() {
     { id: 'g2', name: '', paid: 0 }
   ]);
 
+  // Derived values for Equal Split
   const equalBillVal = parseFloat(equalTotalBill) || 0;
   const equalPeopleCount = parseInt(equalNumPeople) || 1;
   const equalShare = equalBillVal > 0 ? parseFloat((equalBillVal / equalPeopleCount).toFixed(2)) : 0;
 
+  // Derived values for Custom Split
   const customBillVal = parseFloat(customTotalBill) || 0;
   const customShare = customBillVal > 0 ? parseFloat((customBillVal / customParticipants.length).toFixed(2)) : 0;
   const customNamesEntered = customParticipants.every(p => p.name.trim().length > 0);
@@ -93,6 +97,7 @@ export function BillSplitTool() {
     return results;
   }, [customParticipants, customBillVal, splitType, customShare, isCustomMismatch, customNamesEntered]);
 
+  // Derived values for Group Trip
   const groupTotalPaid = groupParticipants.reduce((sum, p) => sum + p.paid, 0);
   const groupShare = groupParticipants.length > 0 ? parseFloat((groupTotalPaid / groupParticipants.length).toFixed(2)) : 0;
   const groupNamesEntered = groupParticipants.every(p => p.name.trim().length > 0);
