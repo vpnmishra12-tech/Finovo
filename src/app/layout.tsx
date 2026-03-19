@@ -5,7 +5,7 @@ import { AuthProvider } from '@/lib/contexts/auth-context';
 import { LanguageProvider } from '@/lib/contexts/language-context';
 import { Toaster } from '@/components/ui/toaster';
 
-const APP_ICON_URL = 'https://images.unsplash.com/photo-1620714223084-8fcacc6dfd8d?w=512&h=512&fit=crop&q=80&v=walletv11';
+const APP_ICON_URL = 'https://images.unsplash.com/photo-1633158829585-23ba8f7c8caf?w=512&h=512&fit=crop&q=80&v=finalwalletv12';
 
 export const metadata: Metadata = {
   title: 'Finovo - Smart Expense Tracker',
@@ -53,7 +53,6 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
         
-        {/* Definitive Wallet Icon v11 - Neon Edition */}
         <link rel="apple-touch-icon" href={APP_ICON_URL} />
         <link rel="icon" href={APP_ICON_URL} />
       </head>
