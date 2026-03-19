@@ -18,8 +18,8 @@ const spaceGrotesk = Space_Grotesk({
   display: 'swap',
 });
 
-// DEFINITIVE ULTRA-PREMIUM 3D DIGITAL WALLET - Version v2500
-const APP_ICON_URL = 'https://images.unsplash.com/photo-1620714223084-8fcacc6dfd8d?w=512&h=512&fit=crop&q=80&v=v2500';
+// DEFINITIVE ULTRA-PREMIUM 3D DIGITAL WALLET - Version v3000
+const APP_ICON_URL = 'https://images.unsplash.com/photo-1634733988138-bf2c3a2a13fa?w=512&h=512&fit=crop&q=80&v=v3000';
 
 export const metadata: Metadata = {
   title: 'Finovo - Expense Tracker',

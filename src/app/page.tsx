@@ -1,15 +1,12 @@
 "use client";
 
 import { useState } from 'react';
+import dynamic from 'next/dynamic';
 import { useAuth } from '@/lib/contexts/auth-context';
 import { useLanguage } from '@/lib/contexts/language-context';
 import { Header } from '@/components/layout/header';
 import { BudgetSummary } from '@/components/dashboard/budget-summary';
-import { SpendingChart } from '@/components/dashboard/spending-chart';
-import { MonthlyHistory } from '@/components/dashboard/monthly-history';
 import { AdBanner } from '@/components/dashboard/ad-banner';
-import { BillSplitTool } from '@/components/bill-split/bill-split-tool';
-import { ExpenseList } from '@/components/expenses/expense-list';
 import { AddExpenseDrawer } from '@/components/expenses/add-expense-drawer';
 import { Loader2, Wallet, Mail, Lock, UserPlus, LogIn, Info, Smartphone, LayoutDashboard, History, Calculator } from 'lucide-react';
 import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
@@ -22,6 +19,21 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { cn } from '@/lib/utils';
+
+// Optimized dynamic imports for faster initial boot
+const SpendingChart = dynamic(() => import('@/components/dashboard/spending-chart').then(mod => mod.SpendingChart), { 
+  ssr: false,
+  loading: () => <div className="h-[140px] w-full bg-muted animate-pulse rounded-2xl" />
+});
+const MonthlyHistory = dynamic(() => import('@/components/dashboard/monthly-history').then(mod => mod.MonthlyHistory), { 
+  ssr: false 
+});
+const BillSplitTool = dynamic(() => import('@/components/bill-split/bill-split-tool').then(mod => mod.BillSplitTool), { 
+  ssr: false 
+});
+const ExpenseList = dynamic(() => import('@/components/expenses/expense-list').then(mod => mod.ExpenseList), { 
+  ssr: false 
+});
 
 type NavTab = 'dashboard' | 'history' | 'splitter';
 
@@ -67,10 +79,10 @@ export default function Home() {
   if (loading) {
     return (
       <div className="h-[100dvh] flex items-center justify-center bg-background">
-        <div className="flex flex-col items-center gap-2">
-          <Loader2 className="w-8 h-8 text-primary animate-spin" />
-          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground animate-pulse">
-            Finovo Fast Boot...
+        <div className="flex flex-col items-center gap-3">
+          <Loader2 className="w-8 h-8 text-primary animate-spin stroke-[3px]" />
+          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary animate-pulse">
+            Finovo Fast Boot
           </p>
         </div>
       </div>

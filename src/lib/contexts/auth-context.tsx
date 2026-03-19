@@ -23,7 +23,8 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const auth = useFirebaseServiceAuth();
-  const [user, setUser] = useState<User | null>(null);
+  // Immediate check for current user to reduce loading flicker
+  const [user, setUser] = useState<User | null>(auth?.currentUser || null);
   const [loading, setLoading] = useState(true);
   const isMounted = useRef(true);
   const { toast } = useToast();
