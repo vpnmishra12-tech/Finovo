@@ -14,4 +14,4 @@ Agar aapko install karte waqt abhi bhi **"Laptop"** wala icon dikh raha hai, toh
 2. Toolbar mein **Billi (Cat)** logo par click karein.
 3. **Push** dabayein.
 
-*Finovo - Updated to Neon 3D Wallet (v11 - Cache Refreshed).*
+*Finovo - Updated to Neon 3D Wallet (v16 - Cache Refreshed).*

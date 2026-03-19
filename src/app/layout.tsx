@@ -5,7 +5,8 @@ import { AuthProvider } from '@/lib/contexts/auth-context';
 import { LanguageProvider } from '@/lib/contexts/language-context';
 import { Toaster } from '@/components/ui/toaster';
 
-const APP_ICON_URL = 'https://images.unsplash.com/photo-1620714223084-8fcacc6df38a?w=512&h=512&fit=crop&q=80&v=walletv15';
+// Definitive Neon Blue 3D Wallet Icon URL with Cache Buster v16
+const APP_ICON_URL = 'https://images.unsplash.com/photo-1620714223084-8fcacc6df38a?w=512&h=512&fit=crop&q=80&v=walletv16';
 
 export const metadata: Metadata = {
   title: 'Finovo - Smart Expense Tracker',
