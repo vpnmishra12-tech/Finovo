@@ -11,7 +11,7 @@ import { AdBanner } from '@/components/dashboard/ad-banner';
 import { BillSplitTool } from '@/components/bill-split/bill-split-tool';
 import { ExpenseList } from '@/components/expenses/expense-list';
 import { AddExpenseDrawer } from '@/components/expenses/add-expense-drawer';
-import { Loader2, Wallet, Mail, Lock, UserPlus, LogIn, Info, Download, LayoutDashboard, History, Calculator } from 'lucide-react';
+import { Loader2, Wallet, Mail, Lock, UserPlus, LogIn, Info, Download, LayoutDashboard, History, Calculator, Smartphone } from 'lucide-react';
 import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import { collection, query, orderBy, limit } from 'firebase/firestore';
 import { Expense } from '@/lib/expenses';
@@ -92,11 +92,12 @@ export default function Home() {
             </p>
           </div>
 
-          <Alert className="max-w-sm bg-blue-500/10 border-blue-500/20 text-blue-600 rounded-2xl">
-            <Download className="w-4 h-4" />
-            <AlertTitle className="text-sm font-bold">Install Tip</AlertTitle>
-            <AlertDescription className="text-xs">
-              Add to Home Screen from your browser menu to use it like a real app!
+          <Alert className="max-w-sm bg-blue-500/10 border-blue-500/20 text-blue-600 rounded-2xl text-left">
+            <Smartphone className="w-5 h-5 mb-2" />
+            <AlertTitle className="text-sm font-bold">iPhone / Android Install Tip</AlertTitle>
+            <AlertDescription className="text-xs space-y-1">
+              <p>• <b>iPhone:</b> Tap Share 📤 & scroll to <b>'Add to Home Screen'</b></p>
+              <p>• <b>Android:</b> Tap 3 dots & select <b>'Install App'</b></p>
             </AlertDescription>
           </Alert>
 

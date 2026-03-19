@@ -1,24 +1,30 @@
 
 # SmartKharcha AI - User Guide 📱
 
-SmartKharcha AI ek **Progressive Web App (PWA)** hai. Aap ise bina Play Store ke apne phone par install kar sakte hain.
+SmartKharcha AI ek **Progressive Web App (PWA)** hai. Aap ise bina Play Store/App Store ke apne phone par install kar sakte hain.
 
 ## 🚀 How to Login:
 1. "Sign Up" tab par jayein.
 2. Email aur Password banayein.
 3. Dashboard khul jayega.
 
-## 📲 Install on Phone (No Laptop Needed):
+## 📲 Install on iPhone (Safari):
+1. **Safari Browser** mein app kholiye.
+2. Neeche **"Share"** button (square box with arrow 📤) par tap karein.
+3. List mein neeche jayein aur **"Add to Home Screen"** (+) select karein.
+4. Ye aapke iPhone mein asli app ki tarah icon ban jayega.
+
+## 📲 Install on Android (Chrome):
 1. Browser mein app kholien.
-2. Menu (3 dots) par jayein aur **"Add to Home Screen"** select karein.
+2. Menu (3 dots) par jayein aur **"Add to Home Screen"** ya **"Install App"** select karein.
 3. Ye aapke phone mein asli app ki tarah icon ban jayega.
 
 ## 📦 How to get .APK (Without Laptop):
 Agar aapko laptop ke bina APK chahiye, toh:
 1. Apni app ko host karein (e.g. Vercel ya Firebase Hosting).
-2. [PWA2APK](https://www.pwa2apk.com/) ya [Appflowy](https://appflowy.io/) jaisi online sites par jayein.
+2. [PWA2APK](https://www.pwa2apk.com/) jaisi online sites par jayein.
 3. Apni app ka URL daalein.
-4. Wo aapko ek `.apk` file download karke de denge jise aap kisi ko bhi bhej sakte hain.
+4. Wo aapko ek `.apk` file download karke de denge.
 
 ## 💰 Monetization (Ads):
 Is app mein **AdSense** ka upyog karein. 
