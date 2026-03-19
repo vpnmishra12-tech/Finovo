@@ -5,7 +5,7 @@ import { AuthProvider } from '@/lib/contexts/auth-context';
 import { LanguageProvider } from '@/lib/contexts/language-context';
 import { Toaster } from '@/components/ui/toaster';
 
-const APP_ICON_URL = 'https://images.unsplash.com/photo-1620714223084-8fcacc6df38a?w=512&h=512&fit=crop&q=80&v=walletv13';
+const APP_ICON_URL = 'https://images.unsplash.com/photo-1620714223084-8fcacc6df38a?w=512&h=512&fit=crop&q=80&v=walletv14';
 
 export const metadata: Metadata = {
   title: 'Finovo - Smart Expense Tracker',
