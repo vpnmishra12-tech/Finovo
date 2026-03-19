@@ -4,12 +4,12 @@ Agar aapko install karte waqt abhi bhi purana icon dikh raha hai, toh iska matla
 
 ## 🚀 PREMIUM 3D Digital Wallet Icon Kaise Hatayein (HARD REFRESH):
 1. **Chrome Settings**: App link par jayein, Chrome ke upar **3 dots (⋮)** par click karein.
-2. **Settings (⚙️)** > **Site Settings** > **All Sites**.
-3. Apne app ka link (cloudworkstations.dev wala) dhundein.
-4. **"Clear & Reset"** ya **"Delete all data"** par click karein.
-5. Ab link ko phir se refresh karein. Ab naya **DEFINITIVE 3D DIGITAL WALLET** (v1000) dikhega!
+2. **Settings (⚙️)** > **Privacy & Security** > **Clear browsing data**.
+3. **Advanced Tab** mein jayein aur **"All time"** select karein.
+4. **"Cookies and other site data"** aur **"Cached images and files"** par tick karein.
+5. **Clear Data** karein aur app ko phir se load karein.
 
 ## 🚀 PWA Install (Home Screen) Refresh:
-Agar aapne app pehle hi "Add to Home Screen" kar liya tha, toh use **Uninstall** karein, Chrome mein **Site Data Clear** karein (upar wale steps), aur phir se **Install** karein.
+Agar aapne app pehle hi "Add to Home Screen" kar liya tha, toh use **Uninstall** karein, upar wale steps se **Site Data Clear** karein, aur phir se **Install** karein.
 
-*Finovo - Updated to DEFINITIVE 3D DIGITAL WALLET (v1000 - Cache Force Refreshed).*
+*Finovo - Updated to ULTRA-PREMIUM 3D WALLET (v2000 - Cache Forced).*

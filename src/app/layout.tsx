@@ -5,12 +5,13 @@ import { AuthProvider } from '@/lib/contexts/auth-context';
 import { LanguageProvider } from '@/lib/contexts/language-context';
 import { Toaster } from '@/components/ui/toaster';
 
-// DEFINITIVE PREMIUM 3D DIGITAL WALLET - Version v1000
-const APP_ICON_URL = 'https://images.unsplash.com/photo-1620714223084-8fcacc6dfd8d?w=512&h=512&fit=crop&q=80&v=v1000';
+// DEFINITIVE ULTRA-PREMIUM 3D DIGITAL WALLET - Version v2000
+// Matching the neon blue futuristic aesthetic provided by the user.
+const APP_ICON_URL = 'https://images.unsplash.com/photo-1620714223084-8fcacc6dfd8d?w=512&h=512&fit=crop&q=80&v=v2000';
 
 export const metadata: Metadata = {
   title: 'Finovo - Expense Tracker',
-  description: 'Manage your money smartly with AI - Premium 3D Digital Wallet Edition',
+  description: 'Manage your money smartly with AI - Ultra Premium 3D Digital Wallet Edition',
   manifest: '/manifest.json',
   icons: {
     icon: [
@@ -24,7 +25,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'Finovo - Expense Tracker',
-    description: 'Manage your money smartly with AI - Premium 3D Digital Wallet Edition',
+    description: 'Manage your money smartly with AI - Ultra Premium 3D Digital Wallet Edition',
     images: [{ url: APP_ICON_URL, width: 512, height: 512 }],
     type: 'website',
   },
