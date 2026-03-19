@@ -239,9 +239,9 @@ export default function Home() {
         </nav>
 
         {/* Main Scrollable Content */}
-        <main className="flex-1 overflow-y-auto py-4 space-y-4 min-w-0 pb-32 md:pb-8 scroll-smooth">
+        <main className="flex-1 overflow-y-auto py-2 space-y-2 min-w-0 pb-16 md:pb-8 scroll-smooth">
           {activeTab === 'dashboard' && (
-            <div className="space-y-4 animate-in fade-in duration-300">
+            <div className="space-y-3 animate-in fade-in duration-300">
               <section className="flex items-center justify-between">
                 <div className="space-y-0.5">
                   <p className="text-muted-foreground text-[9px] font-black uppercase tracking-widest">

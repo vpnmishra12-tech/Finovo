@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -72,11 +71,11 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
   const overspentAmount = Math.max(totalSpent - budget, 0);
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-2">
       {percentage >= 75 && budget > 0 && (
         <Alert className="py-2 px-4 rounded-xl border bg-destructive/5 text-destructive border-destructive/20">
           <AlertTriangle className="h-4 w-4" />
-          <AlertDescription className="text-xs font-bold">
+          <AlertDescription className="text-[10px] font-bold uppercase">
             {percentage >= 100 ? t.alerts.exhausted : t.alerts.critical}
           </AlertDescription>
         </Alert>
@@ -85,19 +84,19 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
       {lastMonthDebt > 0 && (
         <div className="bg-destructive/10 border-destructive/20 rounded-xl p-2 flex items-center gap-2">
           <History className="w-4 h-4 text-destructive" />
-          <p className="text-[10px] font-bold text-destructive uppercase tracking-tight">Debt: -₹{lastMonthDebt.toLocaleString()}</p>
+          <p className="text-[9px] font-black text-destructive uppercase tracking-widest">Debt: -₹{lastMonthDebt.toLocaleString()}</p>
         </div>
       )}
 
-      <div className="grid gap-3 grid-cols-1 md:grid-cols-3">
+      <div className="grid gap-2 grid-cols-1 md:grid-cols-3">
         <Card className="bg-primary text-primary-foreground border-none shadow-md overflow-hidden">
-          <CardContent className="p-4">
-            <div className="flex justify-between items-center mb-1">
-              <p className="text-[9px] font-black opacity-70 uppercase tracking-widest">{t.budget}</p>
+          <CardContent className="p-3">
+            <div className="flex justify-between items-center mb-0.5">
+              <p className="text-[8px] font-black opacity-70 uppercase tracking-widest">{t.budget}</p>
               <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
-                  <Button variant="ghost" size="icon" className="h-6 w-6 bg-white/10 hover:bg-white/20">
-                    <Edit2 className="w-3 h-3 text-white" />
+                  <Button variant="ghost" size="icon" className="h-5 w-5 bg-white/10 hover:bg-white/20">
+                    <Edit2 className="w-2.5 h-2.5 text-white" />
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="max-w-[350px]">
@@ -110,15 +109,15 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
                 </DialogContent>
               </Dialog>
             </div>
-            <p className="text-2xl font-headline font-black">₹{budget.toLocaleString()}</p>
+            <p className="text-xl font-headline font-black leading-tight">₹{budget.toLocaleString()}</p>
           </CardContent>
         </Card>
 
         <Card className="bg-card border-none shadow-sm overflow-hidden">
-          <CardContent className="p-4">
-            <p className="text-[9px] font-black text-muted-foreground mb-1 uppercase tracking-widest">{t.spent}</p>
-            <p className="text-xl font-headline font-black">₹{totalSpent.toLocaleString()}</p>
-            <div className="mt-2 space-y-1">
+          <CardContent className="p-3">
+            <p className="text-[8px] font-black text-muted-foreground mb-0.5 uppercase tracking-widest">{t.spent}</p>
+            <p className="text-xl font-headline font-black leading-tight">₹{totalSpent.toLocaleString()}</p>
+            <div className="mt-1.5 space-y-1">
               <Progress value={percentage} className="h-1 bg-muted" />
               <div className="flex justify-between text-[8px] text-muted-foreground font-black">
                 <span>{percentage.toFixed(0)}%</span>
@@ -129,11 +128,11 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
         </Card>
 
         <Card className="bg-card border-none shadow-sm overflow-hidden">
-          <CardContent className="p-4">
-            <p className="text-[9px] font-black text-muted-foreground mb-1 uppercase tracking-widest">
+          <CardContent className="p-3">
+            <p className="text-[8px] font-black text-muted-foreground mb-0.5 uppercase tracking-widest">
               {overspentAmount > 0 ? t.overspent : t.remaining}
             </p>
-            <p className={`text-xl font-headline font-black ${overspentAmount > 0 ? 'text-destructive' : 'text-green-500'}`}>
+            <p className={`text-xl font-headline font-black leading-tight ${overspentAmount > 0 ? 'text-destructive' : 'text-green-500'}`}>
               ₹{(overspentAmount > 0 ? overspentAmount : remaining).toLocaleString()}
             </p>
           </CardContent>
