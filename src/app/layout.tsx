@@ -5,8 +5,8 @@ import { AuthProvider } from '@/lib/contexts/auth-context';
 import { LanguageProvider } from '@/lib/contexts/language-context';
 import { Toaster } from '@/components/ui/toaster';
 
-// DEFINITIVE 3D WALLET ICON - Version v300 (Clearly a Wallet, No Laptop)
-const APP_ICON_URL = 'https://images.unsplash.com/photo-1634733988138-bf2c3a2a13fa?w=512&h=512&fit=crop&q=80&v=v300';
+// DEFINITIVE 3D DIGITAL WALLET ICON - Version v400 (Futuristic Neon Blue)
+const APP_ICON_URL = 'https://images.unsplash.com/photo-1644023749877-c91792611e03?w=512&h=512&fit=crop&q=80&v=v400';
 
 export const metadata: Metadata = {
   title: 'Finovo - Premium 3D Expense Tracker',
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'Finovo',
-    description: 'Manage your money smartly with AI - Premium 3D Wallet Edition',
+    description: 'Manage your money smartly with AI - Premium 3D Digital Wallet Edition',
     images: [{ url: APP_ICON_URL, width: 512, height: 512 }],
     type: 'website',
   },
