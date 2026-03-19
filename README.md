@@ -17,4 +17,7 @@ Agar aapko GitHub ya Export ka option nahi dikh raha, toh niche diye gaye steps 
 - **iPhone**: Safari mein link kholein -> **Share (📤)** -> **"Add to Home Screen"**.
 - **Android**: Chrome mein link kholein -> **3 dots** -> **"Install App"**.
 
-*Finovo - Icon updated to Neon 3D Wallet (v7 - Deep Blue Edition).*
+## 🛠️ Cache Problem (Agar purana logo dikhe):
+Agar install karte waqt abhi bhi purana logo (Laptop) dikh raha hai, toh Chrome ki Settings mein jakar **"Clear Browsing Data"** karein ya app ko un-install karke link phir se refresh karke install karein.
+
+*Finovo - Icon updated to Neon 3D Wallet (v8 - Deep Blue Edition).*
