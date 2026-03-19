@@ -5,12 +5,12 @@ import { AuthProvider } from '@/lib/contexts/auth-context';
 import { LanguageProvider } from '@/lib/contexts/language-context';
 import { Toaster } from '@/components/ui/toaster';
 
-// DEFINITIVE PREMIUM 3D DIGITAL WALLET - Version v600 (Neon Blue & Dark Navy)
-const APP_ICON_URL = 'https://images.unsplash.com/photo-1633158829585-23bb8f629373?w=512&h=512&fit=crop&q=80&v=v600';
+// DEFINITIVE PREMIUM 3D DIGITAL WALLET - Version v700
+const APP_ICON_URL = 'https://images.unsplash.com/photo-1633158829585-23bb8f629373?w=512&h=512&fit=crop&q=80&v=v700';
 
 export const metadata: Metadata = {
-  title: 'Finovo Expense Tracker',
-  description: 'Manage your money smartly with AI - Neon Blue Edition',
+  title: 'Finovo - Expense Tracker',
+  description: 'Manage your money smartly with AI - Premium 3D Digital Wallet Edition',
   manifest: '/manifest.json',
   icons: {
     icon: [
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     ],
   },
   openGraph: {
-    title: 'Finovo Expense Tracker',
+    title: 'Finovo - Expense Tracker',
     description: 'Manage your money smartly with AI - Premium 3D Digital Wallet Edition',
     images: [{ url: APP_ICON_URL, width: 512, height: 512 }],
     type: 'website',
@@ -31,9 +31,9 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
-    title: 'Finovo Expense Tracker',
+    title: 'Finovo - Expense Tracker',
   },
-  applicationName: 'Finovo Expense Tracker',
+  applicationName: 'Finovo - Expense Tracker',
 };
 
 export const viewport: Viewport = {

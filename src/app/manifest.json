@@ -1,5 +1,5 @@
 {
-  "name": "Finovo Expense Tracker",
+  "name": "Finovo - Expense Tracker",
   "short_name": "Finovo",
   "description": "Professional AI-powered expense tracker with PREMIUM 3D Digital Wallet Icon.",
   "start_url": "/",
@@ -9,19 +9,19 @@
   "theme_color": "#00BFFF",
   "icons": [
     {
-      "src": "https://images.unsplash.com/photo-1633158829585-23bb8f629373?w=192&h=192&fit=crop&q=80&v=v600",
+      "src": "https://images.unsplash.com/photo-1633158829585-23bb8f629373?w=192&h=192&fit=crop&q=80&v=v700",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "https://images.unsplash.com/photo-1633158829585-23bb8f629373?w=192&h=192&fit=crop&q=80&v=v600",
+      "src": "https://images.unsplash.com/photo-1633158829585-23bb8f629373?w=192&h=192&fit=crop&q=80&v=v700",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "https://images.unsplash.com/photo-1633158829585-23bb8f629373?w=512&h=512&fit=crop&q=80&v=v600",
+      "src": "https://images.unsplash.com/photo-1633158829585-23bb8f629373?w=512&h=512&fit=crop&q=80&v=v700",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
