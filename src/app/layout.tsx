@@ -4,7 +4,6 @@ import { FirebaseClientProvider } from '@/firebase/client-provider';
 import { AuthProvider } from '@/lib/contexts/auth-context';
 import { LanguageProvider } from '@/lib/contexts/language-context';
 import { Toaster } from '@/components/ui/toaster';
-import Script from 'next/script';
 
 export const metadata: Metadata = {
   title: 'SmartKharcha AI - Smart Expense Tracker',
@@ -12,7 +11,7 @@ export const metadata: Metadata = {
   manifest: '/manifest.json',
   icons: {
     apple: [
-      { url: 'https://images.unsplash.com/photo-1580519542036-c47de6196ba5?w=180&h=180&fit=crop&q=80', sizes: '180x180', type: 'image/png' },
+      { url: 'https://images.unsplash.com/photo-1614028674026-a65e31bfd27c?w=180&h=180&fit=crop&q=80', sizes: '180x180', type: 'image/png' },
     ],
   },
   appleWebApp: {
@@ -45,17 +44,7 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
         
         {/* iOS Touch Icon for Home Screen */}
-        <link rel="apple-touch-icon" href="https://images.unsplash.com/photo-1580519542036-c47de6196ba5?w=180&h=180&fit=crop&q=80" />
-        
-        {/* AdSense Global Script */}
-        {/* 
-        <Script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX"
-          crossOrigin="anonymous"
-          strategy="afterInteractive"
-        /> 
-        */}
+        <link rel="apple-touch-icon" href="https://images.unsplash.com/photo-1614028674026-a65e31bfd27c?w=180&h=180&fit=crop&q=80" />
       </head>
       <body className="font-body antialiased min-h-screen bg-background text-foreground selection:bg-primary/30">
         <FirebaseClientProvider>
