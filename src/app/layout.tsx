@@ -5,8 +5,8 @@ import { AuthProvider } from '@/lib/contexts/auth-context';
 import { LanguageProvider } from '@/lib/contexts/language-context';
 import { Toaster } from '@/components/ui/toaster';
 
-// DEFINITIVE 3D DIGITAL WALLET ICON - Version v400 (Futuristic Neon Blue)
-const APP_ICON_URL = 'https://images.unsplash.com/photo-1644023749877-c91792611e03?w=512&h=512&fit=crop&q=80&v=v400';
+// DEFINITIVE 3D DIGITAL WALLET ICON - Version v500 (Futuristic Neon Blue)
+const APP_ICON_URL = 'https://images.unsplash.com/photo-1621416848440-2369dadaf35e?w=512&h=512&fit=crop&q=80&v=v500';
 
 export const metadata: Metadata = {
   title: 'Finovo - Premium 3D Expense Tracker',
