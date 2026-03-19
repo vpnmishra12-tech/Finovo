@@ -4,54 +4,55 @@
 
 @layer base {
   :root {
-    /* Updated Primary to a vibrant Violet/Purple (262 83% 58%) */
-    --background: 240 19% 98%;
-    --foreground: 240 19% 10%;
+    /* Updated to match requested Neon Orange-Pink theme with Blue accents */
+    --background: 210 40% 98%;
+    --foreground: 222 47% 11%;
     --card: 0 0% 100%;
-    --card-foreground: 240 19% 10%;
+    --card-foreground: 222 47% 11%;
     --popover: 0 0% 100%;
-    --popover-foreground: 240 19% 10%;
-    --primary: 262 83% 58%;
+    --popover-foreground: 222 47% 11%;
+    --primary: 327 73% 55%; /* Vivid Pink */
     --primary-foreground: 0 0% 100%;
-    --secondary: 240 19% 90%;
-    --secondary-foreground: 240 71% 20%;
-    --muted: 240 19% 95%;
-    --muted-foreground: 240 10% 40%;
-    --accent: 327 73% 75%;
-    --accent-foreground: 240 71% 15%;
+    --secondary: 210 40% 90%;
+    --secondary-foreground: 222 47% 20%;
+    --muted: 210 40% 95%;
+    --muted-foreground: 215 16% 47%;
+    --accent: 38 92% 50%; /* Vibrant Orange from image */
+    --accent-foreground: 222 47% 11%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
-    --border: 240 19% 90%;
-    --input: 240 19% 90%;
-    --ring: 262 83% 58%;
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 327 73% 55%;
     --radius: 1rem;
-    --chart-1: 262 83% 58%;
-    --chart-2: 327 73% 75%;
-    --chart-3: 160 60% 45%;
-    --chart-4: 30 80% 55%;
+    --chart-1: 38 92% 50%;
+    --chart-2: 327 73% 55%;
+    --chart-3: 221 83% 53%;
+    --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
   }
 
   .dark {
-    --background: 240 19% 15%;
-    --foreground: 0 0% 98%;
-    --card: 240 19% 18%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 19% 12%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 262 83% 58%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 240 19% 22%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 19% 22%;
-    --muted-foreground: 240 10% 70%;
-    --accent: 327 73% 75%;
-    --accent-foreground: 240 19% 15%;
+    /* "Bich me black hai usko blue kr do" -> Deep Blue Background */
+    --background: 222 47% 11%; 
+    --foreground: 210 40% 98%;
+    --card: 222 47% 15%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222 47% 12%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 327 73% 55%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 222 47% 20%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 222 47% 20%;
+    --muted-foreground: 215 20% 65%;
+    --accent: 38 92% 50%;
+    --accent-foreground: 222 47% 11%;
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 19% 25%;
-    --input: 240 19% 25%;
-    --ring: 262 83% 58%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 222 47% 25%;
+    --input: 222 47% 25%;
+    --ring: 327 73% 55%;
   }
 }
 
@@ -70,4 +71,8 @@
 
 .glass-morphism {
   @apply bg-opacity-20 backdrop-blur-lg border border-white border-opacity-10;
+}
+
+.neon-gradient {
+  background: linear-gradient(135deg, #FF9D00 0%, #E91E63 50%, #7C3AED 100%);
 }

@@ -16,7 +16,7 @@ export function Header() {
   const handleShare = async () => {
     const shareData = {
       title: 'SmartKharcha AI',
-      text: 'Manage your money smartly with SmartKharcha AI! 💸 Try this 3D Wallet edition.',
+      text: 'Manage your money smartly with SmartKharcha AI! 💸 Orange-Pink Edition.',
       url: window.location.href,
     };
 
@@ -47,12 +47,12 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-md">
       <div className="container flex h-16 items-center justify-between px-4 max-w-2xl mx-auto">
         <div className="flex items-center gap-2">
-          {/* Styled Wallet icon with Purple to Pink gradient background */}
-          <div className="bg-gradient-to-br from-[#7C3AED] to-[#EC4899] p-2 rounded-xl shadow-lg shadow-primary/20">
+          {/* Styled Wallet icon with Orange to Pink gradient to match the image */}
+          <div className="bg-gradient-to-br from-[#FF9D00] via-[#E91E63] to-[#7C3AED] p-2 rounded-xl shadow-lg shadow-primary/20">
             <Wallet className="w-5 h-5 text-white" />
           </div>
           <div className="flex flex-col">
-            <h1 className="font-headline font-black text-lg leading-tight tracking-tight bg-gradient-to-r from-primary to-[#EC4899] bg-clip-text text-transparent uppercase">
+            <h1 className="font-headline font-black text-lg leading-tight tracking-tight bg-gradient-to-r from-[#FF9D00] to-[#E91E63] bg-clip-text text-transparent uppercase">
               {t.appName}
             </h1>
           </div>
