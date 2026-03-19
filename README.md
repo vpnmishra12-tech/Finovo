@@ -7,11 +7,11 @@ Agar aapko install karte waqt abhi bhi purana icon dikh raha hai, toh iska matla
 2. **Settings (⚙️)** > **Site Settings** > **All Sites**.
 3. Apne app ka link (cloudworkstations.dev wala) dhundein.
 4. **"Clear & Reset"** ya **"Delete all data"** par click karein.
-5. Ab link ko phir se refresh karein. Ab naya **PREMIUM 3D Wallet** icon (v17) dikhega!
+5. Ab link ko phir se refresh karein. Ab naya **PREMIUM 3D Wallet** icon (v25) dikhega!
 
 ## 🚀 GitHub Export:
 1. **Desktop Site**: Mobile Chrome mein **"Desktop Site"** mode on karein.
 2. Toolbar mein **Billi (Cat)** logo par click karein.
 3. **Push** dabayein.
 
-*Finovo - Updated to PREMIUM 3D Wallet (v17 - Hard Refresh).*
+*Finovo - Updated to PREMIUM 3D Wallet (v25 - Hard Refresh).*
