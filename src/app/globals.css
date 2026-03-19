@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    /* Updated to match requested Neon Orange-Pink theme with Blue accents */
+    /* Updated to Neon Orange-Pink theme with Blue accents */
     --background: 210 40% 98%;
     --foreground: 222 47% 11%;
     --card: 0 0% 100%;
@@ -17,7 +17,7 @@
     --secondary-foreground: 222 47% 20%;
     --muted: 210 40% 95%;
     --muted-foreground: 215 16% 47%;
-    --accent: 38 92% 50%; /* Vibrant Orange from image */
+    --accent: 38 92% 50%; /* Vibrant Orange */
     --accent-foreground: 222 47% 11%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;

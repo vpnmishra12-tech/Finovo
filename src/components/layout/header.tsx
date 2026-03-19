@@ -16,7 +16,7 @@ export function Header() {
   const handleShare = async () => {
     const shareData = {
       title: 'SmartKharcha AI',
-      text: 'Manage your money smartly with SmartKharcha AI! 💸 Orange-Pink Edition.',
+      text: 'Manage your money smartly with SmartKharcha AI! 💸 Neon Orange-Pink Edition.',
       url: window.location.href,
     };
 
@@ -47,8 +47,8 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-md">
       <div className="container flex h-16 items-center justify-between px-4 max-w-2xl mx-auto">
         <div className="flex items-center gap-2">
-          {/* Styled Wallet icon with Orange to Pink gradient to match the image */}
-          <div className="bg-gradient-to-br from-[#FF9D00] via-[#E91E63] to-[#7C3AED] p-2 rounded-xl shadow-lg shadow-primary/20">
+          {/* Neon Gradient Wallet Icon Container */}
+          <div className="bg-gradient-to-br from-[#FF9D00] via-[#E91E63] to-[#7C3AED] p-2 rounded-xl shadow-lg shadow-primary/30">
             <Wallet className="w-5 h-5 text-white" />
           </div>
           <div className="flex flex-col">
