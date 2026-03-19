@@ -84,7 +84,7 @@ export function AddExpenseDrawer() {
     <Dialog open={open} onOpenChange={(val) => { setOpen(val); if (!val) resetForm(); }}>
       <DialogTrigger asChild>
         <Button 
-          className="fixed bottom-24 right-6 md:bottom-8 md:right-8 h-16 w-16 rounded-full shadow-2xl z-[60] hover:scale-105 transition-transform active:scale-95 bg-primary text-primary-foreground"
+          className="fixed bottom-[74px] right-6 md:bottom-8 md:right-8 h-16 w-16 rounded-full shadow-2xl z-[60] hover:scale-105 transition-transform active:scale-95 bg-primary text-primary-foreground border-4 border-background"
         >
           <Plus className="w-8 h-8" />
         </Button>

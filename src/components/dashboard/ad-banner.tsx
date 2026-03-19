@@ -20,14 +20,18 @@ export function AdBanner() {
       <CardContent className="p-2">
         <div className="flex items-center justify-between mb-1 px-1">
           <span className="text-[8px] font-black text-muted-foreground/60 uppercase tracking-widest flex items-center gap-1">
-            <Info className="w-2.5 h-2.5" />
+            <info className="w-2.5 h-2.5" />
             {t.sponsored}
           </span>
         </div>
         
-        <div className="h-[40px] w-full bg-gradient-to-r from-primary/5 to-accent/5 rounded-lg border border-dashed border-muted/50 flex items-center justify-center text-center px-4 relative">
-          <p className="text-[10px] font-bold text-muted-foreground/80">
-            Professional Ad Space Available • AdSense
+        {/* Increased height from 40px to 120px to fill the space down to the line */}
+        <div className="h-[120px] w-full bg-gradient-to-r from-primary/5 to-accent/5 rounded-lg border border-dashed border-muted/50 flex flex-col items-center justify-center text-center px-4 relative">
+          <p className="text-[10px] font-black text-muted-foreground/80 uppercase tracking-widest mb-1">
+            Professional Ad Space
+          </p>
+          <p className="text-[8px] font-bold text-muted-foreground/40 uppercase">
+            AdSense Managed Slot
           </p>
           {/* 
           <ins className="adsbygoogle"
