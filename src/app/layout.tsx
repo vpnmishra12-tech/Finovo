@@ -1,4 +1,3 @@
-
 import type {Metadata, Viewport} from 'next';
 import './globals.css';
 import { FirebaseClientProvider } from '@/firebase/client-provider';
@@ -12,7 +11,7 @@ export const metadata: Metadata = {
   manifest: '/manifest.json',
   icons: {
     apple: [
-      { url: 'https://images.unsplash.com/photo-1601597111158-2fcee29ec4d0?w=180&h=180&fit=crop&q=80&v=2', sizes: '180x180', type: 'image/png' },
+      { url: 'https://images.unsplash.com/photo-1621416894569-0f39ed31d247?w=180&h=180&fit=crop&q=80', sizes: '180x180', type: 'image/png' },
     ],
   },
   appleWebApp: {
@@ -44,8 +43,8 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
         
-        {/* iOS Touch Icon for Home Screen - Wallet Finance Theme in Purple/Pink */}
-        <link rel="apple-touch-icon" href="https://images.unsplash.com/photo-1601597111158-2fcee29ec4d0?w=180&h=180&fit=crop&q=80&v=2" />
+        {/* iOS Touch Icon - Purple/Pink Wallet Theme */}
+        <link rel="apple-touch-icon" href="https://images.unsplash.com/photo-1621416894569-0f39ed31d247?w=180&h=180&fit=crop&q=80" />
       </head>
       <body className="font-body antialiased min-h-screen bg-background text-foreground selection:bg-primary/30">
         <FirebaseClientProvider>

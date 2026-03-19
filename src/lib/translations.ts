@@ -1,4 +1,3 @@
-
 export const translations = {
   en: {
     appName: "SmartKharcha AI",
@@ -40,7 +39,7 @@ export const translations = {
     to: "to",
     noPayment: "Settled up!",
     remainingToSplit: "Remaining to assign",
-    personShare: "Share of",
+    personShare: "Share per Person",
     enterNames: "Please enter names for everyone",
     totalGroupExpense: "Total Group Expense",
     groupDesc: "Enter what each person paid during the trip. App will sum it up and split it.",
@@ -131,7 +130,7 @@ export const translations = {
     to: "को",
     noPayment: "सब बराबर है!",
     remainingToSplit: "बचे हुए पैसे",
-    personShare: "हिसा (Share)",
+    personShare: "प्रति व्यक्ति हिस्सा",
     enterNames: "कृपया सभी के नाम लिखें",
     totalGroupExpense: "कुल ग्रुप खर्च",
     groupDesc: "लिखें कि यात्रा के दौरान किसने कितने पैसे दिए। ऐप सब जोड़कर बराबर बांट देगी।",
