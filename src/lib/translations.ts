@@ -1,6 +1,6 @@
 export const translations = {
   en: {
-    appName: "Finove",
+    appName: "Finovo",
     dashboard: "Dashboard",
     addExpense: "Add Expense",
     expenses: "Expenses",
@@ -91,7 +91,7 @@ export const translations = {
     }
   },
   hi: {
-    appName: "Finove",
+    appName: "Finovo",
     dashboard: "डैशबोर्ड",
     addExpense: "खर्च जोड़ें",
     expenses: "खर्च",

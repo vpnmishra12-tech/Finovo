@@ -8,7 +8,7 @@ import { Toaster } from '@/components/ui/toaster';
 const APP_ICON_URL = 'https://images.unsplash.com/photo-1620714223084-8fcacc6dfd8d?w=512&h=512&fit=crop&q=80&v=walletv7';
 
 export const metadata: Metadata = {
-  title: 'Finove - Smart Expense Tracker',
+  title: 'Finovo - Smart Expense Tracker',
   description: 'An AI-powered expense tracker for modern Indian users.',
   manifest: '/manifest.json',
   icons: {
@@ -19,17 +19,17 @@ export const metadata: Metadata = {
     ],
   },
   openGraph: {
-    title: 'Finove',
-    description: 'Manage your money smartly with AI - 3D Purple Wallet Edition',
+    title: 'Finovo',
+    description: 'Manage your money smartly with AI - Neon Orange-Pink Edition',
     images: [{ url: APP_ICON_URL, width: 512, height: 512 }],
     type: 'website',
   },
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
-    title: 'Finove',
+    title: 'Finovo',
   },
-  applicationName: 'Finove',
+  applicationName: 'Finovo',
 };
 
 export const viewport: Viewport = {

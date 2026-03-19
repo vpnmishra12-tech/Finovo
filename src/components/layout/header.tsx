@@ -15,8 +15,8 @@ export function Header() {
 
   const handleShare = async () => {
     const shareData = {
-      title: 'Finove',
-      text: 'Manage your money smartly with Finove! 💸 Neon Orange-Pink Edition.',
+      title: 'Finovo',
+      text: 'Manage your money smartly with Finovo! 💸 Neon Orange-Pink Edition.',
       url: window.location.href,
     };
 
