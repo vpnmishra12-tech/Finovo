@@ -53,7 +53,7 @@ export function Header() {
           </div>
           <div className="flex flex-col">
             <h1 className="font-headline font-black text-lg leading-tight tracking-tight bg-gradient-to-r from-[#00D2FF] to-[#3a7bd5] bg-clip-text text-transparent uppercase neon-text-glow">
-              {t.appName}
+              Finovo
             </h1>
           </div>
         </div>

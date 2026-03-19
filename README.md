@@ -7,9 +7,9 @@ Agar aapko install karte waqt abhi bhi purana icon dikh raha hai, toh iska matla
 2. **Settings (⚙️)** > **Site Settings** > **All Sites**.
 3. Apne app ka link (cloudworkstations.dev wala) dhundein.
 4. **"Clear & Reset"** ya **"Delete all data"** par click karein.
-5. Ab link ko phir se refresh karein. Ab naya **DEFINITIVE 3D DIGITAL WALLET** (v900) dikhega!
+5. Ab link ko phir se refresh karein. Ab naya **DEFINITIVE 3D DIGITAL WALLET** (v1000) dikhega!
 
 ## 🚀 PWA Install (Home Screen) Refresh:
 Agar aapne app pehle hi "Add to Home Screen" kar liya tha, toh use **Uninstall** karein, Chrome mein **Site Data Clear** karein (upar wale steps), aur phir se **Install** karein.
 
-*Finovo - Updated to DEFINITIVE 3D DIGITAL WALLET (v900 - Cache Force Refreshed).*
+*Finovo - Updated to DEFINITIVE 3D DIGITAL WALLET (v1000 - Cache Force Refreshed).*
