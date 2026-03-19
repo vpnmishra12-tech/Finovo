@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   manifest: '/manifest.json',
   icons: {
     apple: [
-      { url: 'https://images.unsplash.com/photo-1621348556736-d76077af82b2?w=180&h=180&fit=crop&q=80', sizes: '180x180', type: 'image/png' },
+      { url: 'https://images.unsplash.com/photo-1601597111158-2fcee29ec4d0?w=180&h=180&fit=crop&q=80&v=2', sizes: '180x180', type: 'image/png' },
     ],
   },
   appleWebApp: {
@@ -44,7 +44,7 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
         
         {/* iOS Touch Icon for Home Screen - Wallet Finance Theme in Purple/Pink */}
-        <link rel="apple-touch-icon" href="https://images.unsplash.com/photo-1621348556736-d76077af82b2?w=180&h=180&fit=crop&q=80" />
+        <link rel="apple-touch-icon" href="https://images.unsplash.com/photo-1601597111158-2fcee29ec4d0?w=180&h=180&fit=crop&q=80&v=2" />
       </head>
       <body className="font-body antialiased min-h-screen bg-background text-foreground selection:bg-primary/30">
         <FirebaseClientProvider>
