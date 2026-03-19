@@ -66,7 +66,7 @@ export default function Home() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="h-[100dvh] flex items-center justify-center bg-background">
         <div className="flex flex-col items-center gap-4">
           <Loader2 className="w-10 h-10 text-primary animate-spin" />
           <p className="text-sm font-bold animate-pulse uppercase tracking-widest text-muted-foreground">Booting SmartKharcha...</p>
@@ -77,99 +77,101 @@ export default function Home() {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-background flex flex-col">
+      <div className="h-[100dvh] bg-background flex flex-col overflow-hidden">
         <Header />
-        <main className="flex-1 flex flex-col items-center justify-center px-6 py-12 text-center space-y-8 max-w-2xl mx-auto">
-          <div className="p-4 bg-primary/10 rounded-3xl mb-4">
-            <Wallet className="w-16 h-16 text-primary" />
-          </div>
-          <div className="space-y-4">
-            <h1 className="text-3xl sm:text-5xl font-headline font-black tracking-tight">
-              Control your money with <span className="text-primary">AI</span>
-            </h1>
-            <p className="text-sm text-muted-foreground font-medium leading-relaxed">
-              Track expenses using voice, text, or bill scans. Secure and private.
-            </p>
-          </div>
+        <main className="flex-1 overflow-y-auto px-6 py-12 text-center space-y-8 max-w-2xl mx-auto w-full">
+          <div className="flex flex-col items-center justify-center">
+            <div className="p-4 bg-primary/10 rounded-3xl mb-4">
+              <Wallet className="w-16 h-16 text-primary" />
+            </div>
+            <div className="space-y-4">
+              <h1 className="text-3xl sm:text-5xl font-headline font-black tracking-tight">
+                Control your money with <span className="text-primary">AI</span>
+              </h1>
+              <p className="text-sm text-muted-foreground font-medium leading-relaxed">
+                Track expenses using voice, text, or bill scans. Secure and private.
+              </p>
+            </div>
 
-          <Alert className="max-w-sm bg-blue-500/10 border-blue-500/20 text-blue-600 rounded-2xl text-left">
-            <Smartphone className="w-5 h-5 mb-2" />
-            <AlertTitle className="text-xs font-black uppercase">iPhone / Android Tip</AlertTitle>
-            <AlertDescription className="text-[10px] space-y-1 font-bold">
-              <p>• <b>iPhone:</b> Tap Share 📤 & <b>'Add to Home Screen'</b></p>
-              <p>• <b>Android:</b> Tap 3 dots & <b>'Install App'</b></p>
-            </AlertDescription>
-          </Alert>
+            <Alert className="max-w-sm mt-8 bg-blue-500/10 border-blue-500/20 text-blue-600 rounded-2xl text-left">
+              <Smartphone className="w-5 h-5 mb-2" />
+              <AlertTitle className="text-xs font-black uppercase">iPhone / Android Tip</AlertTitle>
+              <AlertDescription className="text-[10px] space-y-1 font-bold">
+                <p>• <b>iPhone:</b> Tap Share 📤 & <b>'Add to Home Screen'</b></p>
+                <p>• <b>Android:</b> Tap 3 dots & <b>'Install App'</b></p>
+              </AlertDescription>
+            </Alert>
 
-          <Card className="w-full max-w-sm border-none shadow-2xl rounded-3xl overflow-hidden bg-card">
-            <CardContent className="p-0">
-              <Tabs defaultValue="login" className="w-full">
-                <TabsList className="grid w-full grid-cols-2 rounded-none h-14 bg-muted/50">
-                  <TabsTrigger value="login" className="data-[state=active]:bg-card rounded-none h-full font-black text-xs uppercase">
-                    Login
-                  </TabsTrigger>
-                  <TabsTrigger value="signup" className="data-[state=active]:bg-card rounded-none h-full font-black text-xs uppercase">
-                    Sign Up
-                  </TabsTrigger>
-                </TabsList>
-                
-                <div className="p-8 space-y-4">
-                  <div className="space-y-4 text-left">
-                    <div className="space-y-1">
-                      <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Email Address</label>
-                      <div className="relative">
-                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                        <Input 
-                          type="email" 
-                          placeholder="name@example.com" 
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          className="pl-12 h-12 rounded-xl bg-muted border-none font-bold text-sm"
-                        />
+            <Card className="w-full max-w-sm border-none shadow-2xl rounded-3xl overflow-hidden bg-card mt-8">
+              <CardContent className="p-0">
+                <Tabs defaultValue="login" className="w-full">
+                  <TabsList className="grid w-full grid-cols-2 rounded-none h-14 bg-muted/50">
+                    <TabsTrigger value="login" className="data-[state=active]:bg-card rounded-none h-full font-black text-xs uppercase">
+                      Login
+                    </TabsTrigger>
+                    <TabsTrigger value="signup" className="data-[state=active]:bg-card rounded-none h-full font-black text-xs uppercase">
+                      Sign Up
+                    </TabsTrigger>
+                  </TabsList>
+                  
+                  <div className="p-8 space-y-4">
+                    <div className="space-y-4 text-left">
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Email Address</label>
+                        <div className="relative">
+                          <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                          <Input 
+                            type="email" 
+                            placeholder="name@example.com" 
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className="pl-12 h-12 rounded-xl bg-muted border-none font-bold text-sm"
+                          />
+                        </div>
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Password</label>
+                        <div className="relative">
+                          <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                          <Input 
+                            type="password" 
+                            placeholder="••••••••" 
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            className="pl-12 h-12 rounded-xl bg-muted border-none font-bold text-sm"
+                          />
+                        </div>
                       </div>
                     </div>
-                    <div className="space-y-1">
-                      <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Password</label>
-                      <div className="relative">
-                        <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                        <Input 
-                          type="password" 
-                          placeholder="••••••••" 
-                          value={password}
-                          onChange={(e) => setPassword(e.target.value)}
-                          className="pl-12 h-12 rounded-xl bg-muted border-none font-bold text-sm"
-                        />
-                      </div>
-                    </div>
+
+                    <TabsContent value="login" className="m-0">
+                      <Button 
+                        onClick={handleLogin}
+                        className="w-full h-12 rounded-xl text-sm font-black uppercase tracking-widest gap-2"
+                        disabled={isAuthLoading || !email || !password}
+                      >
+                        {isAuthLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <><LogIn className="w-4 h-4" /> Login</>}
+                      </Button>
+                    </TabsContent>
+
+                    <TabsContent value="signup" className="m-0">
+                      <Button 
+                        onClick={handleSignup}
+                        className="w-full h-12 rounded-xl text-sm font-black uppercase tracking-widest gap-2"
+                        disabled={isAuthLoading || !email || !password}
+                      >
+                        {isAuthLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <><UserPlus className="w-4 h-4" /> Sign Up</>}
+                      </Button>
+                    </TabsContent>
+
+                    <p className="text-[9px] text-muted-foreground text-center font-bold flex items-center justify-center gap-1 uppercase">
+                      <Info className="w-3 h-3" /> Secure Google Auth
+                    </p>
                   </div>
-
-                  <TabsContent value="login" className="m-0">
-                    <Button 
-                      onClick={handleLogin}
-                      className="w-full h-12 rounded-xl text-sm font-black uppercase tracking-widest gap-2"
-                      disabled={isAuthLoading || !email || !password}
-                    >
-                      {isAuthLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <><LogIn className="w-4 h-4" /> Login</>}
-                    </Button>
-                  </TabsContent>
-
-                  <TabsContent value="signup" className="m-0">
-                    <Button 
-                      onClick={handleSignup}
-                      className="w-full h-12 rounded-xl text-sm font-black uppercase tracking-widest gap-2"
-                      disabled={isAuthLoading || !email || !password}
-                    >
-                      {isAuthLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <><UserPlus className="w-4 h-4" /> Sign Up</>}
-                    </Button>
-                  </TabsContent>
-
-                  <p className="text-[9px] text-muted-foreground text-center font-bold flex items-center justify-center gap-1 uppercase">
-                    <Info className="w-3 h-3" /> Secure Google Auth
-                  </p>
-                </div>
-              </Tabs>
-            </CardContent>
-          </Card>
+                </Tabs>
+              </CardContent>
+            </Card>
+          </div>
         </main>
       </div>
     );
@@ -198,10 +200,11 @@ export default function Home() {
   );
 
   return (
-    <div className="min-h-screen bg-background flex flex-col overflow-x-hidden">
+    <div className="h-[100dvh] bg-background flex flex-col overflow-hidden">
       <Header />
       
-      <div className="flex-1 flex flex-col md:flex-row container max-w-6xl mx-auto md:gap-4 px-4 pb-20 md:pb-4">
+      <div className="flex-1 flex flex-col md:flex-row container max-w-6xl mx-auto md:gap-4 px-4 overflow-hidden">
+        {/* Desktop Sidebar Nav */}
         <nav className="hidden md:flex flex-col gap-1 py-4 w-48 shrink-0">
           <button
             onClick={() => setActiveTab('dashboard')}
@@ -235,7 +238,8 @@ export default function Home() {
           </button>
         </nav>
 
-        <main className="flex-1 py-4 space-y-4 min-w-0">
+        {/* Main Scrollable Content */}
+        <main className="flex-1 overflow-y-auto py-4 space-y-4 min-w-0 pb-32 md:pb-8 scroll-smooth">
           {activeTab === 'dashboard' && (
             <div className="space-y-4 animate-in fade-in duration-300">
               <section className="flex items-center justify-between">
@@ -290,18 +294,21 @@ export default function Home() {
               <h2 className="text-xl font-headline font-black uppercase tracking-tight">{t.history}</h2>
               <SpendingChart expenses={selectedMonthExpenses} />
               <ExpenseList expenses={expenses || []} isLoading={isExpensesLoading} />
+              <AddExpenseDrawer />
             </div>
           )}
 
           {activeTab === 'splitter' && (
-            <div className="space-y-4 animate-in fade-in duration-300 max-w-2xl mx-auto">
+            <div className="space-y-4 animate-in fade-in duration-300 max-w-2xl mx-auto pb-12">
               <BillSplitTool />
+              <AddExpenseDrawer />
             </div>
           )}
         </main>
       </div>
 
-      <div className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-background/80 backdrop-blur-lg border-t z-50 px-6 flex items-center justify-between">
+      {/* Fixed Mobile Bottom Navigation */}
+      <div className="md:hidden sticky bottom-0 left-0 right-0 h-16 bg-background/95 backdrop-blur-lg border-t z-50 px-6 flex items-center justify-between shrink-0 shadow-[0_-4px_12px_rgba(0,0,0,0.1)]">
         <NavItem id="dashboard" icon={LayoutDashboard} label={t.dashboard} />
         <NavItem id="history" icon={History} label={t.history} />
         <NavItem id="splitter" icon={Calculator} label={t.billSplitter} />
