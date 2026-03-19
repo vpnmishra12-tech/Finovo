@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useAuth } from '@/lib/contexts/auth-context';
@@ -48,11 +47,12 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-md">
       <div className="container flex h-16 items-center justify-between px-4 max-w-2xl mx-auto">
         <div className="flex items-center gap-2">
-          <div className="bg-primary p-1.5 rounded-lg shadow-lg">
+          {/* Styled Wallet icon with Purple to Pink gradient background */}
+          <div className="bg-gradient-to-br from-[#7C3AED] to-[#EC4899] p-2 rounded-xl shadow-lg shadow-primary/20">
             <Wallet className="w-5 h-5 text-white" />
           </div>
           <div className="flex flex-col">
-            <h1 className="font-headline font-bold text-lg leading-tight tracking-tight bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+            <h1 className="font-headline font-black text-lg leading-tight tracking-tight bg-gradient-to-r from-primary to-[#EC4899] bg-clip-text text-transparent uppercase">
               {t.appName}
             </h1>
           </div>
@@ -87,21 +87,21 @@ export function Header() {
               <DropdownMenuContent className="w-56" align="end" forceMount>
                 <DropdownMenuLabel className="font-normal">
                   <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium leading-none">{user.phoneNumber || 'User'}</p>
-                    <p className="text-xs leading-none text-muted-foreground">ID: {user.uid.substring(0, 8)}...</p>
+                    <p className="text-sm font-black leading-none uppercase">{user.email?.split('@')[0] || 'User'}</p>
+                    <p className="text-[10px] leading-none text-muted-foreground font-bold">ID: {user.uid.substring(0, 8).toUpperCase()}...</p>
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => setLanguage(language === 'en' ? 'hi' : 'en')}>
+                <DropdownMenuItem onClick={() => setLanguage(language === 'en' ? 'hi' : 'en')} className="font-black text-[10px] uppercase">
                   <Languages className="mr-2 h-4 w-4" />
                   <span>{language === 'en' ? 'हिन्दी' : 'English'}</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem disabled>
+                <DropdownMenuItem disabled className="font-black text-[10px] uppercase">
                   <Settings className="mr-2 h-4 w-4" />
                   <span>{t.settings}</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={logout} className="text-destructive focus:bg-destructive focus:text-destructive-foreground">
+                <DropdownMenuItem onClick={logout} className="text-destructive focus:bg-destructive focus:text-destructive-foreground font-black text-[10px] uppercase">
                   <LogOut className="mr-2 h-4 w-4" />
                   <span>{t.logout}</span>
                 </DropdownMenuItem>
