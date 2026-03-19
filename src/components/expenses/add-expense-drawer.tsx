@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from 'react';
@@ -90,7 +89,7 @@ export function AddExpenseDrawer() {
           <Plus className="w-8 h-8" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-md w-[95%] max-h-[85vh] rounded-3xl p-0 overflow-hidden border-none shadow-2xl z-[100] flex flex-col">
+      <DialogContent className="max-w-md w-[95%] max-h-[92vh] rounded-3xl p-0 overflow-hidden border-none shadow-2xl z-[100] flex flex-col top-[45%]">
         <DialogHeader className="p-6 bg-primary text-primary-foreground shrink-0">
           <DialogTitle className="font-headline text-2xl flex items-center gap-2">
             <Sparkles className="w-6 h-6" />
@@ -120,10 +119,10 @@ export function AddExpenseDrawer() {
                     value={textInput} 
                     onChange={(e) => setTextInput(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && handleAiTextSubmit()}
-                    className="bg-muted border-none rounded-xl"
+                    className="bg-muted border-none rounded-xl h-12"
                   />
-                  <Button size="icon" onClick={handleAiTextSubmit} disabled={isProcessing}>
-                    {isProcessing ? <Loader2 className="animate-spin" /> : <Send className="w-4 h-4" />}
+                  <Button size="icon" className="h-12 w-12 rounded-xl" onClick={handleAiTextSubmit} disabled={isProcessing}>
+                    {isProcessing ? <Loader2 className="animate-spin" /> : <Send className="w-5 h-5" />}
                   </Button>
                 </div>
               </TabsContent>
@@ -146,13 +145,13 @@ export function AddExpenseDrawer() {
                     placeholder="0" 
                     value={amount} 
                     onChange={(e) => setAmount(e.target.value)}
-                    className="bg-muted border-none font-headline font-bold text-xl rounded-xl h-12"
+                    className="bg-muted border-none font-headline font-bold text-xl rounded-xl h-14"
                   />
                 </div>
                 <div className="space-y-2">
                   <Label className="text-xs uppercase font-bold text-muted-foreground">Category</Label>
                   <Select value={category} onValueChange={setCategory}>
-                    <SelectTrigger className="bg-muted border-none rounded-xl h-12">
+                    <SelectTrigger className="bg-muted border-none rounded-xl h-14">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent position="popper" className="z-[110]">
@@ -172,12 +171,12 @@ export function AddExpenseDrawer() {
                   placeholder="What was this for?" 
                   value={description} 
                   onChange={(e) => setDescription(e.target.value)}
-                  className="bg-muted border-none rounded-xl h-12"
+                  className="bg-muted border-none rounded-xl h-14"
                 />
               </div>
 
               <div className="flex gap-3 pt-4">
-                <Button className="w-full rounded-xl h-14 text-lg font-bold shadow-lg shadow-primary/20" onClick={handleSave} disabled={!amount || !description}>
+                <Button className="w-full rounded-2xl h-16 text-lg font-black uppercase tracking-widest shadow-lg shadow-primary/20" onClick={handleSave} disabled={!amount || !description}>
                   {t.actions.save}
                 </Button>
               </div>

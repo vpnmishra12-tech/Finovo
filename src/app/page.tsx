@@ -294,14 +294,12 @@ export default function Home() {
               <h2 className="text-xl font-headline font-black uppercase tracking-tight">{t.history}</h2>
               <SpendingChart expenses={selectedMonthExpenses} />
               <ExpenseList expenses={expenses || []} isLoading={isExpensesLoading} />
-              <AddExpenseDrawer />
             </div>
           )}
 
           {activeTab === 'splitter' && (
             <div className="space-y-4 animate-in fade-in duration-300 max-w-2xl mx-auto pb-12">
               <BillSplitTool />
-              <AddExpenseDrawer />
             </div>
           )}
         </main>
