@@ -36,13 +36,9 @@ export function BillSplitTool() {
 
   const [splitType, setSplitType] = useState<'equal' | 'custom' | 'group'>('equal');
 
-  // mode: Equal Split
+  // mode: Equal Split (Simplified)
   const [equalTotalBill, setEqualTotalBill] = useState<string>("");
-  const [equalParticipants, setEqualParticipants] = useState<Participant[]>([
-    { id: 'e1', name: '', paid: 0 },
-    { id: 'e2', name: '', paid: 0 }
-  ]);
-  const [equalPayerId, setEqualPayerId] = useState<string>('e1');
+  const [equalNumPeople, setEqualNumPeople] = useState<string>("2");
 
   // mode: Custom Split
   const [customTotalBill, setCustomTotalBill] = useState<string>("");
@@ -59,22 +55,8 @@ export function BillSplitTool() {
 
   // Calculations for Equal Split
   const equalBillVal = parseFloat(equalTotalBill) || 0;
-  const equalShare = equalBillVal > 0 ? parseFloat((equalBillVal / equalParticipants.length).toFixed(2)) : 0;
-  const equalNamesEntered = equalParticipants.every(p => p.name.trim().length > 0);
-  
-  const equalSettlements = useMemo(() => {
-    if (splitType !== 'equal' || equalBillVal <= 0 || !equalNamesEntered) return [];
-    const mainPayer = equalParticipants.find(p => p.id === equalPayerId);
-    if (!mainPayer || !mainPayer.name.trim()) return [];
-
-    return equalParticipants
-      .filter(p => p.id !== equalPayerId)
-      .map(p => ({
-        from: p.name.trim(),
-        to: mainPayer.name.trim(),
-        amount: equalShare
-      }));
-  }, [equalParticipants, equalBillVal, splitType, equalPayerId, equalShare, equalNamesEntered]);
+  const equalPeopleCount = parseInt(equalNumPeople) || 1;
+  const equalShare = equalBillVal > 0 ? parseFloat((equalBillVal / equalPeopleCount).toFixed(2)) : 0;
 
   // Calculations for Custom Split
   const customBillVal = parseFloat(customTotalBill) || 0;
@@ -158,14 +140,6 @@ export function BillSplitTool() {
     return results;
   }, [groupParticipants, groupTotalPaid, splitType, groupShare, groupNamesEntered]);
 
-  const addEqualPerson = () => setEqualParticipants([...equalParticipants, { id: Date.now().toString(), name: '', paid: 0 }]);
-  const removeEqualPerson = (id: string) => {
-    if (equalParticipants.length <= 2) return;
-    setEqualParticipants(equalParticipants.filter(p => p.id !== id));
-    if (equalPayerId === id) setEqualPayerId(equalParticipants[0].id);
-  };
-  const updateEqualName = (id: string, name: string) => setEqualParticipants(prev => prev.map(p => p.id === id ? { ...p, name } : p));
-
   const addCustomPerson = () => setCustomParticipants([...customParticipants, { id: Date.now().toString(), name: '', paid: 0 }]);
   const removeCustomPerson = (id: string) => {
     if (customParticipants.length <= 2) return;
@@ -198,24 +172,24 @@ export function BillSplitTool() {
     if (!firestore || !user?.uid) return;
     let shareToSave = 0;
     let billDesc = "";
-    let namesReady = false;
+    let canSave = false;
 
     if (splitType === 'equal') {
       shareToSave = equalShare;
-      billDesc = `Equal Split: ${equalTotalBill}`;
-      namesReady = equalNamesEntered;
+      billDesc = `Equal Split: ${equalTotalBill} amongst ${equalPeopleCount}`;
+      canSave = equalBillVal > 0 && equalPeopleCount > 0;
     } else if (splitType === 'custom') {
       shareToSave = customShare;
       billDesc = `Custom Split: ${customTotalBill}`;
-      namesReady = customNamesEntered;
+      canSave = customBillVal > 0 && customNamesEntered && !isCustomMismatch;
     } else {
       shareToSave = groupShare;
       billDesc = `Group Trip: ${groupTotalPaid}`;
-      namesReady = groupNamesEntered;
+      canSave = groupTotalPaid > 0 && groupNamesEntered;
     }
 
-    if (shareToSave <= 0 || !namesReady) {
-      toast({ variant: "destructive", title: "Error", description: !namesReady ? t.enterNames : "Check bill details" });
+    if (shareToSave <= 0 || !canSave) {
+      toast({ variant: "destructive", title: "Error", description: "Please complete the details correctly." });
       return;
     }
 
@@ -253,61 +227,33 @@ export function BillSplitTool() {
           </TabsList>
 
           <TabsContent value="equal" className="space-y-6 m-0">
-            <div className="space-y-2">
-              <Label className="text-xs font-bold uppercase text-muted-foreground">{t.totalAmount}</Label>
-              <Input 
-                type="number" 
-                placeholder="0.00" 
-                value={equalTotalBill} 
-                onChange={(e) => setEqualTotalBill(e.target.value)}
-                className="h-14 rounded-2xl bg-muted border-none font-headline font-bold text-2xl text-primary"
-              />
-            </div>
             <div className="space-y-4">
-              <Label className="text-xs font-bold uppercase text-muted-foreground">Names</Label>
-              <div className="grid gap-3">
-                {equalParticipants.map((p) => (
-                  <div key={p.id} className="flex items-center gap-2">
-                    <Input 
-                      value={p.name} 
-                      onChange={(e) => updateEqualName(p.id, e.target.value)}
-                      placeholder="Enter Name"
-                      className="h-12 bg-muted/50 border-none rounded-xl font-bold px-4 flex-1"
-                    />
-                    <Button variant="ghost" size="icon" onClick={() => removeEqualPerson(p.id)} disabled={equalParticipants.length <= 2}>
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
-                  </div>
-                ))}
+              <div className="space-y-2">
+                <Label className="text-xs font-bold uppercase text-muted-foreground">{t.totalAmount}</Label>
+                <Input 
+                  type="number" 
+                  placeholder="0.00" 
+                  value={equalTotalBill} 
+                  onChange={(e) => setEqualTotalBill(e.target.value)}
+                  className="h-14 rounded-2xl bg-muted border-none font-headline font-bold text-2xl text-primary"
+                />
               </div>
-              <Button variant="outline" onClick={addEqualPerson} className="w-full h-12 rounded-2xl border-dashed border-2 gap-2">
-                <UserPlus className="w-4 h-4" /> {t.addPerson}
-              </Button>
+              <div className="space-y-2">
+                <Label className="text-xs font-bold uppercase text-muted-foreground">{t.numPeople}</Label>
+                <Input 
+                  type="number" 
+                  placeholder="2" 
+                  value={equalNumPeople} 
+                  onChange={(e) => setEqualNumPeople(e.target.value)}
+                  className="h-12 bg-muted/50 border-none rounded-xl font-bold px-4"
+                  min="1"
+                />
+              </div>
             </div>
-            {equalNamesEntered && equalBillVal > 0 && (
-              <div className="space-y-4 pt-4 border-t border-dashed">
-                <Label className="text-xs font-bold uppercase text-muted-foreground">{t.whoPaid}</Label>
-                <Select value={equalPayerId} onValueChange={setEqualPayerId}>
-                  <SelectTrigger className="h-12 bg-muted border-none rounded-xl font-bold">
-                    <SelectValue placeholder="Select Payer" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {equalParticipants.map(p => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}
-                  </SelectContent>
-                </Select>
-                <div className="bg-primary/5 rounded-3xl p-5 space-y-3">
-                  {equalSettlements.map((s, idx) => (
-                    <div key={`equal-s-${idx}`} className="flex items-center gap-2 p-4 bg-card rounded-2xl shadow-sm border border-primary/5">
-                      <p className="text-sm font-medium">
-                        <span className="font-bold text-primary">{s.from}</span>
-                        <span className="mx-1 text-muted-foreground">{t.owes}</span>
-                        <span className="font-headline font-black text-primary mx-1">₹{s.amount.toLocaleString()}</span>
-                        <span className="mx-1 text-muted-foreground">{t.to}</span>
-                        <span className="font-bold text-primary bg-primary/10 px-2 py-0.5 rounded">{s.to}</span>
-                      </p>
-                    </div>
-                  ))}
-                </div>
+            {equalBillVal > 0 && (
+              <div className="bg-primary/5 rounded-3xl p-6 text-center border border-primary/10">
+                <p className="text-xs font-black uppercase text-muted-foreground tracking-widest mb-1">{t.personShare}</p>
+                <p className="text-4xl font-headline font-black text-primary">₹{equalShare.toLocaleString()}</p>
               </div>
             )}
           </TabsContent>
@@ -396,7 +342,7 @@ export function BillSplitTool() {
           </TabsContent>
         </Tabs>
 
-        {((splitType === 'equal' && !equalNamesEntered) || (splitType === 'custom' && !customNamesEntered) || (splitType === 'group' && !groupNamesEntered)) && (equalBillVal > 0 || customBillVal > 0 || groupTotalPaid > 0) && (
+        {((splitType === 'custom' && !customNamesEntered && customBillVal > 0) || (splitType === 'group' && !groupNamesEntered && groupTotalPaid > 0)) && (
           <Alert className="rounded-2xl bg-amber-500/10 border-amber-500/20 text-amber-600"><AlertCircle className="h-4 w-4" /><AlertDescription className="text-xs font-bold">{t.enterNames}</AlertDescription></Alert>
         )}
 
@@ -407,7 +353,15 @@ export function BillSplitTool() {
               <span className="text-[10px] font-black uppercase tracking-widest opacity-80">{t.yourShare}</span>
               <span className="text-3xl font-headline font-black">₹{(splitType === 'equal' ? equalShare : splitType === 'custom' ? customShare : groupShare).toLocaleString()}</span>
             </div>
-            <Button onClick={handleSaveMyShare} disabled={(splitType === 'equal' ? (equalBillVal <= 0 || !equalNamesEntered) : splitType === 'custom' ? (customBillVal <= 0 || !customNamesEntered || isCustomMismatch) : (groupTotalPaid <= 0 || !groupNamesEntered))} className="rounded-2xl h-14 px-8 bg-white text-primary hover:bg-white/90 font-black gap-2 shadow-xl relative z-10">
+            <Button 
+              onClick={handleSaveMyShare} 
+              disabled={
+                splitType === 'equal' ? (equalBillVal <= 0 || equalPeopleCount <= 0) : 
+                splitType === 'custom' ? (customBillVal <= 0 || !customNamesEntered || isCustomMismatch) : 
+                (groupTotalPaid <= 0 || !groupNamesEntered)
+              } 
+              className="rounded-2xl h-14 px-8 bg-white text-primary hover:bg-white/90 font-black gap-2 shadow-xl relative z-10"
+            >
               <CheckCircle2 className="w-5 h-5" /> {t.saveMyShare}
             </Button>
           </div>
