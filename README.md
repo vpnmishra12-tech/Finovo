@@ -1,4 +1,4 @@
-# SmartKharcha AI - Mobile Export Guide 📱
+# Finove - Mobile Export Guide 📱
 
 Agar aapko GitHub ya Export ka option nahi dikh raha, toh niche diye gaye steps ko dhyan se padhein:
 
@@ -17,4 +17,4 @@ Agar aapko GitHub ya Export ka option nahi dikh raha, toh niche diye gaye steps 
 - **iPhone**: Safari mein link kholein -> **Share (📤)** -> **"Add to Home Screen"**.
 - **Android**: Chrome mein link kholein -> **3 dots** -> **"Install App"**.
 
-*SmartKharcha AI - Icon updated to Neon 3D Wallet (v7 - Deep Blue Edition).*
+*Finove - Icon updated to Neon 3D Wallet (v7 - Deep Blue Edition).*

@@ -15,8 +15,8 @@ export function Header() {
 
   const handleShare = async () => {
     const shareData = {
-      title: 'SmartKharcha AI',
-      text: 'Manage your money smartly with SmartKharcha AI! 💸 Neon Orange-Pink Edition.',
+      title: 'Finove',
+      text: 'Manage your money smartly with Finove! 💸 Neon Orange-Pink Edition.',
       url: window.location.href,
     };
 
