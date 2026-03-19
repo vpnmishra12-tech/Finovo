@@ -9,19 +9,19 @@
   "theme_color": "#7C3AED",
   "icons": [
     {
-      "src": "https://images.unsplash.com/photo-1621416894569-0f39ed31d247?w=192&h=192&fit=crop&q=80",
+      "src": "https://images.unsplash.com/photo-1621416894569-0f39ed31d247?w=192&h=192&fit=crop&q=80&v=wallet",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "https://images.unsplash.com/photo-1621416894569-0f39ed31d247?w=192&h=192&fit=crop&q=80",
+      "src": "https://images.unsplash.com/photo-1621416894569-0f39ed31d247?w=192&h=192&fit=crop&q=80&v=wallet",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "https://images.unsplash.com/photo-1621416894569-0f39ed31d247?w=512&h=512&fit=crop&q=80",
+      "src": "https://images.unsplash.com/photo-1621416894569-0f39ed31d247?w=512&h=512&fit=crop&q=80&v=wallet",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"

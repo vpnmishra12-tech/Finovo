@@ -1,26 +1,20 @@
 # SmartKharcha AI - User Guide 📱
 
-Agar Firebase Studio ka "Publish" button billing maang raha hai, toh ye **100% FREE** tarika follow karein:
+Agar aapko GitHub icon nahi dikh raha, toh mobile browser mein **"Desktop Site"** mode on karein.
 
-## 🚀 Export to GitHub (Laptop ki zaroorat nahi):
-1. **GitHub Icon**: Top-right corner mein GitHub ka icon (billi jaisa logo) dekhiye.
-2. **Connect**: Us par click karke apna GitHub account connect karein.
-3. **Push**: "Push to GitHub" par click karein. Aapka sara code GitHub par chala jayega.
+## 🚀 Export to GitHub (Bina Laptop ke):
+1. **GitHub Icon**: Top-right corner mein **Billi (Cat)** jaisa logo dekhiye. Agar nahi dikh raha, toh Chrome settings mein **"Desktop Site"** on karein.
+2. **Connect**: Us par click karke apna free GitHub account connect karein.
+3. **Push**: "Push" button dabayein. Aapka code GitHub par chala jayega.
 
-## 🚀 Sabse Simple Free Hosting:
-1. **GitHub Repository**: GitHub par code jaane ke baad, `vercel.com` par jayein.
-2. **Vercel Connect**: "Continue with GitHub" karein. 
-3. **Deploy**: Apne project ko select karein aur "Deploy" par click karein. 
-4. **Link Mil Jayega**: 2 minute mein aapko ek free link milega (jaise `my-app.vercel.app`). Ise kisi bhi mobile par share karein!
+## 🚀 Sabse Simple Free Hosting (Vercel):
+1. **GitHub Link**: GitHub par code jaane ke baad, `vercel.com` par jayein.
+2. **Login**: "Continue with GitHub" karein. 
+3. **Deploy**: Apne repository ko select karein aur "Deploy" dabayein. 
+4. **Public URL**: Aapko ek free link milega (jaise `kharcha.vercel.app`). Ise kisi bhi mobile par WhatsApp karein!
 
-## 📲 Install on iPhone (Safari):
-1. **Safari Browser** mein apna link kholiye.
-2. Neeche **"Share"** button (square box with arrow 📤) par tap karein.
-3. List mein neeche jayein aur **"Add to Home Screen"** (+) select karein.
-4. Ye aapke iPhone mein asli app ki tarah **Premium Purple Wallet** icon ke saath ban jayega.
+## 📲 Install on Mobile:
+1. **iPhone**: Safari mein link kholein -> **Share (📤)** -> **"Add to Home Screen"**.
+2. **Android**: Chrome mein link kholein -> **3 dots** -> **"Install App"**.
 
-## 📲 Install on Android (Chrome):
-1. Browser mein apna link kholien.
-2. Menu (3 dots) par jayein aur **"Add to Home Screen"** ya **"Install App"** select karein.
-
-*SmartKharcha AI - No Laptop needed, No Payment needed.*
+*SmartKharcha AI - Premium Purple Wallet Theme.*
