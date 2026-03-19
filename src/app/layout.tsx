@@ -5,12 +5,12 @@ import { AuthProvider } from '@/lib/contexts/auth-context';
 import { LanguageProvider } from '@/lib/contexts/language-context';
 import { Toaster } from '@/components/ui/toaster';
 
-// DEFINITIVE PREMIUM 3D NEON WALLET ICON - Version v25 (Strictly NO HAND)
-const APP_ICON_URL = 'https://images.unsplash.com/photo-1621416848446-99550343a47e?w=512&h=512&fit=crop&q=80&v=walletv25';
+// DEFINITIVE PREMIUM 3D NEON WALLET ICON - Version v100 (Ultra Premium)
+const APP_ICON_URL = 'https://images.unsplash.com/photo-1634733988138-bf2c3a7a13f5?w=512&h=512&fit=crop&q=80&v=v100';
 
 export const metadata: Metadata = {
-  title: 'Finovo - Smart Expense Tracker',
-  description: 'Manage your money smartly with AI - Premium 3D Edition',
+  title: 'Finovo - Premium 3D Expense Tracker',
+  description: 'Manage your money smartly with AI - Neon Blue Edition',
   manifest: '/manifest.json',
   icons: {
     icon: [
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#00D2FF',
+  themeColor: '#00BFFF',
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,

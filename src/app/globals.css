@@ -10,47 +10,47 @@
     --card-foreground: 222 47% 11%;
     --popover: 0 0% 100%;
     --popover-foreground: 222 47% 11%;
-    --primary: 199 89% 48%; /* Neon Blue */
+    --primary: 197 100% 50%; /* Deep Sky Blue */
     --primary-foreground: 0 0% 100%;
     --secondary: 210 40% 90%;
     --secondary-foreground: 222 47% 20%;
     --muted: 210 40% 95%;
     --muted-foreground: 215 16% 47%;
-    --accent: 180 100% 50%; /* Cyan Neon */
+    --accent: 180 100% 50%; /* Electric Cyan */
     --accent-foreground: 222 47% 11%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
     --border: 214 32% 91%;
     --input: 214 32% 91%;
-    --ring: 199 89% 48%;
+    --ring: 197 100% 50%;
     --radius: 1.25rem;
-    --chart-1: 199 89% 48%;
+    --chart-1: 197 100% 50%;
     --chart-2: 180 100% 50%;
-    --chart-3: 221 83% 53%;
-    --chart-4: 200 65% 60%;
+    --chart-3: 217 91% 60%;
+    --chart-4: 190 90% 50%;
     --chart-5: 210 75% 55%;
   }
 
   .dark {
-    --background: 222 47% 4%; /* Deep Dark Navy */
+    --background: 222 47% 4%; /* Professional Deep Navy */
     --foreground: 210 40% 98%;
     --card: 222 47% 8%;
     --card-foreground: 210 40% 98%;
     --popover: 222 47% 6%;
     --popover-foreground: 210 40% 98%;
-    --primary: 199 89% 48%; /* Electric Neon Blue */
+    --primary: 197 100% 50%; /* Neon Blue */
     --primary-foreground: 210 40% 98%;
     --secondary: 222 47% 12%;
     --secondary-foreground: 210 40% 98%;
     --muted: 222 47% 10%;
     --muted-foreground: 215 20% 65%;
-    --accent: 180 100% 50%; /* Cyan Neon */
+    --accent: 180 100% 50%; /* Neon Cyan */
     --accent-foreground: 222 47% 4%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
     --border: 222 47% 15%;
     --input: 222 47% 15%;
-    --ring: 199 89% 48%;
+    --ring: 197 100% 50%;
   }
 }
 
@@ -72,9 +72,9 @@
 }
 
 .neon-gradient {
-  background: linear-gradient(135deg, #00D2FF 0%, #3a7bd5 100%);
+  background: linear-gradient(135deg, #00BFFF 0%, #0077FF 100%);
 }
 
 .neon-text-glow {
-  text-shadow: 0 0 10px rgba(0, 210, 255, 0.5);
+  text-shadow: 0 0 10px rgba(0, 191, 255, 0.6);
 }

@@ -1,27 +1,27 @@
 {
   "name": "Finovo",
   "short_name": "Finovo",
-  "description": "Professional AI-powered expense tracker with PREMIUM 3D Wallet Icon.",
+  "description": "Professional AI-powered expense tracker with PREMIUM 3D Neon Wallet Icon.",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#0B1120",
-  "theme_color": "#00D2FF",
+  "theme_color": "#00BFFF",
   "icons": [
     {
-      "src": "https://images.unsplash.com/photo-1621416848446-99550343a47e?w=192&h=192&fit=crop&q=80&v=walletv25",
+      "src": "https://images.unsplash.com/photo-1634733988138-bf2c3a7a13f5?w=192&h=192&fit=crop&q=80&v=v100",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "https://images.unsplash.com/photo-1621416848446-99550343a47e?w=192&h=192&fit=crop&q=80&v=walletv25",
+      "src": "https://images.unsplash.com/photo-1634733988138-bf2c3a7a13f5?w=192&h=192&fit=crop&q=80&v=v100",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "https://images.unsplash.com/photo-1621416848446-99550343a47e?w=512&h=512&fit=crop&q=80&v=walletv25",
+      "src": "https://images.unsplash.com/photo-1634733988138-bf2c3a7a13f5?w=512&h=512&fit=crop&q=80&v=v100",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
