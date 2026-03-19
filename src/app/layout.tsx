@@ -5,16 +5,24 @@ import { AuthProvider } from '@/lib/contexts/auth-context';
 import { LanguageProvider } from '@/lib/contexts/language-context';
 import { Toaster } from '@/components/ui/toaster';
 
+const APP_ICON_URL = 'https://images.unsplash.com/photo-1620714223084-8fcacc6dfd8d?w=512&h=512&fit=crop&q=80&v=walletv5';
+
 export const metadata: Metadata = {
   title: 'SmartKharcha AI - Smart Expense Tracker',
   description: 'An AI-powered expense tracker for modern Indian users.',
   manifest: '/manifest.json',
   icons: {
-    icon: 'https://images.unsplash.com/photo-1512428559087-560fa5ceab42?w=32&h=32&fit=crop&q=80&v=walletv4',
-    shortcut: 'https://images.unsplash.com/photo-1512428559087-560fa5ceab42?w=32&h=32&fit=crop&q=80&v=walletv4',
+    icon: APP_ICON_URL,
+    shortcut: APP_ICON_URL,
     apple: [
-      { url: 'https://images.unsplash.com/photo-1512428559087-560fa5ceab42?w=180&h=180&fit=crop&q=80&v=walletv4', sizes: '180x180', type: 'image/png' },
+      { url: APP_ICON_URL, sizes: '180x180', type: 'image/png' },
     ],
+  },
+  openGraph: {
+    title: 'SmartKharcha AI',
+    description: 'Smart AI Expense Tracker - 3D Purple Wallet Edition',
+    images: [{ url: APP_ICON_URL, width: 512, height: 512 }],
+    type: 'website',
   },
   appleWebApp: {
     capable: true,
@@ -45,9 +53,9 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
         
-        {/* Force Wallet Icon v4 */}
-        <link rel="apple-touch-icon" href="https://images.unsplash.com/photo-1512428559087-560fa5ceab42?w=180&h=180&fit=crop&q=80&v=walletv4" />
-        <link rel="icon" href="https://images.unsplash.com/photo-1512428559087-560fa5ceab42?w=32&h=32&fit=crop&q=80&v=walletv4" />
+        {/* Definitive Wallet Icon v5 */}
+        <link rel="apple-touch-icon" href={APP_ICON_URL} />
+        <link rel="icon" href={APP_ICON_URL} />
       </head>
       <body className="font-body antialiased min-h-screen bg-background text-foreground selection:bg-primary/30">
         <FirebaseClientProvider>
