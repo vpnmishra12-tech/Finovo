@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from 'react';
@@ -70,7 +69,7 @@ export default function Home() {
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="flex flex-col items-center gap-4">
           <Loader2 className="w-10 h-10 text-primary animate-spin" />
-          <p className="text-muted-foreground font-medium animate-pulse">Checking access...</p>
+          <p className="text-muted-foreground font-medium animate-pulse">Fast Booting SmartKharcha...</p>
         </div>
       </div>
     );
