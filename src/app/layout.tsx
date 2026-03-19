@@ -5,15 +5,18 @@ import { AuthProvider } from '@/lib/contexts/auth-context';
 import { LanguageProvider } from '@/lib/contexts/language-context';
 import { Toaster } from '@/components/ui/toaster';
 
-// Definitive Neon Blue 3D Wallet Icon URL with Cache Buster v16
-const APP_ICON_URL = 'https://images.unsplash.com/photo-1620714223084-8fcacc6df38a?w=512&h=512&fit=crop&q=80&v=walletv16';
+// DEFINITIVE PREMIUM 3D NEON WALLET ICON - Version v17
+const APP_ICON_URL = 'https://images.unsplash.com/photo-1621416848446-99550343a47e?w=512&h=512&fit=crop&q=80&v=walletv17';
 
 export const metadata: Metadata = {
   title: 'Finovo - Smart Expense Tracker',
-  description: 'Manage your money smartly with AI - Professional Edition',
+  description: 'Manage your money smartly with AI - Professional 3D Edition',
   manifest: '/manifest.json',
   icons: {
-    icon: APP_ICON_URL,
+    icon: [
+      { url: APP_ICON_URL, sizes: '32x32', type: 'image/png' },
+      { url: APP_ICON_URL, sizes: '192x192', type: 'image/png' },
+    ],
     shortcut: APP_ICON_URL,
     apple: [
       { url: APP_ICON_URL, sizes: '180x180', type: 'image/png' },
@@ -21,7 +24,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'Finovo',
-    description: 'Manage your money smartly with AI - Professional Edition',
+    description: 'Manage your money smartly with AI - Professional 3D Edition',
     images: [{ url: APP_ICON_URL, width: 512, height: 512 }],
     type: 'website',
   },
