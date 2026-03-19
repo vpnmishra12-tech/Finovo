@@ -3,7 +3,7 @@
 Agar Firebase Studio ka "Publish" button billing maang raha hai, toh ye **100% FREE** tarika follow karein:
 
 ## 🚀 Export to GitHub (Laptop ki zaroorat nahi):
-1. **GitHub Icon**: Top-right corner mein GitHub ka icon dekhiye.
+1. **GitHub Icon**: Top-right corner mein GitHub ka icon (billi jaisa logo) dekhiye.
 2. **Connect**: Us par click karke apna GitHub account connect karein.
 3. **Push**: "Push to GitHub" par click karein. Aapka sara code GitHub par chala jayega.
 
