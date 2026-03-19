@@ -20,7 +20,7 @@ export function AdBanner() {
       <CardContent className="p-2">
         <div className="flex items-center justify-between mb-1 px-1">
           <span className="text-[8px] font-black text-muted-foreground/60 uppercase tracking-widest flex items-center gap-1">
-            <info className="w-2.5 h-2.5" />
+            <Info className="w-2.5 h-2.5" />
             {t.sponsored}
           </span>
         </div>
