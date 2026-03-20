@@ -1,5 +1,5 @@
 
-# 🚀 Finovo - Expense Tracker (v3500 Ultra-Fast)
+# 🚀 Finovo - Expense Tracker (v4000 Ultra-Fast)
 
 Smart AI-powered expense tracking with a Premium 3D Digital Wallet interface.
 

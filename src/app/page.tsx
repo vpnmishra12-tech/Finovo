@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useAuth } from '@/lib/contexts/auth-context';
 import { useLanguage } from '@/lib/contexts/language-context';
@@ -21,7 +21,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { cn } from '@/lib/utils';
 
-// Extreme Optimization: Dynamic imports with no SSR
+// Extreme Optimization: Dynamic imports for speed
 const SpendingChart = dynamic(() => import('@/components/dashboard/spending-chart').then(mod => mod.SpendingChart), { 
   ssr: false,
   loading: () => <div className="h-[140px] w-full bg-muted/20 animate-pulse rounded-2xl" />
@@ -303,30 +303,28 @@ export default function Home() {
               />
 
               {/* Quick Tips for Onboarding */}
-              {expenses?.length === 0 && (
-                <Card className="bg-primary/5 border-dashed border-primary/20 rounded-3xl overflow-hidden">
-                  <CardContent className="p-4 space-y-3">
-                    <div className="flex items-center gap-2">
-                      <Sparkles className="w-4 h-4 text-primary" />
-                      <h4 className="text-[10px] font-black uppercase tracking-widest">Magic Quick Start</h4>
+              <Card className="bg-primary/5 border-dashed border-primary/20 rounded-3xl overflow-hidden">
+                <CardContent className="p-4 space-y-3">
+                  <div className="flex items-center gap-2">
+                    <Sparkles className="w-4 h-4 text-primary" />
+                    <h4 className="text-[10px] font-black uppercase tracking-widest">Magic Quick Start</h4>
+                  </div>
+                  <div className="grid grid-cols-1 gap-2">
+                    <div className="flex items-center gap-3 bg-card p-3 rounded-2xl shadow-sm">
+                      <Mic className="w-5 h-5 text-primary" />
+                      <p className="text-[10px] font-bold">Tap (+) and <b>Speak</b>: "Spent 200 on Coffee"</p>
                     </div>
-                    <div className="grid grid-cols-1 gap-2">
-                      <div className="flex items-center gap-3 bg-card p-3 rounded-2xl shadow-sm">
-                        <Mic className="w-5 h-5 text-primary" />
-                        <p className="text-[10px] font-bold">Tap (+) and <b>Speak</b>: "Spent 200 on Coffee"</p>
-                      </div>
-                      <div className="flex items-center gap-3 bg-card p-3 rounded-2xl shadow-sm">
-                        <Camera className="w-5 h-5 text-primary" />
-                        <p className="text-[10px] font-bold">Scan your <b>Bills</b> for auto-extraction</p>
-                      </div>
-                      <div className="flex items-center gap-3 bg-card p-3 rounded-2xl shadow-sm">
-                        <Keyboard className="w-5 h-5 text-primary" />
-                        <p className="text-[10px] font-bold">Type like a pro: <b>"100 for lunch"</b></p>
-                      </div>
+                    <div className="flex items-center gap-3 bg-card p-3 rounded-2xl shadow-sm">
+                      <Camera className="w-5 h-5 text-primary" />
+                      <p className="text-[10px] font-bold">Scan your <b>Bills</b> for auto-extraction</p>
                     </div>
-                  </CardContent>
-                </Card>
-              )}
+                    <div className="flex items-center gap-3 bg-card p-3 rounded-2xl shadow-sm">
+                      <Keyboard className="w-5 h-5 text-primary" />
+                      <p className="text-[10px] font-bold">Type like a pro: <b>"100 for lunch"</b></p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
 
               <MonthlyHistory expenses={expenses || []} />
               

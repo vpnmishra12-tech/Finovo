@@ -19,7 +19,7 @@ const spaceGrotesk = Space_Grotesk({
   display: 'swap',
 });
 
-// DEFINITIVE ULTRA-PREMIUM 3D DIGITAL WALLET - Version v3500
+// DEFINITIVE ULTRA-PREMIUM 3D DIGITAL WALLET - Version v4000
 const APP_ICON_URL = 'https://images.unsplash.com/photo-1621416848446-991125c75b06?w=512&h=512&fit=crop&q=80';
 
 export const metadata: Metadata = {
@@ -28,12 +28,12 @@ export const metadata: Metadata = {
   manifest: '/manifest.json',
   icons: {
     icon: [
-      { url: `${APP_ICON_URL}&v=3500`, sizes: '32x32', type: 'image/png' },
-      { url: `${APP_ICON_URL}&v=3500`, sizes: '192x192', type: 'image/png' },
+      { url: `${APP_ICON_URL}&v=4000`, sizes: '32x32', type: 'image/png' },
+      { url: `${APP_ICON_URL}&v=4000`, sizes: '192x192', type: 'image/png' },
     ],
-    shortcut: `${APP_ICON_URL}&v=3500`,
+    shortcut: `${APP_ICON_URL}&v=4000`,
     apple: [
-      { url: `${APP_ICON_URL}&v=3500`, sizes: '180x180', type: 'image/png' },
+      { url: `${APP_ICON_URL}&v=4000`, sizes: '180x180', type: 'image/png' },
     ],
   },
   openGraph: {
