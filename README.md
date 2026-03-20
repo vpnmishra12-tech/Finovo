@@ -1,18 +1,48 @@
-# Finovo - Troubleshooting Guide 📱
+# Finovo - Expense Tracker (v3000) 🚀
 
-Agar aapko install karte waqt abhi bhi purana icon dikh raha hai, toh iska matlab hai ki aapka Chrome browser purana icon cache se dikha raha hai.
+Smart AI-powered expense tracking with a Premium 3D Digital Wallet interface.
 
-## 🚀 DEFINITIVE PREMIUM 3D WALLET Icon Kaise Hatayein (v3000):
-1. **Chrome Settings**: App link par jayein, Chrome ke upar **3 dots (⋮)** par click karein.
+## 📁 GitHub par Code Kaise Push Karein:
+
+Agar aap is project ko apne GitHub par daalna chahte hain, toh ye commands terminal mein run karein:
+
+1. **GitHub par naya Repo banayein**: GitHub.com par jayein aur ek empty repository create karein.
+2. **Git Initialize karein**:
+   ```bash
+   git init
+   ```
+3. **Files Add karein**:
+   ```bash
+   git add .
+   ```
+4. **First Commit**:
+   ```bash
+   git commit -m "Initial commit - Finovo v3000 Ultra Fast"
+   ```
+5. **Main Branch set karein**:
+   ```bash
+   git branch -M main
+   ```
+6. **Remote Add karein**: (Apna repo URL yahan paste karein)
+   ```bash
+   git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
+   ```
+7. **Push karein**:
+   ```bash
+   git push -u origin main
+   ```
+
+---
+
+## 📱 Troubleshooting & Icon Fix (v3000):
+
+Agar icon purana dikh raha hai (Laptop/Machine wala), toh ye steps follow karein:
+
+1. **Chrome Settings**: Chrome mein **3 dots (⋮)** par click karein.
 2. **Settings (⚙️)** > **Privacy & Security** > **Clear browsing data**.
-3. **Advanced Tab** mein jayein aur **"All time"** select karein.
-4. **"Cookies and other site data"** aur **"Cached images and files"** par tick karein.
-5. **Clear Data** karein aur app ko phir se load karein.
+3. **Advanced Tab** mein "All time" select karke **Cookies** aur **Cache** clear karein.
+4. App ko refresh karein, naya **3D Neon Wallet** icon load ho jayega.
 
-## 🚀 App Speed Optimization (v3000):
-Maine app ko optimize kar diya hai. Ab heavy components (Charts, History) background mein load honge taaki initial boot time kam ho jaye.
+---
 
-## 🚀 PWA Install (Home Screen) Refresh:
-Agar aapne app pehle hi "Add to Home Screen" kar liya tha, toh use **Uninstall** karein, upar wale steps se **Site Data Clear** karein, aur phir se **Install** karein.
-
-*Finovo - Updated to ULTRA-PREMIUM 3D WALLET (v3000 - Fast Engine).*
+*Finovo - Built for Speed and Style.*
