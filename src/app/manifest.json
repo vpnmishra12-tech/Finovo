@@ -1,3 +1,4 @@
+
 {
   "name": "Finovo - Expense Tracker",
   "short_name": "Finovo",
@@ -9,19 +10,19 @@
   "theme_color": "#00BFFF",
   "icons": [
     {
-      "src": "https://images.unsplash.com/photo-1634733988138-bf2c3a2a13fa?w=192&h=192&fit=crop&q=80&v=v3000",
+      "src": "https://images.unsplash.com/photo-1621416848446-991125c75b06?w=192&h=192&fit=crop&q=80&v=3500",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "https://images.unsplash.com/photo-1634733988138-bf2c3a2a13fa?w=192&h=192&fit=crop&q=80&v=v3000",
+      "src": "https://images.unsplash.com/photo-1621416848446-991125c75b06?w=192&h=192&fit=crop&q=80&v=3500",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "https://images.unsplash.com/photo-1634733988138-bf2c3a2a13fa?w=512&h=512&fit=crop&q=80&v=v3000",
+      "src": "https://images.unsplash.com/photo-1621416848446-991125c75b06?w=512&h=512&fit=crop&q=80&v=3500",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"

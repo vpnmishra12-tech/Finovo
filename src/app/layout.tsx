@@ -1,3 +1,4 @@
+
 import type { Metadata, Viewport } from 'next';
 import { Inter, Space_Grotesk } from 'next/font/google';
 import './globals.css';
@@ -18,8 +19,8 @@ const spaceGrotesk = Space_Grotesk({
   display: 'swap',
 });
 
-// DEFINITIVE ULTRA-PREMIUM 3D DIGITAL WALLET - Version v3000
-const APP_ICON_URL = 'https://images.unsplash.com/photo-1634733988138-bf2c3a2a13fa?w=512&h=512&fit=crop&q=80&v=v3000';
+// DEFINITIVE ULTRA-PREMIUM 3D DIGITAL WALLET - Version v3500
+const APP_ICON_URL = 'https://images.unsplash.com/photo-1621416848446-991125c75b06?w=512&h=512&fit=crop&q=80';
 
 export const metadata: Metadata = {
   title: 'Finovo - Expense Tracker',
@@ -27,12 +28,12 @@ export const metadata: Metadata = {
   manifest: '/manifest.json',
   icons: {
     icon: [
-      { url: `${APP_ICON_URL}&v=3000`, sizes: '32x32', type: 'image/png' },
-      { url: `${APP_ICON_URL}&v=3000`, sizes: '192x192', type: 'image/png' },
+      { url: `${APP_ICON_URL}&v=3500`, sizes: '32x32', type: 'image/png' },
+      { url: `${APP_ICON_URL}&v=3500`, sizes: '192x192', type: 'image/png' },
     ],
-    shortcut: `${APP_ICON_URL}&v=3000`,
+    shortcut: `${APP_ICON_URL}&v=3500`,
     apple: [
-      { url: `${APP_ICON_URL}&v=3000`, sizes: '180x180', type: 'image/png' },
+      { url: `${APP_ICON_URL}&v=3500`, sizes: '180x180', type: 'image/png' },
     ],
   },
   openGraph: {

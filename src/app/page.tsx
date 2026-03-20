@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -8,7 +9,7 @@ import { Header } from '@/components/layout/header';
 import { BudgetSummary } from '@/components/dashboard/budget-summary';
 import { AdBanner } from '@/components/dashboard/ad-banner';
 import { AddExpenseDrawer } from '@/components/expenses/add-expense-drawer';
-import { Loader2, Wallet, Mail, Lock, UserPlus, LogIn, Info, Smartphone, LayoutDashboard, History, Calculator } from 'lucide-react';
+import { Loader2, Wallet, Mail, Lock, UserPlus, LogIn, Info, Smartphone, LayoutDashboard, History, Calculator, Sparkles, Mic, Camera, Keyboard } from 'lucide-react';
 import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import { collection, query, orderBy, limit } from 'firebase/firestore';
 import { Expense } from '@/lib/expenses';
@@ -20,7 +21,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { cn } from '@/lib/utils';
 
-// Extreme Optimization: Dynamic imports with no SSR for non-critical components
+// Extreme Optimization: Dynamic imports with no SSR
 const SpendingChart = dynamic(() => import('@/components/dashboard/spending-chart').then(mod => mod.SpendingChart), { 
   ssr: false,
   loading: () => <div className="h-[140px] w-full bg-muted/20 animate-pulse rounded-2xl" />
@@ -88,7 +89,7 @@ export default function Home() {
             </div>
           </div>
           <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary animate-pulse ml-1">
-            Finovo Engine
+            Finovo Engine v3.5
           </p>
         </div>
       </div>
@@ -259,7 +260,7 @@ export default function Home() {
         </nav>
 
         {/* Content Area */}
-        <main className="flex-1 overflow-y-auto py-2 space-y-2 min-w-0 pb-16 md:pb-8 scroll-smooth scrollbar-hide">
+        <main className="flex-1 overflow-y-auto py-2 space-y-3 min-w-0 pb-16 md:pb-8 scroll-smooth scrollbar-hide">
           {activeTab === 'dashboard' && (
             <div className="space-y-3 animate-in fade-in zoom-in-95 duration-300">
               <section className="flex items-center justify-between">
@@ -300,6 +301,32 @@ export default function Home() {
                 month={parseInt(selectedMonth)}
                 year={parseInt(selectedYear)}
               />
+
+              {/* Quick Tips for Onboarding */}
+              {expenses?.length === 0 && (
+                <Card className="bg-primary/5 border-dashed border-primary/20 rounded-3xl overflow-hidden">
+                  <CardContent className="p-4 space-y-3">
+                    <div className="flex items-center gap-2">
+                      <Sparkles className="w-4 h-4 text-primary" />
+                      <h4 className="text-[10px] font-black uppercase tracking-widest">Magic Quick Start</h4>
+                    </div>
+                    <div className="grid grid-cols-1 gap-2">
+                      <div className="flex items-center gap-3 bg-card p-3 rounded-2xl shadow-sm">
+                        <Mic className="w-5 h-5 text-primary" />
+                        <p className="text-[10px] font-bold">Tap (+) and <b>Speak</b>: "Spent 200 on Coffee"</p>
+                      </div>
+                      <div className="flex items-center gap-3 bg-card p-3 rounded-2xl shadow-sm">
+                        <Camera className="w-5 h-5 text-primary" />
+                        <p className="text-[10px] font-bold">Scan your <b>Bills</b> for auto-extraction</p>
+                      </div>
+                      <div className="flex items-center gap-3 bg-card p-3 rounded-2xl shadow-sm">
+                        <Keyboard className="w-5 h-5 text-primary" />
+                        <p className="text-[10px] font-bold">Type like a pro: <b>"100 for lunch"</b></p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
 
               <MonthlyHistory expenses={expenses || []} />
               
