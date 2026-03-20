@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { useAuth } from '@/lib/contexts/auth-context';
 import { useLanguage } from '@/lib/contexts/language-context';
@@ -20,13 +20,14 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { cn } from '@/lib/utils';
 
-// Optimized dynamic imports for faster initial boot
+// Extreme Optimization: Dynamic imports with no SSR for non-critical components
 const SpendingChart = dynamic(() => import('@/components/dashboard/spending-chart').then(mod => mod.SpendingChart), { 
   ssr: false,
-  loading: () => <div className="h-[140px] w-full bg-muted animate-pulse rounded-2xl" />
+  loading: () => <div className="h-[140px] w-full bg-muted/20 animate-pulse rounded-2xl" />
 });
 const MonthlyHistory = dynamic(() => import('@/components/dashboard/monthly-history').then(mod => mod.MonthlyHistory), { 
-  ssr: false 
+  ssr: false,
+  loading: () => <div className="h-[100px] w-full bg-muted/10 animate-pulse rounded-2xl" />
 });
 const BillSplitTool = dynamic(() => import('@/components/bill-split/bill-split-tool').then(mod => mod.BillSplitTool), { 
   ssr: false 
@@ -79,10 +80,15 @@ export default function Home() {
   if (loading) {
     return (
       <div className="h-[100dvh] flex items-center justify-center bg-background">
-        <div className="flex flex-col items-center gap-3">
-          <Loader2 className="w-8 h-8 text-primary animate-spin stroke-[3px]" />
-          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary animate-pulse">
-            Finovo Fast Boot
+        <div className="flex flex-col items-center gap-4">
+          <div className="relative">
+            <div className="absolute inset-0 bg-primary/20 rounded-full animate-ping" />
+            <div className="bg-primary/10 p-4 rounded-3xl relative z-10">
+              <Wallet className="w-10 h-10 text-primary stroke-[2.5px]" />
+            </div>
+          </div>
+          <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary animate-pulse ml-1">
+            Finovo Engine
           </p>
         </div>
       </div>
@@ -93,7 +99,7 @@ export default function Home() {
     return (
       <div className="h-[100dvh] bg-background flex flex-col overflow-hidden">
         <Header />
-        <main className="flex-1 overflow-y-auto px-6 py-12 text-center space-y-8 max-w-2xl mx-auto w-full">
+        <main className="flex-1 overflow-y-auto px-6 py-8 text-center space-y-8 max-w-2xl mx-auto w-full">
           <div className="flex flex-col items-center justify-center">
             <div className="p-4 bg-primary/10 rounded-3xl mb-4">
               <Wallet className="w-16 h-16 text-primary" />
@@ -102,14 +108,14 @@ export default function Home() {
               <h1 className="text-3xl sm:text-5xl font-headline font-black tracking-tight">
                 Control your money with <span className="text-primary">AI</span>
               </h1>
-              <p className="text-sm text-muted-foreground font-medium leading-relaxed">
-                Track expenses using voice, text, or bill scans. Secure and private.
+              <p className="text-sm text-muted-foreground font-medium leading-relaxed max-w-xs mx-auto">
+                Track expenses using voice, text, or bill scans. Finovo makes it easy.
               </p>
             </div>
 
-            <Alert className="max-w-sm mt-8 bg-blue-500/10 border-blue-500/20 text-blue-600 rounded-2xl text-left">
+            <Alert className="max-w-sm mt-8 bg-blue-500/10 border-blue-500/20 text-blue-600 rounded-2xl text-left shadow-sm">
               <Smartphone className="w-5 h-5 mb-2" />
-              <AlertTitle className="text-xs font-black uppercase">iPhone / Android Tip</AlertTitle>
+              <AlertTitle className="text-xs font-black uppercase">App Install Tip</AlertTitle>
               <AlertDescription className="text-[10px] space-y-1 font-bold">
                 <p>• <b>iPhone:</b> Tap Share 📤 & <b>'Add to Home Screen'</b></p>
                 <p>• <b>Android:</b> Tap 3 dots & <b>'Install App'</b></p>
@@ -120,10 +126,10 @@ export default function Home() {
               <CardContent className="p-0">
                 <Tabs defaultValue="login" className="w-full">
                   <TabsList className="grid w-full grid-cols-2 rounded-none h-14 bg-muted/50">
-                    <TabsTrigger value="login" className="data-[state=active]:bg-card rounded-none h-full font-black text-xs uppercase">
+                    <TabsTrigger value="login" className="data-[state=active]:bg-card rounded-none h-full font-black text-xs uppercase tracking-widest">
                       Login
                     </TabsTrigger>
-                    <TabsTrigger value="signup" className="data-[state=active]:bg-card rounded-none h-full font-black text-xs uppercase">
+                    <TabsTrigger value="signup" className="data-[state=active]:bg-card rounded-none h-full font-black text-xs uppercase tracking-widest">
                       Sign Up
                     </TabsTrigger>
                   </TabsList>
@@ -131,7 +137,7 @@ export default function Home() {
                   <div className="p-8 space-y-4">
                     <div className="space-y-4 text-left">
                       <div className="space-y-1">
-                        <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Email Address</label>
+                        <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Email</label>
                         <div className="relative">
                           <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                           <Input 
@@ -144,7 +150,7 @@ export default function Home() {
                         </div>
                       </div>
                       <div className="space-y-1">
-                        <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Password</label>
+                        <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Password</label>
                         <div className="relative">
                           <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                           <Input 
@@ -161,7 +167,7 @@ export default function Home() {
                     <TabsContent value="login" className="m-0">
                       <Button 
                         onClick={handleLogin}
-                        className="w-full h-12 rounded-xl text-sm font-black uppercase tracking-widest gap-2"
+                        className="w-full h-12 rounded-xl text-sm font-black uppercase tracking-widest gap-2 shadow-lg shadow-primary/20"
                         disabled={isAuthLoading || !email || !password}
                       >
                         {isAuthLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <><LogIn className="w-4 h-4" /> Login</>}
@@ -171,15 +177,15 @@ export default function Home() {
                     <TabsContent value="signup" className="m-0">
                       <Button 
                         onClick={handleSignup}
-                        className="w-full h-12 rounded-xl text-sm font-black uppercase tracking-widest gap-2"
+                        className="w-full h-12 rounded-xl text-sm font-black uppercase tracking-widest gap-2 shadow-lg shadow-primary/20"
                         disabled={isAuthLoading || !email || !password}
                       >
                         {isAuthLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <><UserPlus className="w-4 h-4" /> Sign Up</>}
                       </Button>
                     </TabsContent>
 
-                    <p className="text-[9px] text-muted-foreground text-center font-bold flex items-center justify-center gap-1 uppercase">
-                      <Info className="w-3 h-3" /> Secure Google Auth
+                    <p className="text-[9px] text-muted-foreground text-center font-bold flex items-center justify-center gap-1 uppercase pt-2">
+                      <Info className="w-3 h-3" /> Encrypted & Secure
                     </p>
                   </div>
                 </Tabs>
@@ -204,7 +210,7 @@ export default function Home() {
       className={cn(
         "flex flex-col items-center justify-center gap-1 px-4 py-2 rounded-2xl transition-all",
         activeTab === id 
-          ? "bg-primary text-primary-foreground shadow-lg" 
+          ? "bg-primary text-primary-foreground shadow-lg scale-105" 
           : "text-muted-foreground hover:bg-muted"
       )}
     >
@@ -218,7 +224,7 @@ export default function Home() {
       <Header />
       
       <div className="flex-1 flex flex-col md:flex-row container max-w-6xl mx-auto md:gap-4 px-4 overflow-hidden">
-        {/* Desktop Sidebar Nav */}
+        {/* Sidebar Nav */}
         <nav className="hidden md:flex flex-col gap-1 py-4 w-48 shrink-0">
           <button
             onClick={() => setActiveTab('dashboard')}
@@ -252,10 +258,10 @@ export default function Home() {
           </button>
         </nav>
 
-        {/* Main Scrollable Content */}
-        <main className="flex-1 overflow-y-auto py-2 space-y-2 min-w-0 pb-16 md:pb-8 scroll-smooth">
+        {/* Content Area */}
+        <main className="flex-1 overflow-y-auto py-2 space-y-2 min-w-0 pb-16 md:pb-8 scroll-smooth scrollbar-hide">
           {activeTab === 'dashboard' && (
-            <div className="space-y-3 animate-in fade-in duration-300">
+            <div className="space-y-3 animate-in fade-in zoom-in-95 duration-300">
               <section className="flex items-center justify-between">
                 <div className="space-y-0.5">
                   <p className="text-muted-foreground text-[9px] font-black uppercase tracking-widest">
@@ -304,7 +310,7 @@ export default function Home() {
           )}
 
           {activeTab === 'history' && (
-            <div className="space-y-4 animate-in fade-in duration-300">
+            <div className="space-y-4 animate-in fade-in slide-in-from-right-4 duration-300">
               <h2 className="text-xl font-headline font-black uppercase tracking-tight">{t.history}</h2>
               <SpendingChart expenses={selectedMonthExpenses} />
               <ExpenseList expenses={expenses || []} isLoading={isExpensesLoading} />
@@ -312,14 +318,14 @@ export default function Home() {
           )}
 
           {activeTab === 'splitter' && (
-            <div className="space-y-4 animate-in fade-in duration-300 max-w-2xl mx-auto pb-12">
+            <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-300 max-w-2xl mx-auto pb-12">
               <BillSplitTool />
             </div>
           )}
         </main>
       </div>
 
-      {/* Fixed Mobile Bottom Navigation */}
+      {/* Navigation */}
       <div className="md:hidden sticky bottom-0 left-0 right-0 h-16 bg-background/95 backdrop-blur-lg border-t z-50 px-6 flex items-center justify-between shrink-0 shadow-[0_-4px_12px_rgba(0,0,0,0.1)]">
         <NavItem id="dashboard" icon={LayoutDashboard} label={t.dashboard} />
         <NavItem id="history" icon={History} label={t.history} />
