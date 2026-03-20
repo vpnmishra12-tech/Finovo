@@ -17,7 +17,7 @@ export function Header() {
     const shareData = {
       title: 'Finovo',
       text: 'Manage your money smartly with Finovo! 💸 Premium 3D Digital Wallet Tracker.',
-      url: window.location.href,
+      url: typeof window !== 'undefined' ? window.location.href : '',
     };
 
     try {
