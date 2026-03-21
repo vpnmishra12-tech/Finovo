@@ -5,13 +5,12 @@ import { useState } from 'react';
 import { useAuth } from '@/lib/contexts/auth-context';
 import { useLanguage } from '@/lib/contexts/language-context';
 import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
-import { collection, query, where, orderBy } from 'firebase/firestore';
+import { collection, query, where } from 'firebase/firestore';
 import { Group } from '@/lib/groups';
 import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { CreateGroupDialog } from './create-group-dialog';
 import { GroupView } from './group-view';
-import { Users, ChevronRight, PlusCircle, LayoutDashboard } from 'lucide-react';
+import { Users, ChevronRight } from 'lucide-react';
 
 export function GroupModule() {
   const { user } = useAuth();
@@ -19,12 +18,12 @@ export function GroupModule() {
   const firestore = useFirestore();
   const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null);
 
+  // Simplified query: Removed orderBy to avoid index-related permission issues
   const groupsQuery = useMemoFirebase(() => {
     if (!firestore || !user?.uid) return null;
     return query(
       collection(firestore, 'groups'),
-      where('memberIds', 'array-contains', user.uid),
-      orderBy('createdAt', 'desc')
+      where('memberIds', 'array-contains', user.uid)
     );
   }, [firestore, user?.uid]);
 

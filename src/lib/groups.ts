@@ -1,6 +1,6 @@
 
-import { Firestore, collection, doc, serverTimestamp, Timestamp, addDoc, updateDoc, deleteDoc, arrayUnion } from 'firebase/firestore';
-import { addDocumentNonBlocking, updateDocumentNonBlocking, deleteDocumentNonBlocking } from '@/firebase';
+import { Firestore, collection, doc, serverTimestamp, Timestamp } from 'firebase/firestore';
+import { setDocumentNonBlocking, updateDocumentNonBlocking, deleteDocumentNonBlocking, addDocumentNonBlocking } from '@/firebase';
 
 export interface Group {
   id: string;
@@ -31,8 +31,14 @@ export interface GroupExpense {
   createdAt: Timestamp;
 }
 
-export async function createGroup(db: Firestore, userId: string, name: string, members: {name: string, mobile: string}[]) {
+/**
+ * Creates a new group and adds initial members.
+ * Follows non-blocking patterns by pre-generating IDs.
+ */
+export function createGroup(db: Firestore, userId: string, name: string, members: {name: string, mobile: string}[]) {
   const groupsRef = collection(db, 'groups');
+  const newGroupRef = doc(groupsRef); // Generate ID on client
+  
   const groupData = {
     name,
     createdBy: userId,
@@ -40,21 +46,24 @@ export async function createGroup(db: Firestore, userId: string, name: string, m
     createdAt: serverTimestamp(),
   };
 
-  const docRef = await addDoc(groupsRef, groupData);
+  // Create group document
+  setDocumentNonBlocking(newGroupRef, groupData, {});
   
   // Add initial member (creator)
-  await addDoc(collection(db, 'groups', docRef.id, 'members'), {
+  const creatorRef = doc(collection(db, 'groups', newGroupRef.id, 'members'));
+  setDocumentNonBlocking(creatorRef, {
     name: "Me",
     mobile: "",
     userId: userId
-  });
+  }, {});
 
   // Add other members
   for (const member of members) {
-    await addDoc(collection(db, 'groups', docRef.id, 'members'), member);
+    const memberRef = doc(collection(db, 'groups', newGroupRef.id, 'members'));
+    setDocumentNonBlocking(memberRef, member, {});
   }
 
-  return docRef.id;
+  return newGroupRef.id;
 }
 
 export function addGroupExpense(db: Firestore, groupId: string, data: Omit<GroupExpense, 'id' | 'createdAt'>) {
