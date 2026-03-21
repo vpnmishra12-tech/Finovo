@@ -41,6 +41,36 @@
         "updatedAt": { "type": "string", "format": "date-time" }
       },
       "required": ["userId", "budgetAmount", "month", "year", "updatedAt"]
+    },
+    "Group": {
+      "title": "Group",
+      "type": "object",
+      "description": "A collection of users sharing expenses.",
+      "properties": {
+        "name": { "type": "string" },
+        "createdBy": { "type": "string" },
+        "memberIds": { "type": "array", "items": { "type": "string" } },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "createdBy", "memberIds", "createdAt"]
+    },
+    "GroupExpense": {
+      "title": "GroupExpense",
+      "type": "object",
+      "description": "An expense shared within a group.",
+      "properties": {
+        "groupId": { "type": "string" },
+        "amount": { "type": "number" },
+        "category": { "type": "string", "enum": ["Cab", "Breakfast", "Lunch", "Dinner", "Other"] },
+        "location": { "type": "string" },
+        "description": { "type": "string" },
+        "paidBy": { "type": "string" },
+        "paidByName": { "type": "string" },
+        "transactionDate": { "type": "string", "format": "date-time" },
+        "isEdited": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["groupId", "amount", "category", "paidBy", "paidByName", "transactionDate", "createdAt"]
     }
   },
   "auth": {
@@ -58,6 +88,18 @@
     "/users/{userId}/monthlyBudgets/{monthlyBudgetId}": {
       "schema": { "$ref": "#/backend/entities/MonthlyBudget" },
       "description": "User's monthly budgets."
+    },
+    "/groups/{groupId}": {
+      "schema": { "$ref": "#/backend/entities/Group" },
+      "description": "Group tracking document."
+    },
+    "/groups/{groupId}/expenses/{expenseId}": {
+      "schema": { "$ref": "#/backend/entities/GroupExpense" },
+      "description": "Expenses within a specific group."
+    },
+    "/groups/{groupId}/members/{memberId}": {
+      "schema": { "type": "object", "properties": { "name": { "type": "string" }, "mobile": { "type": "string" }, "userId": { "type": "string" } } },
+      "description": "Members of a specific group."
     }
   }
 }

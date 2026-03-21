@@ -9,7 +9,7 @@ import { Header } from '@/components/layout/header';
 import { BudgetSummary } from '@/components/dashboard/budget-summary';
 import { AdBanner } from '@/components/dashboard/ad-banner';
 import { AddExpenseDrawer } from '@/components/expenses/add-expense-drawer';
-import { Loader2, Wallet, Mail, Lock, UserPlus, LogIn, Info, Smartphone, LayoutDashboard, History, Calculator, Sparkles, Mic, Camera, Keyboard } from 'lucide-react';
+import { Loader2, Wallet, Mail, Lock, UserPlus, LogIn, Info, Smartphone, LayoutDashboard, History, Calculator, Sparkles, Mic, Camera, Keyboard, Users } from 'lucide-react';
 import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import { collection, query, orderBy, limit } from 'firebase/firestore';
 import { Expense } from '@/lib/expenses';
@@ -36,8 +36,11 @@ const BillSplitTool = dynamic(() => import('@/components/bill-split/bill-split-t
 const ExpenseList = dynamic(() => import('@/components/expenses/expense-list').then(mod => mod.ExpenseList), { 
   ssr: false 
 });
+const GroupModule = dynamic(() => import('@/components/groups/group-module').then(mod => mod.GroupModule), { 
+  ssr: false 
+});
 
-type NavTab = 'dashboard' | 'history' | 'splitter';
+type NavTab = 'dashboard' | 'history' | 'splitter' | 'groups';
 
 export default function Home() {
   const { user, loading, login, signup } = useAuth();
@@ -209,14 +212,14 @@ export default function Home() {
     <button
       onClick={() => setActiveTab(id)}
       className={cn(
-        "flex flex-col items-center justify-center gap-1 px-4 py-2 rounded-2xl transition-all",
+        "flex flex-col items-center justify-center gap-1 px-3 py-2 rounded-2xl transition-all",
         activeTab === id 
           ? "bg-primary text-primary-foreground shadow-lg scale-105" 
           : "text-muted-foreground hover:bg-muted"
       )}
     >
       <Icon className="w-5 h-5" />
-      <span className="text-[9px] font-black uppercase tracking-widest">{label}</span>
+      <span className="text-[8px] font-black uppercase tracking-tight">{label}</span>
     </button>
   );
 
@@ -236,6 +239,16 @@ export default function Home() {
           >
             <LayoutDashboard className="w-4 h-4" />
             {t.dashboard}
+          </button>
+          <button
+            onClick={() => setActiveTab('groups')}
+            className={cn(
+              "flex items-center gap-3 px-4 py-3 rounded-xl font-black uppercase tracking-widest transition-all text-[10px]",
+              activeTab === 'groups' ? "bg-primary text-primary-foreground shadow-lg" : "hover:bg-muted text-muted-foreground"
+            )}
+          >
+            <Users className="w-4 h-4" />
+            {t.groups}
           </button>
           <button
             onClick={() => setActiveTab('history')}
@@ -334,6 +347,10 @@ export default function Home() {
             </div>
           )}
 
+          {activeTab === 'groups' && (
+            <GroupModule />
+          )}
+
           {activeTab === 'history' && (
             <div className="space-y-4 animate-in fade-in slide-in-from-right-4 duration-300">
               <h2 className="text-xl font-headline font-black uppercase tracking-tight">{t.history}</h2>
@@ -351,8 +368,9 @@ export default function Home() {
       </div>
 
       {/* Navigation */}
-      <div className="md:hidden sticky bottom-0 left-0 right-0 h-16 bg-background/95 backdrop-blur-lg border-t z-50 px-6 flex items-center justify-between shrink-0 shadow-[0_-4px_12px_rgba(0,0,0,0.1)]">
+      <div className="md:hidden sticky bottom-0 left-0 right-0 h-16 bg-background/95 backdrop-blur-lg border-t z-50 px-2 flex items-center justify-between shrink-0 shadow-[0_-4px_12px_rgba(0,0,0,0.1)]">
         <NavItem id="dashboard" icon={LayoutDashboard} label={t.dashboard} />
+        <NavItem id="groups" icon={Users} label={t.groups} />
         <NavItem id="history" icon={History} label={t.history} />
         <NavItem id="splitter" icon={Calculator} label={t.billSplitter} />
       </div>
