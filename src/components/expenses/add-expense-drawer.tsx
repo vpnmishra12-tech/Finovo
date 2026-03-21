@@ -33,6 +33,9 @@ export function AddExpenseDrawer() {
   const [description, setDescription] = useState("");
   const [textInput, setTextInput] = useState("");
 
+  // Filtered categories for display (only main ones)
+  const mainCategories = ['Food', 'Transport', 'Bills', 'Recharge', 'Shopping', 'EMI', 'Miscellaneous'];
+
   const resetForm = () => {
     setAmount("");
     setCategory("Shopping");
@@ -156,9 +159,9 @@ export function AddExpenseDrawer() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent position="popper" className="z-[110]">
-                      {Object.keys(t.categories).map((cat) => (
+                      {mainCategories.map((cat) => (
                         <SelectItem key={cat} value={cat} className="text-sm font-bold">
-                          {t.categories[cat as keyof typeof t.categories]}
+                          {t.categories[cat as keyof typeof t.categories] || cat}
                         </SelectItem>
                       ))}
                     </SelectContent>

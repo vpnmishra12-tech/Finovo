@@ -69,11 +69,11 @@ export const translations = {
     categories: {
       Food: "Food",
       Transport: "Transport",
-      Bills: "Bills",
+      Bills: "Bill",
+      Recharge: "Recharge",
       Shopping: "Shopping",
       EMI: "EMI",
-      Recharge: "Recharge",
-      Miscellaneous: "Misc/Others",
+      Miscellaneous: "MiSc/ Other",
       Cab: "Cab",
       Breakfast: "Breakfast",
       Lunch: "Lunch",
@@ -165,9 +165,18 @@ export const translations = {
       exhausted: "अलर्ट: 100% बजट पूरा। आप ज़रूरत से ज़्यादा खर्च कर रहे हैं!"
     },
     categories: {
-      Food: "भोजन", Transport: "परिवहन", Bills: "बिल", Shopping: "खरीदारी",
-      EMI: "ईएमआई", Recharge: "रिचार्ज", Miscellaneous: "अन्य",
-      Cab: "कैब", Breakfast: "नाश्ता", Lunch: "लंच", Dinner: "डिनर", Other: "अन्य"
+      Food: "भोजन",
+      Transport: "परिवहन",
+      Bills: "बिल",
+      Recharge: "रिचार्ज",
+      Shopping: "खरीदारी",
+      EMI: "ईएमआई",
+      Miscellaneous: "अन्य/विविध",
+      Cab: "कैब",
+      Breakfast: "नाश्ता",
+      Lunch: "लंच",
+      Dinner: "डिनर",
+      Other: "अन्य"
     },
     months: {
       "01": "जनवरी", "02": "फरवरी", "03": "मार्च", "04": "अप्रैल", "05": "मई", "06": "जून",
