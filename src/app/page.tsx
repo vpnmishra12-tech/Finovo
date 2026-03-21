@@ -54,19 +54,19 @@ export default function Home() {
     );
   }
 
-  // Auth UI if not logged in - 100% MATCH TO SCREENSHOT
+  // Auth UI - RESTORED TO ORIGINAL PREMIUM LOOK
   if (!user) {
     return (
       <div className="h-[100dvh] bg-[#FDFBF7] flex flex-col items-center justify-center p-8">
         <div className="w-full max-w-sm space-y-10 animate-in fade-in duration-500 flex flex-col items-center">
           
-          {/* Logo Icon */}
+          {/* Logo Icon Container */}
           <div className="bg-[#2563EB] p-8 rounded-full shadow-2xl flex items-center justify-center">
             <Wallet className="w-12 h-12 text-white fill-white" />
           </div>
 
           <div className="flex flex-col items-center text-center space-y-2 w-full">
-            <h1 className="text-5xl font-headline font-black text-black tracking-tight">FINOVO</h1>
+            <h1 className="text-5xl font-headline font-black text-black tracking-tight uppercase">FINOVO</h1>
             <p className="text-[10px] font-black uppercase text-gray-400 tracking-[0.3em]">
               {isLoginView ? 'WELCOME BACK' : 'CREATE ACCOUNT'}
             </p>
@@ -80,7 +80,7 @@ export default function Home() {
                 placeholder="you@example.com" 
                 value={email} 
                 onChange={(e) => setEmail(e.target.value)}
-                className="h-16 bg-white border-gray-100 rounded-[2rem] px-8 font-bold text-lg text-gray-700 shadow-sm"
+                className="h-16 bg-white border-gray-100 rounded-[2rem] px-8 font-bold text-lg text-black shadow-sm"
               />
             </div>
             <div className="space-y-2">
@@ -90,7 +90,7 @@ export default function Home() {
                 placeholder="••••••••" 
                 value={password} 
                 onChange={(e) => setPassword(e.target.value)}
-                className="h-16 bg-white border-gray-100 rounded-[2rem] px-8 font-bold text-lg text-gray-700 shadow-sm"
+                className="h-16 bg-white border-gray-100 rounded-[2rem] px-8 font-bold text-lg text-black shadow-sm"
               />
             </div>
             
@@ -130,15 +130,15 @@ export default function Home() {
   );
 
   return (
-    <div className="h-[100dvh] bg-background flex flex-col overflow-hidden text-black">
+    <div className="h-[100dvh] bg-[#FDFBF7] flex flex-col overflow-hidden text-black">
       <Header />
       
       <main className="flex-1 overflow-hidden relative">
         <div className="h-full flex flex-col max-w-6xl mx-auto p-5 space-y-4">
           {activeTab === 'dashboard' && (
-            <div className="flex-1 flex flex-col space-y-4 animate-in fade-in duration-300">
+            <div className="flex-1 flex flex-col space-y-4 animate-in fade-in duration-300 h-full">
               
-              {/* Profile Header */}
+              {/* Profile Header - TOP LEFT */}
               <div className="flex items-center gap-3 shrink-0">
                 <Avatar className="h-12 w-12 border-2 border-white shadow-md">
                   <AvatarFallback className="bg-black text-white text-lg font-black uppercase">
@@ -161,7 +161,7 @@ export default function Home() {
                 />
               </div>
 
-              {/* Feature Grid Section (Middle - Compact) */}
+              {/* Feature Grid Section (Middle - Compact and Properly Sized) */}
               <div className="flex-1 grid grid-cols-2 gap-3 content-start">
                 <GridCard 
                   icon={LayoutGrid} 
@@ -189,7 +189,7 @@ export default function Home() {
                 />
               </div>
 
-              {/* Ad Space Section (Bottom) */}
+              {/* Ad Space Section (Bottom - Properly Repositioned) */}
               <div className="shrink-0 mt-auto pb-2">
                 <AdBanner />
               </div>
