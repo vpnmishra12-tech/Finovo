@@ -57,6 +57,9 @@ export function Header() {
         </div>
 
         <div className="flex items-center gap-0.5">
+          <Button onClick={handleAppShare} variant="ghost" size="icon" className="h-10 w-10 text-white hover:bg-white/10">
+            <Share2 className="w-5 h-5" />
+          </Button>
           <Button variant="ghost" size="icon" className="h-10 w-10 text-white hover:bg-white/10">
             <Bell className="w-5 h-5" />
           </Button>

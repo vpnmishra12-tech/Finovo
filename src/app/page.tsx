@@ -8,7 +8,7 @@ import { Header } from '@/components/layout/header';
 import { BudgetSummary } from '@/components/dashboard/budget-summary';
 import { AdBanner } from '@/components/dashboard/ad-banner';
 import { 
-  Wallet, History, Calculator, Users, LayoutGrid, Home as HomeIcon, LogIn, ArrowRight
+  Wallet, History, Calculator, Users, LayoutGrid, Home as HomeIcon, ArrowRight
 } from 'lucide-react';
 import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import { collection, query, orderBy, limit } from 'firebase/firestore';
@@ -48,63 +48,67 @@ export default function Home() {
 
   if (loading) {
     return (
-      <div className="h-[100dvh] flex items-center justify-center bg-background">
+      <div className="h-[100dvh] flex items-center justify-center bg-[#FDFBF7]">
         <Wallet className="w-10 h-10 text-primary animate-bounce" />
       </div>
     );
   }
 
-  // Auth UI - RESTORED TO ORIGINAL PREMIUM LOOK
+  // Auth UI - REPRODUCING THE IMAGE 100%
   if (!user) {
     return (
       <div className="h-[100dvh] bg-[#FDFBF7] flex flex-col items-center justify-center p-8">
         <div className="w-full max-w-sm space-y-10 animate-in fade-in duration-500 flex flex-col items-center">
           
-          {/* Logo Icon Container */}
-          <div className="bg-[#2563EB] p-8 rounded-full shadow-2xl flex items-center justify-center">
-            <Wallet className="w-12 h-12 text-white fill-white" />
+          {/* Top Blue Icon Circle */}
+          <div className="bg-[#2563EB] p-8 rounded-full shadow-2xl flex items-center justify-center -mt-10">
+            <Wallet className="w-14 h-14 text-white fill-white" />
           </div>
 
-          <div className="flex flex-col items-center text-center space-y-2 w-full">
-            <h1 className="text-5xl font-headline font-black text-black tracking-tight uppercase">FINOVO</h1>
-            <p className="text-[10px] font-black uppercase text-gray-400 tracking-[0.3em]">
+          {/* Headings */}
+          <div className="flex flex-col items-center text-center space-y-2 w-full pt-4">
+            <h1 className="text-6xl font-headline font-black text-black tracking-tight uppercase">FINOVO</h1>
+            <p className="text-[12px] font-black uppercase text-gray-400 tracking-[0.4em] pt-2">
               {isLoginView ? 'WELCOME BACK' : 'CREATE ACCOUNT'}
             </p>
           </div>
 
-          <div className="space-y-6 w-full">
-            <div className="space-y-2">
-              <Label className="text-[10px] font-black uppercase text-gray-400 ml-4 tracking-widest">EMAIL ADDRESS</Label>
+          {/* Form Fields */}
+          <div className="space-y-8 w-full pt-4">
+            <div className="space-y-3">
+              <Label className="text-[11px] font-black uppercase text-gray-400 ml-6 tracking-widest">EMAIL ADDRESS</Label>
               <Input 
                 type="email" 
                 placeholder="you@example.com" 
                 value={email} 
                 onChange={(e) => setEmail(e.target.value)}
-                className="h-16 bg-white border-gray-100 rounded-[2rem] px-8 font-bold text-lg text-black shadow-sm"
+                className="h-20 bg-white border-gray-100 rounded-[2.5rem] px-10 font-bold text-xl text-black shadow-sm focus-visible:ring-primary"
               />
             </div>
-            <div className="space-y-2">
-              <Label className="text-[10px] font-black uppercase text-gray-400 ml-4 tracking-widest">PASSWORD</Label>
+            <div className="space-y-3">
+              <Label className="text-[11px] font-black uppercase text-gray-400 ml-6 tracking-widest">PASSWORD</Label>
               <Input 
                 type="password" 
                 placeholder="••••••••" 
                 value={password} 
                 onChange={(e) => setPassword(e.target.value)}
-                className="h-16 bg-white border-gray-100 rounded-[2rem] px-8 font-bold text-lg text-black shadow-sm"
+                className="h-20 bg-white border-gray-100 rounded-[2.5rem] px-10 font-bold text-xl text-black shadow-sm focus-visible:ring-primary"
               />
             </div>
             
+            {/* Action Button */}
             <Button 
               onClick={() => isLoginView ? login(email, password) : signup(email, password)}
-              className="w-full h-20 rounded-[3rem] font-black uppercase tracking-widest text-lg shadow-2xl shadow-primary/40 gap-3 bg-primary"
+              className="w-full h-24 rounded-[4rem] font-black uppercase tracking-widest text-xl shadow-[0_20px_40px_-10px_rgba(37,99,235,0.5)] gap-4 bg-primary hover:bg-primary/90 transition-all active:scale-95"
             >
-              <ArrowRight className="w-6 h-6" /> {isLoginView ? 'LOGIN NOW' : 'SIGN UP NOW'}
+              <ArrowRight className="w-7 h-7" /> {isLoginView ? 'LOGIN NOW' : 'SIGN UP NOW'}
             </Button>
 
-            <div className="text-center pt-4">
+            {/* Toggle View */}
+            <div className="text-center pt-6">
               <button 
                 onClick={() => setIsLoginView(!isLoginView)} 
-                className="text-[11px] font-black uppercase text-primary tracking-widest hover:underline"
+                className="text-[12px] font-black uppercase text-primary tracking-widest hover:underline"
               >
                 {isLoginView ? 'NEW HERE? CREATE ACCOUNT' : 'ALREADY HAVE AN ACCOUNT? LOGIN'}
               </button>
@@ -115,13 +119,14 @@ export default function Home() {
     );
   }
 
+  // Dashboard Item Card - Compact "Patla" like Spent cards
   const GridCard = ({ icon: Icon, label, color, onClick }: { icon: any, label: string, color: string, onClick: () => void }) => (
     <Card 
       className="border-none shadow-sm active:scale-95 transition-all cursor-pointer rounded-2xl overflow-hidden bg-white h-24 flex items-center"
       onClick={onClick}
     >
       <CardContent className="p-4 flex items-center gap-3 w-full">
-        <div className={cn("p-2 rounded-xl shrink-0", color)}>
+        <div className={cn("p-2.5 rounded-xl shrink-0", color)}>
           <Icon className="w-5 h-5" />
         </div>
         <span className="font-headline font-black text-[11px] uppercase tracking-tighter text-black leading-tight flex-1">{label}</span>
@@ -140,14 +145,14 @@ export default function Home() {
               
               {/* Profile Header - TOP LEFT */}
               <div className="flex items-center gap-3 shrink-0">
-                <Avatar className="h-12 w-12 border-2 border-white shadow-md">
-                  <AvatarFallback className="bg-black text-white text-lg font-black uppercase">
+                <Avatar className="h-14 w-14 border-2 border-white shadow-md">
+                  <AvatarFallback className="bg-black text-white text-xl font-black uppercase">
                     {user.email?.charAt(0) || 'V'}
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col">
-                  <span className="text-[10px] font-black uppercase text-gray-400 tracking-widest leading-none">OVERVIEW</span>
-                  <h2 className="text-xl font-headline font-black uppercase text-black leading-none tracking-tight">DASHBOARD</h2>
+                  <span className="text-[10px] font-black uppercase text-gray-400 tracking-widest leading-none mb-1">OVERVIEW</span>
+                  <h2 className="text-2xl font-headline font-black uppercase text-black leading-none tracking-tight">DASHBOARD</h2>
                 </div>
               </div>
 
@@ -161,7 +166,7 @@ export default function Home() {
                 />
               </div>
 
-              {/* Feature Grid Section (Middle - Compact and Properly Sized) */}
+              {/* Feature Grid Section (Middle - Compact like Spent cards) */}
               <div className="flex-1 grid grid-cols-2 gap-3 content-start">
                 <GridCard 
                   icon={LayoutGrid} 
@@ -189,13 +194,13 @@ export default function Home() {
                 />
               </div>
 
-              {/* Ad Space Section (Bottom - Properly Repositioned) */}
-              <div className="shrink-0 mt-auto pb-2">
+              {/* Ad Space Section (Bottom - Compact & Properly Repositioned) */}
+              <div className="shrink-0 mt-auto pb-4">
                 <AdBanner />
               </div>
               
               {/* Floating Plus Button */}
-              <div className="absolute right-4 bottom-24 z-50">
+              <div className="absolute right-6 bottom-28 z-50">
                 <AddExpenseDrawer />
               </div>
             </div>
