@@ -21,26 +21,51 @@ export function Header() {
     const textToCopy = window.location.origin;
     const shareData = {
       title: 'Finovo - Expense Tracker',
-      text: 'Check out Finovo!',
+      text: 'Check out Finovo, the ultimate AI-powered expense tracker!',
       url: textToCopy
     };
 
     let copied = false;
+
+    // Try Clipboard API first
     try {
       if (navigator.clipboard && window.isSecureContext) {
         await navigator.clipboard.writeText(textToCopy);
         copied = true;
       }
-    } catch (err) {}
-
-    if (copied) {
-      toast({ title: "Link Copied!" });
+    } catch (err) {
+      console.warn("Clipboard API failed", err);
     }
 
+    // Fallback for non-secure contexts
+    if (!copied) {
+      try {
+        const textArea = document.createElement("textarea");
+        textArea.value = textToCopy;
+        textArea.style.position = "fixed";
+        textArea.style.left = "-9999px";
+        textArea.style.top = "0";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        copied = document.execCommand('copy');
+        document.body.removeChild(textArea);
+      } catch (err) {
+        console.error("Fallback copy failed", err);
+      }
+    }
+
+    if (copied) {
+      toast({ title: "Link Copied!", description: "App link saved to clipboard." });
+    }
+
+    // Also trigger native share if available
     if (navigator.share) {
       try {
         await navigator.share(shareData);
-      } catch (err) {}
+      } catch (err) {
+        // Silent if user cancels
+      }
     }
   };
   
@@ -57,9 +82,11 @@ export function Header() {
         </div>
 
         <div className="flex items-center gap-0.5">
+          {/* Main Share Button to Copy Link */}
           <Button onClick={handleAppShare} variant="ghost" size="icon" className="h-10 w-10 text-white hover:bg-white/10">
             <Share2 className="w-5 h-5" />
           </Button>
+          
           <Button variant="ghost" size="icon" className="h-10 w-10 text-white hover:bg-white/10">
             <Bell className="w-5 h-5" />
           </Button>
@@ -78,7 +105,7 @@ export function Header() {
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handleAppShare} className="rounded-xl h-11 gap-3 cursor-pointer">
                 <Share2 className="w-4 h-4" />
-                <span className="font-bold text-sm">Share App</span>
+                <span className="font-bold text-sm">Share & Copy Link</span>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={logout} className="rounded-xl h-11 gap-3 cursor-pointer text-destructive focus:text-destructive">
                 <LogOut className="w-4 h-4" />

@@ -54,7 +54,7 @@ export default function Home() {
     );
   }
 
-  // Auth UI - REPRODUCING THE IMAGE 100%
+  // Auth UI - REPRODUCING THE IMAGE 100% (Ultra-Premium Version)
   if (!user) {
     return (
       <div className="h-[100dvh] bg-[#FDFBF7] flex flex-col items-center justify-center p-8">
