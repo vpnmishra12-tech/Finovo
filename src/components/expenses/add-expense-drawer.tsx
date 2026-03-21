@@ -85,7 +85,7 @@ export function AddExpenseDrawer() {
           <Plus className="w-10 h-10" />
         </Button>
       </SheetTrigger>
-      <SheetContent side="bottom" className="rounded-t-[3rem] p-0 border-none shadow-2xl h-[70vh] focus:outline-none bg-white">
+      <SheetContent side="bottom" className="rounded-t-[3rem] p-0 border-none shadow-2xl h-[85vh] focus:outline-none bg-white overflow-hidden">
         <SheetHeader className="p-6 px-8 bg-primary text-primary-foreground shrink-0 rounded-t-[3rem]">
           <SheetTitle className="font-headline text-2xl flex items-center gap-3 text-white">
             <Sparkles className="w-6 h-6" />
@@ -94,7 +94,7 @@ export function AddExpenseDrawer() {
         </SheetHeader>
 
         <ScrollArea className="h-full">
-          <div className="p-8 space-y-6 pb-12">
+          <div className="p-8 space-y-6 pb-24">
             <Tabs defaultValue="text" className="w-full">
               <TabsList className="grid w-full grid-cols-3 bg-muted h-12 rounded-2xl p-1 mb-6">
                 <TabsTrigger value="text" className="rounded-xl gap-2 text-[11px] font-black uppercase">
