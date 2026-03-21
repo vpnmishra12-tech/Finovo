@@ -62,16 +62,32 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
 
   const handleShareId = async () => {
     const text = `Join my Finovo group '${groupData?.name}'! Use this ID to join: ${groupId}`;
+    
+    // Attempt Share first if available
     if (navigator.share) {
       try {
         await navigator.share({ title: 'Finovo Group Invite', text });
+        return; // Success, exit
       } catch (e) {
+        // User cancelled or share failed, proceed to clipboard fallback
+        console.log('Share dismissed or failed', e);
+      }
+    }
+
+    // Fallback: Clipboard API (Requires document focus)
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
         await navigator.clipboard.writeText(groupId);
         toast({ title: "Copied!", description: "Group ID copied to clipboard." });
+      } else {
+        throw new Error('Clipboard API unavailable');
       }
-    } else {
-      await navigator.clipboard.writeText(groupId);
-      toast({ title: "Copied!", description: "Group ID copied to clipboard." });
+    } catch (err) {
+      // If clipboard also fails (e.g., document not focused), show the ID to user
+      toast({ 
+        title: "Group ID", 
+        description: `ID: ${groupId}. Please copy manually.`,
+      });
     }
   };
 
