@@ -35,31 +35,36 @@ export function Header() {
   
   return (
     <header className="sticky top-0 z-[100] w-full bg-[#1D4ED8] shrink-0 border-none">
-      <div className="container flex h-20 items-center justify-between px-6 max-w-6xl mx-auto">
-        <div className="flex items-center gap-4">
+      <div className="container flex h-16 items-center justify-between px-6 max-w-6xl mx-auto">
+        <div className="flex items-center gap-3">
           <div className="bg-white/10 p-2 rounded-xl border border-white/20 shadow-sm">
-            <Wallet className="w-6 h-6 text-white" />
+            <Wallet className="w-5 h-5 text-white" />
           </div>
           <div className="flex items-center gap-1">
-            <h1 className="font-headline font-black text-2xl text-white tracking-tight uppercase leading-none">
+            <h1 className="font-headline font-black text-xl text-white tracking-tight uppercase leading-none">
               FINOVO
             </h1>
-            <span className="text-white/40 text-[11px] font-medium lowercase self-end mb-0.5">business</span>
+            <span className="text-white/40 text-[9px] font-medium lowercase self-end mb-0.5">business</span>
           </div>
         </div>
 
         <div className="flex items-center gap-1">
-          <Button variant="ghost" size="icon" className="h-10 w-10 text-white hover:bg-white/10" onClick={handleAppShare}>
-            <Share2 className="w-5 h-5" />
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="h-10 w-10 text-white hover:bg-white/10 rounded-full bg-white/5 border border-white/10" 
+            onClick={handleAppShare}
+          >
+            <Share2 className="w-4 h-4" />
           </Button>
           <Button variant="ghost" size="icon" className="h-10 w-10 text-white hover:bg-white/10">
-            <Bell className="w-5 h-5" />
+            <Bell className="w-4 h-4" />
           </Button>
           
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="h-10 w-10 text-white hover:bg-white/10">
-                <Settings className="w-5 h-5" />
+                <Settings className="w-4 h-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56 rounded-[1.5rem] p-2 mt-2 shadow-2xl">

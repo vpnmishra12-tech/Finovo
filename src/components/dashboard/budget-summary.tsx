@@ -44,23 +44,24 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
   const overspentAmount = Math.max(totalSpent - budget, 0);
 
   return (
-    <div className="space-y-4">
-      <Card className="bg-[#1D4ED8] text-primary-foreground border-none shadow-2xl rounded-[2.5rem] overflow-hidden relative">
-        <CardContent className="p-8 py-10">
+    <div className="space-y-3">
+      {/* Main Budget Card */}
+      <Card className="bg-[#1D4ED8] text-primary-foreground border-none shadow-xl rounded-[2rem] overflow-hidden relative h-36 flex items-center">
+        <CardContent className="p-6 w-full relative">
           <div className="flex justify-between items-start">
-            <div className="space-y-2">
-              <p className="text-[11px] font-black opacity-80 uppercase tracking-[0.2em]">MONTHLY BUDGET</p>
-              <p className="text-6xl font-headline font-black leading-none tracking-tight">₹{budget.toLocaleString()}</p>
+            <div className="space-y-1">
+              <p className="text-[10px] font-black opacity-70 uppercase tracking-[0.2em]">MONTHLY BUDGET</p>
+              <p className="text-5xl font-headline font-black leading-none tracking-tight">₹{budget.toLocaleString()}</p>
             </div>
             <Dialog open={open} onOpenChange={setOpen}>
               <DialogTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-10 w-10 bg-white/10 hover:bg-white/20 p-0 rounded-full flex items-center justify-center border border-white/20">
-                  <Pencil className="w-5 h-5 text-white" />
+                <Button variant="ghost" size="icon" className="h-9 w-9 bg-white/10 hover:bg-white/20 p-0 rounded-full border border-white/20">
+                  <Pencil className="w-4 h-4 text-white" />
                 </Button>
               </DialogTrigger>
-              <DialogContent className="max-w-[350px] rounded-[2rem]">
+              <DialogContent className="max-w-[340px] rounded-[2rem]">
                 <DialogHeader><DialogTitle className="font-headline uppercase font-black">{t.actions.setBudget}</DialogTitle></DialogHeader>
-                <div className="flex flex-col gap-4 py-4">
+                <div className="flex flex-col gap-3 py-4">
                   <Input type="number" placeholder="Enter amount" value={newBudget} onChange={(e) => setNewBudget(e.target.value)} className="h-12 rounded-xl font-bold" />
                   <Button onClick={handleSetBudget} className="w-full h-12 rounded-xl font-black uppercase tracking-widest">Update</Button>
                 </div>
@@ -70,23 +71,24 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
         </CardContent>
       </Card>
 
-      <div className="grid grid-cols-2 gap-4">
-        <Card className="bg-white border-none shadow-sm rounded-[1.8rem] overflow-hidden relative h-32 flex items-center">
-          <CardContent className="p-5 w-full flex flex-col justify-between h-full">
+      {/* Spent & Overspent Cards */}
+      <div className="grid grid-cols-2 gap-3">
+        <Card className="bg-white border-none shadow-sm rounded-[1.5rem] overflow-hidden h-24 flex items-center">
+          <CardContent className="p-4 w-full flex flex-col justify-between h-full">
             <div>
-              <p className="text-[10px] font-black text-gray-400 mb-1 uppercase tracking-widest">SPENT</p>
-              <p className="text-3xl font-headline font-black text-black">₹{totalSpent.toLocaleString()}</p>
+              <p className="text-[9px] font-black text-gray-400 mb-0.5 uppercase tracking-widest">SPENT</p>
+              <p className="text-2xl font-headline font-black text-black">₹{totalSpent.toLocaleString()}</p>
             </div>
-            <div className="w-full h-1.5 bg-primary/10 rounded-full overflow-hidden">
+            <div className="w-full h-1 bg-primary/10 rounded-full overflow-hidden">
               <div className="bg-primary h-full" style={{ width: `${Math.min((totalSpent/budget)*100, 100)}%` }} />
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-white border-none shadow-sm rounded-[1.8rem] overflow-hidden h-32 flex items-center">
-          <CardContent className="p-5 w-full">
-            <p className="text-[10px] font-black text-gray-400 mb-1 uppercase tracking-widest">OVERSPENT BY</p>
-            <p className="text-3xl font-headline font-black text-[#D32F2F]">₹{overspentAmount.toLocaleString()}</p>
+        <Card className="bg-white border-none shadow-sm rounded-[1.5rem] overflow-hidden h-24 flex items-center">
+          <CardContent className="p-4 w-full">
+            <p className="text-[9px] font-black text-gray-400 mb-0.5 uppercase tracking-widest">OVERSPENT BY</p>
+            <p className="text-2xl font-headline font-black text-[#D32F2F]">₹{overspentAmount.toLocaleString()}</p>
           </CardContent>
         </Card>
       </div>
