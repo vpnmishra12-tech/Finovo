@@ -18,7 +18,7 @@ export function Header() {
   const { toast } = useToast();
 
   const handleAppShare = async () => {
-    const textToCopy = window.location.origin;
+    const textToCopy = typeof window !== 'undefined' ? window.location.origin : '';
     const shareData = {
       title: 'Finovo - Expense Tracker',
       text: 'Check out Finovo, the ultimate AI-powered expense tracker!',
@@ -76,48 +76,52 @@ export function Header() {
           <div className="bg-white/15 p-1.5 rounded-xl border border-white/20">
             <Wallet className="w-6 h-6 text-white" />
           </div>
-          <h1 className="font-headline font-black text-xl text-white tracking-tight uppercase">
-            FINOVO <span className="text-white/50 text-xs font-bold lowercase tracking-normal">business</span>
+          <h1 className="font-headline font-black text-xl text-white tracking-tight uppercase leading-none">
+            FINOVO <span className="text-white/50 text-[10px] font-bold lowercase tracking-normal block sm:inline sm:ml-1">business</span>
           </h1>
         </div>
 
         <div className="flex items-center gap-2">
-          {/* Main Share Button */}
+          {/* Main Share Button - Always Visible */}
           <Button 
             onClick={handleAppShare} 
             variant="outline" 
-            className="h-9 px-4 text-white border-white/20 hover:bg-white/10 rounded-xl gap-2 flex"
+            className="h-9 px-3 sm:px-4 text-white border-white/20 hover:bg-white/10 rounded-xl gap-2 flex items-center"
           >
             <Share2 className="w-4 h-4 text-white" />
-            <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline">Share App</span>
+            <span className="text-[10px] font-black uppercase tracking-widest hidden xs:inline">Share App</span>
           </Button>
           
-          <Button variant="ghost" size="icon" className="h-10 w-10 text-white hover:bg-white/10">
-            <Bell className="w-5 h-5" />
-          </Button>
-          
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="h-10 w-10 text-white hover:bg-white/10">
-                <Settings className="w-5 h-5" />
+          {user && (
+            <>
+              <Button variant="ghost" size="icon" className="h-10 w-10 text-white hover:bg-white/10 hidden sm:flex">
+                <Bell className="w-5 h-5" />
               </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56 rounded-[1.5rem] p-2 mt-2">
-              <DropdownMenuLabel className="px-3 py-2">
-                <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground block mb-0.5">Account</span>
-                <span className="text-sm font-bold truncate text-primary">{user?.email}</span>
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={handleAppShare} className="rounded-xl h-11 gap-3 cursor-pointer">
-                <Copy className="w-4 h-4" />
-                <span className="font-bold text-sm">Copy App Link</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={logout} className="rounded-xl h-11 gap-3 cursor-pointer text-destructive focus:text-destructive">
-                <LogOut className="w-4 h-4" />
-                <span className="font-bold text-sm">Logout</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+              
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon" className="h-10 w-10 text-white hover:bg-white/10">
+                    <Settings className="w-5 h-5" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56 rounded-[1.5rem] p-2 mt-2">
+                  <DropdownMenuLabel className="px-3 py-2">
+                    <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground block mb-0.5">Account</span>
+                    <span className="text-sm font-bold truncate text-primary">{user?.email}</span>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleAppShare} className="rounded-xl h-11 gap-3 cursor-pointer">
+                    <Copy className="w-4 h-4" />
+                    <span className="font-bold text-sm">Copy App Link</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={logout} className="rounded-xl h-11 gap-3 cursor-pointer text-destructive focus:text-destructive">
+                    <LogOut className="w-4 h-4" />
+                    <span className="font-bold text-sm">Logout</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </>
+          )}
         </div>
       </div>
     </header>
