@@ -62,6 +62,7 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
     const textToCopy = groupId;
     let copied = false;
 
+    // Direct copy attempt first
     try {
       if (navigator.clipboard && window.isSecureContext) {
         await navigator.clipboard.writeText(textToCopy);
@@ -71,6 +72,7 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
       console.warn("Primary clipboard failed", err);
     }
 
+    // Fallback for older browsers or non-secure contexts
     if (!copied) {
       try {
         const textArea = document.createElement("textarea");
@@ -92,6 +94,7 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
       toast({ title: "ID Copied!", description: "Group ID automatically saved." });
     }
 
+    // Trigger share sheet if available
     if (navigator.share) {
       try {
         const shareText = `Join my Finovo group '${groupData?.name || 'Finance'}'! Use this ID: ${groupId}`;
@@ -100,7 +103,9 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
           text: shareText,
           url: window.location.origin
         });
-      } catch (err) {}
+      } catch (err) {
+        // Silent error if user cancels share
+      }
     }
   };
 

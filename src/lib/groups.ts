@@ -58,12 +58,14 @@ export async function createGroup(db: Firestore, userId: string, name: string, m
 
   setDocumentNonBlocking(newGroupRef, groupData, {});
   
+  // Add creator as member
   const creatorRef = doc(collection(db, 'groups', shortId, 'members'), userId);
   setDocumentNonBlocking(creatorRef, {
     name: "Admin",
     userId: userId
   }, {});
 
+  // Add other manual members
   for (const member of members) {
     const memberRef = doc(collection(db, 'groups', shortId, 'members'));
     setDocumentNonBlocking(memberRef, { name: member.name }, {});
