@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from 'react';
@@ -273,6 +272,7 @@ export default function Home() {
         </div>
       </main>
 
+      {/* Show Add Expense Drawer only on Dashboard */}
       {activeTab === 'dashboard' && <AddExpenseDrawer />}
 
       {/* Modern Bottom Navigation */}

@@ -1,4 +1,3 @@
-
 export const translations = {
   en: {
     appName: "Finovo - Expense Tracker",
@@ -31,7 +30,6 @@ export const translations = {
     groupName: "Group Name",
     addMember: "Add Member",
     memberName: "Name",
-    memberMobile: "Mobile Number",
     totalGroupExpense: "Total Group Expense",
     contribution: "Contribution",
     location: "Location",
@@ -129,7 +127,6 @@ export const translations = {
     groupName: "ग्रुप का नाम",
     addMember: "मेंबर जोड़ें",
     memberName: "नाम",
-    memberMobile: "मोबाइल नंबर",
     totalGroupExpense: "कुल ग्रुप खर्च",
     contribution: "योगदान",
     location: "जगह",
@@ -171,7 +168,7 @@ export const translations = {
       Recharge: "रिचार्ज",
       Shopping: "खरीदारी",
       EMI: "ईएमआई",
-      Miscellaneous: "अन्य/विविध",
+      Miscellaneous: "MiSc/ Other",
       Cab: "कैब",
       Breakfast: "नाश्ता",
       Lunch: "लंच",
@@ -181,10 +178,6 @@ export const translations = {
     months: {
       "01": "जनवरी", "02": "फरवरी", "03": "मार्च", "04": "अप्रैल", "05": "मई", "06": "जून",
       "07": "जुलाई", "08": "अगस्त", "09": "सितंबर", "10": "अक्टूबर", "11": "नवंबर", "12": "दिसंबर"
-    },
-    monthsShort: {
-      "01": "Jan", "02": "Feb", "03": "Mar", "04": "Apr", "05": "May", "06": "Jun",
-      "07": "Jul", "08": "Aug", "09": "Sep", "10": "Oct", "11": "Nov", "12": "Dec"
     },
     modes: { text: "टेक्स्ट", voice: "आवाज़", camera: "कैमरा" },
     captions: {

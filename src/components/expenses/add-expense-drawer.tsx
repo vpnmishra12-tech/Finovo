@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from 'react';
@@ -33,7 +32,7 @@ export function AddExpenseDrawer() {
   const [description, setDescription] = useState("");
   const [textInput, setTextInput] = useState("");
 
-  // Filtered categories for display (only main ones)
+  // Filtered categories for display (Exactly as requested)
   const mainCategories = ['Food', 'Transport', 'Bills', 'Recharge', 'Shopping', 'EMI', 'Miscellaneous'];
 
   const resetForm = () => {
@@ -93,6 +92,7 @@ export function AddExpenseDrawer() {
           <Plus className="w-8 h-8" />
         </Button>
       </DialogTrigger>
+      {/* Shifted dialog slightly upward to avoid FAB overlap and look proper */}
       <DialogContent className="max-w-md w-[95%] max-h-[85vh] rounded-[2.5rem] p-0 overflow-hidden border-none shadow-2xl z-[100] flex flex-col top-[42%] translate-y-[-50%]">
         <DialogHeader className="p-4 px-6 bg-primary text-primary-foreground shrink-0">
           <DialogTitle className="font-headline text-xl flex items-center gap-2">

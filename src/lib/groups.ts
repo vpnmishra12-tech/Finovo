@@ -30,19 +30,20 @@ export interface GroupExpense {
 }
 
 /**
- * Generates a unique 6-character alphanumeric group code.
+ * Generates a unique 10-character alphanumeric group code.
+ * 36^10 combinations (~3.6 Quadrillion) - Practically Unlimited for a lifetime.
  */
 function generateShortId() {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
   let result = '';
-  for (let i = 0; i < 6; i++) {
+  for (let i = 0; i < 10; i++) {
     result += chars.charAt(Math.floor(Math.random() * chars.length));
   }
   return result;
 }
 
 /**
- * Creates a new group with a unique short ID and adds initial members.
+ * Creates a new group with a unique 10-char short ID and adds initial members.
  */
 export async function createGroup(db: Firestore, userId: string, name: string, members: {name: string}[]) {
   const groupsRef = collection(db, 'groups');
@@ -67,8 +68,10 @@ export async function createGroup(db: Firestore, userId: string, name: string, m
 
   // Add other manual members
   for (const member of members) {
-    const memberRef = doc(collection(db, 'groups', shortId, 'members'));
-    setDocumentNonBlocking(memberRef, { name: member.name }, {});
+    if (member.name.trim()) {
+      const memberRef = doc(collection(db, 'groups', shortId, 'members'));
+      setDocumentNonBlocking(memberRef, { name: member.name }, {});
+    }
   }
 
   return shortId;
