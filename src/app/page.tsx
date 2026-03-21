@@ -54,7 +54,7 @@ export default function Home() {
     );
   }
 
-  // DEFINITIVE PROFESSIONAL AUTH UI
+  // ULTRA-PREMIUM PROFESSIONAL AUTH UI
   if (!user) {
     return (
       <div className="h-[100dvh] bg-[#FDFBF7] flex flex-col items-center justify-center p-6">
@@ -114,7 +114,7 @@ export default function Home() {
     );
   }
 
-  // "Patla" Feature Grid Card - Optimized for Visibility
+  // COMPACT "PATLA" GRID CARD
   const GridCard = ({ icon: Icon, label, color, onClick, active }: { icon: any, label: string, color: string, onClick: () => void, active?: boolean }) => (
     <Card 
       className={cn(
@@ -166,7 +166,7 @@ export default function Home() {
                 />
               </div>
 
-              {/* Feature Grid - Compact "Patla" Style */}
+              {/* Feature Grid - Compact Style */}
               <div className="flex-1 grid grid-cols-2 gap-3 content-start">
                 <GridCard 
                   icon={LayoutGrid} 
