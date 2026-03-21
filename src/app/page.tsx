@@ -8,7 +8,7 @@ import { Header } from '@/components/layout/header';
 import { BudgetSummary } from '@/components/dashboard/budget-summary';
 import { AdBanner } from '@/components/dashboard/ad-banner';
 import { 
-  Wallet, History, Calculator, Users, LayoutGrid, Home as HomeIcon, LogIn
+  Wallet, History, Calculator, Users, LayoutGrid, Home as HomeIcon, LogIn, ArrowRight
 } from 'lucide-react';
 import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import { collection, query, orderBy, limit } from 'firebase/firestore';
@@ -54,50 +54,57 @@ export default function Home() {
     );
   }
 
-  // Auth UI if not logged in
+  // Auth UI if not logged in - 100% MATCH TO SCREENSHOT
   if (!user) {
     return (
-      <div className="h-[100dvh] bg-background flex flex-col items-center justify-center p-8">
-        <div className="w-full max-w-sm space-y-8 animate-in fade-in duration-500">
-          <div className="flex flex-col items-center text-center space-y-2">
-            <div className="bg-primary p-4 rounded-[2rem] shadow-xl mb-4">
-              <Wallet className="w-10 h-10 text-white" />
-            </div>
-            <h1 className="text-4xl font-headline font-black uppercase tracking-tight text-black leading-none">FINOVO</h1>
-            <p className="text-[10px] font-black uppercase text-gray-400 tracking-[0.2em]">{isLoginView ? 'WELCOME BACK' : 'CREATE ACCOUNT'}</p>
+      <div className="h-[100dvh] bg-[#FDFBF7] flex flex-col items-center justify-center p-8">
+        <div className="w-full max-w-sm space-y-10 animate-in fade-in duration-500 flex flex-col items-center">
+          
+          {/* Logo Icon */}
+          <div className="bg-[#2563EB] p-8 rounded-full shadow-2xl flex items-center justify-center">
+            <Wallet className="w-12 h-12 text-white fill-white" />
           </div>
 
-          <div className="space-y-4">
-            <div className="space-y-1">
-              <Label className="text-[10px] font-black uppercase text-gray-400 ml-2">Email Address</Label>
+          <div className="flex flex-col items-center text-center space-y-2 w-full">
+            <h1 className="text-5xl font-headline font-black text-black tracking-tight">FINOVO</h1>
+            <p className="text-[10px] font-black uppercase text-gray-400 tracking-[0.3em]">
+              {isLoginView ? 'WELCOME BACK' : 'CREATE ACCOUNT'}
+            </p>
+          </div>
+
+          <div className="space-y-6 w-full">
+            <div className="space-y-2">
+              <Label className="text-[10px] font-black uppercase text-gray-400 ml-4 tracking-widest">EMAIL ADDRESS</Label>
               <Input 
                 type="email" 
                 placeholder="you@example.com" 
                 value={email} 
                 onChange={(e) => setEmail(e.target.value)}
-                className="h-14 bg-white border-gray-100 rounded-2xl px-6 font-bold"
+                className="h-16 bg-white border-gray-100 rounded-[2rem] px-8 font-bold text-lg text-gray-700 shadow-sm"
               />
             </div>
-            <div className="space-y-1">
-              <Label className="text-[10px] font-black uppercase text-gray-400 ml-2">Password</Label>
+            <div className="space-y-2">
+              <Label className="text-[10px] font-black uppercase text-gray-400 ml-4 tracking-widest">PASSWORD</Label>
               <Input 
                 type="password" 
                 placeholder="••••••••" 
                 value={password} 
                 onChange={(e) => setPassword(e.target.value)}
-                className="h-14 bg-white border-gray-100 rounded-2xl px-6 font-bold"
+                className="h-16 bg-white border-gray-100 rounded-[2rem] px-8 font-bold text-lg text-gray-700 shadow-sm"
               />
             </div>
+            
             <Button 
               onClick={() => isLoginView ? login(email, password) : signup(email, password)}
-              className="w-full h-16 rounded-[2rem] font-black uppercase tracking-widest text-sm shadow-xl shadow-primary/20 gap-3"
+              className="w-full h-20 rounded-[3rem] font-black uppercase tracking-widest text-lg shadow-2xl shadow-primary/40 gap-3 bg-primary"
             >
-              <LogIn className="w-5 h-5" /> {isLoginView ? 'Login Now' : 'Sign Up Now'}
+              <ArrowRight className="w-6 h-6" /> {isLoginView ? 'LOGIN NOW' : 'SIGN UP NOW'}
             </Button>
-            <div className="text-center">
+
+            <div className="text-center pt-4">
               <button 
                 onClick={() => setIsLoginView(!isLoginView)} 
-                className="text-[10px] font-black uppercase text-primary tracking-widest"
+                className="text-[11px] font-black uppercase text-primary tracking-widest hover:underline"
               >
                 {isLoginView ? 'NEW HERE? CREATE ACCOUNT' : 'ALREADY HAVE AN ACCOUNT? LOGIN'}
               </button>
@@ -110,14 +117,14 @@ export default function Home() {
 
   const GridCard = ({ icon: Icon, label, color, onClick }: { icon: any, label: string, color: string, onClick: () => void }) => (
     <Card 
-      className="border-none shadow-sm active:scale-95 transition-all cursor-pointer rounded-2xl overflow-hidden bg-white"
+      className="border-none shadow-sm active:scale-95 transition-all cursor-pointer rounded-2xl overflow-hidden bg-white h-24 flex items-center"
       onClick={onClick}
     >
-      <CardContent className="p-4 flex items-center gap-3">
-        <div className={cn("p-2 rounded-xl", color)}>
+      <CardContent className="p-4 flex items-center gap-3 w-full">
+        <div className={cn("p-2 rounded-xl shrink-0", color)}>
           <Icon className="w-5 h-5" />
         </div>
-        <span className="font-headline font-black text-[10px] uppercase tracking-tighter text-black leading-tight flex-1">{label}</span>
+        <span className="font-headline font-black text-[11px] uppercase tracking-tighter text-black leading-tight flex-1">{label}</span>
       </CardContent>
     </Card>
   );
@@ -129,17 +136,18 @@ export default function Home() {
       <main className="flex-1 overflow-hidden relative">
         <div className="h-full flex flex-col max-w-6xl mx-auto p-5 space-y-4">
           {activeTab === 'dashboard' && (
-            <div className="flex-1 flex flex-col space-y-4 animate-in fade-in duration-500">
+            <div className="flex-1 flex flex-col space-y-4 animate-in fade-in duration-300">
+              
               {/* Profile Header */}
-              <div className="flex items-center gap-4 shrink-0">
-                <Avatar className="h-12 w-12 border-4 border-white shadow-md">
+              <div className="flex items-center gap-3 shrink-0">
+                <Avatar className="h-12 w-12 border-2 border-white shadow-md">
                   <AvatarFallback className="bg-black text-white text-lg font-black uppercase">
                     {user.email?.charAt(0) || 'V'}
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col">
-                  <span className="text-[10px] font-black uppercase text-gray-400 tracking-[0.2em] leading-none">OVERVIEW</span>
-                  <h2 className="text-2xl font-headline font-black uppercase text-black leading-none tracking-tight">DASHBOARD</h2>
+                  <span className="text-[10px] font-black uppercase text-gray-400 tracking-widest leading-none">OVERVIEW</span>
+                  <h2 className="text-xl font-headline font-black uppercase text-black leading-none tracking-tight">DASHBOARD</h2>
                 </div>
               </div>
 
@@ -153,8 +161,8 @@ export default function Home() {
                 />
               </div>
 
-              {/* Feature Grid Section (Middle - Flex-1 to fill space) */}
-              <div className="flex-1 grid grid-cols-2 gap-3 content-center">
+              {/* Feature Grid Section (Middle - Compact) */}
+              <div className="flex-1 grid grid-cols-2 gap-3 content-start">
                 <GridCard 
                   icon={LayoutGrid} 
                   label="DASHBOARD" 
@@ -182,12 +190,12 @@ export default function Home() {
               </div>
 
               {/* Ad Space Section (Bottom) */}
-              <div className="shrink-0 mt-auto">
+              <div className="shrink-0 mt-auto pb-2">
                 <AdBanner />
               </div>
               
               {/* Floating Plus Button */}
-              <div className="absolute right-4 bottom-20 z-50">
+              <div className="absolute right-4 bottom-24 z-50">
                 <AddExpenseDrawer />
               </div>
             </div>
@@ -202,21 +210,21 @@ export default function Home() {
       </main>
 
       {/* Bottom Navigation */}
-      <div className="h-16 bg-white border-t flex items-center justify-around px-4 pb-1 shadow-inner shrink-0">
+      <div className="h-20 bg-white border-t flex items-center justify-around px-4 pb-4 shadow-inner shrink-0">
         <button onClick={() => setActiveTab('dashboard')} className={cn("flex flex-col items-center gap-1", activeTab === 'dashboard' ? "text-primary" : "text-gray-400")}>
-          <HomeIcon className="w-5 h-5" />
+          <HomeIcon className="w-6 h-6" />
           <span className="text-[9px] font-black uppercase tracking-widest">HOME</span>
         </button>
         <button onClick={() => setActiveTab('history')} className={cn("flex flex-col items-center gap-1", activeTab === 'history' ? "text-primary" : "text-gray-400")}>
-          <History className="w-5 h-5" />
+          <History className="w-6 h-6" />
           <span className="text-[9px] font-black uppercase tracking-widest">BILLS</span>
         </button>
         <button onClick={() => setActiveTab('splitter')} className={cn("flex flex-col items-center gap-1", activeTab === 'splitter' ? "text-primary" : "text-gray-400")}>
-          <Calculator className="w-5 h-5" />
+          <Calculator className="w-6 h-6" />
           <span className="text-[9px] font-black uppercase tracking-widest">SPLIT</span>
         </button>
         <button onClick={() => setActiveTab('groups')} className={cn("flex flex-col items-center gap-1", activeTab === 'groups' ? "text-primary" : "text-gray-400")}>
-          <Users className="w-5 h-5" />
+          <Users className="w-6 h-6" />
           <span className="text-[9px] font-black uppercase tracking-widest">GROUPS</span>
         </button>
       </div>
