@@ -1,6 +1,5 @@
-
-import { Firestore, collection, doc, serverTimestamp, Timestamp, updateDoc, arrayUnion, arrayRemove, deleteDoc, getDoc } from 'firebase/firestore';
-import { setDocumentNonBlocking, updateDocumentNonBlocking, deleteDocumentNonBlocking, addDocumentNonBlocking } from '@/firebase';
+import { Firestore, collection, doc, serverTimestamp, Timestamp, updateDoc, arrayUnion, getDoc } from 'firebase/firestore';
+import { setDocumentNonBlocking, deleteDocumentNonBlocking, addDocumentNonBlocking } from '@/firebase';
 
 export interface Group {
   id: string;
@@ -13,7 +12,6 @@ export interface Group {
 export interface GroupMember {
   id: string;
   name: string;
-  mobile: string;
   userId?: string;
 }
 
@@ -32,11 +30,24 @@ export interface GroupExpense {
 }
 
 /**
- * Creates a new group and adds initial members.
+ * Generates a unique 6-character alphanumeric group code.
  */
-export function createGroup(db: Firestore, userId: string, name: string, members: {name: string, mobile: string}[]) {
+function generateShortId() {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let result = '';
+  for (let i = 0; i < 6; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
+}
+
+/**
+ * Creates a new group with a unique short ID and adds initial members.
+ */
+export async function createGroup(db: Firestore, userId: string, name: string, members: {name: string}[]) {
   const groupsRef = collection(db, 'groups');
-  const newGroupRef = doc(groupsRef); 
+  const shortId = generateShortId();
+  const newGroupRef = doc(groupsRef, shortId); 
   
   const groupData = {
     name,
@@ -47,19 +58,18 @@ export function createGroup(db: Firestore, userId: string, name: string, members
 
   setDocumentNonBlocking(newGroupRef, groupData, {});
   
-  const creatorRef = doc(collection(db, 'groups', newGroupRef.id, 'members'), userId);
+  const creatorRef = doc(collection(db, 'groups', shortId, 'members'), userId);
   setDocumentNonBlocking(creatorRef, {
     name: "Admin",
-    mobile: "",
     userId: userId
   }, {});
 
   for (const member of members) {
-    const memberRef = doc(collection(db, 'groups', newGroupRef.id, 'members'));
-    setDocumentNonBlocking(memberRef, member, {});
+    const memberRef = doc(collection(db, 'groups', shortId, 'members'));
+    setDocumentNonBlocking(memberRef, { name: member.name }, {});
   }
 
-  return newGroupRef.id;
+  return shortId;
 }
 
 /**
@@ -73,23 +83,20 @@ export async function joinGroup(db: Firestore, groupId: string, userId: string, 
     throw new Error("Group not found");
   }
 
-  // Update Group memberIds array
   await updateDoc(groupRef, {
     memberIds: arrayUnion(userId)
   });
 
-  // Add to members sub-collection
   const memberRef = doc(collection(db, 'groups', groupId, 'members'), userId);
   setDocumentNonBlocking(memberRef, {
     name: userName,
-    mobile: "",
     userId: userId
   }, {});
 }
 
-export function addMemberToGroup(db: Firestore, groupId: string, name: string, mobile: string) {
+export function addMemberToGroup(db: Firestore, groupId: string, name: string) {
   const memberRef = doc(collection(db, 'groups', groupId, 'members'));
-  setDocumentNonBlocking(memberRef, { name, mobile }, {});
+  setDocumentNonBlocking(memberRef, { name }, {});
 }
 
 export function removeMemberFromGroup(db: Firestore, groupId: string, memberId: string) {
@@ -110,15 +117,6 @@ export function addGroupExpense(db: Firestore, groupId: string, data: Omit<Group
     isEdited: false
   };
   addDocumentNonBlocking(colRef, expenseData);
-}
-
-export function updateGroupExpense(db: Firestore, groupId: string, expenseId: string, data: Partial<GroupExpense>) {
-  const docRef = doc(db, 'groups', groupId, 'expenses', expenseId);
-  updateDocumentNonBlocking(docRef, {
-    ...data,
-    isEdited: true,
-    updatedAt: serverTimestamp()
-  });
 }
 
 export function deleteGroupExpense(db: Firestore, groupId: string, expenseId: string) {

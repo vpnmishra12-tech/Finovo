@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from 'react';
@@ -21,20 +20,20 @@ export function CreateGroupDialog() {
   
   const [open, setOpen] = useState(false);
   const [groupName, setGroupName] = useState("");
-  const [members, setMembers] = useState<{name: string, mobile: string}[]>([]);
+  const [members, setMembers] = useState<{name: string}[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const addMemberField = () => {
-    setMembers([...members, { name: "", mobile: "" }]);
+    setMembers([...members, { name: "" }]);
   };
 
   const removeMemberField = (index: number) => {
     setMembers(members.filter((_, i) => i !== index));
   };
 
-  const updateMember = (index: number, field: 'name' | 'mobile', value: string) => {
+  const updateMember = (index: number, value: string) => {
     const newMembers = [...members];
-    newMembers[index][field] = value;
+    newMembers[index].name = value;
     setMembers(newMembers);
   };
 
@@ -91,17 +90,11 @@ export function CreateGroupDialog() {
                   <Input 
                     placeholder={t.memberName} 
                     value={m.name} 
-                    onChange={(e) => updateMember(i, 'name', e.target.value)}
+                    onChange={(e) => updateMember(i, e.target.value)}
                     className="h-10 bg-card border-none rounded-lg text-sm"
                   />
                   <Button variant="ghost" size="icon" onClick={() => removeMemberField(i)} className="text-destructive"><Trash2 className="w-4 h-4" /></Button>
                 </div>
-                <Input 
-                  placeholder={t.memberMobile} 
-                  value={m.mobile} 
-                  onChange={(e) => updateMember(i, 'mobile', e.target.value)}
-                  className="h-10 bg-card border-none rounded-lg text-sm"
-                />
               </div>
             ))}
           </div>

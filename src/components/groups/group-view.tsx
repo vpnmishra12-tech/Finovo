@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from 'react';
@@ -12,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
-import { ArrowLeft, MapPin, Calendar, Trash2, Wallet, Users, UserPlus, CheckCircle2, Share2, Copy, Loader2 } from 'lucide-react';
+import { ArrowLeft, MapPin, Calendar, Trash2, Wallet, UserPlus, Share2, Loader2 } from 'lucide-react';
 import { AddGroupExpenseDialog } from './add-group-expense-dialog';
 import { format } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
@@ -25,7 +24,6 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
   const { toast } = useToast();
 
   const [newMemberName, setNewMemberName] = useState("");
-  const [newMemberMobile, setNewMemberMobile] = useState("");
 
   const groupRef = useMemoFirebase(() => {
     if (!firestore || !groupId) return null;
@@ -64,7 +62,6 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
     const textToCopy = groupId;
     let copied = false;
 
-    // 1. Instant Copy attempt (Primary)
     try {
       if (navigator.clipboard && window.isSecureContext) {
         await navigator.clipboard.writeText(textToCopy);
@@ -74,7 +71,6 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
       console.warn("Primary clipboard failed", err);
     }
 
-    // 2. Fallback Copy attempt (Professional Legacy Method)
     if (!copied) {
       try {
         const textArea = document.createElement("textarea");
@@ -96,32 +92,22 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
       toast({ title: "ID Copied!", description: "Group ID automatically saved." });
     }
 
-    // 3. Optional OS Share
     if (navigator.share) {
       try {
-        const shareText = `Join my Finovo group '${groupData?.name || 'Finance'}'! Use this ID to join: ${groupId}`;
+        const shareText = `Join my Finovo group '${groupData?.name || 'Finance'}'! Use this ID: ${groupId}`;
         await navigator.share({
           title: 'Finovo Group Invite',
           text: shareText,
           url: window.location.origin
         });
-      } catch (err) {
-        // User cancelled, which is fine since we already copied
-      }
-    } else if (!copied) {
-      // Final message if all automated copy methods failed
-      toast({ 
-        title: "Group ID", 
-        description: `Copy manually: ${groupId}`,
-      });
+      } catch (err) {}
     }
   };
 
   const handleAddMember = () => {
     if (!firestore || !groupId || !newMemberName) return;
-    addMemberToGroup(firestore, groupId, newMemberName, newMemberMobile);
+    addMemberToGroup(firestore, groupId, newMemberName);
     setNewMemberName("");
-    setNewMemberMobile("");
     toast({ title: "Member Added", description: `${newMemberName} added to the list.` });
   };
 
@@ -153,11 +139,14 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
           </Button>
           <div className="flex flex-col">
             <h2 className="text-lg font-headline font-black uppercase tracking-tight truncate max-w-[150px]">{groupData?.name || "Loading..."}</h2>
-            {groupData?.createdAt && (
-              <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">
-                Started: {format(groupData.createdAt.toDate(), 'dd MMM yyyy')}
-              </span>
-            )}
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-black uppercase text-primary">CODE: {groupId}</span>
+              {groupData?.createdAt && (
+                <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">
+                  • {format(groupData.createdAt.toDate(), 'dd MMM yyyy')}
+                </span>
+              )}
+            </div>
           </div>
         </div>
         
@@ -285,7 +274,6 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
             </h4>
             <div className="grid gap-2">
               <Input placeholder="Friend's Name" value={newMemberName} onChange={(e) => setNewMemberName(e.target.value)} className="bg-card border-none h-10 rounded-xl font-bold" />
-              <Input placeholder="Mobile (Optional)" value={newMemberMobile} onChange={(e) => setNewMemberMobile(e.target.value)} className="bg-card border-none h-10 rounded-xl font-bold" />
               <Button onClick={handleAddMember} disabled={!newMemberName} className="h-10 rounded-xl font-black uppercase tracking-widest text-[10px] gap-2">
                 Add to List
               </Button>
@@ -303,7 +291,7 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
                     </div>
                     <div className="flex flex-col">
                       <span className="font-bold text-sm leading-tight">{member.name} {member.userId === user?.uid && "(Me)"}</span>
-                      <span className="text-[8px] text-muted-foreground font-black uppercase tracking-widest">{member.mobile || "ID: " + member.id.substring(0,6)}</span>
+                      <span className="text-[8px] text-muted-foreground font-black uppercase tracking-widest">ID: {member.id.substring(0,6)}</span>
                     </div>
                   </div>
                   {member.userId !== groupData?.createdBy && member.userId !== user?.uid && (
