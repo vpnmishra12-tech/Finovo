@@ -133,7 +133,6 @@ export default function Home() {
             {activeTab === 'dashboard' && (
               <div className="flex-1 flex flex-col space-y-4 animate-in fade-in duration-300 overflow-hidden">
                 
-                {/* 100% IMAGE MATCH PROFILE SECTION */}
                 <div className="flex items-center gap-5 shrink-0 px-1 mt-2">
                   <Avatar className="h-20 w-20 border-4 border-white shadow-2xl">
                     <AvatarFallback className="bg-black text-white text-3xl font-black uppercase">
@@ -146,7 +145,6 @@ export default function Home() {
                   </div>
                 </div>
 
-                {/* 100% IMAGE MATCH ALERT BAR */}
                 <Alert className="py-3 px-5 rounded-[1.5rem] border-2 bg-[#FFF1F1] text-[#D32F2F] border-[#FFE4E4] flex items-center gap-4 shrink-0 shadow-sm">
                   <AlertTriangle className="h-5 w-5 shrink-0" />
                   <AlertDescription className="text-[11px] font-black uppercase tracking-wider leading-tight">
@@ -162,7 +160,6 @@ export default function Home() {
                     year={new Date().getFullYear()} 
                   />
 
-                  {/* 100% IMAGE MATCH FEATURE GRID - SLIM STYLE */}
                   <div className="grid grid-cols-2 gap-3 shrink-0">
                     <GridCard 
                       icon={LayoutGrid} 
@@ -196,7 +193,6 @@ export default function Home() {
                   </div>
                 </div>
                 
-                {/* 100% IMAGE MATCH FAB POSITION */}
                 <div className="absolute right-8 bottom-28 z-[60]">
                   <AddExpenseDrawer />
                 </div>
