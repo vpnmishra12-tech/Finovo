@@ -44,9 +44,8 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
   const overspentAmount = Math.max(totalSpent - budget, 0);
 
   return (
-    <div className="space-y-3">
-      {/* 100% IMAGE MATCH BUDGET CARD */}
-      <Card className="bg-[#1D4ED8] text-primary-foreground border-none shadow-2xl rounded-[1.8rem] overflow-hidden relative transition-transform active:scale-[0.98]">
+    <div className="space-y-4">
+      <Card className="bg-[#1D4ED8] text-primary-foreground border-none shadow-2xl rounded-[2.5rem] overflow-hidden relative">
         <CardContent className="p-8 py-10">
           <div className="flex justify-between items-start">
             <div className="space-y-2">
@@ -55,7 +54,7 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
             </div>
             <Dialog open={open} onOpenChange={setOpen}>
               <DialogTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-10 w-10 bg-white/10 hover:bg-white/20 p-0 rounded-full flex items-center justify-center">
+                <Button variant="ghost" size="icon" className="h-10 w-10 bg-white/10 hover:bg-white/20 p-0 rounded-full flex items-center justify-center border border-white/20">
                   <Pencil className="w-5 h-5 text-white" />
                 </Button>
               </DialogTrigger>
@@ -71,22 +70,23 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
         </CardContent>
       </Card>
 
-      {/* 100% IMAGE MATCH SPENT/OVERSPENT CARDS - SLIM STYLE */}
-      <div className="grid grid-cols-2 gap-3">
-        <Card className="bg-white border-none shadow-sm rounded-[1.2rem] overflow-hidden relative h-16 flex items-center">
-          <CardContent className="p-3 w-full">
-            <p className="text-[8px] font-black text-gray-400 mb-1 uppercase tracking-widest leading-none">SPENT</p>
-            <p className="text-lg font-headline font-black leading-tight text-black">₹{totalSpent.toLocaleString()}</p>
-            <div className="mt-1.5 w-full h-1 bg-primary/10 rounded-full overflow-hidden">
+      <div className="grid grid-cols-2 gap-4">
+        <Card className="bg-white border-none shadow-sm rounded-[1.8rem] overflow-hidden relative h-32 flex items-center">
+          <CardContent className="p-5 w-full flex flex-col justify-between h-full">
+            <div>
+              <p className="text-[10px] font-black text-gray-400 mb-1 uppercase tracking-widest">SPENT</p>
+              <p className="text-3xl font-headline font-black text-black">₹{totalSpent.toLocaleString()}</p>
+            </div>
+            <div className="w-full h-1.5 bg-primary/10 rounded-full overflow-hidden">
               <div className="bg-primary h-full" style={{ width: `${Math.min((totalSpent/budget)*100, 100)}%` }} />
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-white border-none shadow-sm rounded-[1.2rem] overflow-hidden h-16 flex items-center">
-          <CardContent className="p-3 w-full">
-            <p className="text-[8px] font-black text-gray-400 mb-1 uppercase tracking-widest leading-none">OVERSPENT BY</p>
-            <p className="text-lg font-headline font-black leading-tight text-[#D32F2F]">₹{overspentAmount.toLocaleString()}</p>
+        <Card className="bg-white border-none shadow-sm rounded-[1.8rem] overflow-hidden h-32 flex items-center">
+          <CardContent className="p-5 w-full">
+            <p className="text-[10px] font-black text-gray-400 mb-1 uppercase tracking-widest">OVERSPENT BY</p>
+            <p className="text-3xl font-headline font-black text-[#D32F2F]">₹{overspentAmount.toLocaleString()}</p>
           </CardContent>
         </Card>
       </div>
