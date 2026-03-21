@@ -143,11 +143,11 @@ export default function Home() {
       className="border-none shadow-sm hover:shadow-md transition-all active:scale-95 cursor-pointer rounded-[1.5rem] overflow-hidden group"
       onClick={onClick}
     >
-      <CardContent className="p-6 flex flex-col items-center justify-center gap-4 text-center">
-        <div className={cn("p-4 rounded-full transition-transform group-hover:scale-110", color)}>
-          <Icon className="w-8 h-8" />
+      <CardContent className="p-4 flex flex-col items-center justify-center gap-2 text-center">
+        <div className={cn("p-3 rounded-full transition-transform group-hover:scale-110", color)}>
+          <Icon className="w-6 h-6" />
         </div>
-        <span className="font-headline font-black text-sm uppercase tracking-tight">{label}</span>
+        <span className="font-headline font-black text-[11px] uppercase tracking-tight">{label}</span>
       </CardContent>
     </Card>
   );
@@ -156,24 +156,24 @@ export default function Home() {
     <div className="h-[100dvh] bg-[#F4F7FE] flex flex-col overflow-hidden text-foreground">
       <Header />
       
-      <main className="flex-1 overflow-y-auto pb-24 scroll-smooth">
-        <div className="max-w-6xl mx-auto p-4 space-y-4">
+      <main className="flex-1 overflow-y-auto pb-20 scroll-smooth">
+        <div className="max-w-6xl mx-auto p-4 space-y-3">
           {activeTab === 'dashboard' && (
-            <div className="space-y-4 animate-in fade-in duration-500">
+            <div className="space-y-3 animate-in fade-in duration-500">
               {/* Profile - Top Left Alphabet */}
-              <div className="flex items-center gap-4 mb-2">
-                <Avatar className="h-14 w-14 border-2 border-primary/10 shadow-sm">
-                  <AvatarFallback className="bg-primary text-primary-foreground text-xl font-black">
+              <div className="flex items-center gap-3 mb-1">
+                <Avatar className="h-10 w-10 border-2 border-primary/10 shadow-sm">
+                  <AvatarFallback className="bg-primary text-primary-foreground text-base font-black">
                     {user.email?.charAt(0).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col">
-                  <span className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">Overview</span>
-                  <h2 className="text-xl font-headline font-black uppercase">Dashboard</h2>
+                  <span className="text-[9px] font-black uppercase text-muted-foreground tracking-widest">Overview</span>
+                  <h2 className="text-lg font-headline font-black uppercase text-foreground leading-none">Dashboard</h2>
                 </div>
               </div>
 
-              {/* Budget Summary - TOP (Now properly on top as requested) */}
+              {/* Budget Summary - TOP */}
               <BudgetSummary 
                 userId={user.uid} 
                 totalSpent={expenses?.reduce((sum, e) => sum + e.amount, 0) || 0} 
@@ -182,7 +182,7 @@ export default function Home() {
               />
 
               {/* Feature Grid - MIDDLE */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-3">
                 <GridCard 
                   icon={LayoutDashboard} 
                   label={t.dashboard} 
@@ -209,7 +209,7 @@ export default function Home() {
                 />
               </div>
 
-              {/* Ad Space - BOTTOM (Now properly at the bottom) */}
+              {/* Ad Space - BOTTOM */}
               <AdBanner />
             </div>
           )}
@@ -239,7 +239,7 @@ export default function Home() {
       {activeTab === 'dashboard' && <AddExpenseDrawer />}
 
       {/* Modern Bottom Navigation */}
-      <div className="fixed bottom-0 left-0 right-0 h-20 bg-white border-t z-50 px-6 flex items-center justify-between shadow-[0_-8px_24px_rgba(0,0,0,0.05)]">
+      <div className="fixed bottom-0 left-0 right-0 h-16 bg-white border-t z-50 px-6 flex items-center justify-between shadow-[0_-8px_24px_rgba(0,0,0,0.05)]">
         <NavItem id="dashboard" icon={LayoutDashboard} label="Home" active={activeTab === 'dashboard'} />
         <NavItem id="history" icon={History} label="Bills" active={activeTab === 'history'} />
         <NavItem id="splitter" icon={Calculator} label="Split" active={activeTab === 'splitter'} />
