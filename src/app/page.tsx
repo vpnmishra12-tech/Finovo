@@ -139,14 +139,14 @@ export default function Home() {
 
   const GridCard = ({ icon: Icon, label, color, onClick }: { icon: any, label: string, color: string, onClick: () => void }) => (
     <Card 
-      className="border-2 border-primary/5 shadow-sm hover:shadow-md transition-all active:scale-95 cursor-pointer rounded-[2rem] overflow-hidden group bg-card h-full"
+      className="border-2 border-primary/5 shadow-sm hover:shadow-md transition-all active:scale-95 cursor-pointer rounded-2xl overflow-hidden group bg-card h-full"
       onClick={onClick}
     >
-      <CardContent className="p-4 flex flex-col items-center justify-center h-full gap-3 text-center">
-        <div className={cn("p-4 rounded-3xl transition-transform group-hover:scale-110", color)}>
-          <Icon className="w-7 h-7" />
+      <CardContent className="p-3 flex items-center gap-3 h-full">
+        <div className={cn("p-2 rounded-xl transition-transform group-hover:scale-110", color)}>
+          <Icon className="w-5 h-5" />
         </div>
-        <span className="font-headline font-black text-[11px] uppercase tracking-widest text-black whitespace-nowrap">{label}</span>
+        <span className="font-headline font-black text-[10px] uppercase tracking-widest text-black whitespace-nowrap">{label}</span>
       </CardContent>
     </Card>
   );
@@ -156,23 +156,23 @@ export default function Home() {
       <Header />
       
       <main className="flex-1 overflow-hidden">
-        <div className="h-full max-w-6xl mx-auto p-5 flex flex-col space-y-4">
+        <div className="h-full max-w-6xl mx-auto p-4 flex flex-col space-y-4">
           {activeTab === 'dashboard' && (
-            <div className="flex-1 flex flex-col space-y-5 animate-in fade-in duration-500 overflow-hidden">
+            <div className="flex-1 flex flex-col space-y-4 animate-in fade-in duration-500 overflow-hidden">
               {/* Profile - Top Left Initial */}
-              <div className="flex items-center gap-4 shrink-0">
-                <Avatar className="h-14 w-14 border-4 border-primary/10 shadow-md">
-                  <AvatarFallback className="bg-black text-white text-xl font-black">
+              <div className="flex items-center gap-3 shrink-0">
+                <Avatar className="h-12 w-12 border-4 border-primary/10 shadow-md">
+                  <AvatarFallback className="bg-black text-white text-lg font-black">
                     {user.email?.charAt(0).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col">
-                  <span className="text-[10px] font-black uppercase text-black/40 tracking-[0.3em]">Overview</span>
-                  <h2 className="text-2xl font-headline font-black uppercase text-black leading-none">Dashboard</h2>
+                  <span className="text-[9px] font-black uppercase text-black/40 tracking-[0.3em]">Overview</span>
+                  <h2 className="text-xl font-headline font-black uppercase text-black leading-none">Dashboard</h2>
                 </div>
               </div>
 
-              {/* Budget Summary - TOP (SPACED) */}
+              {/* Budget Summary - TOP (COMPACT) */}
               <div className="shrink-0">
                 <BudgetSummary 
                   userId={user.uid} 
@@ -182,8 +182,8 @@ export default function Home() {
                 />
               </div>
 
-              {/* Feature Grid - MIDDLE (FILLS AVAILABLE SPACE) */}
-              <div className="flex-1 grid grid-cols-2 gap-4">
+              {/* Feature Grid - MIDDLE (COMPACT THIN CARDS) */}
+              <div className="shrink-0 grid grid-cols-2 gap-3">
                 <GridCard 
                   icon={LayoutDashboard} 
                   label={t.dashboard} 
@@ -210,8 +210,8 @@ export default function Home() {
                 />
               </div>
 
-              {/* Ad Space - BOTTOM (FIXED BOTTOM) */}
-              <div className="shrink-0">
+              {/* Ad Space - BOTTOM (PUSHED UP SLIGHTLY) */}
+              <div className="mt-auto pb-4 shrink-0">
                 <AdBanner />
               </div>
             </div>
