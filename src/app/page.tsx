@@ -155,12 +155,12 @@ export default function Home() {
     <div className="h-[100dvh] bg-background flex flex-col overflow-hidden text-black">
       <Header />
       
-      <main className="flex-1 overflow-y-auto pb-20 scroll-smooth">
-        <div className="max-w-6xl mx-auto p-6 pt-4 space-y-6">
+      <main className="flex-1 overflow-hidden">
+        <div className="h-full max-w-6xl mx-auto p-6 flex flex-col space-y-6">
           {activeTab === 'dashboard' && (
-            <div className="space-y-6 animate-in fade-in duration-500">
+            <div className="flex-1 flex flex-col space-y-6 animate-in fade-in duration-500 overflow-hidden">
               {/* Profile - Top Left Alphabet */}
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-4 shrink-0">
                 <Avatar className="h-14 w-14 border-4 border-primary/10 shadow-md">
                   <AvatarFallback className="bg-black text-white text-xl font-black">
                     {user.email?.charAt(0).toUpperCase()}
@@ -172,16 +172,18 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Budget Summary - TOP (RE-ORDERED) */}
-              <BudgetSummary 
-                userId={user.uid} 
-                totalSpent={expenses?.reduce((sum, e) => sum + e.amount, 0) || 0} 
-                month={new Date().getMonth()+1} 
-                year={new Date().getFullYear()} 
-              />
+              {/* Budget Summary - TOP (SPACED) */}
+              <div className="shrink-0">
+                <BudgetSummary 
+                  userId={user.uid} 
+                  totalSpent={expenses?.reduce((sum, e) => sum + e.amount, 0) || 0} 
+                  month={new Date().getMonth()+1} 
+                  year={new Date().getFullYear()} 
+                />
+              </div>
 
-              {/* Feature Grid - MIDDLE (MORE SPACIOUS) */}
-              <div className="grid grid-cols-2 gap-4">
+              {/* Feature Grid - MIDDLE (FILLS SPACE) */}
+              <div className="flex-1 grid grid-cols-2 gap-4">
                 <GridCard 
                   icon={LayoutDashboard} 
                   label={t.dashboard} 
@@ -208,26 +210,28 @@ export default function Home() {
                 />
               </div>
 
-              {/* Ad Space - BOTTOM (RESTORED TO BOTTOM) */}
-              <AdBanner />
+              {/* Ad Space - BOTTOM (FIXED BOTTOM) */}
+              <div className="shrink-0">
+                <AdBanner />
+              </div>
             </div>
           )}
 
           {activeTab === 'history' && (
-            <div className="space-y-6 animate-in slide-in-from-right-4 duration-500">
+            <div className="flex-1 overflow-y-auto space-y-6 animate-in slide-in-from-right-4 duration-500">
               <SpendingChart expenses={expenses || []} />
               <ExpenseList expenses={expenses || []} isLoading={isExpensesLoading} />
             </div>
           )}
 
           {activeTab === 'splitter' && (
-            <div className="animate-in slide-in-from-bottom-4 duration-500">
+            <div className="flex-1 overflow-y-auto animate-in slide-in-from-bottom-4 duration-500">
               <BillSplitTool />
             </div>
           )}
 
           {activeTab === 'groups' && (
-            <div className="animate-in fade-in zoom-in-95 duration-500">
+            <div className="flex-1 overflow-y-auto animate-in fade-in zoom-in-95 duration-500">
               <GroupModule />
             </div>
           )}
@@ -238,7 +242,7 @@ export default function Home() {
       {activeTab === 'dashboard' && <AddExpenseDrawer />}
 
       {/* Modern Bottom Navigation */}
-      <div className="fixed bottom-0 left-0 right-0 h-18 bg-card border-t z-50 px-8 pb-2 flex items-center justify-between shadow-[0_-12px_32px_rgba(0,0,0,0.08)]">
+      <div className="shrink-0 h-18 bg-card border-t z-50 px-8 pb-2 flex items-center justify-between shadow-[0_-12px_32px_rgba(0,0,0,0.08)]">
         <NavItem id="dashboard" icon={LayoutDashboard} label="Home" active={activeTab === 'dashboard'} />
         <NavItem id="history" icon={History} label="Bills" active={activeTab === 'history'} />
         <NavItem id="splitter" icon={Calculator} label="Split" active={activeTab === 'splitter'} />
