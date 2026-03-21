@@ -42,11 +42,7 @@ export function AddExpenseDrawer() {
   };
 
   const handleSave = () => {
-    if (!firestore || !user?.uid) {
-      toast({ title: "Error", description: "You must be logged in to save expenses.", variant: "destructive" });
-      return;
-    }
-    
+    if (!firestore || !user?.uid) return;
     saveExpense(firestore, user.uid, {
       amount: parseFloat(amount),
       category: category as any,
@@ -54,8 +50,7 @@ export function AddExpenseDrawer() {
       transactionDate: new Date().toISOString().split('T')[0],
       captureMethod: 'Text',
     });
-
-    toast({ title: "Success", description: "Expense recorded!" });
+    toast({ title: "Expense recorded!" });
     setOpen(false);
     resetForm();
   };
@@ -69,7 +64,7 @@ export function AddExpenseDrawer() {
       setCategory(result.category);
       setDescription(result.description);
     } catch (err) {
-      toast({ title: "AI Error", description: "Couldn't parse that. Try manual entry.", variant: "destructive" });
+      toast({ title: "AI Error", variant: "destructive" });
     } finally {
       setIsProcessing(false);
     }
@@ -85,45 +80,45 @@ export function AddExpenseDrawer() {
     <Sheet open={open} onOpenChange={(val) => { setOpen(val); if (!val) resetForm(); }}>
       <SheetTrigger asChild>
         <Button 
-          className="fixed bottom-[100px] right-6 md:bottom-8 md:right-8 h-16 w-16 rounded-full shadow-2xl z-[60] hover:scale-105 transition-transform active:scale-95 bg-primary text-primary-foreground border-4 border-background"
+          className="h-20 w-20 rounded-full shadow-[0_15px_30px_-5px_rgba(37,99,235,0.4)] z-[60] hover:scale-105 transition-transform active:scale-95 bg-primary text-primary-foreground border-4 border-white"
         >
-          <Plus className="w-8 h-8" />
+          <Plus className="w-10 h-10" />
         </Button>
       </SheetTrigger>
-      <SheetContent side="bottom" className="rounded-t-[2.5rem] p-0 border-none shadow-2xl h-[70vh] focus:outline-none">
-        <SheetHeader className="p-4 px-6 bg-primary text-primary-foreground shrink-0 rounded-t-[2.5rem]">
-          <SheetTitle className="font-headline text-xl flex items-center gap-2 text-white">
-            <Sparkles className="w-5 h-5" />
+      <SheetContent side="bottom" className="rounded-t-[3rem] p-0 border-none shadow-2xl h-[70vh] focus:outline-none bg-white">
+        <SheetHeader className="p-6 px-8 bg-primary text-primary-foreground shrink-0 rounded-t-[3rem]">
+          <SheetTitle className="font-headline text-2xl flex items-center gap-3 text-white">
+            <Sparkles className="w-6 h-6" />
             {t.addExpense}
           </SheetTitle>
         </SheetHeader>
 
         <ScrollArea className="h-full">
-          <div className="p-5 space-y-5 pb-10">
+          <div className="p-8 space-y-6 pb-12">
             <Tabs defaultValue="text" className="w-full">
-              <TabsList className="grid w-full grid-cols-3 bg-muted h-10 rounded-xl p-1 mb-4">
-                <TabsTrigger value="text" className="rounded-lg gap-2 text-[10px] font-black uppercase">
-                  <Keyboard className="w-3.5 h-3.5" /> {t.modes.text}
+              <TabsList className="grid w-full grid-cols-3 bg-muted h-12 rounded-2xl p-1 mb-6">
+                <TabsTrigger value="text" className="rounded-xl gap-2 text-[11px] font-black uppercase">
+                  <Keyboard className="w-4 h-4" /> {t.modes.text}
                 </TabsTrigger>
-                <TabsTrigger value="voice" className="rounded-lg gap-2 text-[10px] font-black uppercase">
-                  <Mic className="w-3.5 h-3.5" /> {t.modes.voice}
+                <TabsTrigger value="voice" className="rounded-xl gap-2 text-[11px] font-black uppercase">
+                  <Mic className="w-4 h-4" /> {t.modes.voice}
                 </TabsTrigger>
-                <TabsTrigger value="camera" className="rounded-lg gap-2 text-[10px] font-black uppercase">
-                  <Camera className="w-3.5 h-3.5" /> {t.modes.camera}
+                <TabsTrigger value="camera" className="rounded-xl gap-2 text-[11px] font-black uppercase">
+                  <Camera className="w-4 h-4" /> {t.modes.camera}
                 </TabsTrigger>
               </TabsList>
 
               <TabsContent value="text" className="mt-0">
-                <div className="flex gap-2">
+                <div className="flex gap-3">
                   <Input 
                     placeholder={t.captions.text} 
                     value={textInput} 
                     onChange={(e) => setTextInput(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && handleAiTextSubmit()}
-                    className="bg-muted border-none rounded-xl h-11 text-xs font-bold"
+                    className="bg-muted border-none rounded-2xl h-14 text-sm font-bold px-6"
                   />
-                  <Button size="icon" className="h-11 w-11 rounded-xl shrink-0" onClick={handleAiTextSubmit} disabled={isProcessing}>
-                    {isProcessing ? <Loader2 className="animate-spin w-4 h-4" /> : <Send className="w-4 h-4" />}
+                  <Button size="icon" className="h-14 w-14 rounded-2xl shrink-0" onClick={handleAiTextSubmit} disabled={isProcessing}>
+                    {isProcessing ? <Loader2 className="animate-spin w-5 h-5" /> : <Send className="w-5 h-5" />}
                   </Button>
                 </div>
               </TabsContent>
@@ -137,27 +132,27 @@ export function AddExpenseDrawer() {
               </TabsContent>
             </Tabs>
 
-            <div className="space-y-4 pt-4 border-t border-muted/50">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-1.5">
-                  <Label className="text-[10px] uppercase font-black text-muted-foreground ml-1 tracking-widest">Amount (₹)</Label>
+            <div className="space-y-6 pt-6 border-t border-muted/50">
+              <div className="grid grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <Label className="text-[11px] uppercase font-black text-muted-foreground ml-2 tracking-widest">Amount (₹)</Label>
                   <Input 
                     type="number" 
                     placeholder="0" 
                     value={amount} 
                     onChange={(e) => setAmount(e.target.value)}
-                    className="bg-muted border-none font-headline font-black text-xl rounded-xl h-12"
+                    className="bg-muted border-none font-headline font-black text-2xl rounded-2xl h-14 px-6"
                   />
                 </div>
-                <div className="space-y-1.5">
-                  <Label className="text-[10px] uppercase font-black text-muted-foreground ml-1 tracking-widest">Category</Label>
+                <div className="space-y-2">
+                  <Label className="text-[11px] uppercase font-black text-muted-foreground ml-2 tracking-widest">Category</Label>
                   <Select value={category} onValueChange={setCategory}>
-                    <SelectTrigger className="bg-muted border-none rounded-xl h-12 font-bold text-sm">
+                    <SelectTrigger className="bg-muted border-none rounded-2xl h-14 font-bold text-base px-6">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent position="popper">
+                    <SelectContent className="rounded-2xl">
                       {mainCategories.map((cat) => (
-                        <SelectItem key={cat} value={cat} className="text-sm font-bold">
+                        <SelectItem key={cat} value={cat} className="text-base font-bold">
                           {t.categories[cat as keyof typeof t.categories] || cat}
                         </SelectItem>
                       ))}
@@ -166,19 +161,19 @@ export function AddExpenseDrawer() {
                 </div>
               </div>
               
-              <div className="space-y-1.5">
-                <Label className="text-[10px] uppercase font-black text-muted-foreground ml-1 tracking-widest">Description</Label>
+              <div className="space-y-2">
+                <Label className="text-[11px] uppercase font-black text-muted-foreground ml-2 tracking-widest">Description</Label>
                 <Input 
                   placeholder="What was this for?" 
                   value={description} 
                   onChange={(e) => setDescription(e.target.value)}
-                  className="bg-muted border-none rounded-xl h-12 font-bold text-sm"
+                  className="bg-muted border-none rounded-2xl h-14 font-bold text-base px-6"
                 />
               </div>
 
-              <div className="pt-2">
-                <Button className="w-full rounded-2xl h-14 text-sm font-black uppercase tracking-widest shadow-lg shadow-primary/20 gap-2" onClick={handleSave} disabled={!amount || !description}>
-                  <Plus className="w-5 h-5" /> Save Expense
+              <div className="pt-4">
+                <Button className="w-full rounded-[2rem] h-16 text-base font-black uppercase tracking-widest shadow-xl shadow-primary/20 gap-3" onClick={handleSave} disabled={!amount || !description}>
+                  <Plus className="w-6 h-6" /> Save Expense
                 </Button>
               </div>
             </div>
