@@ -20,7 +20,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 
-// Dynamic imports for heavy UI components
+// Dynamic imports for performance
 const AddExpenseDrawer = dynamic(() => import('@/components/expenses/add-expense-drawer').then(mod => mod.AddExpenseDrawer), { ssr: false });
 const BillSplitTool = dynamic(() => import('@/components/bill-split/bill-split-tool').then(mod => mod.BillSplitTool), { ssr: false });
 const ExpenseList = dynamic(() => import('@/components/expenses/expense-list').then(mod => mod.ExpenseList), { ssr: false });
@@ -54,7 +54,7 @@ export default function Home() {
     );
   }
 
-  // Ultra-Premium Professional Auth UI
+  // DEFINITIVE PROFESSIONAL AUTH UI
   if (!user) {
     return (
       <div className="h-[100dvh] bg-[#FDFBF7] flex flex-col items-center justify-center p-6">
@@ -114,7 +114,7 @@ export default function Home() {
     );
   }
 
-  // Compact "Patla" Feature Grid Card
+  // "Patla" Feature Grid Card - Optimized for Visibility
   const GridCard = ({ icon: Icon, label, color, onClick, active }: { icon: any, label: string, color: string, onClick: () => void, active?: boolean }) => (
     <Card 
       className={cn(

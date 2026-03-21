@@ -37,7 +37,7 @@ export function Header() {
       console.warn("Clipboard API failed", err);
     }
 
-    // Fallback for non-secure
+    // Fallback for non-secure contexts
     if (!copied) {
       try {
         const textArea = document.createElement("textarea");
@@ -64,13 +64,13 @@ export function Header() {
       try {
         await navigator.share(shareData);
       } catch (err) {
-        // Silent
+        // Silent if cancelled
       }
     }
   };
   
   return (
-    <header className="sticky top-0 z-50 w-full bg-primary border-b border-white/10">
+    <header className="sticky top-0 z-50 w-full bg-primary border-b border-white/10 shrink-0">
       <div className="container flex h-16 items-center justify-between px-6 max-w-6xl mx-auto">
         <div className="flex items-center gap-2.5">
           <div className="bg-white/15 p-1.5 rounded-xl border border-white/20">
@@ -82,19 +82,14 @@ export function Header() {
         </div>
 
         <div className="flex items-center gap-2">
-          {/* Enhanced Share Button */}
+          {/* Main Share Button */}
           <Button 
             onClick={handleAppShare} 
             variant="outline" 
-            className="h-9 px-4 text-white border-white/20 hover:bg-white/10 rounded-xl gap-2 hidden sm:flex"
+            className="h-9 px-4 text-white border-white/20 hover:bg-white/10 rounded-xl gap-2 flex"
           >
-            <Share2 className="w-4 h-4" />
-            <span className="text-[10px] font-black uppercase tracking-widest">Share App</span>
-          </Button>
-
-          {/* Mobile Share Icon */}
-          <Button onClick={handleAppShare} variant="ghost" size="icon" className="h-10 w-10 text-white hover:bg-white/10 sm:hidden">
-            <Share2 className="w-5 h-5" />
+            <Share2 className="w-4 h-4 text-white" />
+            <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline">Share App</span>
           </Button>
           
           <Button variant="ghost" size="icon" className="h-10 w-10 text-white hover:bg-white/10">
@@ -109,7 +104,7 @@ export function Header() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56 rounded-[1.5rem] p-2 mt-2">
               <DropdownMenuLabel className="px-3 py-2">
-                <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground block mb-0.5">Logged in as</span>
+                <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground block mb-0.5">Account</span>
                 <span className="text-sm font-bold truncate text-primary">{user?.email}</span>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
