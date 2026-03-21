@@ -61,33 +61,29 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
   }, {} as Record<string, {name: string, total: number}>);
 
   const handleShareId = async () => {
-    const text = `Join my Finovo group '${groupData?.name}'! Use this ID to join: ${groupId}`;
-    
-    // Attempt Share first if available
-    if (navigator.share) {
-      try {
-        await navigator.share({ title: 'Finovo Group Invite', text });
-        return; // Success, exit
-      } catch (e) {
-        // User cancelled or share failed, proceed to clipboard fallback
-        console.log('Share dismissed or failed', e);
-      }
-    }
-
-    // Fallback: Clipboard API (Requires document focus)
     try {
+      // Step 1: Immediate Clipboard Copy (Primary Action)
+      // This is the most "automatic" way and works best as the first call in a click handler
       if (navigator.clipboard && window.isSecureContext) {
         await navigator.clipboard.writeText(groupId);
-        toast({ title: "Copied!", description: "Group ID copied to clipboard." });
-      } else {
-        throw new Error('Clipboard API unavailable');
+        toast({ title: "ID Copied!", description: "Group ID is now in your clipboard." });
+      }
+
+      // Step 2: Try OS Share (If supported)
+      if (navigator.share) {
+        const text = `Join my Finovo group '${groupData?.name || 'Finance'}'! Use this ID: ${groupId}`;
+        await navigator.share({ title: 'Finovo Group Invite', text });
       }
     } catch (err) {
-      // If clipboard also fails (e.g., document not focused), show the ID to user
-      toast({ 
-        title: "Group ID", 
-        description: `ID: ${groupId}. Please copy manually.`,
-      });
+      // If OS share is cancelled or fails, it's okay because the ID was already copied in Step 1.
+      console.log('Share interaction finished or failed', err);
+      // Final fallback: If even Step 1 failed for some reason
+      if (!navigator.clipboard) {
+        toast({ 
+          title: "Group ID", 
+          description: `ID: ${groupId}. Please copy it manually.`,
+        });
+      }
     }
   };
 
