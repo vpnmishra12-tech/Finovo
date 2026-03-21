@@ -131,7 +131,7 @@ export default function Home() {
         ) : (
           <div className="h-full flex flex-col max-w-6xl mx-auto px-5 py-2 space-y-2 overflow-hidden">
             {activeTab === 'dashboard' ? (
-              <div className="flex-1 flex flex-col space-y-2 animate-in fade-in duration-300 overflow-hidden">
+              <div className="flex-1 flex flex-col space-y-1 animate-in fade-in duration-300 overflow-hidden">
                 
                 {/* Profile Section */}
                 <div className="flex items-center gap-3 shrink-0 px-1 mt-1">
@@ -154,7 +154,7 @@ export default function Home() {
                   </AlertDescription>
                 </Alert>
 
-                {/* Main Content Area */}
+                {/* Main Content Area (Scrollable) */}
                 <div className="flex-1 flex flex-col space-y-2 overflow-y-auto no-scrollbar">
                   {/* Budget Cards Section */}
                   <BudgetSummary 
@@ -192,11 +192,11 @@ export default function Home() {
                       onClick={() => setActiveTab('groups')} 
                     />
                   </div>
-                  
-                  {/* Ad Section - Sticks to the very bottom */}
-                  <div className="mt-auto shrink-0 pb-1">
-                    <AdBanner />
-                  </div>
+                </div>
+
+                {/* Ad Section - Sticks to the very bottom border line */}
+                <div className="shrink-0 pt-1">
+                  <AdBanner />
                 </div>
                 
                 {/* FAB */}
