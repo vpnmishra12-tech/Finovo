@@ -241,16 +241,6 @@ export default function Home() {
             {t.dashboard}
           </button>
           <button
-            onClick={() => setActiveTab('groups')}
-            className={cn(
-              "flex items-center gap-3 px-4 py-3 rounded-xl font-black uppercase tracking-widest transition-all text-[10px]",
-              activeTab === 'groups' ? "bg-primary text-primary-foreground shadow-lg" : "hover:bg-muted text-muted-foreground"
-            )}
-          >
-            <Users className="w-4 h-4" />
-            {t.groups}
-          </button>
-          <button
             onClick={() => setActiveTab('history')}
             className={cn(
               "flex items-center gap-3 px-4 py-3 rounded-xl font-black uppercase tracking-widest transition-all text-[10px]",
@@ -269,6 +259,16 @@ export default function Home() {
           >
             <Calculator className="w-4 h-4" />
             {t.billSplitter}
+          </button>
+          <button
+            onClick={() => setActiveTab('groups')}
+            className={cn(
+              "flex items-center gap-3 px-4 py-3 rounded-xl font-black uppercase tracking-widest transition-all text-[10px]",
+              activeTab === 'groups' ? "bg-primary text-primary-foreground shadow-lg" : "hover:bg-muted text-muted-foreground"
+            )}
+          >
+            <Users className="w-4 h-4" />
+            {t.groups}
           </button>
         </nav>
 
@@ -370,9 +370,9 @@ export default function Home() {
       {/* Navigation */}
       <div className="md:hidden sticky bottom-0 left-0 right-0 h-16 bg-background/95 backdrop-blur-lg border-t z-50 px-2 flex items-center justify-between shrink-0 shadow-[0_-4px_12px_rgba(0,0,0,0.1)]">
         <NavItem id="dashboard" icon={LayoutDashboard} label={t.dashboard} />
-        <NavItem id="groups" icon={Users} label={t.groups} />
         <NavItem id="history" icon={History} label={t.history} />
         <NavItem id="splitter" icon={Calculator} label={t.billSplitter} />
+        <NavItem id="groups" icon={Users} label={t.groups} />
       </div>
     </div>
   );

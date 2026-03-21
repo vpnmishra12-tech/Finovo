@@ -1,5 +1,5 @@
 
-import { Firestore, collection, doc, serverTimestamp, Timestamp } from 'firebase/firestore';
+import { Firestore, collection, doc, serverTimestamp, Timestamp, updateDoc, arrayUnion, arrayRemove, deleteDoc } from 'firebase/firestore';
 import { setDocumentNonBlocking, updateDocumentNonBlocking, deleteDocumentNonBlocking, addDocumentNonBlocking } from '@/firebase';
 
 export interface Group {
@@ -33,11 +33,10 @@ export interface GroupExpense {
 
 /**
  * Creates a new group and adds initial members.
- * Follows non-blocking patterns by pre-generating IDs.
  */
 export function createGroup(db: Firestore, userId: string, name: string, members: {name: string, mobile: string}[]) {
   const groupsRef = collection(db, 'groups');
-  const newGroupRef = doc(groupsRef); // Generate ID on client
+  const newGroupRef = doc(groupsRef); 
   
   const groupData = {
     name,
@@ -46,24 +45,36 @@ export function createGroup(db: Firestore, userId: string, name: string, members
     createdAt: serverTimestamp(),
   };
 
-  // Create group document
   setDocumentNonBlocking(newGroupRef, groupData, {});
   
-  // Add initial member (creator)
-  const creatorRef = doc(collection(db, 'groups', newGroupRef.id, 'members'));
+  const creatorRef = doc(collection(db, 'groups', newGroupRef.id, 'members'), userId);
   setDocumentNonBlocking(creatorRef, {
     name: "Me",
     mobile: "",
     userId: userId
   }, {});
 
-  // Add other members
   for (const member of members) {
     const memberRef = doc(collection(db, 'groups', newGroupRef.id, 'members'));
     setDocumentNonBlocking(memberRef, member, {});
   }
 
   return newGroupRef.id;
+}
+
+export function addMemberToGroup(db: Firestore, groupId: string, name: string, mobile: string) {
+  const memberRef = doc(collection(db, 'groups', groupId, 'members'));
+  setDocumentNonBlocking(memberRef, { name, mobile }, {});
+}
+
+export function removeMemberFromGroup(db: Firestore, groupId: string, memberId: string) {
+  const docRef = doc(db, 'groups', groupId, 'members', memberId);
+  deleteDocumentNonBlocking(docRef);
+}
+
+export function deleteGroup(db: Firestore, groupId: string) {
+  const docRef = doc(db, 'groups', groupId);
+  deleteDocumentNonBlocking(docRef);
 }
 
 export function addGroupExpense(db: Firestore, groupId: string, data: Omit<GroupExpense, 'id' | 'createdAt'>) {

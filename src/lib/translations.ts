@@ -56,6 +56,10 @@ export const translations = {
     remainingToSplit: "Remaining to assign",
     personShare: "Share per Person",
     enterNames: "Please enter names for everyone",
+    deleteGroup: "Delete Group",
+    createdOn: "Created on",
+    removeMember: "Remove Member",
+    membersList: "Members List",
     alerts: {
       halfway: "Warning: You have spent 50% of your budget!",
       critical: "Urgent: 75% budget used. Watch your spending!",
@@ -149,6 +153,10 @@ export const translations = {
     remainingToSplit: "बचे हुए पैसे",
     personShare: "प्रति व्यक्ति हिस्सा",
     enterNames: "कृपया सभी के नाम लिखें",
+    deleteGroup: "ग्रुप हटाएं",
+    createdOn: "बनाया गया",
+    removeMember: "मेंबर हटाएं",
+    membersList: "मेंबर लिस्ट",
     alerts: {
       halfway: "चेतावनी: आपने अपने बजट का 50% खर्च कर दिया है!",
       critical: "ज़रूरी: 75% बजट खत्म। थोड़ा संभल कर चलें!",
