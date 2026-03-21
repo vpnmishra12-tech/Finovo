@@ -28,7 +28,7 @@ const AddExpenseDrawer = dynamic(() => import('@/components/expenses/add-expense
 });
 const SpendingChart = dynamic(() => import('@/components/dashboard/spending-chart').then(mod => mod.SpendingChart), { 
   ssr: false,
-  loading: () => <div className="h-[140px] w-full bg-muted/20 animate-pulse rounded-2xl" />
+  loading: () => <div className="h-[120px] w-full bg-muted/20 animate-pulse rounded-2xl" />
 });
 const BillSplitTool = dynamic(() => import('@/components/bill-split/bill-split-tool').then(mod => mod.BillSplitTool), { 
   ssr: false 
@@ -112,7 +112,7 @@ export default function Home() {
                   <div className="p-8 space-y-4">
                     <Input placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} className="h-12 rounded-xl bg-muted border-none font-bold" />
                     <Input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="h-12 rounded-xl bg-muted border-none font-bold" />
-                    <Button onClick={activeTab === 'dashboard' ? handleLogin : handleSignup} className="w-full h-12 rounded-xl font-black uppercase tracking-widest">
+                    <Button onClick={handleLogin} className="w-full h-12 rounded-xl font-black uppercase tracking-widest">
                       {isAuthLoading ? <Loader2 className="animate-spin" /> : "Proceed"}
                     </Button>
                   </div>
@@ -143,21 +143,21 @@ export default function Home() {
       className="border-none shadow-sm hover:shadow-md transition-all active:scale-95 cursor-pointer rounded-[1.5rem] overflow-hidden group"
       onClick={onClick}
     >
-      <CardContent className="p-4 flex flex-col items-center justify-center gap-2 text-center">
-        <div className={cn("p-3 rounded-full transition-transform group-hover:scale-110", color)}>
-          <Icon className="w-6 h-6" />
+      <CardContent className="p-3 flex flex-col items-center justify-center gap-2 text-center">
+        <div className={cn("p-2 rounded-full transition-transform group-hover:scale-110", color)}>
+          <Icon className="w-5 h-5" />
         </div>
-        <span className="font-headline font-black text-[11px] uppercase tracking-tight">{label}</span>
+        <span className="font-headline font-black text-[9px] uppercase tracking-tight">{label}</span>
       </CardContent>
     </Card>
   );
 
   return (
-    <div className="h-[100dvh] bg-[#F4F7FE] flex flex-col overflow-hidden text-foreground">
+    <div className="h-[100dvh] bg-background flex flex-col overflow-hidden text-foreground">
       <Header />
       
-      <main className="flex-1 overflow-y-auto pb-20 scroll-smooth">
-        <div className="max-w-6xl mx-auto p-4 space-y-3">
+      <main className="flex-1 overflow-y-auto pb-16 scroll-smooth">
+        <div className="max-w-6xl mx-auto p-4 pt-2 space-y-3">
           {activeTab === 'dashboard' && (
             <div className="space-y-3 animate-in fade-in duration-500">
               {/* Profile - Top Left Alphabet */}
@@ -182,7 +182,7 @@ export default function Home() {
               />
 
               {/* Feature Grid - MIDDLE */}
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-2">
                 <GridCard 
                   icon={LayoutDashboard} 
                   label={t.dashboard} 
@@ -239,7 +239,7 @@ export default function Home() {
       {activeTab === 'dashboard' && <AddExpenseDrawer />}
 
       {/* Modern Bottom Navigation */}
-      <div className="fixed bottom-0 left-0 right-0 h-16 bg-white border-t z-50 px-6 flex items-center justify-between shadow-[0_-8px_24px_rgba(0,0,0,0.05)]">
+      <div className="fixed bottom-0 left-0 right-0 h-16 bg-card border-t z-50 px-6 flex items-center justify-between shadow-[0_-8px_24px_rgba(0,0,0,0.05)]">
         <NavItem id="dashboard" icon={LayoutDashboard} label="Home" active={activeTab === 'dashboard'} />
         <NavItem id="history" icon={History} label="Bills" active={activeTab === 'history'} />
         <NavItem id="splitter" icon={Calculator} label="Split" active={activeTab === 'splitter'} />
