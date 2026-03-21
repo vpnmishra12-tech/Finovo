@@ -8,7 +8,7 @@ import { Header } from '@/components/layout/header';
 import { BudgetSummary } from '@/components/dashboard/budget-summary';
 import { AdBanner } from '@/components/dashboard/ad-banner';
 import { 
-  Wallet, LayoutDashboard, History, Calculator, Users, Plus, LayoutGrid, Home as HomeIcon, ReceiptText, CreditCard
+  Wallet, History, Calculator, Users, LayoutGrid, Home as HomeIcon, LogIn
 } from 'lucide-react';
 import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import { collection, query, orderBy, limit } from 'firebase/firestore';
@@ -16,6 +16,8 @@ import { Expense } from '@/lib/expenses';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 
 // Dynamic imports for heavy UI components
@@ -27,10 +29,15 @@ const GroupModule = dynamic(() => import('@/components/groups/group-module').the
 type NavTab = 'dashboard' | 'history' | 'splitter' | 'groups';
 
 export default function Home() {
-  const { user, loading } = useAuth();
+  const { user, loading, login, signup } = useAuth();
   const { t } = useLanguage();
   const firestore = useFirestore();
   const [activeTab, setActiveTab] = useState<NavTab>('dashboard');
+  
+  // Auth Form State
+  const [isLoginView, setIsLoginView] = useState(true);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const expensesQuery = useMemoFirebase(() => {
     if (!firestore || !user?.uid) return null;
@@ -47,18 +54,70 @@ export default function Home() {
     );
   }
 
-  if (!user) return null; // Auth handled by provider/redirect
+  // Auth UI if not logged in
+  if (!user) {
+    return (
+      <div className="h-[100dvh] bg-background flex flex-col items-center justify-center p-8">
+        <div className="w-full max-w-sm space-y-8 animate-in fade-in duration-500">
+          <div className="flex flex-col items-center text-center space-y-2">
+            <div className="bg-primary p-4 rounded-[2rem] shadow-xl mb-4">
+              <Wallet className="w-10 h-10 text-white" />
+            </div>
+            <h1 className="text-4xl font-headline font-black uppercase tracking-tight text-black leading-none">FINOVO</h1>
+            <p className="text-[10px] font-black uppercase text-gray-400 tracking-[0.2em]">{isLoginView ? 'WELCOME BACK' : 'CREATE ACCOUNT'}</p>
+          </div>
+
+          <div className="space-y-4">
+            <div className="space-y-1">
+              <Label className="text-[10px] font-black uppercase text-gray-400 ml-2">Email Address</Label>
+              <Input 
+                type="email" 
+                placeholder="you@example.com" 
+                value={email} 
+                onChange={(e) => setEmail(e.target.value)}
+                className="h-14 bg-white border-gray-100 rounded-2xl px-6 font-bold"
+              />
+            </div>
+            <div className="space-y-1">
+              <Label className="text-[10px] font-black uppercase text-gray-400 ml-2">Password</Label>
+              <Input 
+                type="password" 
+                placeholder="••••••••" 
+                value={password} 
+                onChange={(e) => setPassword(e.target.value)}
+                className="h-14 bg-white border-gray-100 rounded-2xl px-6 font-bold"
+              />
+            </div>
+            <Button 
+              onClick={() => isLoginView ? login(email, password) : signup(email, password)}
+              className="w-full h-16 rounded-[2rem] font-black uppercase tracking-widest text-sm shadow-xl shadow-primary/20 gap-3"
+            >
+              <LogIn className="w-5 h-5" /> {isLoginView ? 'Login Now' : 'Sign Up Now'}
+            </Button>
+            <div className="text-center">
+              <button 
+                onClick={() => setIsLoginView(!isLoginView)} 
+                className="text-[10px] font-black uppercase text-primary tracking-widest"
+              >
+                {isLoginView ? 'NEW HERE? CREATE ACCOUNT' : 'ALREADY HAVE AN ACCOUNT? LOGIN'}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const GridCard = ({ icon: Icon, label, color, onClick }: { icon: any, label: string, color: string, onClick: () => void }) => (
     <Card 
-      className="border border-gray-100 shadow-sm active:scale-95 transition-all cursor-pointer rounded-[1.8rem] overflow-hidden bg-white"
+      className="border-none shadow-sm active:scale-95 transition-all cursor-pointer rounded-2xl overflow-hidden bg-white"
       onClick={onClick}
     >
-      <CardContent className="p-5 flex items-center gap-4">
+      <CardContent className="p-4 flex items-center gap-3">
         <div className={cn("p-2 rounded-xl", color)}>
-          <Icon className="w-6 h-6" />
+          <Icon className="w-5 h-5" />
         </div>
-        <span className="font-headline font-black text-[11px] uppercase tracking-widest text-black leading-none">{label}</span>
+        <span className="font-headline font-black text-[10px] uppercase tracking-tighter text-black leading-tight flex-1">{label}</span>
       </CardContent>
     </Card>
   );
@@ -67,33 +126,35 @@ export default function Home() {
     <div className="h-[100dvh] bg-background flex flex-col overflow-hidden text-black">
       <Header />
       
-      <main className="flex-1 overflow-y-auto">
-        <div className="max-w-6xl mx-auto p-6 flex flex-col space-y-6">
+      <main className="flex-1 overflow-hidden relative">
+        <div className="h-full flex flex-col max-w-6xl mx-auto p-5 space-y-4">
           {activeTab === 'dashboard' && (
-            <div className="animate-in fade-in duration-500 space-y-6">
+            <div className="flex-1 flex flex-col space-y-4 animate-in fade-in duration-500">
               {/* Profile Header */}
-              <div className="flex items-center gap-4">
-                <Avatar className="h-16 w-16 border-[6px] border-white shadow-lg">
-                  <AvatarFallback className="bg-black text-white text-2xl font-black">
-                    {user.email?.charAt(0).toUpperCase() || 'V'}
+              <div className="flex items-center gap-4 shrink-0">
+                <Avatar className="h-12 w-12 border-4 border-white shadow-md">
+                  <AvatarFallback className="bg-black text-white text-lg font-black uppercase">
+                    {user.email?.charAt(0) || 'V'}
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col">
-                  <span className="text-[11px] font-black uppercase text-gray-400 tracking-[0.2em]">OVERVIEW</span>
-                  <h2 className="text-3xl font-headline font-black uppercase text-black leading-none tracking-tight">DASHBOARD</h2>
+                  <span className="text-[10px] font-black uppercase text-gray-400 tracking-[0.2em] leading-none">OVERVIEW</span>
+                  <h2 className="text-2xl font-headline font-black uppercase text-black leading-none tracking-tight">DASHBOARD</h2>
                 </div>
               </div>
 
-              {/* Budget Summary Section */}
-              <BudgetSummary 
-                userId={user.uid} 
-                totalSpent={expenses?.reduce((sum, e) => sum + e.amount, 0) || 6808} 
-                month={new Date().getMonth()+1} 
-                year={new Date().getFullYear()} 
-              />
+              {/* Budget Summary Section (Top) */}
+              <div className="shrink-0">
+                <BudgetSummary 
+                  userId={user.uid} 
+                  totalSpent={expenses?.reduce((sum, e) => sum + e.amount, 0) || 0} 
+                  month={new Date().getMonth()+1} 
+                  year={new Date().getFullYear()} 
+                />
+              </div>
 
-              {/* Feature Grid Section */}
-              <div className="grid grid-cols-2 gap-4">
+              {/* Feature Grid Section (Middle - Flex-1 to fill space) */}
+              <div className="flex-1 grid grid-cols-2 gap-3 content-center">
                 <GridCard 
                   icon={LayoutGrid} 
                   label="DASHBOARD" 
@@ -120,42 +181,43 @@ export default function Home() {
                 />
               </div>
 
-              {/* Ad Space Section */}
-              <div className="relative">
+              {/* Ad Space Section (Bottom) */}
+              <div className="shrink-0 mt-auto">
                 <AdBanner />
-                {/* Floating Plus Button - positioned relative to content in image */}
-                <div className="absolute right-0 bottom-[-20px] z-20">
-                  <AddExpenseDrawer />
-                </div>
               </div>
               
-              <div className="h-20" /> {/* Bottom spacing */}
+              {/* Floating Plus Button */}
+              <div className="absolute right-4 bottom-20 z-50">
+                <AddExpenseDrawer />
+              </div>
             </div>
           )}
 
-          {activeTab === 'history' && <ExpenseList expenses={expenses || []} isLoading={isExpensesLoading} />}
-          {activeTab === 'splitter' && <BillSplitTool />}
-          {activeTab === 'groups' && <GroupModule />}
+          <div className="flex-1 overflow-y-auto">
+            {activeTab === 'history' && <ExpenseList expenses={expenses || []} isLoading={isExpensesLoading} />}
+            {activeTab === 'splitter' && <BillSplitTool />}
+            {activeTab === 'groups' && <GroupModule />}
+          </div>
         </div>
       </main>
 
       {/* Bottom Navigation */}
-      <div className="h-20 bg-white border-t flex items-center justify-around px-4 pb-2 shadow-inner">
-        <button onClick={() => setActiveTab('dashboard')} className={cn("flex flex-col items-center gap-1.5", activeTab === 'dashboard' ? "text-primary" : "text-gray-400")}>
-          <HomeIcon className="w-6 h-6" />
-          <span className="text-[10px] font-black uppercase tracking-widest">HOME</span>
+      <div className="h-16 bg-white border-t flex items-center justify-around px-4 pb-1 shadow-inner shrink-0">
+        <button onClick={() => setActiveTab('dashboard')} className={cn("flex flex-col items-center gap-1", activeTab === 'dashboard' ? "text-primary" : "text-gray-400")}>
+          <HomeIcon className="w-5 h-5" />
+          <span className="text-[9px] font-black uppercase tracking-widest">HOME</span>
         </button>
-        <button onClick={() => setActiveTab('history')} className={cn("flex flex-col items-center gap-1.5", activeTab === 'history' ? "text-primary" : "text-gray-400")}>
-          <History className="w-6 h-6" />
-          <span className="text-[10px] font-black uppercase tracking-widest">BILLS</span>
+        <button onClick={() => setActiveTab('history')} className={cn("flex flex-col items-center gap-1", activeTab === 'history' ? "text-primary" : "text-gray-400")}>
+          <History className="w-5 h-5" />
+          <span className="text-[9px] font-black uppercase tracking-widest">BILLS</span>
         </button>
-        <button onClick={() => setActiveTab('splitter')} className={cn("flex flex-col items-center gap-1.5", activeTab === 'splitter' ? "text-primary" : "text-gray-400")}>
-          <Calculator className="w-6 h-6" />
-          <span className="text-[10px] font-black uppercase tracking-widest">SPLIT</span>
+        <button onClick={() => setActiveTab('splitter')} className={cn("flex flex-col items-center gap-1", activeTab === 'splitter' ? "text-primary" : "text-gray-400")}>
+          <Calculator className="w-5 h-5" />
+          <span className="text-[9px] font-black uppercase tracking-widest">SPLIT</span>
         </button>
-        <button onClick={() => setActiveTab('groups')} className={cn("flex flex-col items-center gap-1.5", activeTab === 'groups' ? "text-primary" : "text-gray-400")}>
-          <Users className="w-6 h-6" />
-          <span className="text-[10px] font-black uppercase tracking-widest">GROUPS</span>
+        <button onClick={() => setActiveTab('groups')} className={cn("flex flex-col items-center gap-1", activeTab === 'groups' ? "text-primary" : "text-gray-400")}>
+          <Users className="w-5 h-5" />
+          <span className="text-[9px] font-black uppercase tracking-widest">GROUPS</span>
         </button>
       </div>
     </div>
