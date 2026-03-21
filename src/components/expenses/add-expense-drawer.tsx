@@ -88,12 +88,12 @@ export function AddExpenseDrawer() {
     <Dialog open={open} onOpenChange={(val) => { setOpen(val); if (!val) resetForm(); }}>
       <DialogTrigger asChild>
         <Button 
-          className="fixed bottom-[74px] right-6 md:bottom-8 md:right-8 h-16 w-16 rounded-full shadow-2xl z-[60] hover:scale-105 transition-transform active:scale-95 bg-primary text-primary-foreground border-4 border-background"
+          className="fixed bottom-[100px] right-6 md:bottom-8 md:right-8 h-16 w-16 rounded-full shadow-2xl z-[60] hover:scale-105 transition-transform active:scale-95 bg-primary text-primary-foreground border-4 border-background"
         >
           <Plus className="w-8 h-8" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-md w-[95%] max-h-[85vh] rounded-[2.5rem] p-0 overflow-hidden border-none shadow-2xl z-[100] flex flex-col top-[50%] translate-y-[-50%]">
+      <DialogContent className="max-w-md w-[95%] max-h-[85vh] rounded-[2.5rem] p-0 overflow-hidden border-none shadow-2xl z-[100] flex flex-col top-[42%] translate-y-[-50%]">
         <DialogHeader className="p-4 px-6 bg-primary text-primary-foreground shrink-0">
           <DialogTitle className="font-headline text-xl flex items-center gap-2">
             <Sparkles className="w-5 h-5" />

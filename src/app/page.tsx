@@ -273,7 +273,7 @@ export default function Home() {
         </div>
       </main>
 
-      <AddExpenseDrawer />
+      {activeTab === 'dashboard' && <AddExpenseDrawer />}
 
       {/* Modern Bottom Navigation */}
       <div className="fixed bottom-0 left-0 right-0 h-20 bg-white border-t z-50 px-6 flex items-center justify-between shadow-[0_-8px_24px_rgba(0,0,0,0.05)]">
