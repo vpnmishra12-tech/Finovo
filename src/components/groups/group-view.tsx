@@ -12,7 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
-import { ArrowLeft, MapPin, Calendar, Trash2, Wallet, Users, UserPlus, CheckCircle2, Share2, Copy } from 'lucide-react';
+import { ArrowLeft, MapPin, Calendar, Trash2, Wallet, Users, UserPlus, CheckCircle2, Share2, Copy, Loader2 } from 'lucide-react';
 import { AddGroupExpenseDialog } from './add-group-expense-dialog';
 import { format } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
