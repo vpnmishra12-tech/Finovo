@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -9,8 +8,8 @@ import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { PiggyBank, Target, TrendingUp, Edit2, AlertTriangle, Info, History, ArrowUpCircle } from 'lucide-react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { AlertTriangle, Edit2, History } from 'lucide-react';
 import { useFirestore, useDoc, useMemoFirebase } from '@/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
@@ -32,7 +31,6 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
 
   const { data: budgetData } = useDoc<MonthlyBudget>(budgetRef);
   const budget = budgetData?.budgetAmount || 0;
-  const updateCount = budgetData?.updateCount || 0;
 
   useEffect(() => {
     async function checkCarryover() {
@@ -72,65 +70,65 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
   const overspentAmount = Math.max(totalSpent - budget, 0);
 
   return (
-    <div className="space-y-1.5">
+    <div className="space-y-4">
       {percentage >= 75 && budget > 0 && (
-        <Alert className="py-1.5 px-3 rounded-lg border bg-destructive/5 text-destructive border-destructive/20 flex items-center gap-2">
-          <AlertTriangle className="h-3 w-3" />
-          <AlertDescription className="text-[9px] font-bold uppercase leading-none">
+        <Alert className="py-2 px-4 rounded-2xl border bg-destructive/5 text-destructive border-destructive/20 flex items-center gap-3">
+          <AlertTriangle className="h-4 w-4" />
+          <AlertDescription className="text-[10px] font-black uppercase tracking-widest leading-none">
             {percentage >= 100 ? t.alerts.exhausted : t.alerts.critical}
           </AlertDescription>
         </Alert>
       )}
 
       {lastMonthDebt > 0 && (
-        <div className="bg-destructive/10 border-destructive/20 rounded-lg p-1.5 flex items-center gap-2">
-          <History className="w-3 h-3 text-destructive" />
-          <p className="text-[8px] font-black text-destructive uppercase tracking-widest">Debt: -₹{lastMonthDebt.toLocaleString()}</p>
+        <div className="bg-destructive/10 border-destructive/20 rounded-2xl p-3 flex items-center gap-3">
+          <History className="w-4 h-4 text-destructive" />
+          <p className="text-[10px] font-black text-destructive uppercase tracking-widest">Last Month Debt: -₹{lastMonthDebt.toLocaleString()}</p>
         </div>
       )}
 
-      <div className="grid gap-2 grid-cols-1">
-        <Card className="bg-primary text-primary-foreground border-none shadow-md overflow-hidden rounded-xl">
-          <CardContent className="p-2.5">
-            <div className="flex justify-between items-center mb-0.5">
-              <p className="text-[8px] font-black opacity-70 uppercase tracking-widest">{t.budget}</p>
+      <div className="grid gap-3 grid-cols-1">
+        <Card className="bg-primary text-primary-foreground border-none shadow-xl overflow-hidden rounded-[2rem]">
+          <CardContent className="p-6">
+            <div className="flex justify-between items-center mb-2">
+              <p className="text-[10px] font-black opacity-70 uppercase tracking-[0.3em]">{t.budget}</p>
               <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
-                  <Button variant="ghost" size="icon" className="h-4 w-4 bg-white/10 hover:bg-white/20 p-0">
-                    <Edit2 className="w-2.5 h-2.5 text-white" />
+                  <Button variant="ghost" size="icon" className="h-8 w-8 bg-white/10 hover:bg-white/20 p-0 rounded-full">
+                    <Edit2 className="w-4 h-4 text-white" />
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="max-w-[350px]">
-                  <DialogHeader><DialogTitle>{t.actions.setBudget}</DialogTitle></DialogHeader>
+                <DialogContent className="max-w-[350px] rounded-3xl">
+                  <DialogHeader><DialogTitle className="font-headline uppercase font-black">{t.actions.setBudget}</DialogTitle></DialogHeader>
                   <div className="flex flex-col gap-4 py-4">
-                    <p className="text-sm text-muted-foreground">{t.limitDesc}</p>
-                    <Input type="number" placeholder="Enter amount" value={newBudget} onChange={(e) => setNewBudget(e.target.value)} />
-                    <Button onClick={handleSetBudget} className="w-full">{t.actions.save}</Button>
+                    <p className="text-xs font-bold text-black/60 uppercase tracking-tight">{t.limitDesc}</p>
+                    <Input type="number" placeholder="Enter amount" value={newBudget} onChange={(e) => setNewBudget(e.target.value)} className="h-12 rounded-xl font-bold" />
+                    <Button onClick={handleSetBudget} className="w-full h-12 rounded-xl font-black uppercase tracking-widest">{t.actions.save}</Button>
                   </div>
                 </DialogContent>
               </Dialog>
             </div>
-            <p className="text-lg font-headline font-black leading-tight">₹{budget.toLocaleString()}</p>
+            <p className="text-4xl font-headline font-black leading-tight tracking-tight">₹{budget.toLocaleString()}</p>
           </CardContent>
         </Card>
 
-        <div className="grid grid-cols-2 gap-2">
-          <Card className="bg-card border-none shadow-sm overflow-hidden rounded-xl">
-            <CardContent className="p-2.5">
-              <p className="text-[8px] font-black text-muted-foreground mb-0.5 uppercase tracking-widest">{t.spent}</p>
-              <p className="text-base font-headline font-black leading-tight">₹{totalSpent.toLocaleString()}</p>
-              <div className="mt-1 space-y-1">
-                <Progress value={percentage} className="h-0.5 bg-muted" />
+        <div className="grid grid-cols-2 gap-3">
+          <Card className="bg-card border-2 border-primary/5 shadow-sm overflow-hidden rounded-[1.5rem]">
+            <CardContent className="p-5">
+              <p className="text-[10px] font-black text-black/40 mb-1 uppercase tracking-widest">{t.spent}</p>
+              <p className="text-2xl font-headline font-black leading-tight text-black">₹{totalSpent.toLocaleString()}</p>
+              <div className="mt-3">
+                <Progress value={percentage} className="h-1 bg-muted" />
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-card border-none shadow-sm overflow-hidden rounded-xl">
-            <CardContent className="p-2.5">
-              <p className="text-[8px] font-black text-muted-foreground mb-0.5 uppercase tracking-widest">
+          <Card className="bg-card border-2 border-primary/5 shadow-sm overflow-hidden rounded-[1.5rem]">
+            <CardContent className="p-5">
+              <p className="text-[10px] font-black text-black/40 mb-1 uppercase tracking-widest">
                 {overspentAmount > 0 ? t.overspent : t.remaining}
               </p>
-              <p className={`text-base font-headline font-black leading-tight ${overspentAmount > 0 ? 'text-destructive' : 'text-green-500'}`}>
+              <p className={`text-2xl font-headline font-black leading-tight ${overspentAmount > 0 ? 'text-destructive' : 'text-green-600'}`}>
                 ₹{(overspentAmount > 0 ? overspentAmount : remaining).toLocaleString()}
               </p>
             </CardContent>

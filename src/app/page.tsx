@@ -83,7 +83,7 @@ export default function Home() {
           <div className="bg-primary/10 p-4 rounded-3xl">
             <Wallet className="w-10 h-10 text-primary animate-bounce" />
           </div>
-          <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary animate-pulse">Finovo Loading...</p>
+          <p className="text-[10px] font-black uppercase tracking-[0.4em] text-black animate-pulse">Finovo Loading...</p>
         </div>
       </div>
     );
@@ -98,20 +98,20 @@ export default function Home() {
             <div className="p-4 bg-primary/10 rounded-full mb-4">
               <Wallet className="w-16 h-16 text-primary" />
             </div>
-            <h1 className="text-3xl font-headline font-black tracking-tight text-foreground">Finovo <span className="text-primary">Business</span></h1>
-            <p className="text-sm text-muted-foreground font-medium max-w-xs mx-auto mt-2">Professional Grade Expense Tracking for Everyone.</p>
+            <h1 className="text-3xl font-headline font-black tracking-tight text-black">Finovo <span className="text-primary">Business</span></h1>
+            <p className="text-sm text-black/60 font-medium max-w-xs mx-auto mt-2">Professional Grade Expense Tracking for Everyone.</p>
             
             <Card className="w-full max-w-sm border-none shadow-2xl rounded-[2rem] overflow-hidden bg-card mt-8">
               <CardContent className="p-0">
                 <Tabs defaultValue="login" className="w-full">
                   <TabsList className="grid w-full grid-cols-2 rounded-none h-14 bg-muted/50">
-                    <TabsTrigger value="login" className="data-[state=active]:bg-card rounded-none h-full font-black text-xs uppercase tracking-widest text-foreground">Login</TabsTrigger>
-                    <TabsTrigger value="signup" className="data-[state=active]:bg-card rounded-none h-full font-black text-xs uppercase tracking-widest text-foreground">Sign Up</TabsTrigger>
+                    <TabsTrigger value="login" className="data-[state=active]:bg-card rounded-none h-full font-black text-xs uppercase tracking-widest text-black">Login</TabsTrigger>
+                    <TabsTrigger value="signup" className="data-[state=active]:bg-card rounded-none h-full font-black text-xs uppercase tracking-widest text-black">Sign Up</TabsTrigger>
                   </TabsList>
                   <div className="p-8 space-y-4">
-                    <Input placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} className="h-12 rounded-xl bg-muted border-none font-bold text-foreground" />
-                    <Input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="h-12 rounded-xl bg-muted border-none font-bold text-foreground" />
-                    <Button onClick={handleLogin} className="w-full h-12 rounded-xl font-black uppercase tracking-widest">
+                    <Input placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} className="h-12 rounded-xl bg-muted border-none font-bold text-black" />
+                    <Input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="h-12 rounded-xl bg-muted border-none font-bold text-black" />
+                    <Button onClick={handleLogin} className="w-full h-12 rounded-xl font-black uppercase tracking-widest bg-black text-white hover:bg-black/90">
                       {isAuthLoading ? <Loader2 className="animate-spin" /> : "Proceed"}
                     </Button>
                   </div>
@@ -129,7 +129,7 @@ export default function Home() {
       onClick={() => setActiveTab(id)}
       className={cn(
         "flex flex-col items-center justify-center gap-1 transition-all",
-        active ? "text-primary scale-110" : "text-muted-foreground opacity-60"
+        active ? "text-primary scale-110" : "text-black/40"
       )}
     >
       <Icon className="w-6 h-6" />
@@ -139,40 +139,40 @@ export default function Home() {
 
   const GridCard = ({ icon: Icon, label, color, onClick }: { icon: any, label: string, color: string, onClick: () => void }) => (
     <Card 
-      className="border-none shadow-sm hover:shadow-md transition-all active:scale-95 cursor-pointer rounded-[1.5rem] overflow-hidden group bg-card"
+      className="border-2 border-primary/5 shadow-sm hover:shadow-md transition-all active:scale-95 cursor-pointer rounded-[2rem] overflow-hidden group bg-card h-32 md:h-40"
       onClick={onClick}
     >
-      <CardContent className="p-3 flex flex-col items-center justify-center gap-2 text-center">
-        <div className={cn("p-2 rounded-full transition-transform group-hover:scale-110", color)}>
-          <Icon className="w-5 h-5" />
+      <CardContent className="p-4 flex flex-col items-center justify-center h-full gap-3 text-center">
+        <div className={cn("p-4 rounded-3xl transition-transform group-hover:scale-110", color)}>
+          <Icon className="w-7 h-7" />
         </div>
-        <span className="font-headline font-black text-[9px] uppercase tracking-tight text-foreground">{label}</span>
+        <span className="font-headline font-black text-[11px] uppercase tracking-widest text-black">{label}</span>
       </CardContent>
     </Card>
   );
 
   return (
-    <div className="h-[100dvh] bg-background flex flex-col overflow-hidden text-foreground">
+    <div className="h-[100dvh] bg-background flex flex-col overflow-hidden text-black">
       <Header />
       
-      <main className="flex-1 overflow-y-auto pb-16 scroll-smooth">
-        <div className="max-w-6xl mx-auto p-4 pt-2 space-y-3">
+      <main className="flex-1 overflow-y-auto pb-20 scroll-smooth">
+        <div className="max-w-6xl mx-auto p-6 pt-4 space-y-6">
           {activeTab === 'dashboard' && (
-            <div className="space-y-3 animate-in fade-in duration-500">
+            <div className="space-y-6 animate-in fade-in duration-500">
               {/* Profile - Top Left Alphabet */}
-              <div className="flex items-center gap-3 mb-1">
-                <Avatar className="h-10 w-10 border-2 border-primary/10 shadow-sm">
-                  <AvatarFallback className="bg-primary text-primary-foreground text-base font-black">
+              <div className="flex items-center gap-4">
+                <Avatar className="h-14 w-14 border-4 border-primary/10 shadow-md">
+                  <AvatarFallback className="bg-black text-white text-xl font-black">
                     {user.email?.charAt(0).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col">
-                  <span className="text-[9px] font-black uppercase text-muted-foreground tracking-widest">Overview</span>
-                  <h2 className="text-lg font-headline font-black uppercase text-foreground leading-none">Dashboard</h2>
+                  <span className="text-[10px] font-black uppercase text-black/40 tracking-[0.3em]">Overview</span>
+                  <h2 className="text-2xl font-headline font-black uppercase text-black leading-none">Dashboard</h2>
                 </div>
               </div>
 
-              {/* Budget Summary - TOP */}
+              {/* Budget Summary - TOP (RE-ORDERED) */}
               <BudgetSummary 
                 userId={user.uid} 
                 totalSpent={expenses?.reduce((sum, e) => sum + e.amount, 0) || 0} 
@@ -180,41 +180,41 @@ export default function Home() {
                 year={new Date().getFullYear()} 
               />
 
-              {/* Feature Grid - MIDDLE */}
-              <div className="grid grid-cols-2 gap-2">
+              {/* Feature Grid - MIDDLE (MORE SPACIOUS) */}
+              <div className="grid grid-cols-2 gap-4">
                 <GridCard 
                   icon={LayoutDashboard} 
                   label={t.dashboard} 
-                  color="bg-blue-500/10 text-blue-500" 
+                  color="bg-blue-500/10 text-blue-600" 
                   onClick={() => setActiveTab('dashboard')} 
                 />
                 <GridCard 
                   icon={History} 
                   label={t.history} 
-                  color="bg-orange-500/10 text-orange-500" 
+                  color="bg-orange-500/10 text-orange-600" 
                   onClick={() => setActiveTab('history')} 
                 />
                 <GridCard 
                   icon={Calculator} 
                   label={t.billSplitter} 
-                  color="bg-purple-500/10 text-purple-500" 
+                  color="bg-purple-500/10 text-purple-600" 
                   onClick={() => setActiveTab('splitter')} 
                 />
                 <GridCard 
                   icon={Users} 
                   label={t.groups} 
-                  color="bg-green-500/10 text-green-500" 
+                  color="bg-green-500/10 text-green-600" 
                   onClick={() => setActiveTab('groups')} 
                 />
               </div>
 
-              {/* Ad Space - BOTTOM */}
+              {/* Ad Space - BOTTOM (RESTORED TO BOTTOM) */}
               <AdBanner />
             </div>
           )}
 
           {activeTab === 'history' && (
-            <div className="space-y-4 animate-in slide-in-from-right-4 duration-500">
+            <div className="space-y-6 animate-in slide-in-from-right-4 duration-500">
               <SpendingChart expenses={expenses || []} />
               <ExpenseList expenses={expenses || []} isLoading={isExpensesLoading} />
             </div>
@@ -238,7 +238,7 @@ export default function Home() {
       {activeTab === 'dashboard' && <AddExpenseDrawer />}
 
       {/* Modern Bottom Navigation */}
-      <div className="fixed bottom-0 left-0 right-0 h-16 bg-card border-t z-50 px-6 flex items-center justify-between shadow-[0_-8px_24px_rgba(0,0,0,0.05)]">
+      <div className="fixed bottom-0 left-0 right-0 h-18 bg-card border-t z-50 px-8 pb-2 flex items-center justify-between shadow-[0_-12px_32px_rgba(0,0,0,0.08)]">
         <NavItem id="dashboard" icon={LayoutDashboard} label="Home" active={activeTab === 'dashboard'} />
         <NavItem id="history" icon={History} label="Bills" active={activeTab === 'history'} />
         <NavItem id="splitter" icon={Calculator} label="Split" active={activeTab === 'splitter'} />
