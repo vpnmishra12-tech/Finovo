@@ -68,7 +68,7 @@ export function Header() {
     <header className="sticky top-0 z-[100] w-full bg-[#1D4ED8] shrink-0 border-none">
       <div className="container flex h-20 items-center justify-between px-6 max-w-6xl mx-auto">
         <div className="flex items-center gap-4">
-          <div className="bg-white/20 p-2.5 rounded-xl border border-white/10">
+          <div className="bg-white/20 p-2.5 rounded-xl border border-white/10 shadow-sm">
             <Wallet className="w-7 h-7 text-white" />
           </div>
           <div className="flex flex-col">
@@ -84,19 +84,19 @@ export function Header() {
             onClick={handleAppShare} 
             variant="ghost" 
             size="icon"
-            className="h-10 w-10 text-white bg-white/10 rounded-full hover:bg-white/20"
+            className="h-10 w-10 text-white bg-white/15 rounded-full hover:bg-white/25 transition-all active:scale-90"
           >
             <Share2 className="w-5 h-5" />
           </Button>
           
           <Button variant="ghost" size="icon" className="h-10 w-10 text-white hover:bg-white/10">
-            <Bell className="w-6 h-6" />
+            <Bell className="w-5 h-5" />
           </Button>
           
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="h-10 w-10 text-white hover:bg-white/10">
-                <Settings className="w-6 h-6" />
+                <Settings className="w-5 h-5" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56 rounded-[1.5rem] p-2 mt-2 shadow-2xl">
