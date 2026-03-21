@@ -11,11 +11,6 @@ service cloud.firestore {
       return isSignedIn() && request.auth.uid == userId;
     }
 
-    function isGroupMember(groupId) {
-      // Basic rule: if your UID is in the group's memberIds array
-      return isSignedIn() && (request.auth.uid in get(/databases/$(database)/documents/groups/$(groupId)).data.memberIds);
-    }
-
     match /users/{userId} {
       allow get, list, create, update, delete: if isOwner(userId);
 
@@ -29,17 +24,19 @@ service cloud.firestore {
     }
 
     match /groups/{groupId} {
+      // For the group document itself, use resource.data for efficient listing
       allow create: if isSignedIn();
-      allow read, update, delete: if isGroupMember(groupId);
+      allow read, update, delete: if isSignedIn() && (request.auth.uid in resource.data.memberIds);
 
       match /expenses/{expenseId} {
-        allow read: if isGroupMember(groupId);
-        allow create: if isGroupMember(groupId);
-        allow update, delete: if isGroupMember(groupId) && request.auth.uid == resource.data.paidBy;
+        // For sub-collections, we must use get() to check parent group membership
+        allow read: if isSignedIn() && (request.auth.uid in get(/databases/$(database)/documents/groups/$(groupId)).data.memberIds);
+        allow create: if isSignedIn() && (request.auth.uid in get(/databases/$(database)/documents/groups/$(groupId)).data.memberIds);
+        allow update, delete: if isSignedIn() && (request.auth.uid in get(/databases/$(database)/documents/groups/$(groupId)).data.memberIds) && request.auth.uid == resource.data.paidBy;
       }
 
       match /members/{memberId} {
-        allow read, write: if isGroupMember(groupId);
+        allow read, write: if isSignedIn() && (request.auth.uid in get(/databases/$(database)/documents/groups/$(groupId)).data.memberIds);
       }
     }
 
