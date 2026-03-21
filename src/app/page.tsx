@@ -157,21 +157,23 @@ export default function Home() {
       <Header />
       
       <main className="flex-1 overflow-y-auto pb-24 scroll-smooth">
-        {/* Profile Section - Show Only Avatar Alphabet */}
-        <section className="bg-white p-6 pb-8 border-b shadow-sm">
-          <div className="max-w-6xl mx-auto flex items-center justify-center">
-            <Avatar className="h-20 w-20 border-4 border-primary/10 shadow-lg">
-              <AvatarFallback className="bg-primary text-primary-foreground text-3xl font-black">
-                {user.email?.charAt(0).toUpperCase()}
-              </AvatarFallback>
-            </Avatar>
-          </div>
-        </section>
-
         <div className="max-w-6xl mx-auto p-4 space-y-4">
           {activeTab === 'dashboard' && (
             <div className="space-y-4 animate-in fade-in duration-500">
-              {/* Budget Summary - Top */}
+              {/* Profile - Top Left Alphabet */}
+              <div className="flex items-center gap-4 mb-2">
+                <Avatar className="h-14 w-14 border-2 border-primary/10 shadow-sm">
+                  <AvatarFallback className="bg-primary text-primary-foreground text-xl font-black">
+                    {user.email?.charAt(0).toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="flex flex-col">
+                  <span className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">Overview</span>
+                  <h2 className="text-xl font-headline font-black uppercase">Dashboard</h2>
+                </div>
+              </div>
+
+              {/* Budget Summary - TOP (Now properly on top as requested) */}
               <BudgetSummary 
                 userId={user.uid} 
                 totalSpent={expenses?.reduce((sum, e) => sum + e.amount, 0) || 0} 
@@ -179,7 +181,7 @@ export default function Home() {
                 year={new Date().getFullYear()} 
               />
 
-              {/* Feature Grid - Middle */}
+              {/* Feature Grid - MIDDLE */}
               <div className="grid grid-cols-2 gap-4">
                 <GridCard 
                   icon={LayoutDashboard} 
@@ -207,7 +209,7 @@ export default function Home() {
                 />
               </div>
 
-              {/* Ad Space - Bottom */}
+              {/* Ad Space - BOTTOM (Now properly at the bottom) */}
               <AdBanner />
             </div>
           )}
