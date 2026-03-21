@@ -52,12 +52,9 @@ export default function Home() {
     );
   }
 
-  const GridCard = ({ icon: Icon, label, color, onClick, active }: { icon: any, label: string, color: string, onClick: () => void, active?: boolean }) => (
+  const GridCard = ({ icon: Icon, label, color, onClick }: { icon: any, label: string, color: string, onClick: () => void }) => (
     <Card 
-      className={cn(
-        "border-none shadow-sm active:scale-95 transition-all cursor-pointer rounded-[1rem] bg-white h-[5.2rem] flex items-center overflow-hidden",
-        active && "ring-2 ring-primary"
-      )}
+      className="border-none shadow-sm active:scale-95 transition-all cursor-pointer rounded-[1rem] bg-white h-[5.2rem] flex items-center overflow-hidden"
       onClick={onClick}
     >
       <CardContent className="p-2.5 flex items-center gap-2.5 w-full">
@@ -163,14 +160,13 @@ export default function Home() {
                     year={new Date().getFullYear()} 
                   />
 
-                  {/* Feature Grid Section - Increased Height to fill empty space */}
+                  {/* Feature Grid Section */}
                   <div className="grid grid-cols-2 gap-2 shrink-0">
                     <GridCard 
                       icon={LayoutGrid} 
                       label="Dashboard" 
                       color="text-blue-600 bg-blue-50" 
                       onClick={() => setActiveTab('dashboard')} 
-                      active={activeTab === 'dashboard'}
                     />
                     <GridCard 
                       icon={History} 
@@ -193,7 +189,7 @@ export default function Home() {
                   </div>
                 </div>
 
-                {/* Ad Section - Sticks to the very bottom border line */}
+                {/* Ad Section */}
                 <div className="shrink-0 pt-1">
                   <AdBanner />
                 </div>
