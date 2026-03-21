@@ -155,7 +155,7 @@ export default function Home() {
                 </Alert>
 
                 {/* Main Content Area */}
-                <div className="flex-1 flex flex-col space-y-2 overflow-y-auto no-scrollbar pb-24">
+                <div className="flex-1 flex flex-col space-y-2 overflow-y-auto no-scrollbar">
                   {/* Budget Cards Section */}
                   <BudgetSummary 
                     userId={user.uid} 
@@ -193,8 +193,8 @@ export default function Home() {
                     />
                   </div>
                   
-                  {/* Ad Section - Moved lower using mt-auto and extra padding */}
-                  <div className="pt-10 mt-auto shrink-0">
+                  {/* Ad Section - Sticks to the very bottom */}
+                  <div className="mt-auto shrink-0 pb-1">
                     <AdBanner />
                   </div>
                 </div>
