@@ -2,7 +2,7 @@
 
 import { useAuth } from '@/lib/contexts/auth-context';
 import { Button } from '@/components/ui/button';
-import { Wallet, Share2, Bell, Settings, LogOut } from 'lucide-react';
+import { Wallet, Share2, Bell, Settings, LogOut, Copy } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import {
   DropdownMenu,
@@ -27,7 +27,7 @@ export function Header() {
 
     let copied = false;
 
-    // Try Clipboard API first
+    // Try Clipboard API
     try {
       if (navigator.clipboard && window.isSecureContext) {
         await navigator.clipboard.writeText(textToCopy);
@@ -37,7 +37,7 @@ export function Header() {
       console.warn("Clipboard API failed", err);
     }
 
-    // Fallback for non-secure contexts
+    // Fallback for non-secure
     if (!copied) {
       try {
         const textArea = document.createElement("textarea");
@@ -59,12 +59,12 @@ export function Header() {
       toast({ title: "Link Copied!", description: "App link saved to clipboard." });
     }
 
-    // Also trigger native share if available
+    // Trigger native share if available
     if (navigator.share) {
       try {
         await navigator.share(shareData);
       } catch (err) {
-        // Silent if user cancels
+        // Silent
       }
     }
   };
@@ -81,9 +81,19 @@ export function Header() {
           </h1>
         </div>
 
-        <div className="flex items-center gap-0.5">
-          {/* Main Share Button to Copy Link */}
-          <Button onClick={handleAppShare} variant="ghost" size="icon" className="h-10 w-10 text-white hover:bg-white/10">
+        <div className="flex items-center gap-2">
+          {/* Enhanced Share Button */}
+          <Button 
+            onClick={handleAppShare} 
+            variant="outline" 
+            className="h-9 px-4 text-white border-white/20 hover:bg-white/10 rounded-xl gap-2 hidden sm:flex"
+          >
+            <Share2 className="w-4 h-4" />
+            <span className="text-[10px] font-black uppercase tracking-widest">Share App</span>
+          </Button>
+
+          {/* Mobile Share Icon */}
+          <Button onClick={handleAppShare} variant="ghost" size="icon" className="h-10 w-10 text-white hover:bg-white/10 sm:hidden">
             <Share2 className="w-5 h-5" />
           </Button>
           
@@ -104,8 +114,8 @@ export function Header() {
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handleAppShare} className="rounded-xl h-11 gap-3 cursor-pointer">
-                <Share2 className="w-4 h-4" />
-                <span className="font-bold text-sm">Share & Copy Link</span>
+                <Copy className="w-4 h-4" />
+                <span className="font-bold text-sm">Copy App Link</span>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={logout} className="rounded-xl h-11 gap-3 cursor-pointer text-destructive focus:text-destructive">
                 <LogOut className="w-4 h-4" />

@@ -8,16 +8,16 @@ import { Header } from '@/components/layout/header';
 import { BudgetSummary } from '@/components/dashboard/budget-summary';
 import { AdBanner } from '@/components/dashboard/ad-banner';
 import { 
-  Wallet, History, Calculator, Users, LayoutGrid, Home as HomeIcon, ArrowRight
+  Wallet, History, Calculator, Users, LayoutGrid, Home as HomeIcon, ArrowRight, Sparkles
 } from 'lucide-react';
 import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import { collection, query, orderBy, limit } from 'firebase/firestore';
 import { Expense } from '@/lib/expenses';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 
 // Dynamic imports for heavy UI components
@@ -54,63 +54,58 @@ export default function Home() {
     );
   }
 
-  // Auth UI - REPRODUCING THE IMAGE 100% (Ultra-Premium Version)
+  // Ultra-Premium Professional Auth UI
   if (!user) {
     return (
-      <div className="h-[100dvh] bg-[#FDFBF7] flex flex-col items-center justify-center p-8">
-        <div className="w-full max-w-sm space-y-10 animate-in fade-in duration-500 flex flex-col items-center">
-          
-          {/* Top Blue Icon Circle */}
-          <div className="bg-[#2563EB] p-8 rounded-full shadow-2xl flex items-center justify-center -mt-10">
-            <Wallet className="w-14 h-14 text-white fill-white" />
+      <div className="h-[100dvh] bg-[#FDFBF7] flex flex-col items-center justify-center p-6">
+        <div className="w-full max-w-sm bg-white rounded-[3rem] p-10 shadow-2xl border border-gray-100 space-y-8 animate-in fade-in zoom-in duration-500">
+          <div className="flex flex-col items-center text-center space-y-4">
+            <div className="bg-primary/10 p-5 rounded-[2rem]">
+              <Wallet className="w-12 h-12 text-primary" />
+            </div>
+            <div>
+              <h1 className="text-4xl font-headline font-black text-black tracking-tight uppercase">FINOVO</h1>
+              <p className="text-[10px] font-black uppercase text-gray-400 tracking-[0.3em] pt-1">
+                {isLoginView ? 'Welcome Back' : 'Create Account'}
+              </p>
+            </div>
           </div>
 
-          {/* Headings */}
-          <div className="flex flex-col items-center text-center space-y-2 w-full pt-4">
-            <h1 className="text-6xl font-headline font-black text-black tracking-tight uppercase">FINOVO</h1>
-            <p className="text-[12px] font-black uppercase text-gray-400 tracking-[0.4em] pt-2">
-              {isLoginView ? 'WELCOME BACK' : 'CREATE ACCOUNT'}
-            </p>
-          </div>
-
-          {/* Form Fields */}
-          <div className="space-y-8 w-full pt-4">
-            <div className="space-y-3">
-              <Label className="text-[11px] font-black uppercase text-gray-400 ml-6 tracking-widest">EMAIL ADDRESS</Label>
+          <div className="space-y-6">
+            <div className="space-y-2">
+              <Label className="text-[10px] font-black uppercase text-gray-400 ml-4 tracking-widest">Email Address</Label>
               <Input 
                 type="email" 
                 placeholder="you@example.com" 
                 value={email} 
                 onChange={(e) => setEmail(e.target.value)}
-                className="h-20 bg-white border-gray-100 rounded-[2.5rem] px-10 font-bold text-xl text-black shadow-sm focus-visible:ring-primary"
+                className="h-14 bg-muted/30 border-none rounded-2xl px-6 font-bold text-black"
               />
             </div>
-            <div className="space-y-3">
-              <Label className="text-[11px] font-black uppercase text-gray-400 ml-6 tracking-widest">PASSWORD</Label>
+            <div className="space-y-2">
+              <Label className="text-[10px] font-black uppercase text-gray-400 ml-4 tracking-widest">Password</Label>
               <Input 
                 type="password" 
                 placeholder="••••••••" 
                 value={password} 
                 onChange={(e) => setPassword(e.target.value)}
-                className="h-20 bg-white border-gray-100 rounded-[2.5rem] px-10 font-bold text-xl text-black shadow-sm focus-visible:ring-primary"
+                className="h-14 bg-muted/30 border-none rounded-2xl px-6 font-bold text-black"
               />
             </div>
             
-            {/* Action Button */}
             <Button 
               onClick={() => isLoginView ? login(email, password) : signup(email, password)}
-              className="w-full h-24 rounded-[4rem] font-black uppercase tracking-widest text-xl shadow-[0_20px_40px_-10px_rgba(37,99,235,0.5)] gap-4 bg-primary hover:bg-primary/90 transition-all active:scale-95"
+              className="w-full h-16 rounded-2xl font-black uppercase tracking-widest text-sm shadow-xl shadow-primary/20 gap-2"
             >
-              <ArrowRight className="w-7 h-7" /> {isLoginView ? 'LOGIN NOW' : 'SIGN UP NOW'}
+              {isLoginView ? 'Login Now' : 'Sign Up Now'} <ArrowRight className="w-4 h-4" />
             </Button>
 
-            {/* Toggle View */}
-            <div className="text-center pt-6">
+            <div className="text-center pt-2">
               <button 
                 onClick={() => setIsLoginView(!isLoginView)} 
-                className="text-[12px] font-black uppercase text-primary tracking-widest hover:underline"
+                className="text-[11px] font-black uppercase text-primary tracking-widest hover:underline"
               >
-                {isLoginView ? 'NEW HERE? CREATE ACCOUNT' : 'ALREADY HAVE AN ACCOUNT? LOGIN'}
+                {isLoginView ? 'New here? Create Account' : 'Already have an account? Login'}
               </button>
             </div>
           </div>
@@ -119,17 +114,22 @@ export default function Home() {
     );
   }
 
-  // Dashboard Item Card - Compact "Patla" like Spent cards
-  const GridCard = ({ icon: Icon, label, color, onClick }: { icon: any, label: string, color: string, onClick: () => void }) => (
+  // Compact "Patla" Feature Grid Card
+  const GridCard = ({ icon: Icon, label, color, onClick, active }: { icon: any, label: string, color: string, onClick: () => void, active?: boolean }) => (
     <Card 
-      className="border-none shadow-sm active:scale-95 transition-all cursor-pointer rounded-2xl overflow-hidden bg-white h-24 flex items-center"
+      className={cn(
+        "border-none shadow-sm active:scale-95 transition-all cursor-pointer rounded-2xl overflow-hidden bg-white h-24 flex items-center",
+        active && "ring-2 ring-primary ring-inset"
+      )}
       onClick={onClick}
     >
       <CardContent className="p-4 flex items-center gap-3 w-full">
         <div className={cn("p-2.5 rounded-xl shrink-0", color)}>
           <Icon className="w-5 h-5" />
         </div>
-        <span className="font-headline font-black text-[11px] uppercase tracking-tighter text-black leading-tight flex-1">{label}</span>
+        <span className="font-headline font-black text-[11px] uppercase tracking-tight text-black leading-tight flex-1">
+          {label}
+        </span>
       </CardContent>
     </Card>
   );
@@ -143,7 +143,7 @@ export default function Home() {
           {activeTab === 'dashboard' && (
             <div className="flex-1 flex flex-col space-y-4 animate-in fade-in duration-300 h-full">
               
-              {/* Profile Header - TOP LEFT */}
+              {/* Profile Header */}
               <div className="flex items-center gap-3 shrink-0">
                 <Avatar className="h-14 w-14 border-2 border-white shadow-md">
                   <AvatarFallback className="bg-black text-white text-xl font-black uppercase">
@@ -151,12 +151,12 @@ export default function Home() {
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col">
-                  <span className="text-[10px] font-black uppercase text-gray-400 tracking-widest leading-none mb-1">OVERVIEW</span>
-                  <h2 className="text-2xl font-headline font-black uppercase text-black leading-none tracking-tight">DASHBOARD</h2>
+                  <span className="text-[10px] font-black uppercase text-gray-400 tracking-widest leading-none mb-1">Overview</span>
+                  <h2 className="text-2xl font-headline font-black uppercase text-black leading-none tracking-tight">Dashboard</h2>
                 </div>
               </div>
 
-              {/* Budget Summary Section (Top) */}
+              {/* Budget Summary Section */}
               <div className="shrink-0">
                 <BudgetSummary 
                   userId={user.uid} 
@@ -166,35 +166,36 @@ export default function Home() {
                 />
               </div>
 
-              {/* Feature Grid Section (Middle - Compact like Spent cards) */}
+              {/* Feature Grid - Compact "Patla" Style */}
               <div className="flex-1 grid grid-cols-2 gap-3 content-start">
                 <GridCard 
                   icon={LayoutGrid} 
-                  label="DASHBOARD" 
+                  label="Dashboard" 
                   color="text-blue-600 bg-blue-50" 
                   onClick={() => setActiveTab('dashboard')} 
+                  active={activeTab === 'dashboard'}
                 />
                 <GridCard 
                   icon={History} 
-                  label="RECENT HISTORY" 
+                  label="Recent History" 
                   color="text-orange-600 bg-orange-50" 
                   onClick={() => setActiveTab('history')} 
                 />
                 <GridCard 
                   icon={Calculator} 
-                  label="SPLIT YOUR BILL" 
+                  label="Split Your Bill" 
                   color="text-purple-600 bg-purple-50" 
                   onClick={() => setActiveTab('splitter')} 
                 />
                 <GridCard 
                   icon={Users} 
-                  label="GROUPS" 
+                  label="Groups" 
                   color="text-green-600 bg-green-50" 
                   onClick={() => setActiveTab('groups')} 
                 />
               </div>
 
-              {/* Ad Space Section (Bottom - Compact & Properly Repositioned) */}
+              {/* Ad Space properly adjusted */}
               <div className="shrink-0 mt-auto pb-4">
                 <AdBanner />
               </div>
@@ -218,19 +219,19 @@ export default function Home() {
       <div className="h-20 bg-white border-t flex items-center justify-around px-4 pb-4 shadow-inner shrink-0">
         <button onClick={() => setActiveTab('dashboard')} className={cn("flex flex-col items-center gap-1", activeTab === 'dashboard' ? "text-primary" : "text-gray-400")}>
           <HomeIcon className="w-6 h-6" />
-          <span className="text-[9px] font-black uppercase tracking-widest">HOME</span>
+          <span className="text-[9px] font-black uppercase tracking-widest">Home</span>
         </button>
         <button onClick={() => setActiveTab('history')} className={cn("flex flex-col items-center gap-1", activeTab === 'history' ? "text-primary" : "text-gray-400")}>
           <History className="w-6 h-6" />
-          <span className="text-[9px] font-black uppercase tracking-widest">BILLS</span>
+          <span className="text-[9px] font-black uppercase tracking-widest">Bills</span>
         </button>
         <button onClick={() => setActiveTab('splitter')} className={cn("flex flex-col items-center gap-1", activeTab === 'splitter' ? "text-primary" : "text-gray-400")}>
           <Calculator className="w-6 h-6" />
-          <span className="text-[9px] font-black uppercase tracking-widest">SPLIT</span>
+          <span className="text-[9px] font-black uppercase tracking-widest">Split</span>
         </button>
         <button onClick={() => setActiveTab('groups')} className={cn("flex flex-col items-center gap-1", activeTab === 'groups' ? "text-primary" : "text-gray-400")}>
           <Users className="w-6 h-6" />
-          <span className="text-[9px] font-black uppercase tracking-widest">GROUPS</span>
+          <span className="text-[9px] font-black uppercase tracking-widest">Groups</span>
         </button>
       </div>
     </div>
