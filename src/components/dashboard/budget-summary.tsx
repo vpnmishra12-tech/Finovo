@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from 'react';
@@ -71,9 +70,9 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
         </CardContent>
       </Card>
 
-      {/* Spent & Overspent Cards */}
+      {/* Spent & Overspent Cards - Increased Height to fill empty space */}
       <div className="grid grid-cols-2 gap-2">
-        <Card className="bg-white border-none shadow-sm rounded-[1rem] overflow-hidden h-23 flex items-center">
+        <Card className="bg-white border-none shadow-sm rounded-[1rem] overflow-hidden h-28 flex items-center">
           <CardContent className="p-3 w-full flex flex-col justify-between h-full">
             <div>
               <p className="text-[8px] font-black text-gray-400 mb-0.5 uppercase tracking-widest">SPENT</p>
@@ -85,7 +84,7 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
           </CardContent>
         </Card>
 
-        <Card className="bg-white border-none shadow-sm rounded-[1rem] overflow-hidden h-23 flex items-center">
+        <Card className="bg-white border-none shadow-sm rounded-[1rem] overflow-hidden h-28 flex items-center">
           <CardContent className="p-3 w-full">
             <p className="text-[8px] font-black text-gray-400 mb-0.5 uppercase tracking-widest">OVERSPENT BY</p>
             <p className="text-xl font-headline font-black text-[#D32F2F]">₹{overspentAmount.toLocaleString()}</p>
