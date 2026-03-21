@@ -70,32 +70,32 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
   const overspentAmount = Math.max(totalSpent - budget, 0);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       {percentage >= 75 && budget > 0 && (
-        <Alert className="py-2 px-4 rounded-2xl border bg-destructive/5 text-destructive border-destructive/20 flex items-center gap-3">
-          <AlertTriangle className="h-4 w-4" />
-          <AlertDescription className="text-[10px] font-black uppercase tracking-widest leading-none">
+        <Alert className="py-1 px-3 rounded-xl border bg-destructive/5 text-destructive border-destructive/20 flex items-center gap-2">
+          <AlertTriangle className="h-3 w-3" />
+          <AlertDescription className="text-[9px] font-black uppercase tracking-widest leading-none">
             {percentage >= 100 ? t.alerts.exhausted : t.alerts.critical}
           </AlertDescription>
         </Alert>
       )}
 
       {lastMonthDebt > 0 && (
-        <div className="bg-destructive/10 border-destructive/20 rounded-2xl p-3 flex items-center gap-3">
-          <History className="w-4 h-4 text-destructive" />
-          <p className="text-[10px] font-black text-destructive uppercase tracking-widest">Last Month Debt: -₹{lastMonthDebt.toLocaleString()}</p>
+        <div className="bg-destructive/10 border-destructive/20 rounded-xl p-2 flex items-center gap-2">
+          <History className="w-3 h-3 text-destructive" />
+          <p className="text-[9px] font-black text-destructive uppercase tracking-widest">Last Month Debt: -₹{lastMonthDebt.toLocaleString()}</p>
         </div>
       )}
 
-      <div className="grid gap-3 grid-cols-1">
-        <Card className="bg-primary text-primary-foreground border-none shadow-xl overflow-hidden rounded-[2rem]">
-          <CardContent className="p-6">
-            <div className="flex justify-between items-center mb-2">
-              <p className="text-[10px] font-black opacity-70 uppercase tracking-[0.3em]">{t.budget}</p>
+      <div className="grid gap-2.5">
+        <Card className="bg-primary text-primary-foreground border-none shadow-xl overflow-hidden rounded-[1.8rem]">
+          <CardContent className="p-4 py-5 flex flex-col justify-center">
+            <div className="flex justify-between items-center mb-1">
+              <p className="text-[9px] font-black opacity-70 uppercase tracking-[0.2em]">{t.budget}</p>
               <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
-                  <Button variant="ghost" size="icon" className="h-8 w-8 bg-white/10 hover:bg-white/20 p-0 rounded-full">
-                    <Edit2 className="w-4 h-4 text-white" />
+                  <Button variant="ghost" size="icon" className="h-7 w-7 bg-white/10 hover:bg-white/20 p-0 rounded-full">
+                    <Edit2 className="w-3.5 h-3.5 text-white" />
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="max-w-[350px] rounded-3xl">
@@ -108,27 +108,27 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
                 </DialogContent>
               </Dialog>
             </div>
-            <p className="text-4xl font-headline font-black leading-tight tracking-tight">₹{budget.toLocaleString()}</p>
+            <p className="text-3xl font-headline font-black leading-none tracking-tight">₹{budget.toLocaleString()}</p>
           </CardContent>
         </Card>
 
-        <div className="grid grid-cols-2 gap-3">
-          <Card className="bg-card border-2 border-primary/5 shadow-sm overflow-hidden rounded-[1.5rem]">
-            <CardContent className="p-5">
-              <p className="text-[10px] font-black text-black/40 mb-1 uppercase tracking-widest">{t.spent}</p>
-              <p className="text-2xl font-headline font-black leading-tight text-black">₹{totalSpent.toLocaleString()}</p>
-              <div className="mt-3">
+        <div className="grid grid-cols-2 gap-2.5">
+          <Card className="bg-card border-2 border-primary/5 shadow-sm overflow-hidden rounded-[1.2rem]">
+            <CardContent className="p-4">
+              <p className="text-[9px] font-black text-black/40 mb-1 uppercase tracking-widest">{t.spent}</p>
+              <p className="text-xl font-headline font-black leading-tight text-black">₹{totalSpent.toLocaleString()}</p>
+              <div className="mt-2">
                 <Progress value={percentage} className="h-1 bg-muted" />
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-card border-2 border-primary/5 shadow-sm overflow-hidden rounded-[1.5rem]">
-            <CardContent className="p-5">
-              <p className="text-[10px] font-black text-black/40 mb-1 uppercase tracking-widest">
+          <Card className="bg-card border-2 border-primary/5 shadow-sm overflow-hidden rounded-[1.2rem]">
+            <CardContent className="p-4">
+              <p className="text-[9px] font-black text-black/40 mb-1 uppercase tracking-widest">
                 {overspentAmount > 0 ? t.overspent : t.remaining}
               </p>
-              <p className={`text-2xl font-headline font-black leading-tight ${overspentAmount > 0 ? 'text-destructive' : 'text-green-600'}`}>
+              <p className={`text-xl font-headline font-black leading-tight ${overspentAmount > 0 ? 'text-destructive' : 'text-green-600'}`}>
                 ₹{(overspentAmount > 0 ? overspentAmount : remaining).toLocaleString()}
               </p>
             </CardContent>

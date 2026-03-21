@@ -139,14 +139,14 @@ export default function Home() {
 
   const GridCard = ({ icon: Icon, label, color, onClick }: { icon: any, label: string, color: string, onClick: () => void }) => (
     <Card 
-      className="border-2 border-primary/5 shadow-sm hover:shadow-md transition-all active:scale-95 cursor-pointer rounded-[2rem] overflow-hidden group bg-card h-32 md:h-40"
+      className="border-2 border-primary/5 shadow-sm hover:shadow-md transition-all active:scale-95 cursor-pointer rounded-[2rem] overflow-hidden group bg-card h-full"
       onClick={onClick}
     >
       <CardContent className="p-4 flex flex-col items-center justify-center h-full gap-3 text-center">
         <div className={cn("p-4 rounded-3xl transition-transform group-hover:scale-110", color)}>
           <Icon className="w-7 h-7" />
         </div>
-        <span className="font-headline font-black text-[11px] uppercase tracking-widest text-black">{label}</span>
+        <span className="font-headline font-black text-[11px] uppercase tracking-widest text-black whitespace-nowrap">{label}</span>
       </CardContent>
     </Card>
   );
@@ -156,10 +156,10 @@ export default function Home() {
       <Header />
       
       <main className="flex-1 overflow-hidden">
-        <div className="h-full max-w-6xl mx-auto p-6 flex flex-col space-y-6">
+        <div className="h-full max-w-6xl mx-auto p-5 flex flex-col space-y-4">
           {activeTab === 'dashboard' && (
-            <div className="flex-1 flex flex-col space-y-6 animate-in fade-in duration-500 overflow-hidden">
-              {/* Profile - Top Left Alphabet */}
+            <div className="flex-1 flex flex-col space-y-5 animate-in fade-in duration-500 overflow-hidden">
+              {/* Profile - Top Left Initial */}
               <div className="flex items-center gap-4 shrink-0">
                 <Avatar className="h-14 w-14 border-4 border-primary/10 shadow-md">
                   <AvatarFallback className="bg-black text-white text-xl font-black">
@@ -182,7 +182,7 @@ export default function Home() {
                 />
               </div>
 
-              {/* Feature Grid - MIDDLE (FILLS SPACE) */}
+              {/* Feature Grid - MIDDLE (FILLS AVAILABLE SPACE) */}
               <div className="flex-1 grid grid-cols-2 gap-4">
                 <GridCard 
                   icon={LayoutDashboard} 
