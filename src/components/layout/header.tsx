@@ -27,6 +27,7 @@ export function Header() {
 
     let copied = false;
     
+    // Attempt standard clipboard API
     try {
       if (navigator.clipboard && window.isSecureContext) {
         await navigator.clipboard.writeText(textToCopy);
@@ -34,6 +35,7 @@ export function Header() {
       }
     } catch (err) {}
 
+    // Fallback for older browsers or non-secure contexts
     if (!copied) {
       try {
         const textArea = document.createElement("textarea");
@@ -49,6 +51,7 @@ export function Header() {
       toast({ title: "Link Copied!", description: "App link saved to clipboard." });
     }
 
+    // Trigger native share if available
     if (navigator.share) {
       try {
         await navigator.share(shareData);
