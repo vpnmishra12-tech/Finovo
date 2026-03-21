@@ -130,7 +130,7 @@ export default function Home() {
           </div>
         ) : (
           <div className="h-full flex flex-col max-w-6xl mx-auto px-5 py-3 space-y-3 overflow-hidden">
-            {activeTab === 'dashboard' && (
+            {activeTab === 'dashboard' ? (
               <div className="flex-1 flex flex-col space-y-3 animate-in fade-in duration-300 overflow-hidden">
                 
                 {/* Profile Section */}
@@ -204,13 +204,13 @@ export default function Home() {
                   <AddExpenseDrawer />
                 </div>
               </div>
+            ) : (
+              <div className="flex-1 overflow-y-auto no-scrollbar">
+                {activeTab === 'history' && <ExpenseList expenses={expenses || []} isLoading={isExpensesLoading} />}
+                {activeTab === 'splitter' && <BillSplitTool />}
+                {activeTab === 'groups' && <GroupModule />}
+              </div>
             )}
-
-            <div className="flex-1 overflow-y-auto no-scrollbar">
-              {activeTab === 'history' && <ExpenseList expenses={expenses || []} isLoading={isExpensesLoading} />}
-              {activeTab === 'splitter' && <BillSplitTool />}
-              {activeTab === 'groups' && <GroupModule />}
-            </div>
           </div>
         )}
       </main>
