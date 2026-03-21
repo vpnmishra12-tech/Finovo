@@ -56,7 +56,7 @@ export default function Home() {
   const GridCard = ({ icon: Icon, label, color, onClick, active }: { icon: any, label: string, color: string, onClick: () => void, active?: boolean }) => (
     <Card 
       className={cn(
-        "border-none shadow-sm active:scale-95 transition-all cursor-pointer rounded-[1rem] bg-white h-[4rem] flex items-center overflow-hidden",
+        "border-none shadow-sm active:scale-95 transition-all cursor-pointer rounded-[1rem] bg-white h-[4.2rem] flex items-center overflow-hidden",
         active && "ring-2 ring-primary"
       )}
       onClick={onClick}
