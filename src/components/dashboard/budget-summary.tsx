@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from 'react';
@@ -7,8 +8,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { AlertTriangle, Edit2, Pencil } from 'lucide-react';
+import { Pencil } from 'lucide-react';
 import { useFirestore, useDoc, useMemoFirebase } from '@/firebase';
 import { doc } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
@@ -44,17 +44,9 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
   const overspentAmount = Math.max(totalSpent - budget, 0);
 
   return (
-    <div className="space-y-4">
-      {/* 100% IMAGE MATCH ALERT BAR */}
-      <Alert className="py-2.5 px-4 rounded-xl border bg-red-50 text-red-700 border-red-100 flex items-center gap-3">
-        <AlertTriangle className="h-4 w-4 shrink-0" />
-        <AlertDescription className="text-[10px] font-black uppercase tracking-wider leading-tight">
-          ALERT: 100% BUDGET REACHED. YOU ARE OVERSPENDING!
-        </AlertDescription>
-      </Alert>
-
+    <div className="space-y-3">
       {/* 100% IMAGE MATCH BUDGET CARD */}
-      <Card className="bg-primary text-primary-foreground border-none shadow-2xl rounded-[2.5rem] overflow-hidden relative transition-transform active:scale-[0.98]">
+      <Card className="bg-primary text-primary-foreground border-none shadow-2xl rounded-[2rem] overflow-hidden relative transition-transform active:scale-[0.98]">
         <CardContent className="p-8 py-10">
           <div className="flex justify-between items-start">
             <div className="space-y-2">
@@ -79,22 +71,22 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
         </CardContent>
       </Card>
 
-      {/* 100% IMAGE MATCH SPENT/OVERSPENT CARDS */}
-      <div className="grid grid-cols-2 gap-4">
-        <Card className="bg-white border border-gray-50 shadow-sm rounded-[1.8rem] overflow-hidden relative">
-          <CardContent className="p-5">
-            <p className="text-[10px] font-black text-gray-400 mb-2 uppercase tracking-widest">SPENT</p>
-            <p className="text-3xl font-headline font-black leading-tight text-black">₹{totalSpent.toLocaleString()}</p>
-            <div className="mt-4 w-full h-1.5 bg-primary/10 rounded-full overflow-hidden">
-              <div className="bg-primary h-full" style={{ width: '60%' }} />
+      {/* 100% IMAGE MATCH SPENT/OVERSPENT CARDS - SLIM STYLE */}
+      <div className="grid grid-cols-2 gap-3">
+        <Card className="bg-white border-none shadow-sm rounded-[1.2rem] overflow-hidden relative h-20 flex items-center">
+          <CardContent className="p-4 w-full">
+            <p className="text-[9px] font-black text-gray-400 mb-1 uppercase tracking-widest">SPENT</p>
+            <p className="text-xl font-headline font-black leading-tight text-black">₹{totalSpent.toLocaleString()}</p>
+            <div className="mt-2 w-full h-1 bg-primary/10 rounded-full overflow-hidden">
+              <div className="bg-primary h-full" style={{ width: `${Math.min((totalSpent/budget)*100, 100)}%` }} />
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-white border border-gray-50 shadow-sm rounded-[1.8rem] overflow-hidden">
-          <CardContent className="p-5">
-            <p className="text-[10px] font-black text-gray-400 mb-2 uppercase tracking-widest">OVERSPENT BY</p>
-            <p className="text-3xl font-headline font-black leading-tight text-red-500">₹{overspentAmount.toLocaleString()}</p>
+        <Card className="bg-white border-none shadow-sm rounded-[1.2rem] overflow-hidden h-20 flex items-center">
+          <CardContent className="p-4 w-full">
+            <p className="text-[9px] font-black text-gray-400 mb-1 uppercase tracking-widest">OVERSPENT BY</p>
+            <p className="text-xl font-headline font-black leading-tight text-red-500">₹{overspentAmount.toLocaleString()}</p>
           </CardContent>
         </Card>
       </div>

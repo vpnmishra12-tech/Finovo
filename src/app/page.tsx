@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from 'react';
@@ -8,7 +9,7 @@ import { Header } from '@/components/layout/header';
 import { BudgetSummary } from '@/components/dashboard/budget-summary';
 import { AdBanner } from '@/components/dashboard/ad-banner';
 import { 
-  Wallet, History, Calculator, Users, LayoutGrid, Home as HomeIcon, ArrowRight, Sparkles
+  Wallet, History, Calculator, Users, LayoutGrid, Home as HomeIcon, ArrowRight, Sparkles, AlertTriangle
 } from 'lucide-react';
 import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import { collection, query, orderBy, limit } from 'firebase/firestore';
@@ -16,8 +17,8 @@ import { Expense } from '@/lib/expenses';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { cn } from '@/lib/utils';
 
 // Dynamic imports for performance
@@ -54,18 +55,18 @@ export default function Home() {
     );
   }
 
-  // 100% IMAGE MATCH COMPACT CARD
+  // COMPACT SLIM GRID CARD - MATCHING SPENT CARD STYLE
   const GridCard = ({ icon: Icon, label, color, onClick, active }: { icon: any, label: string, color: string, onClick: () => void, active?: boolean }) => (
     <Card 
       className={cn(
-        "border-none shadow-sm active:scale-95 transition-all cursor-pointer rounded-[1.5rem] bg-white h-16 flex items-center overflow-hidden",
+        "border-none shadow-sm active:scale-95 transition-all cursor-pointer rounded-[1.2rem] bg-white h-16 flex items-center overflow-hidden",
         active && "ring-2 ring-primary ring-inset"
       )}
       onClick={onClick}
     >
       <CardContent className="p-3 flex items-center gap-3 w-full">
-        <div className={cn("p-2 rounded-xl shrink-0", color)}>
-          <Icon className="w-5 h-5" />
+        <div className={cn("p-2 rounded-lg shrink-0", color)}>
+          <Icon className="w-4 h-4" />
         </div>
         <span className="font-headline font-black text-[10px] uppercase tracking-wider text-black leading-tight flex-1">
           {label}
@@ -131,12 +132,12 @@ export default function Home() {
             </div>
           </div>
         ) : (
-          <div className="h-full flex flex-col max-w-6xl mx-auto px-5 py-4 space-y-4 overflow-hidden">
+          <div className="h-full flex flex-col max-w-6xl mx-auto px-5 py-2 space-y-3 overflow-hidden">
             {activeTab === 'dashboard' && (
-              <div className="flex-1 flex flex-col space-y-4 animate-in fade-in duration-300 overflow-hidden">
+              <div className="flex-1 flex flex-col space-y-3 animate-in fade-in duration-300 overflow-hidden">
                 
                 {/* Profile Header - IMAGE MATCH */}
-                <div className="flex items-center gap-4 shrink-0">
+                <div className="flex items-center gap-4 shrink-0 pt-2">
                   <Avatar className="h-14 w-14 border-2 border-white shadow-xl">
                     <AvatarFallback className="bg-black text-white text-xl font-black uppercase">
                       {user.email?.charAt(0) || 'V'}
@@ -148,8 +149,16 @@ export default function Home() {
                   </div>
                 </div>
 
+                {/* Alert Bar - IMAGE MATCH */}
+                <Alert className="py-2.5 px-4 rounded-xl border bg-red-50 text-red-700 border-red-100 flex items-center gap-3 shrink-0">
+                  <AlertTriangle className="h-4 w-4 shrink-0" />
+                  <AlertDescription className="text-[10px] font-black uppercase tracking-wider leading-tight">
+                    ALERT: 100% BUDGET REACHED. YOU ARE OVERSPENDING!
+                  </AlertDescription>
+                </Alert>
+
                 {/* Budget Summary & Feature Grid - IMAGE MATCH */}
-                <div className="flex-1 flex flex-col space-y-4 overflow-hidden">
+                <div className="flex-1 flex flex-col space-y-3 overflow-hidden">
                   <BudgetSummary 
                     userId={user.uid} 
                     totalSpent={expenses?.reduce((sum, e) => sum + e.amount, 0) || 0} 
@@ -157,6 +166,7 @@ export default function Home() {
                     year={new Date().getFullYear()} 
                   />
 
+                  {/* Feature Grid - Slim Cards */}
                   <div className="grid grid-cols-2 gap-3 shrink-0">
                     <GridCard 
                       icon={LayoutGrid} 
