@@ -90,7 +90,9 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
               <p className="text-[8px] font-black text-gray-400 mb-0.5 uppercase tracking-widest">OVERSPENT BY</p>
               <p className="text-xl font-headline font-black text-[#D32F2F]">₹{overspentAmount.toLocaleString()}</p>
             </div>
-            <div className="w-full h-1 shrink-0" /> {/* Spacer to match Spent card height alignment */}
+            <div className="w-full h-1 bg-red-100 rounded-full overflow-hidden shrink-0">
+              <div className="bg-[#D32F2F] h-full" style={{ width: `${overspentAmount > 0 ? 100 : 0}%` }} />
+            </div>
           </CardContent>
         </Card>
       </div>
