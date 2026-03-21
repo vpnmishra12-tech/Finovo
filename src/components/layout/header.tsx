@@ -1,8 +1,9 @@
+
 "use client";
 
 import { useAuth } from '@/lib/contexts/auth-context';
 import { Button } from '@/components/ui/button';
-import { Wallet, Share2, Bell, Settings, LogOut } from 'lucide-react';
+import { Wallet, Share2, Bell, Settings, LogOut, User as UserIcon } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import {
   DropdownMenu,
@@ -83,7 +84,10 @@ export function Header() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56 rounded-2xl p-2 mt-2">
-              <DropdownMenuLabel className="text-xs font-black uppercase tracking-widest text-muted-foreground px-3 py-2">Settings</DropdownMenuLabel>
+              <DropdownMenuLabel className="flex flex-col gap-1 px-3 py-2">
+                <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Logged in as</span>
+                <span className="text-sm font-bold truncate text-primary">{user?.email}</span>
+              </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handleAppShare} className="rounded-xl h-11 gap-3 cursor-pointer">
                 <Share2 className="w-4 h-4" />
