@@ -9,7 +9,6 @@ import { BudgetSummary } from '@/components/dashboard/budget-summary';
 import { AdBanner } from '@/components/dashboard/ad-banner';
 import { 
   Loader2, Wallet, LayoutDashboard, History, Calculator, Users, 
-  ChevronRight, Settings, HelpCircle, LogOut, Receipt, CreditCard
 } from 'lucide-react';
 import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import { collection, query, orderBy, limit } from 'firebase/firestore';
@@ -19,10 +18,9 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
 
-// Optimized dynamic imports for heavy feature modules
+// Optimized dynamic imports
 const AddExpenseDrawer = dynamic(() => import('@/components/expenses/add-expense-drawer').then(mod => mod.AddExpenseDrawer), {
   ssr: false,
   loading: () => null
@@ -44,8 +42,8 @@ const GroupModule = dynamic(() => import('@/components/groups/group-module').the
 type NavTab = 'dashboard' | 'history' | 'splitter' | 'groups';
 
 export default function Home() {
-  const { user, loading, login, signup, logout } = useAuth();
-  const { t, language, setLanguage } = useLanguage();
+  const { user, loading, login, signup } = useAuth();
+  const { t } = useLanguage();
   const firestore = useFirestore();
   
   const [activeTab, setActiveTab] = useState<NavTab>('dashboard');
@@ -158,32 +156,17 @@ export default function Home() {
       <Header />
       
       <main className="flex-1 overflow-y-auto pb-24 scroll-smooth">
-        {/* Profile Section - Premium Look */}
+        {/* Profile Section - Cleaned Up */}
         <section className="bg-white p-6 pb-8 border-b shadow-sm">
-          <div className="max-w-6xl mx-auto flex flex-col gap-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <Avatar className="h-16 w-16 border-4 border-primary/10">
-                  <AvatarFallback className="bg-primary text-primary-foreground text-xl font-black">
-                    {user.email?.charAt(0).toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="flex flex-col">
-                  <h2 className="text-xl font-headline font-black leading-tight">My Account</h2>
-                  <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">{user.email?.split('@')[0]}</p>
-                </div>
-              </div>
-              <Button variant="outline" size="sm" className="rounded-xl border-primary/20 text-primary font-black uppercase text-[10px] tracking-widest px-6">
-                Edit
-              </Button>
-            </div>
-
-            <div className="space-y-2">
-              <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest">
-                <span className="text-muted-foreground">Financial Health: <span className="text-primary">Strong</span></span>
-                <span className="text-primary">85%</span>
-              </div>
-              <Progress value={85} className="h-2 bg-muted rounded-full" />
+          <div className="max-w-6xl mx-auto flex items-center gap-4">
+            <Avatar className="h-16 w-16 border-4 border-primary/10">
+              <AvatarFallback className="bg-primary text-primary-foreground text-xl font-black">
+                {user.email?.charAt(0).toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
+            <div className="flex flex-col">
+              <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Logged in as</p>
+              <h2 className="text-xl font-headline font-black leading-tight">{user.email?.split('@')[0]}</h2>
             </div>
           </div>
         </section>
@@ -228,31 +211,6 @@ export default function Home() {
                 month={new Date().getMonth()+1} 
                 year={new Date().getFullYear()} 
               />
-
-              {/* Professional List Items */}
-              <div className="bg-white rounded-[2rem] shadow-sm divide-y overflow-hidden border border-muted/20">
-                <button onClick={() => setLanguage(language === 'en' ? 'hi' : 'en')} className="flex items-center justify-between w-full p-5 hover:bg-muted/30 transition-colors">
-                  <div className="flex items-center gap-4">
-                    <div className="p-2 bg-primary/10 rounded-xl text-primary"><Settings className="w-5 h-5" /></div>
-                    <span className="font-bold text-sm">{t.language}: {language === 'en' ? 'हिन्दी' : 'English'}</span>
-                  </div>
-                  <ChevronRight className="w-5 h-5 text-muted-foreground/30" />
-                </button>
-                <button className="flex items-center justify-between w-full p-5 hover:bg-muted/30 transition-colors">
-                  <div className="flex items-center gap-4">
-                    <div className="p-2 bg-primary/10 rounded-xl text-primary"><HelpCircle className="w-5 h-5" /></div>
-                    <span className="font-bold text-sm">Help & Support</span>
-                  </div>
-                  <ChevronRight className="w-5 h-5 text-muted-foreground/30" />
-                </button>
-                <button onClick={logout} className="flex items-center justify-between w-full p-5 hover:bg-muted/30 transition-colors text-destructive">
-                  <div className="flex items-center gap-4">
-                    <div className="p-2 bg-destructive/10 rounded-xl"><LogOut className="w-5 h-5" /></div>
-                    <span className="font-bold text-sm">{t.logout}</span>
-                  </div>
-                  <ChevronRight className="w-5 h-5 opacity-20" />
-                </button>
-              </div>
             </div>
           )}
 
@@ -283,8 +241,8 @@ export default function Home() {
       {/* Modern Bottom Navigation */}
       <div className="fixed bottom-0 left-0 right-0 h-20 bg-white border-t z-50 px-6 flex items-center justify-between shadow-[0_-8px_24px_rgba(0,0,0,0.05)]">
         <NavItem id="dashboard" icon={LayoutDashboard} label="Home" active={activeTab === 'dashboard'} />
-        <NavItem id="history" icon={Receipt} label="Bills" active={activeTab === 'history'} />
-        <NavItem id="splitter" icon={CreditCard} label="Split" active={activeTab === 'splitter'} />
+        <NavItem id="history" icon={History} label="Bills" active={activeTab === 'history'} />
+        <NavItem id="splitter" icon={Calculator} label="Split" active={activeTab === 'splitter'} />
         <NavItem id="groups" icon={Users} label="Groups" active={activeTab === 'groups'} />
       </div>
     </div>

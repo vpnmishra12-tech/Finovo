@@ -1,14 +1,20 @@
-
 "use client";
 
 import { useAuth } from '@/lib/contexts/auth-context';
-import { useLanguage } from '@/lib/contexts/language-context';
 import { Button } from '@/components/ui/button';
-import { Wallet, Share2, Bell } from 'lucide-react';
+import { Wallet, Share2, Bell, Settings, LogOut } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export function Header() {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const { toast } = useToast();
 
   const handleAppShare = async () => {
@@ -21,7 +27,6 @@ export function Header() {
 
     let copied = false;
     
-    // Method 1: navigator.clipboard
     try {
       if (navigator.clipboard && window.isSecureContext) {
         await navigator.clipboard.writeText(textToCopy);
@@ -29,7 +34,6 @@ export function Header() {
       }
     } catch (err) {}
 
-    // Method 2: Fallback
     if (!copied) {
       try {
         const textArea = document.createElement("textarea");
@@ -68,14 +72,26 @@ export function Header() {
           <Button variant="ghost" size="icon" className="h-9 w-9 text-white hover:bg-white/10">
             <Bell className="w-5 h-5" />
           </Button>
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            className="h-9 w-9 text-white hover:bg-white/10"
-            onClick={handleAppShare}
-          >
-            <Share2 className="w-5 h-5" />
-          </Button>
+          
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="h-9 w-9 text-white hover:bg-white/10">
+                <Settings className="w-5 h-5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56 rounded-2xl p-2 mt-2">
+              <DropdownMenuLabel className="text-xs font-black uppercase tracking-widest text-muted-foreground px-3 py-2">Settings</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={handleAppShare} className="rounded-xl h-11 gap-3 cursor-pointer">
+                <Share2 className="w-4 h-4" />
+                <span className="font-bold text-sm">Share App</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={logout} className="rounded-xl h-11 gap-3 cursor-pointer text-destructive focus:text-destructive">
+                <LogOut className="w-4 h-4" />
+                <span className="font-bold text-sm">Logout</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </header>

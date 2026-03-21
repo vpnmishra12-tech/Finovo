@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Plus, Send, Keyboard, Mic, Camera, Loader2, Sparkles } from 'lucide-react';
@@ -26,13 +26,11 @@ export function AddExpenseDrawer() {
   const [open, setOpen] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   
-  // Form state
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState<string>("Shopping");
   const [description, setDescription] = useState("");
   const [textInput, setTextInput] = useState("");
 
-  // Filtered categories for display (Exactly as requested)
   const mainCategories = ['Food', 'Transport', 'Bills', 'Recharge', 'Shopping', 'EMI', 'Miscellaneous'];
 
   const resetForm = () => {
@@ -84,25 +82,24 @@ export function AddExpenseDrawer() {
   };
 
   return (
-    <Dialog open={open} onOpenChange={(val) => { setOpen(val); if (!val) resetForm(); }}>
-      <DialogTrigger asChild>
+    <Sheet open={open} onOpenChange={(val) => { setOpen(val); if (!val) resetForm(); }}>
+      <SheetTrigger asChild>
         <Button 
           className="fixed bottom-[100px] right-6 md:bottom-8 md:right-8 h-16 w-16 rounded-full shadow-2xl z-[60] hover:scale-105 transition-transform active:scale-95 bg-primary text-primary-foreground border-4 border-background"
         >
           <Plus className="w-8 h-8" />
         </Button>
-      </DialogTrigger>
-      {/* Shifted dialog slightly upward to avoid FAB overlap and look proper */}
-      <DialogContent className="max-w-md w-[95%] max-h-[85vh] rounded-[2.5rem] p-0 overflow-hidden border-none shadow-2xl z-[100] flex flex-col top-[42%] translate-y-[-50%]">
-        <DialogHeader className="p-4 px-6 bg-primary text-primary-foreground shrink-0">
-          <DialogTitle className="font-headline text-xl flex items-center gap-2">
+      </SheetTrigger>
+      <SheetContent side="bottom" className="rounded-t-[2.5rem] p-0 border-none shadow-2xl h-[70vh] focus:outline-none">
+        <SheetHeader className="p-4 px-6 bg-primary text-primary-foreground shrink-0 rounded-t-[2.5rem]">
+          <SheetTitle className="font-headline text-xl flex items-center gap-2 text-white">
             <Sparkles className="w-5 h-5" />
             {t.addExpense}
-          </DialogTitle>
-        </DialogHeader>
+          </SheetTitle>
+        </SheetHeader>
 
-        <ScrollArea className="flex-1 overflow-y-auto">
-          <div className="p-5 space-y-5">
+        <ScrollArea className="h-full">
+          <div className="p-5 space-y-5 pb-10">
             <Tabs defaultValue="text" className="w-full">
               <TabsList className="grid w-full grid-cols-3 bg-muted h-10 rounded-xl p-1 mb-4">
                 <TabsTrigger value="text" className="rounded-lg gap-2 text-[10px] font-black uppercase">
@@ -143,7 +140,7 @@ export function AddExpenseDrawer() {
             <div className="space-y-4 pt-4 border-t border-muted/50">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <Label className="text-[10px] uppercase font-black text-muted-foreground ml-1 tracking-widest">{t.spent} (₹)</Label>
+                  <Label className="text-[10px] uppercase font-black text-muted-foreground ml-1 tracking-widest">Amount (₹)</Label>
                   <Input 
                     type="number" 
                     placeholder="0" 
@@ -158,7 +155,7 @@ export function AddExpenseDrawer() {
                     <SelectTrigger className="bg-muted border-none rounded-xl h-12 font-bold text-sm">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent position="popper" className="z-[110]">
+                    <SelectContent position="popper">
                       {mainCategories.map((cat) => (
                         <SelectItem key={cat} value={cat} className="text-sm font-bold">
                           {t.categories[cat as keyof typeof t.categories] || cat}
@@ -181,13 +178,13 @@ export function AddExpenseDrawer() {
 
               <div className="pt-2">
                 <Button className="w-full rounded-2xl h-14 text-sm font-black uppercase tracking-widest shadow-lg shadow-primary/20 gap-2" onClick={handleSave} disabled={!amount || !description}>
-                  <Plus className="w-5 h-5" /> {t.actions.save}
+                  <Plus className="w-5 h-5" /> Save Expense
                 </Button>
               </div>
             </div>
           </div>
         </ScrollArea>
-      </DialogContent>
-    </Dialog>
+      </SheetContent>
+    </Sheet>
   );
 }
