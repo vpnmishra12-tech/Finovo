@@ -70,7 +70,7 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
         </CardContent>
       </Card>
 
-      {/* Spent & Overspent Cards - Increased Height to fill empty space */}
+      {/* Spent & Overspent Cards */}
       <div className="grid grid-cols-2 gap-2">
         <Card className="bg-white border-none shadow-sm rounded-[1rem] overflow-hidden h-28 flex items-center">
           <CardContent className="p-3 w-full flex flex-col justify-between h-full">
@@ -78,16 +78,19 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
               <p className="text-[8px] font-black text-gray-400 mb-0.5 uppercase tracking-widest">SPENT</p>
               <p className="text-xl font-headline font-black text-black">₹{totalSpent.toLocaleString()}</p>
             </div>
-            <div className="w-full h-1 bg-primary/10 rounded-full overflow-hidden">
+            <div className="w-full h-1 bg-primary/10 rounded-full overflow-hidden shrink-0">
               <div className="bg-primary h-full" style={{ width: `${Math.min((totalSpent/budget)*100, 100)}%` }} />
             </div>
           </CardContent>
         </Card>
 
         <Card className="bg-white border-none shadow-sm rounded-[1rem] overflow-hidden h-28 flex items-center">
-          <CardContent className="p-3 w-full">
-            <p className="text-[8px] font-black text-gray-400 mb-0.5 uppercase tracking-widest">OVERSPENT BY</p>
-            <p className="text-xl font-headline font-black text-[#D32F2F]">₹{overspentAmount.toLocaleString()}</p>
+          <CardContent className="p-3 w-full flex flex-col justify-between h-full">
+            <div>
+              <p className="text-[8px] font-black text-gray-400 mb-0.5 uppercase tracking-widest">OVERSPENT BY</p>
+              <p className="text-xl font-headline font-black text-[#D32F2F]">₹{overspentAmount.toLocaleString()}</p>
+            </div>
+            <div className="w-full h-1 shrink-0" /> {/* Spacer to match Spent card height alignment */}
           </CardContent>
         </Card>
       </div>
