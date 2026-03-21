@@ -73,7 +73,7 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
     <div className="space-y-3">
       {percentage >= 75 && budget > 0 && (
         <Alert className="py-1 px-3 rounded-xl border bg-destructive/5 text-destructive border-destructive/20 flex items-center gap-2">
-          <AlertTriangle className="h-3 w-3" />
+          <AlertTriangle className="h-3 v-3" />
           <AlertDescription className="text-[9px] font-black uppercase tracking-widest leading-none">
             {percentage >= 100 ? t.alerts.exhausted : t.alerts.critical}
           </AlertDescription>
