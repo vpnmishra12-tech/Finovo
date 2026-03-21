@@ -5,9 +5,30 @@ import { useAuth } from '@/lib/contexts/auth-context';
 import { useLanguage } from '@/lib/contexts/language-context';
 import { Button } from '@/components/ui/button';
 import { Wallet, Share2, Bell } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 export function Header() {
   const { user } = useAuth();
+  const { toast } = useToast();
+
+  const handleAppShare = async () => {
+    const shareData = {
+      title: 'Finovo - Expense Tracker',
+      text: 'Check out Finovo, the professional AI expense tracker!',
+      url: window.location.origin
+    };
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else if (navigator.clipboard) {
+        await navigator.clipboard.writeText(window.location.origin);
+        toast({ title: "Link Copied!", description: "App link saved to clipboard." });
+      }
+    } catch (err) {
+      console.log('Share cancelled or failed');
+    }
+  };
   
   return (
     <header className="sticky top-0 z-50 w-full bg-primary border-b border-white/10 shadow-md">
@@ -25,7 +46,12 @@ export function Header() {
           <Button variant="ghost" size="icon" className="h-9 w-9 text-white hover:bg-white/10">
             <Bell className="w-5 h-5" />
           </Button>
-          <Button variant="ghost" size="icon" className="h-9 w-9 text-white hover:bg-white/10">
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="h-9 w-9 text-white hover:bg-white/10"
+            onClick={handleAppShare}
+          >
             <Share2 className="w-5 h-5" />
           </Button>
         </div>

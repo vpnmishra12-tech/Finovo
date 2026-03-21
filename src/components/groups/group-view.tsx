@@ -61,29 +61,34 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
   }, {} as Record<string, {name: string, total: number}>);
 
   const handleShareId = async () => {
+    // 1. Sabse pehle copy logic (Professional priority)
     try {
-      // Step 1: Immediate Clipboard Copy (Primary Action)
-      // This is the most "automatic" way and works best as the first call in a click handler
-      if (navigator.clipboard && window.isSecureContext) {
+      if (navigator.clipboard) {
         await navigator.clipboard.writeText(groupId);
-        toast({ title: "ID Copied!", description: "Group ID is now in your clipboard." });
-      }
-
-      // Step 2: Try OS Share (If supported)
-      if (navigator.share) {
-        const text = `Join my Finovo group '${groupData?.name || 'Finance'}'! Use this ID: ${groupId}`;
-        await navigator.share({ title: 'Finovo Group Invite', text });
+        toast({ title: "ID Copied!", description: "Group ID automatically saved." });
       }
     } catch (err) {
-      // If OS share is cancelled or fails, it's okay because the ID was already copied in Step 1.
-      console.log('Share interaction finished or failed', err);
-      // Final fallback: If even Step 1 failed for some reason
-      if (!navigator.clipboard) {
-        toast({ 
-          title: "Group ID", 
-          description: `ID: ${groupId}. Please copy it manually.`,
+      console.warn("Clipboard auto-copy failed", err);
+    }
+
+    // 2. Phir OS Share option (Agar supported ho)
+    if (navigator.share) {
+      try {
+        const shareText = `Join my Finovo group '${groupData?.name || 'Finance'}'! Use this ID to join: ${groupId}`;
+        await navigator.share({
+          title: 'Finovo Group Invite',
+          text: shareText,
+          url: window.location.origin
         });
+      } catch (err) {
+        console.log('Share interaction finished');
       }
+    } else if (!navigator.clipboard) {
+      // Fallback agar dono hi fail ho jayein
+      toast({ 
+        title: "Group ID", 
+        description: `Please copy manually: ${groupId}`,
+      });
     }
   };
 
