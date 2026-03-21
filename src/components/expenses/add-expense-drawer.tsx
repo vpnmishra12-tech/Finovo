@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from 'react';
@@ -89,26 +90,26 @@ export function AddExpenseDrawer() {
           <Plus className="w-8 h-8" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-md w-[95%] max-h-[92vh] rounded-3xl p-0 overflow-hidden border-none shadow-2xl z-[100] flex flex-col top-[45%]">
-        <DialogHeader className="p-6 bg-primary text-primary-foreground shrink-0">
-          <DialogTitle className="font-headline text-2xl flex items-center gap-2">
-            <Sparkles className="w-6 h-6" />
+      <DialogContent className="max-w-md w-[95%] max-h-[85vh] rounded-[2.5rem] p-0 overflow-hidden border-none shadow-2xl z-[100] flex flex-col top-[50%] translate-y-[-50%]">
+        <DialogHeader className="p-4 px-6 bg-primary text-primary-foreground shrink-0">
+          <DialogTitle className="font-headline text-xl flex items-center gap-2">
+            <Sparkles className="w-5 h-5" />
             {t.addExpense}
           </DialogTitle>
         </DialogHeader>
 
         <ScrollArea className="flex-1 overflow-y-auto">
-          <div className="p-6 space-y-6 pb-20">
+          <div className="p-5 space-y-5">
             <Tabs defaultValue="text" className="w-full">
-              <TabsList className="grid w-full grid-cols-3 bg-muted h-12 rounded-xl p-1 mb-6">
-                <TabsTrigger value="text" className="rounded-lg gap-2">
-                  <Keyboard className="w-4 h-4" /> {t.modes.text}
+              <TabsList className="grid w-full grid-cols-3 bg-muted h-10 rounded-xl p-1 mb-4">
+                <TabsTrigger value="text" className="rounded-lg gap-2 text-[10px] font-black uppercase">
+                  <Keyboard className="w-3.5 h-3.5" /> {t.modes.text}
                 </TabsTrigger>
-                <TabsTrigger value="voice" className="rounded-lg gap-2">
-                  <Mic className="w-4 h-4" /> {t.modes.voice}
+                <TabsTrigger value="voice" className="rounded-lg gap-2 text-[10px] font-black uppercase">
+                  <Mic className="w-3.5 h-3.5" /> {t.modes.voice}
                 </TabsTrigger>
-                <TabsTrigger value="camera" className="rounded-lg gap-2">
-                  <Camera className="w-4 h-4" /> {t.modes.camera}
+                <TabsTrigger value="camera" className="rounded-lg gap-2 text-[10px] font-black uppercase">
+                  <Camera className="w-3.5 h-3.5" /> {t.modes.camera}
                 </TabsTrigger>
               </TabsList>
 
@@ -119,10 +120,10 @@ export function AddExpenseDrawer() {
                     value={textInput} 
                     onChange={(e) => setTextInput(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && handleAiTextSubmit()}
-                    className="bg-muted border-none rounded-xl h-12"
+                    className="bg-muted border-none rounded-xl h-11 text-xs font-bold"
                   />
-                  <Button size="icon" className="h-12 w-12 rounded-xl" onClick={handleAiTextSubmit} disabled={isProcessing}>
-                    {isProcessing ? <Loader2 className="animate-spin" /> : <Send className="w-5 h-5" />}
+                  <Button size="icon" className="h-11 w-11 rounded-xl shrink-0" onClick={handleAiTextSubmit} disabled={isProcessing}>
+                    {isProcessing ? <Loader2 className="animate-spin w-4 h-4" /> : <Send className="w-4 h-4" />}
                   </Button>
                 </div>
               </TabsContent>
@@ -136,27 +137,27 @@ export function AddExpenseDrawer() {
               </TabsContent>
             </Tabs>
 
-            <div className="space-y-4 pt-4 border-t">
+            <div className="space-y-4 pt-4 border-t border-muted/50">
               <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label className="text-xs uppercase font-bold text-muted-foreground">{t.spent} (₹)</Label>
+                <div className="space-y-1.5">
+                  <Label className="text-[10px] uppercase font-black text-muted-foreground ml-1 tracking-widest">{t.spent} (₹)</Label>
                   <Input 
                     type="number" 
                     placeholder="0" 
                     value={amount} 
                     onChange={(e) => setAmount(e.target.value)}
-                    className="bg-muted border-none font-headline font-bold text-xl rounded-xl h-14"
+                    className="bg-muted border-none font-headline font-black text-xl rounded-xl h-12"
                   />
                 </div>
-                <div className="space-y-2">
-                  <Label className="text-xs uppercase font-bold text-muted-foreground">Category</Label>
+                <div className="space-y-1.5">
+                  <Label className="text-[10px] uppercase font-black text-muted-foreground ml-1 tracking-widest">Category</Label>
                   <Select value={category} onValueChange={setCategory}>
-                    <SelectTrigger className="bg-muted border-none rounded-xl h-14">
+                    <SelectTrigger className="bg-muted border-none rounded-xl h-12 font-bold text-sm">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent position="popper" className="z-[110]">
                       {Object.keys(t.categories).map((cat) => (
-                        <SelectItem key={cat} value={cat}>
+                        <SelectItem key={cat} value={cat} className="text-sm font-bold">
                           {t.categories[cat as keyof typeof t.categories]}
                         </SelectItem>
                       ))}
@@ -165,19 +166,19 @@ export function AddExpenseDrawer() {
                 </div>
               </div>
               
-              <div className="space-y-2">
-                <Label className="text-xs uppercase font-bold text-muted-foreground">Description</Label>
+              <div className="space-y-1.5">
+                <Label className="text-[10px] uppercase font-black text-muted-foreground ml-1 tracking-widest">Description</Label>
                 <Input 
                   placeholder="What was this for?" 
                   value={description} 
                   onChange={(e) => setDescription(e.target.value)}
-                  className="bg-muted border-none rounded-xl h-14"
+                  className="bg-muted border-none rounded-xl h-12 font-bold text-sm"
                 />
               </div>
 
-              <div className="flex gap-3 pt-4">
-                <Button className="w-full rounded-2xl h-16 text-lg font-black uppercase tracking-widest shadow-lg shadow-primary/20" onClick={handleSave} disabled={!amount || !description}>
-                  {t.actions.save}
+              <div className="pt-2">
+                <Button className="w-full rounded-2xl h-14 text-sm font-black uppercase tracking-widest shadow-lg shadow-primary/20 gap-2" onClick={handleSave} disabled={!amount || !description}>
+                  <Plus className="w-5 h-5" /> {t.actions.save}
                 </Button>
               </div>
             </div>

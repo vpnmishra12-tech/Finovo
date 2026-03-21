@@ -1,8 +1,9 @@
+
 "use client";
 
 import { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
-import { Camera, Image as ImageIcon, Loader2, RefreshCcw } from 'lucide-react';
+import { Camera, Image as ImageIcon, Loader2 } from 'lucide-react';
 import { useLanguage } from '@/lib/contexts/language-context';
 import { extractBillPhotoExpense } from '@/ai/flows/extract-bill-photo-expense';
 
@@ -37,7 +38,7 @@ export function CameraInput({ onExtracted }: { onExtracted: (data: any) => void 
   };
 
   return (
-    <div className="flex flex-col items-center justify-center py-8 gap-6">
+    <div className="flex flex-col items-center justify-center py-4 gap-4">
       <input 
         type="file" 
         accept="image/*" 
@@ -47,18 +48,18 @@ export function CameraInput({ onExtracted }: { onExtracted: (data: any) => void 
         onChange={onFileChange}
       />
       
-      <div className="grid grid-cols-1 gap-4 w-full px-8">
+      <div className="grid grid-cols-1 gap-3 w-full px-4">
         <Button
           size="lg"
-          className="h-16 gap-3 font-medium text-lg"
+          className="h-12 gap-2 font-black uppercase text-[10px] tracking-widest rounded-xl"
           onClick={() => fileInputRef.current?.click()}
           disabled={isProcessing}
         >
           {isProcessing ? (
-            <Loader2 className="w-6 h-6 animate-spin" />
+            <Loader2 className="w-4 h-4 animate-spin" />
           ) : (
             <>
-              <Camera className="w-6 h-6" />
+              <Camera className="w-4 h-4" />
               Capture Bill
             </>
           )}
@@ -66,7 +67,7 @@ export function CameraInput({ onExtracted }: { onExtracted: (data: any) => void 
         <Button
           variant="outline"
           size="lg"
-          className="h-16 gap-3"
+          className="h-12 gap-2 font-black uppercase text-[10px] tracking-widest rounded-xl border-primary/20"
           onClick={() => {
             const input = document.createElement('input');
             input.type = 'file';
@@ -79,12 +80,12 @@ export function CameraInput({ onExtracted }: { onExtracted: (data: any) => void 
           }}
           disabled={isProcessing}
         >
-          <ImageIcon className="w-6 h-6" />
-          Upload from Gallery
+          <ImageIcon className="w-4 h-4" />
+          Gallery
         </Button>
       </div>
       
-      <p className="text-sm text-center text-muted-foreground px-8">
+      <p className="text-[10px] font-bold text-center text-muted-foreground uppercase px-4 tracking-tighter">
         {isProcessing ? t.actions.extracting : t.captions.camera}
       </p>
     </div>

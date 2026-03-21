@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -18,7 +19,7 @@ export function VoiceInput({ onExtracted }: { onExtracted: (data: any) => void }
       const rec = new SpeechRecognition();
       rec.continuous = false;
       rec.interimResults = false;
-      rec.lang = 'en-IN'; // Better support for Indian accents
+      rec.lang = 'en-IN';
 
       rec.onresult = async (event: any) => {
         const transcript = event.results[0][0].transcript;
@@ -54,28 +55,28 @@ export function VoiceInput({ onExtracted }: { onExtracted: (data: any) => void }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center py-8 gap-6">
+    <div className="flex flex-col items-center justify-center py-4 gap-4">
       <div className="relative">
         {isListening && (
           <div className="absolute inset-0 bg-primary/20 rounded-full animate-ping" />
         )}
         <Button
           size="icon"
-          variant={isListening ? "destructive" : "primary"}
-          className="w-20 h-20 rounded-full shadow-2xl relative z-10 transition-all active:scale-95"
+          variant={isListening ? "destructive" : "default"}
+          className="w-16 h-16 rounded-full shadow-xl relative z-10 transition-all active:scale-95"
           onClick={toggleListening}
           disabled={isProcessing}
         >
           {isProcessing ? (
-            <Loader2 className="w-8 h-8 animate-spin" />
+            <Loader2 className="w-6 h-6 animate-spin" />
           ) : isListening ? (
-            <MicOff className="w-8 h-8" />
+            <MicOff className="w-6 h-6" />
           ) : (
-            <Mic className="w-8 h-8" />
+            <Mic className="w-6 h-6" />
           )}
         </Button>
       </div>
-      <p className="text-sm text-center text-muted-foreground px-8">
+      <p className="text-[10px] font-bold text-center text-muted-foreground uppercase px-4 tracking-tighter">
         {isProcessing ? t.actions.extracting : isListening ? "Listening..." : t.captions.voice}
       </p>
     </div>
