@@ -1,5 +1,5 @@
 
-import { Firestore, collection, doc, serverTimestamp, Timestamp, updateDoc, arrayUnion, arrayRemove, deleteDoc } from 'firebase/firestore';
+import { Firestore, collection, doc, serverTimestamp, Timestamp, updateDoc, arrayUnion, arrayRemove, deleteDoc, getDoc } from 'firebase/firestore';
 import { setDocumentNonBlocking, updateDocumentNonBlocking, deleteDocumentNonBlocking, addDocumentNonBlocking } from '@/firebase';
 
 export interface Group {
@@ -49,7 +49,7 @@ export function createGroup(db: Firestore, userId: string, name: string, members
   
   const creatorRef = doc(collection(db, 'groups', newGroupRef.id, 'members'), userId);
   setDocumentNonBlocking(creatorRef, {
-    name: "Me",
+    name: "Admin",
     mobile: "",
     userId: userId
   }, {});
@@ -60,6 +60,31 @@ export function createGroup(db: Firestore, userId: string, name: string, members
   }
 
   return newGroupRef.id;
+}
+
+/**
+ * Join an existing group using Group ID
+ */
+export async function joinGroup(db: Firestore, groupId: string, userId: string, userName: string) {
+  const groupRef = doc(db, 'groups', groupId);
+  const groupSnap = await getDoc(groupRef);
+  
+  if (!groupSnap.exists()) {
+    throw new Error("Group not found");
+  }
+
+  // Update Group memberIds array
+  await updateDoc(groupRef, {
+    memberIds: arrayUnion(userId)
+  });
+
+  // Add to members sub-collection
+  const memberRef = doc(collection(db, 'groups', groupId, 'members'), userId);
+  setDocumentNonBlocking(memberRef, {
+    name: userName,
+    mobile: "",
+    userId: userId
+  }, {});
 }
 
 export function addMemberToGroup(db: Firestore, groupId: string, name: string, mobile: string) {

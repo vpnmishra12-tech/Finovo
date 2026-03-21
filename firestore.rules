@@ -11,7 +11,6 @@ service cloud.firestore {
       return isSignedIn() && request.auth.uid == userId;
     }
 
-    // Explicitly allow reading users for profile checks if needed
     match /users/{userId} {
       allow get, list, create, update, delete: if isOwner(userId);
 
@@ -24,14 +23,22 @@ service cloud.firestore {
       }
     }
 
-    // Refined Group Rules for better query performance
     match /groups/{groupId} {
-      // Re-triggering rules deployment with explicit methods
       allow create: if isSignedIn();
-      allow get, list: if isSignedIn() && (request.auth.uid in resource.data.memberIds);
-      allow update, delete: if isSignedIn() && (request.auth.uid in resource.data.memberIds);
+      // Allow reading if the user is in the memberIds array
+      allow get: if isSignedIn() && (request.auth.uid in resource.data.memberIds);
+      allow list: if isSignedIn() && (request.auth.uid in resource.data.memberIds);
+      
+      // Allow update for joining (adding self to memberIds) OR if already a member
+      allow update: if isSignedIn() && (
+        (request.resource.data.memberIds.hasAll(resource.data.memberIds) && request.resource.data.memberIds.hasAny([request.auth.uid])) ||
+        (request.auth.uid in resource.data.memberIds)
+      );
+      
+      allow delete: if isSignedIn() && (request.auth.uid == resource.data.createdBy);
 
       match /expenses/{expenseId} {
+        // Use get() with extreme care or prefer list-ready checks
         allow read: if isSignedIn() && (request.auth.uid in get(/databases/$(database)/documents/groups/$(groupId)).data.memberIds);
         allow create: if isSignedIn() && (request.auth.uid in get(/databases/$(database)/documents/groups/$(groupId)).data.memberIds);
         allow update, delete: if isSignedIn() && (request.auth.uid in get(/databases/$(database)/documents/groups/$(groupId)).data.memberIds) && request.auth.uid == resource.data.paidBy;
@@ -44,7 +51,6 @@ service cloud.firestore {
 
     match /categories/{categoryId} {
       allow read: if true;
-      allow write: if false;
     }
   }
 }
