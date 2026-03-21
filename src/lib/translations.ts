@@ -45,7 +45,8 @@ export const translations = {
     numPeople: "Number of People",
     splitEqual: "Split Equally",
     splitCustom: "Custom Split",
-    splitGroup: "Join Group",
+    splitGroup: "Group Trip",
+    joinGroup: "Join Group",
     yourShare: "Your Personal Share",
     saveMyShare: "Save My Share",
     whoPaid: "Who paid the full bill?",
@@ -142,7 +143,8 @@ export const translations = {
     numPeople: "कितने लोग हैं?",
     splitEqual: "बराबर बांटें",
     splitCustom: "अलग-अलग बांटें",
-    splitGroup: "ग्रुप में जुड़ें",
+    splitGroup: "ग्रुप ट्रिप",
+    joinGroup: "ग्रुप में जुड़ें",
     yourShare: "आपका हिस्सा",
     saveMyShare: "अपना हिस्सा सेव करें",
     whoPaid: "पूरा पैसा किसने भरा?",
@@ -170,6 +172,10 @@ export const translations = {
     months: {
       "01": "जनवरी", "02": "फरवरी", "03": "मार्च", "04": "अप्रैल", "05": "मई", "06": "जून",
       "07": "जुलाई", "08": "अगस्त", "09": "सितंबर", "10": "अक्टूबर", "11": "नवंबर", "12": "दिसंबर"
+    },
+    monthsShort: {
+      "01": "Jan", "02": "Feb", "03": "Mar", "04": "Apr", "05": "May", "06": "Jun",
+      "07": "Jul", "08": "Aug", "09": "Sep", "10": "Oct", "11": "Nov", "12": "Dec"
     },
     modes: { text: "टेक्स्ट", voice: "आवाज़", camera: "कैमरा" },
     captions: {

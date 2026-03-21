@@ -64,7 +64,7 @@ export function GroupModule() {
           <Dialog open={isJoinDialogOpen} onOpenChange={setIsJoinDialogOpen}>
             <DialogTrigger asChild>
               <Button variant="outline" className="rounded-xl font-black uppercase tracking-widest text-[10px] gap-2 border-primary/20">
-                <UserPlus className="w-3 h-3" /> {t.splitGroup}
+                <UserPlus className="w-3 h-3" /> {t.joinGroup}
               </Button>
             </DialogTrigger>
             <DialogContent className="max-w-md w-[92%] rounded-3xl">
