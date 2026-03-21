@@ -27,7 +27,6 @@ export function Header() {
     };
 
     let copied = false;
-
     try {
       if (navigator.clipboard && window.isSecureContext) {
         await navigator.clipboard.writeText(textToCopy);
@@ -61,48 +60,46 @@ export function Header() {
     if (navigator.share) {
       try {
         await navigator.share(shareData);
-      } catch (err) {
-        // Silent if cancelled
-      }
+      } catch (err) {}
     }
   };
   
   return (
     <header className="sticky top-0 z-[100] w-full bg-[#1D4ED8] shrink-0 border-none">
-      <div className="container flex h-16 items-center justify-between px-6 max-w-6xl mx-auto">
-        <div className="flex items-center gap-3">
-          <div className="bg-white/10 p-2 rounded-xl border border-white/10">
-            <Wallet className="w-6 h-6 text-white" />
+      <div className="container flex h-20 items-center justify-between px-6 max-w-6xl mx-auto">
+        <div className="flex items-center gap-4">
+          <div className="bg-white/20 p-2.5 rounded-xl border border-white/10">
+            <Wallet className="w-7 h-7 text-white" />
           </div>
           <div className="flex flex-col">
-            <h1 className="font-headline font-black text-xl text-white tracking-tight uppercase leading-none">
+            <h1 className="font-headline font-black text-2xl text-white tracking-tight uppercase leading-none">
               FINOVO
             </h1>
-            <span className="text-white/60 text-[10px] font-bold lowercase">business</span>
+            <span className="text-white/60 text-[11px] font-bold lowercase">business</span>
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           <Button 
             onClick={handleAppShare} 
             variant="ghost" 
             size="icon"
-            className="h-10 w-10 text-white hover:bg-white/10"
+            className="h-10 w-10 text-white bg-white/10 rounded-full hover:bg-white/20"
           >
             <Share2 className="w-5 h-5" />
           </Button>
           
           <Button variant="ghost" size="icon" className="h-10 w-10 text-white hover:bg-white/10">
-            <Bell className="w-5 h-5" />
+            <Bell className="w-6 h-6" />
           </Button>
           
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="h-10 w-10 text-white hover:bg-white/10">
-                <Settings className="w-5 h-5" />
+                <Settings className="w-6 h-6" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56 rounded-[1.5rem] p-2 mt-2">
+            <DropdownMenuContent align="end" className="w-56 rounded-[1.5rem] p-2 mt-2 shadow-2xl">
               <DropdownMenuLabel className="px-3 py-2">
                 <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground block mb-0.5">Account</span>
                 <span className="text-sm font-bold truncate text-primary">{user?.email || "Guest"}</span>

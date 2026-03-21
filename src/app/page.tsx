@@ -9,7 +9,7 @@ import { Header } from '@/components/layout/header';
 import { BudgetSummary } from '@/components/dashboard/budget-summary';
 import { AdBanner } from '@/components/dashboard/ad-banner';
 import { 
-  Wallet, History, Calculator, Users, LayoutGrid, Home as HomeIcon, ArrowRight, Sparkles, AlertTriangle
+  Wallet, History, Calculator, Users, LayoutGrid, Home as HomeIcon, ArrowRight, AlertTriangle
 } from 'lucide-react';
 import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import { collection, query, orderBy, limit } from 'firebase/firestore';
@@ -21,7 +21,6 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { cn } from '@/lib/utils';
 
-// Dynamic imports for performance
 const AddExpenseDrawer = dynamic(() => import('@/components/expenses/add-expense-drawer').then(mod => mod.AddExpenseDrawer), { ssr: false });
 const BillSplitTool = dynamic(() => import('@/components/bill-split/bill-split-tool').then(mod => mod.BillSplitTool), { ssr: false });
 const ExpenseList = dynamic(() => import('@/components/expenses/expense-list').then(mod => mod.ExpenseList), { ssr: false });
@@ -35,7 +34,6 @@ export default function Home() {
   const firestore = useFirestore();
   const [activeTab, setActiveTab] = useState<NavTab>('dashboard');
   
-  // Auth Form State
   const [isLoginView, setIsLoginView] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -55,7 +53,6 @@ export default function Home() {
     );
   }
 
-  // 100% IMAGE MATCH GRID CARD - COMPACT STYLE
   const GridCard = ({ icon: Icon, label, color, onClick, active }: { icon: any, label: string, color: string, onClick: () => void, active?: boolean }) => (
     <Card 
       className={cn(
@@ -136,28 +133,25 @@ export default function Home() {
             {activeTab === 'dashboard' && (
               <div className="flex-1 flex flex-col space-y-4 animate-in fade-in duration-300 overflow-hidden">
                 
-                {/* Profile Header - 100% IMAGE MATCH */}
-                <div className="flex items-center gap-4 shrink-0">
-                  <Avatar className="h-16 w-16 border-2 border-white shadow-xl">
-                    <AvatarFallback className="bg-black text-white text-2xl font-black uppercase">
+                <div className="flex items-center gap-5 shrink-0 px-1 mt-2">
+                  <Avatar className="h-20 w-20 border-4 border-white shadow-2xl">
+                    <AvatarFallback className="bg-black text-white text-3xl font-black uppercase">
                       {user.email?.charAt(0) || 'V'}
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex flex-col">
-                    <span className="text-[11px] font-black uppercase text-gray-400 tracking-widest leading-none mb-1">Overview</span>
-                    <h2 className="text-3xl font-headline font-black uppercase text-black leading-none tracking-tight">Dashboard</h2>
+                    <span className="text-[12px] font-black uppercase text-gray-400 tracking-[0.3em] leading-none mb-1">Overview</span>
+                    <h2 className="text-4xl font-headline font-black uppercase text-black leading-none tracking-tight">Dashboard</h2>
                   </div>
                 </div>
 
-                {/* Alert Bar - 100% IMAGE MATCH */}
-                <Alert className="py-3 px-5 rounded-2xl border bg-red-50 text-red-700 border-red-100 flex items-center gap-3 shrink-0">
-                  <AlertTriangle className="h-5 w-5 shrink-0" />
-                  <AlertDescription className="text-[11px] font-black uppercase tracking-wider leading-tight">
+                <Alert className="py-4 px-6 rounded-3xl border-2 bg-[#FFF1F1] text-[#D32F2F] border-[#FFE4E4] flex items-center gap-4 shrink-0">
+                  <AlertTriangle className="h-6 w-6 shrink-0" />
+                  <AlertDescription className="text-[12px] font-black uppercase tracking-wider leading-tight">
                     ALERT: 100% BUDGET REACHED. YOU ARE OVERSPENDING!
                   </AlertDescription>
                 </Alert>
 
-                {/* Budget Summary & Feature Grid - 100% IMAGE MATCH */}
                 <div className="flex-1 flex flex-col space-y-4 overflow-hidden">
                   <BudgetSummary 
                     userId={user.uid} 
@@ -166,7 +160,6 @@ export default function Home() {
                     year={new Date().getFullYear()} 
                   />
 
-                  {/* Feature Grid - IMAGE MATCH BUTTONS */}
                   <div className="grid grid-cols-2 gap-4 shrink-0">
                     <GridCard 
                       icon={LayoutGrid} 
@@ -195,13 +188,12 @@ export default function Home() {
                     />
                   </div>
                   
-                  <div className="flex-1 flex flex-col justify-end">
+                  <div className="flex-1 flex flex-col justify-end pb-4">
                     <AdBanner />
                   </div>
                 </div>
                 
-                {/* Floating Plus Button - 100% IMAGE MATCH POSITION */}
-                <div className="absolute right-6 bottom-24 z-[60]">
+                <div className="absolute right-8 bottom-28 z-[60]">
                   <AddExpenseDrawer />
                 </div>
               </div>
@@ -216,24 +208,23 @@ export default function Home() {
         )}
       </main>
 
-      {/* Bottom Navigation - 100% IMAGE MATCH */}
       {user && (
-        <div className="h-20 bg-white border-t flex items-center justify-around px-4 pb-4 shadow-inner shrink-0 z-50">
-          <button onClick={() => setActiveTab('dashboard')} className={cn("flex flex-col items-center gap-1.5 transition-colors", activeTab === 'dashboard' ? "text-primary" : "text-gray-400")}>
-            <HomeIcon className="w-6 h-6" />
-            <span className="text-[10px] font-black uppercase tracking-widest">Home</span>
+        <div className="h-24 bg-white border-t flex items-center justify-around px-4 pb-6 shadow-inner shrink-0 z-50">
+          <button onClick={() => setActiveTab('dashboard')} className={cn("flex flex-col items-center gap-1.5 transition-colors", activeTab === 'dashboard' ? "text-[#1D4ED8]" : "text-gray-400")}>
+            <HomeIcon className="w-7 h-7" />
+            <span className="text-[11px] font-black uppercase tracking-widest">Home</span>
           </button>
-          <button onClick={() => setActiveTab('history')} className={cn("flex flex-col items-center gap-1.5 transition-colors", activeTab === 'history' ? "text-primary" : "text-gray-400")}>
-            <History className="w-6 h-6" />
-            <span className="text-[10px] font-black uppercase tracking-widest">Bills</span>
+          <button onClick={() => setActiveTab('history')} className={cn("flex flex-col items-center gap-1.5 transition-colors", activeTab === 'history' ? "text-[#1D4ED8]" : "text-gray-400")}>
+            <History className="w-7 h-7" />
+            <span className="text-[11px] font-black uppercase tracking-widest">Bills</span>
           </button>
-          <button onClick={() => setActiveTab('splitter')} className={cn("flex flex-col items-center gap-1.5 transition-colors", activeTab === 'splitter' ? "text-primary" : "text-gray-400")}>
-            <Calculator className="w-6 h-6" />
-            <span className="text-[10px] font-black uppercase tracking-widest">Split</span>
+          <button onClick={() => setActiveTab('splitter')} className={cn("flex flex-col items-center gap-1.5 transition-colors", activeTab === 'splitter' ? "text-[#1D4ED8]" : "text-gray-400")}>
+            <Calculator className="w-7 h-7" />
+            <span className="text-[11px] font-black uppercase tracking-widest">Split</span>
           </button>
-          <button onClick={() => setActiveTab('groups')} className={cn("flex flex-col items-center gap-1.5 transition-colors", activeTab === 'groups' ? "text-primary" : "text-gray-400")}>
-            <Users className="w-6 h-6" />
-            <span className="text-[10px] font-black uppercase tracking-widest">Groups</span>
+          <button onClick={() => setActiveTab('groups')} className={cn("flex flex-col items-center gap-1.5 transition-colors", activeTab === 'groups' ? "text-[#1D4ED8]" : "text-gray-400")}>
+            <Users className="w-7 h-7" />
+            <span className="text-[11px] font-black uppercase tracking-widest">Groups</span>
           </button>
         </div>
       )}
