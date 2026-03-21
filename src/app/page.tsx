@@ -193,8 +193,8 @@ export default function Home() {
                     />
                   </div>
                   
-                  {/* Ad Section */}
-                  <div className="pt-0.5">
+                  {/* Ad Section - Moved lower using mt-auto and extra padding */}
+                  <div className="pt-10 mt-auto shrink-0">
                     <AdBanner />
                   </div>
                 </div>
