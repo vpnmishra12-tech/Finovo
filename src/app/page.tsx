@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from 'react';
@@ -99,19 +98,19 @@ export default function Home() {
             <div className="p-4 bg-primary/10 rounded-full mb-4">
               <Wallet className="w-16 h-16 text-primary" />
             </div>
-            <h1 className="text-3xl font-headline font-black tracking-tight">Finovo <span className="text-primary">Business</span></h1>
+            <h1 className="text-3xl font-headline font-black tracking-tight text-foreground">Finovo <span className="text-primary">Business</span></h1>
             <p className="text-sm text-muted-foreground font-medium max-w-xs mx-auto mt-2">Professional Grade Expense Tracking for Everyone.</p>
             
             <Card className="w-full max-w-sm border-none shadow-2xl rounded-[2rem] overflow-hidden bg-card mt-8">
               <CardContent className="p-0">
                 <Tabs defaultValue="login" className="w-full">
                   <TabsList className="grid w-full grid-cols-2 rounded-none h-14 bg-muted/50">
-                    <TabsTrigger value="login" className="data-[state=active]:bg-card rounded-none h-full font-black text-xs uppercase tracking-widest">Login</TabsTrigger>
-                    <TabsTrigger value="signup" className="data-[state=active]:bg-card rounded-none h-full font-black text-xs uppercase tracking-widest">Sign Up</TabsTrigger>
+                    <TabsTrigger value="login" className="data-[state=active]:bg-card rounded-none h-full font-black text-xs uppercase tracking-widest text-foreground">Login</TabsTrigger>
+                    <TabsTrigger value="signup" className="data-[state=active]:bg-card rounded-none h-full font-black text-xs uppercase tracking-widest text-foreground">Sign Up</TabsTrigger>
                   </TabsList>
                   <div className="p-8 space-y-4">
-                    <Input placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} className="h-12 rounded-xl bg-muted border-none font-bold" />
-                    <Input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="h-12 rounded-xl bg-muted border-none font-bold" />
+                    <Input placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} className="h-12 rounded-xl bg-muted border-none font-bold text-foreground" />
+                    <Input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="h-12 rounded-xl bg-muted border-none font-bold text-foreground" />
                     <Button onClick={handleLogin} className="w-full h-12 rounded-xl font-black uppercase tracking-widest">
                       {isAuthLoading ? <Loader2 className="animate-spin" /> : "Proceed"}
                     </Button>
@@ -140,14 +139,14 @@ export default function Home() {
 
   const GridCard = ({ icon: Icon, label, color, onClick }: { icon: any, label: string, color: string, onClick: () => void }) => (
     <Card 
-      className="border-none shadow-sm hover:shadow-md transition-all active:scale-95 cursor-pointer rounded-[1.5rem] overflow-hidden group"
+      className="border-none shadow-sm hover:shadow-md transition-all active:scale-95 cursor-pointer rounded-[1.5rem] overflow-hidden group bg-card"
       onClick={onClick}
     >
       <CardContent className="p-3 flex flex-col items-center justify-center gap-2 text-center">
         <div className={cn("p-2 rounded-full transition-transform group-hover:scale-110", color)}>
           <Icon className="w-5 h-5" />
         </div>
-        <span className="font-headline font-black text-[9px] uppercase tracking-tight">{label}</span>
+        <span className="font-headline font-black text-[9px] uppercase tracking-tight text-foreground">{label}</span>
       </CardContent>
     </Card>
   );
