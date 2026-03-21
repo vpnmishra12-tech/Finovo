@@ -68,13 +68,13 @@ export function Header() {
   };
   
   return (
-    <header className="sticky top-0 z-[100] w-full bg-primary border-b border-white/10 shrink-0">
+    <header className="sticky top-0 z-[100] w-full bg-[#1D4ED8] shrink-0 border-none">
       <div className="container flex h-16 items-center justify-between px-6 max-w-6xl mx-auto">
         <div className="flex items-center gap-3">
-          <div className="bg-white/15 p-2 rounded-xl border border-white/20">
+          <div className="bg-white/10 p-2 rounded-xl border border-white/10">
             <Wallet className="w-6 h-6 text-white" />
           </div>
-          <div className="flex flex-col sm:flex-row sm:items-baseline sm:gap-1">
+          <div className="flex flex-col">
             <h1 className="font-headline font-black text-xl text-white tracking-tight uppercase leading-none">
               FINOVO
             </h1>
@@ -83,14 +83,13 @@ export function Header() {
         </div>
 
         <div className="flex items-center gap-2">
-          {/* Share Button - Matching Image Circle Style */}
           <Button 
             onClick={handleAppShare} 
             variant="ghost" 
             size="icon"
-            className="h-10 w-10 text-white hover:bg-white/10 rounded-xl border border-white/20 bg-white/5"
+            className="h-10 w-10 text-white hover:bg-white/10"
           >
-            <Share2 className="w-5 h-5 text-white" />
+            <Share2 className="w-5 h-5" />
           </Button>
           
           <Button variant="ghost" size="icon" className="h-10 w-10 text-white hover:bg-white/10">

@@ -55,20 +55,20 @@ export default function Home() {
     );
   }
 
-  // COMPACT SLIM GRID CARD - MATCHING SPENT CARD STYLE
+  // 100% IMAGE MATCH GRID CARD - COMPACT STYLE
   const GridCard = ({ icon: Icon, label, color, onClick, active }: { icon: any, label: string, color: string, onClick: () => void, active?: boolean }) => (
     <Card 
       className={cn(
-        "border-none shadow-sm active:scale-95 transition-all cursor-pointer rounded-[1.2rem] bg-white h-16 flex items-center overflow-hidden",
+        "border-none shadow-sm active:scale-95 transition-all cursor-pointer rounded-[1.5rem] bg-white h-20 flex items-center overflow-hidden",
         active && "ring-2 ring-primary ring-inset"
       )}
       onClick={onClick}
     >
-      <CardContent className="p-3 flex items-center gap-3 w-full">
-        <div className={cn("p-2 rounded-lg shrink-0", color)}>
-          <Icon className="w-4 h-4" />
+      <CardContent className="p-4 flex items-center gap-4 w-full">
+        <div className={cn("p-2.5 rounded-xl shrink-0", color)}>
+          <Icon className="w-5 h-5" />
         </div>
-        <span className="font-headline font-black text-[10px] uppercase tracking-wider text-black leading-tight flex-1">
+        <span className="font-headline font-black text-[11px] uppercase tracking-wider text-black leading-tight flex-1">
           {label}
         </span>
       </CardContent>
@@ -132,33 +132,33 @@ export default function Home() {
             </div>
           </div>
         ) : (
-          <div className="h-full flex flex-col max-w-6xl mx-auto px-5 py-2 space-y-3 overflow-hidden">
+          <div className="h-full flex flex-col max-w-6xl mx-auto px-5 py-4 space-y-4 overflow-hidden">
             {activeTab === 'dashboard' && (
-              <div className="flex-1 flex flex-col space-y-3 animate-in fade-in duration-300 overflow-hidden">
+              <div className="flex-1 flex flex-col space-y-4 animate-in fade-in duration-300 overflow-hidden">
                 
-                {/* Profile Header - IMAGE MATCH */}
-                <div className="flex items-center gap-4 shrink-0 pt-2">
-                  <Avatar className="h-14 w-14 border-2 border-white shadow-xl">
-                    <AvatarFallback className="bg-black text-white text-xl font-black uppercase">
+                {/* Profile Header - 100% IMAGE MATCH */}
+                <div className="flex items-center gap-4 shrink-0">
+                  <Avatar className="h-16 w-16 border-2 border-white shadow-xl">
+                    <AvatarFallback className="bg-black text-white text-2xl font-black uppercase">
                       {user.email?.charAt(0) || 'V'}
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex flex-col">
-                    <span className="text-[10px] font-black uppercase text-gray-400 tracking-widest leading-none mb-1">Overview</span>
-                    <h2 className="text-2xl font-headline font-black uppercase text-black leading-none tracking-tight">Dashboard</h2>
+                    <span className="text-[11px] font-black uppercase text-gray-400 tracking-widest leading-none mb-1">Overview</span>
+                    <h2 className="text-3xl font-headline font-black uppercase text-black leading-none tracking-tight">Dashboard</h2>
                   </div>
                 </div>
 
-                {/* Alert Bar - IMAGE MATCH */}
-                <Alert className="py-2.5 px-4 rounded-xl border bg-red-50 text-red-700 border-red-100 flex items-center gap-3 shrink-0">
-                  <AlertTriangle className="h-4 w-4 shrink-0" />
-                  <AlertDescription className="text-[10px] font-black uppercase tracking-wider leading-tight">
+                {/* Alert Bar - 100% IMAGE MATCH */}
+                <Alert className="py-3 px-5 rounded-2xl border bg-red-50 text-red-700 border-red-100 flex items-center gap-3 shrink-0">
+                  <AlertTriangle className="h-5 w-5 shrink-0" />
+                  <AlertDescription className="text-[11px] font-black uppercase tracking-wider leading-tight">
                     ALERT: 100% BUDGET REACHED. YOU ARE OVERSPENDING!
                   </AlertDescription>
                 </Alert>
 
-                {/* Budget Summary & Feature Grid - IMAGE MATCH */}
-                <div className="flex-1 flex flex-col space-y-3 overflow-hidden">
+                {/* Budget Summary & Feature Grid - 100% IMAGE MATCH */}
+                <div className="flex-1 flex flex-col space-y-4 overflow-hidden">
                   <BudgetSummary 
                     userId={user.uid} 
                     totalSpent={expenses?.reduce((sum, e) => sum + e.amount, 0) || 0} 
@@ -166,8 +166,8 @@ export default function Home() {
                     year={new Date().getFullYear()} 
                   />
 
-                  {/* Feature Grid - Slim Cards */}
-                  <div className="grid grid-cols-2 gap-3 shrink-0">
+                  {/* Feature Grid - IMAGE MATCH BUTTONS */}
+                  <div className="grid grid-cols-2 gap-4 shrink-0">
                     <GridCard 
                       icon={LayoutGrid} 
                       label="Dashboard" 
@@ -195,12 +195,12 @@ export default function Home() {
                     />
                   </div>
                   
-                  <div className="flex-1 flex flex-col justify-end pb-2">
+                  <div className="flex-1 flex flex-col justify-end">
                     <AdBanner />
                   </div>
                 </div>
                 
-                {/* Floating Plus Button - IMAGE MATCH POSITION */}
+                {/* Floating Plus Button - 100% IMAGE MATCH POSITION */}
                 <div className="absolute right-6 bottom-24 z-[60]">
                   <AddExpenseDrawer />
                 </div>
@@ -216,7 +216,7 @@ export default function Home() {
         )}
       </main>
 
-      {/* Bottom Navigation - IMAGE MATCH */}
+      {/* Bottom Navigation - 100% IMAGE MATCH */}
       {user && (
         <div className="h-20 bg-white border-t flex items-center justify-around px-4 pb-4 shadow-inner shrink-0 z-50">
           <button onClick={() => setActiveTab('dashboard')} className={cn("flex flex-col items-center gap-1.5 transition-colors", activeTab === 'dashboard' ? "text-primary" : "text-gray-400")}>
