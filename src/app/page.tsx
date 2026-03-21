@@ -54,7 +54,7 @@ export default function Home() {
 
   const GridCard = ({ icon: Icon, label, color, onClick }: { icon: any, label: string, color: string, onClick: () => void }) => (
     <Card 
-      className="border-none shadow-sm active:scale-95 transition-all cursor-pointer rounded-[1rem] bg-white h-[5.2rem] flex items-center overflow-hidden"
+      className="border-none shadow-sm active:scale-95 transition-all cursor-pointer rounded-[1rem] bg-white h-[4.2rem] flex items-center overflow-hidden"
       onClick={onClick}
     >
       <CardContent className="p-2.5 flex items-center gap-2.5 w-full">
@@ -187,15 +187,15 @@ export default function Home() {
                       onClick={() => setActiveTab('groups')} 
                     />
                   </div>
-                </div>
 
-                {/* Ad Section */}
-                <div className="shrink-0 pt-1">
-                  <AdBanner />
+                  {/* Ad Section - Now at the end of scrollable area but layout ensures it touches bottom line */}
+                  <div className="mt-auto shrink-0 pb-0">
+                    <AdBanner />
+                  </div>
                 </div>
                 
-                {/* FAB */}
-                <div className="absolute right-5 bottom-24 z-[60]">
+                {/* FAB - Lowered z-index so it hides behind the drawer */}
+                <div className="absolute right-5 bottom-24 z-40">
                   <AddExpenseDrawer />
                 </div>
               </div>
