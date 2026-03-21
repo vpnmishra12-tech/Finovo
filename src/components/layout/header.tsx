@@ -12,21 +12,43 @@ export function Header() {
   const { toast } = useToast();
 
   const handleAppShare = async () => {
+    const textToCopy = window.location.origin;
     const shareData = {
       title: 'Finovo - Expense Tracker',
       text: 'Check out Finovo, the professional AI expense tracker!',
-      url: window.location.origin
+      url: textToCopy
     };
 
+    let copied = false;
+    
+    // Method 1: navigator.clipboard
     try {
-      if (navigator.share) {
-        await navigator.share(shareData);
-      } else if (navigator.clipboard) {
-        await navigator.clipboard.writeText(window.location.origin);
-        toast({ title: "Link Copied!", description: "App link saved to clipboard." });
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(textToCopy);
+        copied = true;
       }
-    } catch (err) {
-      console.log('Share cancelled or failed');
+    } catch (err) {}
+
+    // Method 2: Fallback
+    if (!copied) {
+      try {
+        const textArea = document.createElement("textarea");
+        textArea.value = textToCopy;
+        document.body.appendChild(textArea);
+        textArea.select();
+        copied = document.execCommand('copy');
+        document.body.removeChild(textArea);
+      } catch (err) {}
+    }
+
+    if (copied) {
+      toast({ title: "Link Copied!", description: "App link saved to clipboard." });
+    }
+
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+      } catch (err) {}
     }
   };
   

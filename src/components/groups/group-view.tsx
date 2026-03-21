@@ -61,17 +61,42 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
   }, {} as Record<string, {name: string, total: number}>);
 
   const handleShareId = async () => {
-    // 1. Sabse pehle copy logic (Professional priority)
+    const textToCopy = groupId;
+    let copied = false;
+
+    // 1. Instant Copy attempt (Primary)
     try {
-      if (navigator.clipboard) {
-        await navigator.clipboard.writeText(groupId);
-        toast({ title: "ID Copied!", description: "Group ID automatically saved." });
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(textToCopy);
+        copied = true;
       }
     } catch (err) {
-      console.warn("Clipboard auto-copy failed", err);
+      console.warn("Primary clipboard failed", err);
     }
 
-    // 2. Phir OS Share option (Agar supported ho)
+    // 2. Fallback Copy attempt (Professional Legacy Method)
+    if (!copied) {
+      try {
+        const textArea = document.createElement("textarea");
+        textArea.value = textToCopy;
+        textArea.style.position = "fixed";
+        textArea.style.left = "-9999px";
+        textArea.style.top = "0";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        copied = document.execCommand('copy');
+        document.body.removeChild(textArea);
+      } catch (err) {
+        console.error("Fallback copy failed", err);
+      }
+    }
+
+    if (copied) {
+      toast({ title: "ID Copied!", description: "Group ID automatically saved." });
+    }
+
+    // 3. Optional OS Share
     if (navigator.share) {
       try {
         const shareText = `Join my Finovo group '${groupData?.name || 'Finance'}'! Use this ID to join: ${groupId}`;
@@ -81,13 +106,13 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
           url: window.location.origin
         });
       } catch (err) {
-        console.log('Share interaction finished');
+        // User cancelled, which is fine since we already copied
       }
-    } else if (!navigator.clipboard) {
-      // Fallback agar dono hi fail ho jayein
+    } else if (!copied) {
+      // Final message if all automated copy methods failed
       toast({ 
         title: "Group ID", 
-        description: `Please copy manually: ${groupId}`,
+        description: `Copy manually: ${groupId}`,
       });
     }
   };
