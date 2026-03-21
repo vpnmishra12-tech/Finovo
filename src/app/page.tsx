@@ -56,16 +56,16 @@ export default function Home() {
   const GridCard = ({ icon: Icon, label, color, onClick, active }: { icon: any, label: string, color: string, onClick: () => void, active?: boolean }) => (
     <Card 
       className={cn(
-        "border-none shadow-sm active:scale-95 transition-all cursor-pointer rounded-[1.2rem] bg-white h-[4.5rem] flex items-center overflow-hidden",
+        "border-none shadow-sm active:scale-95 transition-all cursor-pointer rounded-[1rem] bg-white h-[4rem] flex items-center overflow-hidden",
         active && "ring-2 ring-primary"
       )}
       onClick={onClick}
     >
-      <CardContent className="p-3 flex items-center gap-3 w-full">
-        <div className={cn("p-2 rounded-xl shrink-0", color)}>
+      <CardContent className="p-2.5 flex items-center gap-2.5 w-full">
+        <div className={cn("p-1.5 rounded-lg shrink-0", color)}>
           <Icon className="w-4 h-4" />
         </div>
-        <span className="font-headline font-black text-[10px] uppercase tracking-wider text-black leading-tight flex-1">
+        <span className="font-headline font-black text-[9px] uppercase tracking-wider text-black leading-tight flex-1">
           {label}
         </span>
       </CardContent>
@@ -79,48 +79,48 @@ export default function Home() {
       <main className="flex-1 overflow-hidden relative">
         {!user ? (
           <div className="h-full flex flex-col items-center justify-center p-6 bg-[#FDFBF7] animate-in fade-in duration-500">
-            <div className="w-full max-w-sm flex flex-col items-center space-y-8">
-              <div className="flex flex-col items-center text-center space-y-4">
-                <div className="bg-primary p-5 rounded-full shadow-2xl shadow-primary/30">
-                  <Wallet className="w-8 h-8 text-white" />
+            <div className="w-full max-w-sm flex flex-col items-center space-y-6">
+              <div className="flex flex-col items-center text-center space-y-3">
+                <div className="bg-primary p-4 rounded-full shadow-2xl shadow-primary/30">
+                  <Wallet className="w-7 h-7 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-4xl font-headline font-black text-black tracking-tight uppercase leading-none">FINOVO</h1>
-                  <p className="text-[10px] font-black uppercase text-gray-400 tracking-[0.4em] pt-2">
+                  <h1 className="text-3xl font-headline font-black text-black tracking-tight uppercase leading-none">FINOVO</h1>
+                  <p className="text-[9px] font-black uppercase text-gray-400 tracking-[0.4em] pt-1">
                     {isLoginView ? 'Welcome Back' : 'Create Account'}
                   </p>
                 </div>
               </div>
 
-              <div className="w-full space-y-4">
-                <div className="space-y-3">
+              <div className="w-full space-y-3">
+                <div className="space-y-2">
                   <Input 
                     type="email" 
                     placeholder="Email Address" 
                     value={email} 
                     onChange={(e) => setEmail(e.target.value)}
-                    className="h-14 bg-white border border-gray-100 rounded-full px-8 font-bold text-black shadow-sm focus-visible:ring-primary"
+                    className="h-12 bg-white border border-gray-100 rounded-full px-8 font-bold text-black shadow-sm focus-visible:ring-primary"
                   />
                   <Input 
                     type="password" 
                     placeholder="Password" 
                     value={password} 
                     onChange={(e) => setPassword(e.target.value)}
-                    className="h-14 bg-white border border-gray-100 rounded-full px-8 font-bold text-black shadow-sm focus-visible:ring-primary"
+                    className="h-12 bg-white border border-gray-100 rounded-full px-8 font-bold text-black shadow-sm focus-visible:ring-primary"
                   />
                 </div>
                 
                 <Button 
                   onClick={() => isLoginView ? login(email, password) : signup(email, password)}
-                  className="w-full h-14 rounded-full font-black uppercase tracking-widest text-xs shadow-xl shadow-primary/20 gap-3"
+                  className="w-full h-12 rounded-full font-black uppercase tracking-widest text-[10px] shadow-xl shadow-primary/20 gap-3"
                 >
-                  {isLoginView ? 'Login Now' : 'Sign Up Now'} <ArrowRight className="w-4 h-4" />
+                  {isLoginView ? 'Login Now' : 'Sign Up Now'} <ArrowRight className="w-3 h-3" />
                 </Button>
 
                 <div className="text-center">
                   <button 
                     onClick={() => setIsLoginView(!isLoginView)} 
-                    className="text-[10px] font-black uppercase text-primary tracking-widest hover:underline"
+                    className="text-[9px] font-black uppercase text-primary tracking-widest hover:underline"
                   >
                     {isLoginView ? 'New here? Create Account' : 'Already have an account? Login'}
                   </button>
@@ -129,33 +129,33 @@ export default function Home() {
             </div>
           </div>
         ) : (
-          <div className="h-full flex flex-col max-w-6xl mx-auto px-5 py-3 space-y-3 overflow-hidden">
+          <div className="h-full flex flex-col max-w-6xl mx-auto px-5 py-2 space-y-2 overflow-hidden">
             {activeTab === 'dashboard' ? (
-              <div className="flex-1 flex flex-col space-y-3 animate-in fade-in duration-300 overflow-hidden">
+              <div className="flex-1 flex flex-col space-y-2 animate-in fade-in duration-300 overflow-hidden">
                 
                 {/* Profile Section */}
-                <div className="flex items-center gap-4 shrink-0 px-1 mt-1">
-                  <Avatar className="h-14 w-14 border-4 border-white shadow-lg">
-                    <AvatarFallback className="bg-black text-white text-xl font-black uppercase">
+                <div className="flex items-center gap-3 shrink-0 px-1 mt-1">
+                  <Avatar className="h-12 w-12 border-2 border-white shadow-lg">
+                    <AvatarFallback className="bg-black text-white text-lg font-black uppercase">
                       {user.email?.charAt(0) || 'V'}
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex flex-col">
-                    <span className="text-[9px] font-bold uppercase text-gray-400 tracking-[0.2em] leading-none mb-0.5">OVERVIEW</span>
-                    <h2 className="text-3xl font-headline font-black uppercase text-black leading-none tracking-tight">DASHBOARD</h2>
+                    <span className="text-[8px] font-bold uppercase text-gray-400 tracking-[0.2em] leading-none mb-0.5">OVERVIEW</span>
+                    <h2 className="text-2xl font-headline font-black uppercase text-black leading-none tracking-tight">DASHBOARD</h2>
                   </div>
                 </div>
 
                 {/* Alert Bar */}
-                <Alert className="py-2 px-4 rounded-[1rem] border bg-[#FFF1F1] text-[#D32F2F] border-[#FFE4E4] flex items-center gap-3 shrink-0">
-                  <AlertTriangle className="h-4 w-4 shrink-0" />
-                  <AlertDescription className="text-[9px] font-black uppercase tracking-tight leading-tight">
+                <Alert className="py-1.5 px-3 rounded-[0.8rem] border bg-[#FFF1F1] text-[#D32F2F] border-[#FFE4E4] flex items-center gap-2 shrink-0">
+                  <AlertTriangle className="h-3 w-3 shrink-0" />
+                  <AlertDescription className="text-[8px] font-black uppercase tracking-tight leading-tight">
                     ALERT: 100% BUDGET REACHED. YOU ARE OVERSPENDING!
                   </AlertDescription>
                 </Alert>
 
                 {/* Main Content Area */}
-                <div className="flex-1 flex flex-col space-y-3 overflow-y-auto no-scrollbar pb-24">
+                <div className="flex-1 flex flex-col space-y-2 overflow-y-auto no-scrollbar pb-24">
                   {/* Budget Cards Section */}
                   <BudgetSummary 
                     userId={user.uid} 
@@ -165,7 +165,7 @@ export default function Home() {
                   />
 
                   {/* Feature Grid Section */}
-                  <div className="grid grid-cols-2 gap-3 shrink-0">
+                  <div className="grid grid-cols-2 gap-2 shrink-0">
                     <GridCard 
                       icon={LayoutGrid} 
                       label="Dashboard" 
@@ -194,13 +194,13 @@ export default function Home() {
                   </div>
                   
                   {/* Ad Section */}
-                  <div className="pt-1">
+                  <div className="pt-0.5">
                     <AdBanner />
                   </div>
                 </div>
                 
                 {/* FAB */}
-                <div className="absolute right-6 bottom-28 z-[60]">
+                <div className="absolute right-5 bottom-24 z-[60]">
                   <AddExpenseDrawer />
                 </div>
               </div>
@@ -216,22 +216,22 @@ export default function Home() {
       </main>
 
       {user && (
-        <div className="h-24 bg-white border-t flex items-center justify-around px-4 pb-6 shadow-inner shrink-0 z-50">
-          <button onClick={() => setActiveTab('dashboard')} className={cn("flex flex-col items-center gap-1.5 transition-colors", activeTab === 'dashboard' ? "text-primary" : "text-gray-400")}>
-            <HomeIcon className="w-6 h-6" />
-            <span className="text-[9px] font-black uppercase tracking-widest">Home</span>
+        <div className="h-20 bg-white border-t flex items-center justify-around px-4 pb-4 shadow-inner shrink-0 z-50">
+          <button onClick={() => setActiveTab('dashboard')} className={cn("flex flex-col items-center gap-1 transition-colors", activeTab === 'dashboard' ? "text-primary" : "text-gray-400")}>
+            <HomeIcon className="w-5 h-5" />
+            <span className="text-[8px] font-black uppercase tracking-widest">Home</span>
           </button>
-          <button onClick={() => setActiveTab('history')} className={cn("flex flex-col items-center gap-1.5 transition-colors", activeTab === 'history' ? "text-primary" : "text-gray-400")}>
-            <History className="w-6 h-6" />
-            <span className="text-[9px] font-black uppercase tracking-widest">Bills</span>
+          <button onClick={() => setActiveTab('history')} className={cn("flex flex-col items-center gap-1 transition-colors", activeTab === 'history' ? "text-primary" : "text-gray-400")}>
+            <History className="w-5 h-5" />
+            <span className="text-[8px] font-black uppercase tracking-widest">Bills</span>
           </button>
-          <button onClick={() => setActiveTab('splitter')} className={cn("flex flex-col items-center gap-1.5 transition-colors", activeTab === 'splitter' ? "text-primary" : "text-gray-400")}>
-            <Calculator className="w-6 h-6" />
-            <span className="text-[9px] font-black uppercase tracking-widest">Split</span>
+          <button onClick={() => setActiveTab('splitter')} className={cn("flex flex-col items-center gap-1 transition-colors", activeTab === 'splitter' ? "text-primary" : "text-gray-400")}>
+            <Calculator className="w-5 h-5" />
+            <span className="text-[8px] font-black uppercase tracking-widest">Split</span>
           </button>
-          <button onClick={() => setActiveTab('groups')} className={cn("flex flex-col items-center gap-1.5 transition-colors", activeTab === 'groups' ? "text-primary" : "text-gray-400")}>
-            <Users className="w-6 h-6" />
-            <span className="text-[9px] font-black uppercase tracking-widest">Groups</span>
+          <button onClick={() => setActiveTab('groups')} className={cn("flex flex-col items-center gap-1 transition-colors", activeTab === 'groups' ? "text-primary" : "text-gray-400")}>
+            <Users className="w-5 h-5" />
+            <span className="text-[8px] font-black uppercase tracking-widest">Groups</span>
           </button>
         </div>
       )}

@@ -35,16 +35,16 @@ export function Header() {
   
   return (
     <header className="sticky top-0 z-[100] w-full bg-[#1D4ED8] shrink-0 border-none">
-      <div className="container flex h-16 items-center justify-between px-6 max-w-6xl mx-auto">
-        <div className="flex items-center gap-3">
-          <div className="bg-white/10 p-2 rounded-xl border border-white/20 shadow-sm">
-            <Wallet className="w-5 h-5 text-white" />
+      <div className="container flex h-14 items-center justify-between px-6 max-w-6xl mx-auto">
+        <div className="flex items-center gap-2">
+          <div className="bg-white/10 p-1.5 rounded-lg border border-white/20 shadow-sm">
+            <Wallet className="w-4 h-4 text-white" />
           </div>
           <div className="flex items-center gap-1">
-            <h1 className="font-headline font-black text-xl text-white tracking-tight uppercase leading-none">
+            <h1 className="font-headline font-black text-lg text-white tracking-tight uppercase leading-none">
               FINOVO
             </h1>
-            <span className="text-white/40 text-[9px] font-medium lowercase self-end mb-0.5">business</span>
+            <span className="text-white/40 text-[8px] font-medium lowercase self-end mb-0.5">business</span>
           </div>
         </div>
 
@@ -52,31 +52,31 @@ export function Header() {
           <Button 
             variant="ghost" 
             size="icon" 
-            className="h-10 w-10 text-white hover:bg-white/10 rounded-full bg-white/5 border border-white/10" 
+            className="h-8 w-8 text-white hover:bg-white/10 rounded-full bg-white/5 border border-white/10" 
             onClick={handleAppShare}
           >
-            <Share2 className="w-4 h-4" />
+            <Share2 className="w-3.5 h-3.5" />
           </Button>
-          <Button variant="ghost" size="icon" className="h-10 w-10 text-white hover:bg-white/10">
-            <Bell className="w-4 h-4" />
+          <Button variant="ghost" size="icon" className="h-8 w-8 text-white hover:bg-white/10">
+            <Bell className="w-3.5 h-3.5" />
           </Button>
           
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="h-10 w-10 text-white hover:bg-white/10">
-                <Settings className="w-4 h-4" />
+              <Button variant="ghost" size="icon" className="h-8 w-8 text-white hover:bg-white/10">
+                <Settings className="w-3.5 h-3.5" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56 rounded-[1.5rem] p-2 mt-2 shadow-2xl">
-              <DropdownMenuLabel className="px-3 py-2">
-                <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground block mb-0.5">Account</span>
-                <span className="text-sm font-bold truncate text-primary">{user?.email || "Guest"}</span>
+            <DropdownMenuContent align="end" className="w-48 rounded-[1rem] p-2 mt-2 shadow-2xl">
+              <DropdownMenuLabel className="px-3 py-1.5">
+                <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground block mb-0.5">Account</span>
+                <span className="text-xs font-bold truncate text-primary">{user?.email || "Guest"}</span>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               {user && (
-                <DropdownMenuItem onClick={logout} className="rounded-xl h-11 gap-3 cursor-pointer text-destructive focus:text-destructive">
-                  <LogOut className="w-4 h-4" />
-                  <span className="font-bold text-sm">Logout</span>
+                <DropdownMenuItem onClick={logout} className="rounded-lg h-9 gap-2.5 cursor-pointer text-destructive focus:text-destructive">
+                  <LogOut className="w-3.5 h-3.5" />
+                  <span className="font-bold text-xs">Logout</span>
                 </DropdownMenuItem>
               )}
             </DropdownMenuContent>
