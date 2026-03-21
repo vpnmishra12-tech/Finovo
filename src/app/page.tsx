@@ -7,12 +7,9 @@ import { useLanguage } from '@/lib/contexts/language-context';
 import { Header } from '@/components/layout/header';
 import { BudgetSummary } from '@/components/dashboard/budget-summary';
 import { AdBanner } from '@/components/dashboard/ad-banner';
-import { AddExpenseDrawer } from '@/components/expenses/add-expense-drawer';
 import { 
-  Loader2, Wallet, Mail, Lock, UserPlus, LogIn, Info, Smartphone, 
-  LayoutDashboard, History, Calculator, Sparkles, Mic, Camera, 
-  Keyboard, Users, ChevronRight, Settings, HelpCircle, LogOut,
-  TrendingUp, CreditCard, Receipt
+  Loader2, Wallet, LayoutDashboard, History, Calculator, Users, 
+  ChevronRight, Settings, HelpCircle, LogOut, Receipt, CreditCard
 } from 'lucide-react';
 import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import { collection, query, orderBy, limit } from 'firebase/firestore';
@@ -20,13 +17,16 @@ import { Expense } from '@/lib/expenses';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
 
-// Optimized dynamic imports
+// Optimized dynamic imports for heavy feature modules
+const AddExpenseDrawer = dynamic(() => import('@/components/expenses/add-expense-drawer').then(mod => mod.AddExpenseDrawer), {
+  ssr: false,
+  loading: () => null
+});
 const SpendingChart = dynamic(() => import('@/components/dashboard/spending-chart').then(mod => mod.SpendingChart), { 
   ssr: false,
   loading: () => <div className="h-[140px] w-full bg-muted/20 animate-pulse rounded-2xl" />
@@ -82,10 +82,10 @@ export default function Home() {
     return (
       <div className="h-[100dvh] flex items-center justify-center bg-background">
         <div className="flex flex-col items-center gap-4">
-          <div className="bg-primary/10 p-4 rounded-3xl animate-pulse">
-            <Wallet className="w-10 h-10 text-primary" />
+          <div className="bg-primary/10 p-4 rounded-3xl">
+            <Wallet className="w-10 h-10 text-primary animate-bounce" />
           </div>
-          <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary">Finovo v5.0</p>
+          <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary animate-pulse">Finovo Loading...</p>
         </div>
       </div>
     );
@@ -131,7 +131,7 @@ export default function Home() {
       onClick={() => setActiveTab(id)}
       className={cn(
         "flex flex-col items-center justify-center gap-1 transition-all",
-        active ? "text-primary" : "text-muted-foreground opacity-60"
+        active ? "text-primary scale-110" : "text-muted-foreground opacity-60"
       )}
     >
       <Icon className="w-6 h-6" />
@@ -221,8 +221,13 @@ export default function Home() {
                 />
               </div>
 
-              {/* Budget Summary as an Inline Section */}
-              <BudgetSummary userId={user.uid} totalSpent={0} month={new Date().getMonth()+1} year={new Date().getFullYear()} />
+              {/* Budget Summary */}
+              <BudgetSummary 
+                userId={user.uid} 
+                totalSpent={expenses?.reduce((sum, e) => sum + e.amount, 0) || 0} 
+                month={new Date().getMonth()+1} 
+                year={new Date().getFullYear()} 
+              />
 
               {/* Professional List Items */}
               <div className="bg-white rounded-[2rem] shadow-sm divide-y overflow-hidden border border-muted/20">
