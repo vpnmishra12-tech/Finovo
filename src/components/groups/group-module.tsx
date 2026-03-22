@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from 'react';
@@ -58,17 +57,17 @@ export function GroupModule() {
 
   return (
     <div className="space-y-4 pb-20 px-1">
-      {/* Symmetrical 3-Column Grid to fit all screens without scrolling */}
+      {/* Symmetrical 3-Column Grid */}
       <div className="grid grid-cols-3 gap-1.5 w-full mb-4">
         {/* Uniform Blue Box for Groups Title */}
-        <div className="h-9 bg-primary text-white flex items-center justify-center rounded-xl font-black uppercase tracking-widest text-[9px] shadow-sm text-center px-1">
+        <div className="h-9 bg-primary text-white flex items-center justify-center rounded-xl uppercase tracking-widest text-[9px] shadow-sm text-center px-1">
           {t.groups}
         </div>
         
         {/* Uniform Blue Box for Join Group Button */}
         <Dialog open={isJoinDialogOpen} onOpenChange={setIsJoinDialogOpen}>
           <DialogTrigger asChild>
-            <Button className="h-9 w-full bg-primary text-white hover:bg-primary/90 rounded-xl font-black uppercase tracking-widest text-[9px] shadow-sm border-none px-1">
+            <Button className="h-9 w-full bg-primary text-white hover:bg-primary/90 rounded-xl uppercase tracking-widest text-[9px] shadow-sm border-none px-1">
               {t.joinGroup}
             </Button>
           </DialogTrigger>
@@ -77,14 +76,14 @@ export function GroupModule() {
               <DialogTitle className="font-headline font-black uppercase">Join a Group</DialogTitle>
             </DialogHeader>
             <div className="space-y-4 py-4">
-              <p className="text-[10px] font-bold text-muted-foreground uppercase">Enter the Group ID shared by your friend</p>
+              <p className="text-[10px] text-muted-foreground uppercase">Enter the Group ID shared by your friend</p>
               <Input 
                 placeholder="Paste ID here..." 
                 value={joinId} 
                 onChange={(e) => setJoinId(e.target.value)}
-                className="h-12 rounded-xl bg-muted border-none font-bold"
+                className="h-12 rounded-xl bg-muted border-none"
               />
-              <Button onClick={handleJoin} disabled={!joinId || isJoining} className="w-full h-12 rounded-xl font-black uppercase tracking-widest text-[11px]">
+              <Button onClick={handleJoin} disabled={!joinId || isJoining} className="w-full h-12 rounded-xl uppercase tracking-widest text-[11px]">
                 {isJoining ? <Loader2 className="w-4 h-4 animate-spin" /> : "Join Now"}
               </Button>
             </div>
@@ -114,7 +113,7 @@ export function GroupModule() {
                   </div>
                   <div>
                     <h3 className="font-bold text-lg">{group.name}</h3>
-                    <p className="text-[10px] text-muted-foreground uppercase font-black tracking-widest">
+                    <p className="text-[10px] text-muted-foreground uppercase tracking-widest">
                       {group.memberIds.length} {t.membersList}
                     </p>
                   </div>

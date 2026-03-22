@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useLanguage } from '@/lib/contexts/language-context';
@@ -61,7 +60,7 @@ export function ExpenseList({ expenses, isLoading }: { expenses: Expense[], isLo
     return (
       <div className="flex flex-col items-center justify-center py-12 gap-2 text-muted-foreground">
         <Loader2 className="w-6 h-6 animate-spin" />
-        <p className="text-sm font-medium">Loading history...</p>
+        <p className="text-sm">Loading history...</p>
       </div>
     );
   }
@@ -94,14 +93,14 @@ export function ExpenseList({ expenses, isLoading }: { expenses: Expense[], isLo
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex justify-between items-start">
-                  <p className="font-bold text-base truncate">{expense.description}</p>
-                  <p className="font-headline font-bold text-lg text-primary">₹{expense.amount.toLocaleString()}</p>
+                  <p className="text-base truncate">{expense.description}</p>
+                  <p className="font-headline font-black text-lg text-primary">₹{expense.amount.toLocaleString()}</p>
                 </div>
                 <div className="flex items-center gap-2 mt-1">
-                  <Badge variant="secondary" className="text-[10px] font-bold uppercase tracking-tighter px-2 py-0">
+                  <Badge variant="secondary" className="text-[10px] uppercase tracking-tighter px-2 py-0">
                     {t.categories[expense.category as keyof typeof t.categories]}
                   </Badge>
-                  <span className="text-[10px] text-muted-foreground font-medium uppercase">
+                  <span className="text-[10px] text-muted-foreground uppercase">
                     {expense.createdAt ? format(expense.createdAt.toDate(), 'MMM dd • hh:mm a') : 'Just now'}
                   </span>
                 </div>

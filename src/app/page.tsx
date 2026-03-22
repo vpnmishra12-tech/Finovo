@@ -62,7 +62,7 @@ export default function Home() {
         <div className={cn("p-2.5 rounded-xl shrink-0", color)}>
           <Icon className="w-5 h-5" />
         </div>
-        <span className="font-headline font-black text-[11px] uppercase tracking-wider text-black leading-tight flex-1">
+        <span className="font-headline text-[11px] uppercase tracking-wider text-black leading-tight flex-1">
           {label}
         </span>
       </CardContent>
@@ -75,7 +75,7 @@ export default function Home() {
       
       <main className="flex-1 overflow-hidden relative">
         {!user ? (
-          <div className="h-full flex flex-col items-center justify-center p-6 bg-[#FDFBF7] animate-in fade-in duration-500">
+          <div className="h-full flex flex-col items-center justify-center p-6 bg-[#FDFBF7]">
             <div className="w-full max-w-sm flex flex-col items-center space-y-6">
               <div className="flex flex-col items-center text-center space-y-3">
                 <div className="bg-primary p-4 rounded-full shadow-2xl shadow-primary/30">
@@ -83,7 +83,7 @@ export default function Home() {
                 </div>
                 <div>
                   <h1 className="text-3xl font-headline font-black text-black tracking-tight uppercase leading-none">FINOVO</h1>
-                  <p className="text-[9px] font-black uppercase text-gray-400 tracking-[0.4em] pt-1">
+                  <p className="text-[9px] uppercase text-gray-400 tracking-[0.4em] pt-1">
                     {isLoginView ? 'Welcome Back' : 'Create Account'}
                   </p>
                 </div>
@@ -96,20 +96,20 @@ export default function Home() {
                     placeholder="Email Address" 
                     value={email} 
                     onChange={(e) => setEmail(e.target.value)}
-                    className="h-12 bg-white border border-gray-100 rounded-full px-8 font-bold text-black shadow-sm focus-visible:ring-primary"
+                    className="h-12 bg-white border border-gray-100 rounded-full px-8 text-black shadow-sm focus-visible:ring-primary"
                   />
                   <Input 
                     type="password" 
                     placeholder="Password" 
                     value={password} 
                     onChange={(e) => setPassword(e.target.value)}
-                    className="h-12 bg-white border border-gray-100 rounded-full px-8 font-bold text-black shadow-sm focus-visible:ring-primary"
+                    className="h-12 bg-white border border-gray-100 rounded-full px-8 text-black shadow-sm focus-visible:ring-primary"
                   />
                 </div>
                 
                 <Button 
                   onClick={() => isLoginView ? login(email, password) : signup(email, password)}
-                  className="w-full h-12 rounded-full font-black uppercase tracking-widest text-[10px] shadow-xl shadow-primary/20 gap-3"
+                  className="w-full h-12 rounded-full uppercase tracking-widest text-[10px] shadow-xl shadow-primary/20 gap-3"
                 >
                   {isLoginView ? 'Login Now' : 'Sign Up Now'} <ArrowRight className="w-3 h-3" />
                 </Button>
@@ -117,7 +117,7 @@ export default function Home() {
                 <div className="text-center">
                   <button 
                     onClick={() => setIsLoginView(!isLoginView)} 
-                    className="text-[9px] font-black uppercase text-primary tracking-widest hover:underline"
+                    className="text-[9px] uppercase text-primary tracking-widest hover:underline"
                   >
                     {isLoginView ? 'New here? Create Account' : 'Already have an account? Login'}
                   </button>
@@ -140,7 +140,7 @@ export default function Home() {
                   <div className="mb-0">
                     <Alert className="py-[0.97rem] px-3 rounded-[0.8rem] border bg-[#FFF1F1] text-[#D32F2F] border-[#FFE4E4] flex flex-row items-center gap-2 shrink-0 overflow-hidden min-h-[40px] [&>svg]:relative [&>svg]:top-0 [&>svg]:left-0 [&>svg~*]:pl-0">
                       <AlertTriangle className="h-4 w-4 shrink-0" />
-                      <AlertDescription className="text-[8px] font-black uppercase tracking-tight leading-none">
+                      <AlertDescription className="text-[8px] uppercase tracking-tight leading-none">
                         ALERT: 100% BUDGET REACHED. YOU ARE OVERSPENDING!
                       </AlertDescription>
                     </Alert>
@@ -201,19 +201,19 @@ export default function Home() {
         <div className="h-16 bg-primary border-t border-white/10 flex items-center justify-around px-4 shadow-inner shrink-0 z-50">
           <button onClick={() => setActiveTab('dashboard')} className={cn("flex flex-col items-center gap-1 transition-colors", activeTab === 'dashboard' ? "text-white" : "text-white/50")}>
             <HomeIcon className="w-5 h-5" />
-            <span className="text-[8px] font-black uppercase tracking-widest">Home</span>
+            <span className="text-[8px] uppercase tracking-widest">Home</span>
           </button>
           <button onClick={() => setActiveTab('history')} className={cn("flex flex-col items-center gap-1 transition-colors", activeTab === 'history' ? "text-white" : "text-white/50")}>
             <History className="w-5 h-5" />
-            <span className="text-[8px] font-black uppercase tracking-widest">Bills</span>
+            <span className="text-[8px] uppercase tracking-widest">Bills</span>
           </button>
           <button onClick={() => setActiveTab('splitter')} className={cn("flex flex-col items-center gap-1 transition-colors", activeTab === 'splitter' ? "text-white" : "text-white/50")}>
             <Calculator className="w-5 h-5" />
-            <span className="text-[8px] font-black uppercase tracking-widest">Split</span>
+            <span className="text-[8px] uppercase tracking-widest">Split</span>
           </button>
           <button onClick={() => setActiveTab('groups')} className={cn("flex flex-col items-center gap-1 transition-colors", activeTab === 'groups' ? "text-white" : "text-white/50")}>
             <Users className="w-5 h-5" />
-            <span className="text-[8px] font-black uppercase tracking-widest">Groups</span>
+            <span className="text-[8px] uppercase tracking-widest">Groups</span>
           </button>
         </div>
       )}
