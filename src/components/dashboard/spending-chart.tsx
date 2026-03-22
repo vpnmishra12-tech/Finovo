@@ -2,7 +2,7 @@
 
 import { useLanguage } from '@/lib/contexts/language-context';
 import { Expense } from '@/lib/expenses';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import { Pie, PieChart, Cell } from 'recharts';
 
@@ -36,11 +36,6 @@ export function SpendingChart({ expenses }: { expenses: Expense[] }) {
 
   return (
     <Card className="border-none bg-card shadow-sm overflow-hidden h-[180px] flex flex-col">
-      <CardHeader className="pb-1 pt-3 shrink-0">
-        <CardTitle className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">
-          {t.expenses}
-        </CardTitle>
-      </CardHeader>
       <CardContent className="flex-1 p-0 overflow-hidden">
         {data.length > 0 ? (
           <ChartContainer config={config} className="h-full w-full">
