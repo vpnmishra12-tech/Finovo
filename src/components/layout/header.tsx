@@ -54,9 +54,9 @@ export function Header() {
             <DropdownMenuTrigger asChild>
               <Button 
                 variant="ghost" 
-                className="h-8 w-8 bg-white text-primary hover:bg-white/90 rounded-full border border-white/20 shadow-sm p-0 flex items-center justify-center"
+                className="h-7 w-7 bg-white text-primary hover:bg-white/90 rounded-full border border-white/20 shadow-sm p-0 flex items-center justify-center"
               >
-                <Settings className="w-4 h-4" />
+                <Settings className="w-3.5 h-3.5" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56 rounded-[1rem] p-2 mt-2 shadow-2xl">
