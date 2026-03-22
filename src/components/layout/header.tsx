@@ -49,34 +49,39 @@ export function Header() {
           </div>
         </div>
 
-        <div className="flex items-center gap-1">
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            className="h-8 w-8 text-white hover:bg-white/10 rounded-full bg-white/5 border border-white/10" 
-            onClick={handleAppShare}
-          >
-            <Share2 className="w-3.5 h-3.5" />
-          </Button>
-          <Button variant="ghost" size="icon" className="h-8 w-8 text-white hover:bg-white/10">
-            <Bell className="w-3.5 h-3.5" />
-          </Button>
-          
+        <div className="flex items-center">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="h-8 w-8 text-white hover:bg-white/10">
-                <Settings className="w-3.5 h-3.5" />
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="h-10 w-10 text-white hover:bg-white/10 rounded-full"
+              >
+                <Settings className="w-5 h-5" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48 rounded-[1rem] p-2 mt-2 shadow-2xl">
-              <DropdownMenuLabel className="px-3 py-1.5">
+            <DropdownMenuContent align="end" className="w-56 rounded-[1rem] p-2 mt-2 shadow-2xl">
+              <DropdownMenuLabel className="px-3 py-2">
                 <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground block mb-0.5">Account</span>
-                <span className="text-xs font-bold truncate text-primary">{user?.email || "Guest"}</span>
+                <span className="text-xs font-bold truncate text-primary">{user?.email || "Guest User"}</span>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
+              
+              <DropdownMenuItem onClick={handleAppShare} className="rounded-lg h-10 gap-3 cursor-pointer">
+                <Share2 className="w-4 h-4 text-muted-foreground" />
+                <span className="font-bold text-xs">Share App</span>
+              </DropdownMenuItem>
+
+              <DropdownMenuItem className="rounded-lg h-10 gap-3 cursor-pointer">
+                <Bell className="w-4 h-4 text-muted-foreground" />
+                <span className="font-bold text-xs">Notifications</span>
+              </DropdownMenuItem>
+
+              <DropdownMenuSeparator />
+              
               {user && (
-                <DropdownMenuItem onClick={logout} className="rounded-lg h-9 gap-2.5 cursor-pointer text-destructive focus:text-destructive">
-                  <LogOut className="w-3.5 h-3.5" />
+                <DropdownMenuItem onClick={logout} className="rounded-lg h-10 gap-3 cursor-pointer text-destructive focus:text-destructive">
+                  <LogOut className="w-4 h-4" />
                   <span className="font-bold text-xs">Logout</span>
                 </DropdownMenuItem>
               )}
