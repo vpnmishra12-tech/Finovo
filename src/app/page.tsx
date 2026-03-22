@@ -185,9 +185,8 @@ export default function Home() {
               <div className="flex-1 overflow-y-auto no-scrollbar pb-20 px-5">
                 {activeTab === 'history' && (
                   <div className="space-y-4 animate-in fade-in duration-300">
-                    <div className="grid grid-cols-2 gap-2">
+                    <div className="max-w-md mx-auto w-full">
                       <SpendingChart expenses={expenses || []} />
-                      <MonthlyHistory expenses={expenses || []} />
                     </div>
                     <ExpenseList expenses={expenses || []} isLoading={isExpensesLoading} />
                   </div>
