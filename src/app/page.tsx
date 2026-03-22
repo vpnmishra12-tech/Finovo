@@ -187,7 +187,7 @@ export default function Home() {
                     </div>
                   </div>
 
-                  <div className="mt-auto shrink-0 w-full px-0 mb-0.5">
+                  <div className="mt-auto shrink-0 w-full px-0 mb-0">
                     <AdBanner />
                   </div>
                 </div>
