@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from 'react';
@@ -78,7 +77,7 @@ export function AddGroupExpenseDialog({ groupId }: { groupId: string }) {
               />
             </div>
             <div className="space-y-1">
-              <Label className="text-[10px] font-black uppercase text-muted-foreground">{t.language === 'en' ? 'Category' : 'श्रेणी'}</Label>
+              <Label className="text-[10px] font-black uppercase text-muted-foreground">{t.category}</Label>
               <Select value={category} onValueChange={setCategory}>
                 <SelectTrigger className="h-12 rounded-xl bg-muted border-none">
                   <SelectValue />
@@ -106,7 +105,7 @@ export function AddGroupExpenseDialog({ groupId }: { groupId: string }) {
           </div>
 
           <div className="space-y-1">
-            <Label className="text-[10px] font-black uppercase text-muted-foreground">{t.language === 'en' ? 'Description' : 'विवरण'}</Label>
+            <Label className="text-[10px] font-black uppercase text-muted-foreground">{t.description}</Label>
             <Input 
               value={description} 
               onChange={(e) => setDescription(e.target.value)}
