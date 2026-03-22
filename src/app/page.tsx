@@ -195,7 +195,7 @@ export default function Home() {
       </main>
 
       {user && (
-        <div className="h-16 bg-[#00BFFF] border-t border-white/10 flex items-center justify-around px-4 shadow-inner shrink-0 z-50">
+        <div className="h-16 bg-primary border-t border-white/10 flex items-center justify-around px-4 shadow-inner shrink-0 z-50">
           <button onClick={() => setActiveTab('dashboard')} className={cn("flex flex-col items-center gap-1 transition-colors", activeTab === 'dashboard' ? "text-white" : "text-white/50")}>
             <HomeIcon className="w-5 h-5" />
             <span className="text-[8px] font-black uppercase tracking-widest">Home</span>

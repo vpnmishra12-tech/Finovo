@@ -34,7 +34,7 @@ export function Header() {
   };
   
   return (
-    <header className="sticky top-0 z-[100] w-full bg-[#00BFFF] shrink-0 border-none">
+    <header className="sticky top-0 z-[100] w-full bg-primary shrink-0 border-none">
       <div className="container flex h-16 items-center justify-between px-6 max-w-6xl mx-auto">
         <div className="flex items-center gap-3">
           <Avatar className="h-8 w-8 border border-white/20 shadow-sm">
