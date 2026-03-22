@@ -35,7 +35,7 @@ export function Header() {
   
   return (
     <header className="sticky top-0 z-[100] w-full bg-[#1D4ED8] shrink-0 border-none">
-      <div className="container flex h-14 items-center justify-between px-6 max-w-6xl mx-auto">
+      <div className="container flex h-16 items-center justify-between px-6 max-w-6xl mx-auto">
         <div className="flex items-center gap-2">
           <div className="bg-white/10 p-1.5 rounded-lg border border-white/20 shadow-sm">
             <Wallet className="w-4 h-4 text-white" />
