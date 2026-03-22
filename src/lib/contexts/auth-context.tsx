@@ -6,7 +6,8 @@ import {
   User,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
-  onAuthStateChanged
+  onAuthStateChanged,
+  sendPasswordResetEmail
 } from 'firebase/auth';
 import { useAuth as useFirebaseServiceAuth } from '@/firebase';
 import { useToast } from '@/hooks/use-toast';
@@ -17,6 +18,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   signup: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
+  resetPassword: (email: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -103,8 +105,38 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const resetPassword = async (email: string) => {
+    if (!auth) return;
+    if (!email) {
+      toast({
+        variant: "destructive",
+        title: "Email Required",
+        description: "Please enter your email address first.",
+      });
+      return;
+    }
+    try {
+      toast({ title: "Sending Reset Email...", description: "Please check your inbox" });
+      await sendPasswordResetEmail(auth, email);
+      toast({
+        title: "Email Sent!",
+        description: "A password reset link has been sent to your email.",
+      });
+    } catch (error: any) {
+      console.error("Reset Error:", error);
+      let message = "Could not send reset email.";
+      if (error.code === 'auth/user-not-found') message = "No account found with this email.";
+      
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: message,
+      });
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, loading, login, signup, logout }}>
+    <AuthContext.Provider value={{ user, loading, login, signup, logout, resetPassword }}>
       {children}
     </AuthContext.Provider>
   );

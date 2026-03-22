@@ -29,7 +29,7 @@ const MonthlyHistory = dynamic(() => import('@/components/dashboard/monthly-hist
 type NavTab = 'dashboard' | 'history' | 'splitter' | 'groups';
 
 export default function Home() {
-  const { user, loading, login, signup } = useAuth();
+  const { user, loading, login, signup, resetPassword } = useAuth();
   const { t } = useLanguage();
   const firestore = useFirestore();
   const [activeTab, setActiveTab] = useState<NavTab>('dashboard');
@@ -146,13 +146,25 @@ export default function Home() {
                     onChange={(e) => setEmail(e.target.value)}
                     className="h-12 bg-white border border-gray-100 rounded-full px-8 text-black shadow-sm focus-visible:ring-primary font-normal"
                   />
-                  <Input 
-                    type="password" 
-                    placeholder="Password" 
-                    value={password} 
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="h-12 bg-white border border-gray-100 rounded-full px-8 text-black shadow-sm focus-visible:ring-primary font-normal"
-                  />
+                  <div className="space-y-1">
+                    <Input 
+                      type="password" 
+                      placeholder="Password" 
+                      value={password} 
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="h-12 bg-white border border-gray-100 rounded-full px-8 text-black shadow-sm focus-visible:ring-primary font-normal"
+                    />
+                    {isLoginView && (
+                      <div className="text-right pr-4">
+                        <button 
+                          onClick={() => resetPassword(email)}
+                          className="text-[9px] uppercase text-gray-400 tracking-widest hover:text-primary transition-colors font-normal"
+                        >
+                          Forgot Password?
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 </div>
                 
                 <Button 
@@ -162,7 +174,7 @@ export default function Home() {
                   {isLoginView ? 'Login Now' : 'Sign Up Now'} <ArrowRight className="w-3 h-3" />
                 </Button>
 
-                <div className="text-center">
+                <div className="text-center pt-2">
                   <button 
                     onClick={() => setIsLoginView(!isLoginView)} 
                     className="text-[9px] uppercase text-primary tracking-widest hover:underline font-normal"
