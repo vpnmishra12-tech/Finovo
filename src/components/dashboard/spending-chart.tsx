@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useLanguage } from '@/lib/contexts/language-context';
@@ -20,14 +21,15 @@ export function SpendingChart({ expenses }: { expenses: Expense[] }) {
     originalName: name
   }));
 
+  // Vibrant, distinct colors for multi-colour look
   const COLORS = {
-    Food: 'hsl(var(--chart-1))',
-    Transport: 'hsl(var(--chart-2))',
-    Bills: 'hsl(var(--chart-3))',
-    Shopping: 'hsl(var(--chart-4))',
-    EMI: 'hsl(var(--chart-5))',
-    Recharge: 'hsl(190, 90%, 50%)',
-    Miscellaneous: 'hsl(330, 90%, 60%)',
+    Food: 'hsl(354, 100%, 70%)',        // Vibrant Coral
+    Transport: 'hsl(200, 80%, 57%)',   // Bright Sky Blue
+    Bills: 'hsl(45, 100%, 67%)',       // Sunny Gold
+    Shopping: 'hsl(180, 50%, 52%)',    // Fresh Teal
+    EMI: 'hsl(260, 100%, 70%)',        // Electric Purple
+    Recharge: 'hsl(30, 100%, 62%)',     // Energetic Orange
+    Miscellaneous: 'hsl(0, 0%, 65%)',   // Neutral Slate
   };
 
   const config: ChartConfig = {
@@ -44,13 +46,17 @@ export function SpendingChart({ expenses }: { expenses: Expense[] }) {
                 data={data}
                 cx="50%"
                 cy="50%"
-                innerRadius={55}
-                outerRadius={80}
+                innerRadius={58}
+                outerRadius={82}
                 paddingAngle={4}
                 dataKey="value"
               >
                 {data.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[entry.originalName as keyof typeof COLORS] || 'hsl(var(--primary))'} />
+                  <Cell 
+                    key={`cell-${index}`} 
+                    fill={COLORS[entry.originalName as keyof typeof COLORS] || 'hsl(var(--primary))'} 
+                    stroke="none"
+                  />
                 ))}
               </Pie>
               <ChartTooltip content={<ChartTooltipContent hideLabel />} />
