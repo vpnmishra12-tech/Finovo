@@ -10,7 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Plus, UserPlus, Trash2, CheckCircle2 } from 'lucide-react';
+import { UserPlus, Trash2, CheckCircle2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 export function CreateGroupDialog() {
@@ -58,8 +58,8 @@ export function CreateGroupDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="h-9 rounded-xl font-black uppercase tracking-widest text-[10px] gap-2 px-4">
-          <Plus className="w-3.5 h-3.5" /> {t.createGroup}
+        <Button className="h-9 px-4 bg-primary text-white hover:bg-primary/90 rounded-xl font-black uppercase tracking-widest text-[10px] shadow-sm border-none">
+          {t.createGroup}
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-md w-[95%] rounded-3xl overflow-hidden p-0">
@@ -112,3 +112,4 @@ export function CreateGroupDialog() {
     </Dialog>
   );
 }
+

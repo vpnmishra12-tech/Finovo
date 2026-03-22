@@ -10,7 +10,7 @@ import { Group, joinGroup } from '@/lib/groups';
 import { Card, CardContent } from '@/components/ui/card';
 import { CreateGroupDialog } from './create-group-dialog';
 import { GroupView } from './group-view';
-import { Users, ChevronRight, UserPlus, Loader2 } from 'lucide-react';
+import { Users, ChevronRight, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -58,19 +58,19 @@ export function GroupModule() {
 
   return (
     <div className="space-y-4 pb-20 px-1">
-      {/* Groups Header Row */}
+      {/* Groups Header Row - Perfectly Symmetrical Boxes */}
       <div className="flex items-center justify-between h-10 mb-4">
-        {/* Styled Groups Title Box */}
-        <div className="h-9 px-4 bg-primary text-white flex items-center rounded-xl font-headline font-black uppercase tracking-tight text-[10px]">
+        {/* Uniform Blue Box for Groups Title */}
+        <div className="h-9 px-4 bg-primary text-white flex items-center justify-center rounded-xl font-black uppercase tracking-widest text-[10px] shadow-sm">
           {t.groups}
         </div>
         
         <div className="flex items-center gap-2">
-          {/* Join Group Button - Consistent Blue Box */}
+          {/* Uniform Blue Box for Join Group Button */}
           <Dialog open={isJoinDialogOpen} onOpenChange={setIsJoinDialogOpen}>
             <DialogTrigger asChild>
-              <Button className="h-9 rounded-xl font-black uppercase tracking-widest text-[10px] gap-2 px-4 shadow-sm bg-primary text-white hover:bg-primary/90">
-                <UserPlus className="w-3.5 h-3.5" /> {t.joinGroup}
+              <Button className="h-9 px-4 bg-primary text-white hover:bg-primary/90 rounded-xl font-black uppercase tracking-widest text-[10px] shadow-sm border-none">
+                {t.joinGroup}
               </Button>
             </DialogTrigger>
             <DialogContent className="max-w-md w-[92%] rounded-3xl">
@@ -92,7 +92,7 @@ export function GroupModule() {
             </DialogContent>
           </Dialog>
 
-          {/* Create Group Dialog - Trigger is a Consistent Blue Box */}
+          {/* Create Group Dialog - Trigger is a Uniform Blue Box */}
           <CreateGroupDialog />
         </div>
       </div>
@@ -141,3 +141,4 @@ export function GroupModule() {
     </div>
   );
 }
+
