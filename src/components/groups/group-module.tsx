@@ -58,43 +58,41 @@ export function GroupModule() {
 
   return (
     <div className="space-y-4 pb-20 px-1">
-      {/* Groups Header Row - Perfectly Symmetrical Boxes */}
-      <div className="flex items-center justify-between h-10 mb-4">
+      {/* Groups Header Row - Perfectly Symmetrical Boxes with Uniform Gap */}
+      <div className="flex items-center gap-2 h-10 mb-4 overflow-x-auto no-scrollbar">
         {/* Uniform Blue Box for Groups Title */}
-        <div className="h-9 px-4 bg-primary text-white flex items-center justify-center rounded-xl font-black uppercase tracking-widest text-[10px] shadow-sm">
+        <div className="h-9 px-4 bg-primary text-white flex items-center justify-center rounded-xl font-black uppercase tracking-widest text-[10px] shadow-sm shrink-0">
           {t.groups}
         </div>
         
-        <div className="flex items-center gap-2">
-          {/* Uniform Blue Box for Join Group Button */}
-          <Dialog open={isJoinDialogOpen} onOpenChange={setIsJoinDialogOpen}>
-            <DialogTrigger asChild>
-              <Button className="h-9 px-4 bg-primary text-white hover:bg-primary/90 rounded-xl font-black uppercase tracking-widest text-[10px] shadow-sm border-none">
-                {t.joinGroup}
+        {/* Uniform Blue Box for Join Group Button */}
+        <Dialog open={isJoinDialogOpen} onOpenChange={setIsJoinDialogOpen}>
+          <DialogTrigger asChild>
+            <Button className="h-9 px-4 bg-primary text-white hover:bg-primary/90 rounded-xl font-black uppercase tracking-widest text-[10px] shadow-sm border-none shrink-0">
+              {t.joinGroup}
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-md w-[92%] rounded-3xl">
+            <DialogHeader>
+              <DialogTitle className="font-headline font-black uppercase">Join a Group</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              <p className="text-[10px] font-bold text-muted-foreground uppercase">Enter the Group ID shared by your friend</p>
+              <Input 
+                placeholder="Paste ID here..." 
+                value={joinId} 
+                onChange={(e) => setJoinId(e.target.value)}
+                className="h-12 rounded-xl bg-muted border-none font-bold"
+              />
+              <Button onClick={handleJoin} disabled={!joinId || isJoining} className="w-full h-12 rounded-xl font-black uppercase tracking-widest text-[11px]">
+                {isJoining ? <Loader2 className="w-4 h-4 animate-spin" /> : "Join Now"}
               </Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-md w-[92%] rounded-3xl">
-              <DialogHeader>
-                <DialogTitle className="font-headline font-black uppercase">Join a Group</DialogTitle>
-              </DialogHeader>
-              <div className="space-y-4 py-4">
-                <p className="text-[10px] font-bold text-muted-foreground uppercase">Enter the Group ID shared by your friend</p>
-                <Input 
-                  placeholder="Paste ID here..." 
-                  value={joinId} 
-                  onChange={(e) => setJoinId(e.target.value)}
-                  className="h-12 rounded-xl bg-muted border-none font-bold"
-                />
-                <Button onClick={handleJoin} disabled={!joinId || isJoining} className="w-full h-12 rounded-xl font-black uppercase tracking-widest text-[11px]">
-                  {isJoining ? <Loader2 className="w-4 h-4 animate-spin" /> : "Join Now"}
-                </Button>
-              </div>
-            </DialogContent>
-          </Dialog>
+            </div>
+          </DialogContent>
+        </Dialog>
 
-          {/* Create Group Dialog - Trigger is a Uniform Blue Box */}
-          <CreateGroupDialog />
-        </div>
+        {/* Create Group Dialog Trigger - Now aligned in the same row with gap-2 */}
+        <CreateGroupDialog />
       </div>
 
       {isLoading ? (
@@ -141,4 +139,3 @@ export function GroupModule() {
     </div>
   );
 }
-
