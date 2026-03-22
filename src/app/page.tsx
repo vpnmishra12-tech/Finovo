@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from 'react';
@@ -53,7 +54,7 @@ export default function Home() {
 
   const GridCard = ({ icon: Icon, label, color, onClick }: { icon: any, label: string, color: string, onClick: () => void }) => (
     <Card 
-      className="border-none shadow-sm active:scale-95 transition-all cursor-pointer rounded-[1rem] bg-white h-[4.2rem] flex items-center overflow-hidden"
+      className="border-none shadow-sm active:scale-95 transition-all cursor-pointer rounded-[1rem] bg-white h-[4.5rem] flex items-center overflow-hidden"
       onClick={onClick}
     >
       <CardContent className="p-2.5 flex items-center gap-2.5 w-full">
@@ -124,11 +125,11 @@ export default function Home() {
             </div>
           </div>
         ) : (
-          <div className="h-full flex flex-col max-w-6xl mx-auto px-5 pt-2 pb-0 space-y-2 overflow-hidden">
+          <div className="h-full flex flex-col max-w-6xl mx-auto pt-2 pb-0 overflow-hidden">
             {activeTab === 'dashboard' ? (
-              <div className="flex-1 flex flex-col space-y-1 animate-in fade-in duration-300 overflow-hidden">
+              <div className="flex-1 flex flex-col animate-in fade-in duration-300 overflow-hidden">
                 
-                <div className="flex items-center gap-3 shrink-0 px-1 mt-1">
+                <div className="flex items-center gap-3 shrink-0 px-5 mt-1 mb-2">
                   <Avatar className="h-12 w-12 border-2 border-white shadow-lg">
                     <AvatarFallback className="bg-black text-white text-lg font-black uppercase">
                       {user.email?.charAt(0) || 'V'}
@@ -140,55 +141,59 @@ export default function Home() {
                   </div>
                 </div>
 
-                <Alert className="py-1.5 px-3 rounded-[0.8rem] border bg-[#FFF1F1] text-[#D32F2F] border-[#FFE4E4] flex items-center gap-2 shrink-0">
-                  <AlertTriangle className="h-3 w-3 shrink-0" />
-                  <AlertDescription className="text-[8px] font-black uppercase tracking-tight leading-tight">
-                    ALERT: 100% BUDGET REACHED. YOU ARE OVERSPENDING!
-                  </AlertDescription>
-                </Alert>
+                <div className="px-5 mb-2">
+                  <Alert className="py-1.5 px-3 rounded-[0.8rem] border bg-[#FFF1F1] text-[#D32F2F] border-[#FFE4E4] flex items-center gap-2 shrink-0">
+                    <AlertTriangle className="h-3 w-3 shrink-0" />
+                    <AlertDescription className="text-[8px] font-black uppercase tracking-tight leading-tight">
+                      ALERT: 100% BUDGET REACHED. YOU ARE OVERSPENDING!
+                    </AlertDescription>
+                  </Alert>
+                </div>
 
-                <div className="flex-1 flex flex-col space-y-2 overflow-y-auto no-scrollbar">
-                  <BudgetSummary 
-                    userId={user.uid} 
-                    totalSpent={expenses?.reduce((sum, e) => sum + e.amount, 0) || 0} 
-                    month={new Date().getMonth()+1} 
-                    year={new Date().getFullYear()} 
-                  />
+                <div className="flex-1 flex flex-col overflow-hidden">
+                  <div className="flex-1 overflow-y-auto no-scrollbar px-5 space-y-3 pb-2">
+                    <BudgetSummary 
+                      userId={user.uid} 
+                      totalSpent={expenses?.reduce((sum, e) => sum + e.amount, 0) || 0} 
+                      month={new Date().getMonth()+1} 
+                      year={new Date().getFullYear()} 
+                    />
 
-                  <div className="grid grid-cols-2 gap-2 shrink-0">
-                    <GridCard 
-                      icon={LayoutGrid} 
-                      label="Dashboard" 
-                      color="text-blue-600 bg-blue-50" 
-                      onClick={() => setActiveTab('dashboard')} 
-                    />
-                    <GridCard 
-                      icon={History} 
-                      label="Recent History" 
-                      color="text-orange-600 bg-orange-50" 
-                      onClick={() => setActiveTab('history')} 
-                    />
-                    <GridCard 
-                      icon={Calculator} 
-                      label="Split Your Bill" 
-                      color="text-purple-600 bg-purple-50" 
-                      onClick={() => setActiveTab('splitter')} 
-                    />
-                    <GridCard 
-                      icon={Users} 
-                      label="Groups" 
-                      color="text-green-600 bg-green-50" 
-                      onClick={() => setActiveTab('groups')} 
-                    />
+                    <div className="grid grid-cols-2 gap-2 shrink-0">
+                      <GridCard 
+                        icon={LayoutGrid} 
+                        label="Dashboard" 
+                        color="text-blue-600 bg-blue-50" 
+                        onClick={() => setActiveTab('dashboard')} 
+                      />
+                      <GridCard 
+                        icon={History} 
+                        label="Recent History" 
+                        color="text-orange-600 bg-orange-50" 
+                        onClick={() => setActiveTab('history')} 
+                      />
+                      <GridCard 
+                        icon={Calculator} 
+                        label="Split Your Bill" 
+                        color="text-purple-600 bg-purple-50" 
+                        onClick={() => setActiveTab('splitter')} 
+                      />
+                      <GridCard 
+                        icon={Users} 
+                        label="Groups" 
+                        color="text-green-600 bg-green-50" 
+                        onClick={() => setActiveTab('groups')} 
+                      />
+                    </div>
                   </div>
 
-                  <div className="mt-auto shrink-0 pb-0">
+                  <div className="mt-auto shrink-0 w-full px-0">
                     <AdBanner />
                   </div>
                 </div>
               </div>
             ) : (
-              <div className="flex-1 overflow-y-auto no-scrollbar pb-20">
+              <div className="flex-1 overflow-y-auto no-scrollbar pb-20 px-5">
                 {activeTab === 'history' && <ExpenseList expenses={expenses || []} isLoading={isExpensesLoading} />}
                 {activeTab === 'splitter' && <BillSplitTool />}
                 {activeTab === 'groups' && <GroupModule />}
