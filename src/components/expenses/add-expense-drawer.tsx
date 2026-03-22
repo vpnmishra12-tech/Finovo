@@ -84,7 +84,7 @@ export function AddExpenseDrawer() {
           size="icon" 
           className="h-8 w-8 bg-white/10 hover:bg-white/20 p-0 rounded-full border border-white/20"
         >
-          <Plus className="w-3.5 h-3.5 text-white" />
+          <Plus className="w-3.5 h-3.5 text-white" strokeWidth={2.5} />
         </Button>
       </SheetTrigger>
       <SheetContent side="bottom" className="rounded-t-[3rem] p-0 border-none shadow-2xl h-[85vh] focus:outline-none bg-white overflow-hidden">

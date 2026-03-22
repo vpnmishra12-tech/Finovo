@@ -59,7 +59,7 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
               <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
                   <Button variant="ghost" size="icon" className="h-8 w-8 bg-white/10 hover:bg-white/20 p-0 rounded-full border border-white/20">
-                    <Pencil className="w-3.5 h-3.5 text-white" />
+                    <Pencil className="w-3.5 h-3.5 text-white" strokeWidth={2.5} />
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="max-w-[320px] rounded-[1.5rem]">
