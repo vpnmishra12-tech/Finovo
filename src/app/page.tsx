@@ -46,7 +46,7 @@ export default function Home() {
 
   if (loading) {
     return (
-      <div className="h-[100dvh] flex items-center justify-center bg-[#FDFBF7]">
+      <div className="fixed inset-0 flex items-center justify-center bg-[#FDFBF7]">
         <Wallet className="w-10 h-10 text-primary animate-bounce" />
       </div>
     );
@@ -69,7 +69,7 @@ export default function Home() {
   );
 
   return (
-    <div className="h-[100dvh] bg-[#FDFBF7] flex flex-col overflow-hidden text-black font-body">
+    <div className="fixed inset-0 bg-[#FDFBF7] flex flex-col overflow-hidden text-black font-body select-none">
       <Header />
       
       <main className="flex-1 overflow-hidden relative">
@@ -129,7 +129,6 @@ export default function Home() {
             {activeTab === 'dashboard' ? (
               <div className="flex-1 flex flex-col space-y-1 animate-in fade-in duration-300 overflow-hidden">
                 
-                {/* Profile Section */}
                 <div className="flex items-center gap-3 shrink-0 px-1 mt-1">
                   <Avatar className="h-12 w-12 border-2 border-white shadow-lg">
                     <AvatarFallback className="bg-black text-white text-lg font-black uppercase">
@@ -142,7 +141,6 @@ export default function Home() {
                   </div>
                 </div>
 
-                {/* Alert Bar */}
                 <Alert className="py-1.5 px-3 rounded-[0.8rem] border bg-[#FFF1F1] text-[#D32F2F] border-[#FFE4E4] flex items-center gap-2 shrink-0">
                   <AlertTriangle className="h-3 w-3 shrink-0" />
                   <AlertDescription className="text-[8px] font-black uppercase tracking-tight leading-tight">
@@ -150,9 +148,7 @@ export default function Home() {
                   </AlertDescription>
                 </Alert>
 
-                {/* Main Content Area (Scrollable) */}
                 <div className="flex-1 flex flex-col space-y-2 overflow-y-auto no-scrollbar">
-                  {/* Budget Cards Section */}
                   <BudgetSummary 
                     userId={user.uid} 
                     totalSpent={expenses?.reduce((sum, e) => sum + e.amount, 0) || 0} 
@@ -160,7 +156,6 @@ export default function Home() {
                     year={new Date().getFullYear()} 
                   />
 
-                  {/* Feature Grid Section */}
                   <div className="grid grid-cols-2 gap-2 shrink-0">
                     <GridCard 
                       icon={LayoutGrid} 
@@ -188,19 +183,17 @@ export default function Home() {
                     />
                   </div>
 
-                  {/* Ad Section - Now at the end of scrollable area but layout ensures it touches bottom line */}
                   <div className="mt-auto shrink-0 pb-0">
                     <AdBanner />
                   </div>
                 </div>
                 
-                {/* FAB - Lowered z-index so it hides behind the drawer */}
                 <div className="absolute right-5 bottom-24 z-40">
                   <AddExpenseDrawer />
                 </div>
               </div>
             ) : (
-              <div className="flex-1 overflow-y-auto no-scrollbar">
+              <div className="flex-1 overflow-y-auto no-scrollbar pb-20">
                 {activeTab === 'history' && <ExpenseList expenses={expenses || []} isLoading={isExpensesLoading} />}
                 {activeTab === 'splitter' && <BillSplitTool />}
                 {activeTab === 'groups' && <GroupModule />}

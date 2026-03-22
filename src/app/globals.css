@@ -28,11 +28,19 @@
 }
 
 @layer base {
+  html, body {
+    height: 100%;
+    overflow: hidden;
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
   * {
     @apply border-border;
   }
   body {
     @apply bg-background text-foreground transition-colors duration-300 font-body antialiased selection:bg-primary/30;
+    touch-action: manipulation;
   }
 }
 
@@ -42,4 +50,12 @@
 
 .premium-shadow {
   box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
