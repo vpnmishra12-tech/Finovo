@@ -8,7 +8,7 @@ import { Header } from '@/components/layout/header';
 import { BudgetSummary } from '@/components/dashboard/budget-summary';
 import { AdBanner } from '@/components/dashboard/ad-banner';
 import { 
-  History, Calculator, Users, LayoutGrid, Home as HomeIcon, ArrowRight, AlertTriangle, Wallet
+  History, Calculator, Users, LayoutGrid, Home as HomeIcon, ArrowRight, AlertTriangle, Wallet, CheckCircle2, AlertCircle
 } from 'lucide-react';
 import { useFirestore, useCollection, useMemoFirebase, useDoc } from '@/firebase';
 import { collection, query, orderBy, limit, doc } from 'firebase/firestore';
@@ -84,6 +84,39 @@ export default function Home() {
     </Card>
   );
 
+  // Alert bar logic
+  const percentUsed = (totalSpent / budget) * 100;
+  let alertBar = null;
+
+  if (percentUsed >= 100) {
+    alertBar = (
+      <Alert className="py-[0.97rem] px-3 rounded-[0.8rem] border bg-[#FFF1F1] text-[#D32F2F] border-[#FFE4E4] flex flex-row items-center gap-2 shrink-0 overflow-hidden min-h-[40px] [&>svg]:relative [&>svg]:top-0 [&>svg]:left-0 [&>svg~*]:pl-0">
+        <AlertTriangle className="h-4 w-4 shrink-0" />
+        <AlertDescription className="text-[8px] uppercase tracking-tight font-normal leading-none">
+          {t.alerts.exhausted}
+        </AlertDescription>
+      </Alert>
+    );
+  } else if (percentUsed >= 80) {
+    alertBar = (
+      <Alert className="py-[0.97rem] px-3 rounded-[0.8rem] border bg-[#FFF8F1] text-[#F57C00] border-[#FFEBD6] flex flex-row items-center gap-2 shrink-0 overflow-hidden min-h-[40px] [&>svg]:relative [&>svg]:top-0 [&>svg]:left-0 [&>svg~*]:pl-0">
+        <AlertCircle className="h-4 w-4 shrink-0" />
+        <AlertDescription className="text-[8px] uppercase tracking-tight font-normal leading-none">
+          {t.alerts.critical}
+        </AlertDescription>
+      </Alert>
+    );
+  } else if (percentUsed >= 50) {
+    alertBar = (
+      <Alert className="py-[0.97rem] px-3 rounded-[0.8rem] border bg-[#F1FFF1] text-[#2E7D32] border-[#E4FFE4] flex flex-row items-center gap-2 shrink-0 overflow-hidden min-h-[40px] [&>svg]:relative [&>svg]:top-0 [&>svg]:left-0 [&>svg~*]:pl-0">
+        <CheckCircle2 className="h-4 w-4 shrink-0" />
+        <AlertDescription className="text-[8px] uppercase tracking-tight font-normal leading-none">
+          {t.alerts.halfway}
+        </AlertDescription>
+      </Alert>
+    );
+  }
+
   return (
     <div className="fixed inset-0 bg-[#FDFBF7] flex flex-col overflow-hidden text-black font-body select-none">
       <Header />
@@ -152,14 +185,9 @@ export default function Home() {
                     year={currentYear} 
                   />
 
-                  {totalSpent >= budget && (
+                  {alertBar && (
                     <div className="mb-0">
-                      <Alert className="py-[0.97rem] px-3 rounded-[0.8rem] border bg-[#FFF1F1] text-[#D32F2F] border-[#FFE4E4] flex flex-row items-center gap-2 shrink-0 overflow-hidden min-h-[40px] [&>svg]:relative [&>svg]:top-0 [&>svg]:left-0 [&>svg~*]:pl-0">
-                        <AlertTriangle className="h-4 w-4 shrink-0" />
-                        <AlertDescription className="text-[8px] uppercase tracking-tight font-normal leading-none">
-                          ALERT: 100% BUDGET REACHED. YOU ARE OVERSPENDING!
-                        </AlertDescription>
-                      </Alert>
+                      {alertBar}
                     </div>
                   )}
 
@@ -191,7 +219,7 @@ export default function Home() {
                   </div>
                 </div>
               ) : (
-                <div className="h-full overflow-y-auto no-scrollbar pb-20 px-5">
+                <div className="h-full overflow-y-auto no-scrollbar pb-2 px-5">
                   {activeTab === 'history' && (
                     <div className="space-y-4">
                       <div className="max-w-md mx-auto w-full">

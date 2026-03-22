@@ -52,7 +52,7 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
         <CardContent className="p-5 w-full relative">
           <div className="flex justify-between items-start">
             <div className="space-y-0.5">
-              <p className="text-[8px] opacity-70 uppercase tracking-[0.2em]">MONTHLY BUDGET</p>
+              <p className="text-[8px] opacity-70 uppercase tracking-[0.2em] font-normal">MONTHLY BUDGET</p>
               <p className="text-4xl font-headline font-black leading-none tracking-tight">₹{budget.toLocaleString()}</p>
             </div>
             <div className="flex flex-col gap-1.5 items-center">
@@ -63,10 +63,10 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="max-w-[320px] rounded-[1.5rem]">
-                  <DialogHeader><DialogTitle className="font-headline uppercase font-black text-sm">{t.actions.setBudget}</DialogTitle></DialogHeader>
+                  <DialogHeader><DialogTitle className="font-headline uppercase font-black text-sm">SET BUDGET</DialogTitle></DialogHeader>
                   <div className="flex flex-col gap-2 py-3">
-                    <Input type="number" placeholder="Enter amount" value={newBudget} onChange={(e) => setNewBudget(e.target.value)} className="h-10 rounded-lg" />
-                    <Button onClick={handleSetBudget} className="w-full h-10 rounded-lg uppercase tracking-widest text-xs">Update</Button>
+                    <Input type="number" placeholder="Enter amount" value={newBudget} onChange={(e) => setNewBudget(e.target.value)} className="h-10 rounded-lg font-normal" />
+                    <Button onClick={handleSetBudget} className="w-full h-10 rounded-lg uppercase tracking-widest text-xs font-normal">Update</Button>
                   </div>
                 </DialogContent>
               </Dialog>
@@ -81,7 +81,7 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
         <Card className="bg-white border-none shadow-sm rounded-[1rem] overflow-hidden h-24 flex items-center">
           <CardContent className="p-3 w-full flex flex-col justify-between h-full">
             <div>
-              <p className="text-[8px] text-gray-400 mb-0.5 uppercase tracking-widest">SPENT</p>
+              <p className="text-[8px] text-gray-400 mb-0.5 uppercase tracking-widest font-normal">SPENT</p>
               <p className="text-xl font-headline font-black text-black">₹{totalSpent.toLocaleString()}</p>
             </div>
             <div className="w-full h-1 bg-primary/10 rounded-full overflow-hidden shrink-0">
@@ -93,7 +93,7 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
         <Card className="bg-white border-none shadow-sm rounded-[1rem] overflow-hidden h-24 flex items-center">
           <CardContent className="p-3 w-full flex flex-col justify-between h-full">
             <div>
-              <p className="text-[8px] text-gray-400 mb-0.5 uppercase tracking-widest">OVERSPENT BY</p>
+              <p className="text-[8px] text-gray-400 mb-0.5 uppercase tracking-widest font-normal">OVERSPENT BY</p>
               <p className="text-xl font-headline font-black text-[#D32F2F]">₹{overspentAmount.toLocaleString()}</p>
             </div>
             <div className="w-full h-1 bg-red-100 rounded-full overflow-hidden shrink-0">
