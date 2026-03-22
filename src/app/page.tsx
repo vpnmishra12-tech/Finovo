@@ -10,9 +10,9 @@ import { AdBanner } from '@/components/dashboard/ad-banner';
 import { 
   History, Calculator, Users, LayoutGrid, Home as HomeIcon, ArrowRight, AlertTriangle, Wallet
 } from 'lucide-react';
-import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
-import { collection, query, orderBy, limit } from 'firebase/firestore';
-import { Expense } from '@/lib/expenses';
+import { useFirestore, useCollection, useMemoFirebase, useDoc } from '@/firebase';
+import { collection, query, orderBy, limit, doc } from 'firebase/firestore';
+import { Expense, MonthlyBudget } from '@/lib/expenses';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
@@ -38,12 +38,27 @@ export default function Home() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const currentMonth = new Date().getMonth() + 1;
+  const currentYear = new Date().getFullYear();
+  const budgetId = `${currentYear}-${currentMonth}`;
+
+  // Fetching expenses for totals
   const expensesQuery = useMemoFirebase(() => {
     if (!firestore || !user?.uid) return null;
     return query(collection(firestore, 'users', user.uid, 'expenses'), orderBy('createdAt', 'desc'), limit(50));
   }, [firestore, user?.uid]);
 
   const { data: expenses, isLoading: isExpensesLoading } = useCollection<Expense>(expensesQuery);
+
+  // Fetching budget to compare with totals
+  const budgetRef = useMemoFirebase(() => {
+    if (!firestore || !user?.uid) return null;
+    return doc(firestore, 'users', user.uid, 'monthlyBudgets', budgetId);
+  }, [firestore, user?.uid, budgetId]);
+
+  const { data: budgetData } = useDoc<MonthlyBudget>(budgetRef);
+  const budget = budgetData?.budgetAmount || 5000;
+  const totalSpent = expenses?.reduce((sum, e) => sum + e.amount, 0) || 0;
 
   if (loading) {
     return (
@@ -62,7 +77,7 @@ export default function Home() {
         <div className={cn("p-2.5 rounded-xl shrink-0", color)}>
           <Icon className="w-5 h-5" />
         </div>
-        <span className="font-headline text-[11px] uppercase tracking-wider text-black leading-tight flex-1">
+        <span className="font-headline text-[11px] uppercase tracking-wider text-black font-normal leading-tight flex-1">
           {label}
         </span>
       </CardContent>
@@ -83,7 +98,7 @@ export default function Home() {
                 </div>
                 <div>
                   <h1 className="text-3xl font-headline font-black text-black tracking-tight uppercase leading-none">FINOVO</h1>
-                  <p className="text-[9px] uppercase text-gray-400 tracking-[0.4em] pt-1">
+                  <p className="text-[9px] uppercase text-gray-400 font-normal tracking-[0.4em] pt-1">
                     {isLoginView ? 'Welcome Back' : 'Create Account'}
                   </p>
                 </div>
@@ -96,20 +111,20 @@ export default function Home() {
                     placeholder="Email Address" 
                     value={email} 
                     onChange={(e) => setEmail(e.target.value)}
-                    className="h-12 bg-white border border-gray-100 rounded-full px-8 text-black shadow-sm focus-visible:ring-primary"
+                    className="h-12 bg-white border border-gray-100 rounded-full px-8 text-black shadow-sm focus-visible:ring-primary font-normal"
                   />
                   <Input 
                     type="password" 
                     placeholder="Password" 
                     value={password} 
                     onChange={(e) => setPassword(e.target.value)}
-                    className="h-12 bg-white border border-gray-100 rounded-full px-8 text-black shadow-sm focus-visible:ring-primary"
+                    className="h-12 bg-white border border-gray-100 rounded-full px-8 text-black shadow-sm focus-visible:ring-primary font-normal"
                   />
                 </div>
                 
                 <Button 
                   onClick={() => isLoginView ? login(email, password) : signup(email, password)}
-                  className="w-full h-12 rounded-full uppercase tracking-widest text-[10px] shadow-xl shadow-primary/20 gap-3"
+                  className="w-full h-12 rounded-full uppercase tracking-widest text-[10px] shadow-xl shadow-primary/20 gap-3 font-normal"
                 >
                   {isLoginView ? 'Login Now' : 'Sign Up Now'} <ArrowRight className="w-3 h-3" />
                 </Button>
@@ -117,7 +132,7 @@ export default function Home() {
                 <div className="text-center">
                   <button 
                     onClick={() => setIsLoginView(!isLoginView)} 
-                    className="text-[9px] uppercase text-primary tracking-widest hover:underline"
+                    className="text-[9px] uppercase text-primary tracking-widest hover:underline font-normal"
                   >
                     {isLoginView ? 'New here? Create Account' : 'Already have an account? Login'}
                   </button>
@@ -132,19 +147,21 @@ export default function Home() {
                 <div className="h-full overflow-y-auto no-scrollbar px-5 space-y-2 pb-2">
                   <BudgetSummary 
                     userId={user.uid} 
-                    totalSpent={expenses?.reduce((sum, e) => sum + e.amount, 0) || 0} 
-                    month={new Date().getMonth()+1} 
-                    year={new Date().getFullYear()} 
+                    totalSpent={totalSpent} 
+                    month={currentMonth} 
+                    year={currentYear} 
                   />
 
-                  <div className="mb-0">
-                    <Alert className="py-[0.97rem] px-3 rounded-[0.8rem] border bg-[#FFF1F1] text-[#D32F2F] border-[#FFE4E4] flex flex-row items-center gap-2 shrink-0 overflow-hidden min-h-[40px] [&>svg]:relative [&>svg]:top-0 [&>svg]:left-0 [&>svg~*]:pl-0">
-                      <AlertTriangle className="h-4 w-4 shrink-0" />
-                      <AlertDescription className="text-[8px] uppercase tracking-tight leading-none">
-                        ALERT: 100% BUDGET REACHED. YOU ARE OVERSPENDING!
-                      </AlertDescription>
-                    </Alert>
-                  </div>
+                  {totalSpent >= budget && (
+                    <div className="mb-0">
+                      <Alert className="py-[0.97rem] px-3 rounded-[0.8rem] border bg-[#FFF1F1] text-[#D32F2F] border-[#FFE4E4] flex flex-row items-center gap-2 shrink-0 overflow-hidden min-h-[40px] [&>svg]:relative [&>svg]:top-0 [&>svg]:left-0 [&>svg~*]:pl-0">
+                        <AlertTriangle className="h-4 w-4 shrink-0" />
+                        <AlertDescription className="text-[8px] uppercase tracking-tight font-normal leading-none">
+                          ALERT: 100% BUDGET REACHED. YOU ARE OVERSPENDING!
+                        </AlertDescription>
+                      </Alert>
+                    </div>
+                  )}
 
                   <div className="grid grid-cols-2 gap-2 shrink-0">
                     <GridCard 
@@ -189,7 +206,6 @@ export default function Home() {
               )}
             </div>
 
-            {/* Ad Banner - Sticky at the bottom of the content area for all pages */}
             <div className="mt-auto shrink-0 w-full px-0 mb-0">
               <AdBanner />
             </div>
@@ -201,19 +217,19 @@ export default function Home() {
         <div className="h-16 bg-primary border-t border-white/10 flex items-center justify-around px-4 shadow-inner shrink-0 z-50">
           <button onClick={() => setActiveTab('dashboard')} className={cn("flex flex-col items-center gap-1 transition-colors", activeTab === 'dashboard' ? "text-white" : "text-white/50")}>
             <HomeIcon className="w-5 h-5" />
-            <span className="text-[8px] uppercase tracking-widest">Home</span>
+            <span className="text-[8px] uppercase tracking-widest font-normal">Home</span>
           </button>
           <button onClick={() => setActiveTab('history')} className={cn("flex flex-col items-center gap-1 transition-colors", activeTab === 'history' ? "text-white" : "text-white/50")}>
             <History className="w-5 h-5" />
-            <span className="text-[8px] uppercase tracking-widest">Bills</span>
+            <span className="text-[8px] uppercase tracking-widest font-normal">Bills</span>
           </button>
           <button onClick={() => setActiveTab('splitter')} className={cn("flex flex-col items-center gap-1 transition-colors", activeTab === 'splitter' ? "text-white" : "text-white/50")}>
             <Calculator className="w-5 h-5" />
-            <span className="text-[8px] uppercase tracking-widest">Split</span>
+            <span className="text-[8px] uppercase tracking-widest font-normal">Split</span>
           </button>
           <button onClick={() => setActiveTab('groups')} className={cn("flex flex-col items-center gap-1 transition-colors", activeTab === 'groups' ? "text-white" : "text-white/50")}>
             <Users className="w-5 h-5" />
-            <span className="text-[8px] uppercase tracking-widest">Groups</span>
+            <span className="text-[8px] uppercase tracking-widest font-normal">Groups</span>
           </button>
         </div>
       )}
