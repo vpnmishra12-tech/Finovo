@@ -88,9 +88,9 @@ export function AddExpenseDrawer() {
         </Button>
       </SheetTrigger>
       <SheetContent side="bottom" className="rounded-t-[3rem] p-0 border-none shadow-2xl h-[85vh] focus:outline-none bg-card overflow-hidden">
-        <SheetHeader className="p-6 px-8 bg-card border-b border-border/50 text-foreground shrink-0 rounded-t-[3rem]">
+        <SheetHeader className="p-6 px-8 bg-muted border-b border-border/50 text-foreground shrink-0 rounded-t-[3rem]">
           <SheetTitle className="font-headline text-2xl flex items-center gap-3 text-black">
-            <Sparkles className="w-6 h-6 text-primary" />
+            <Sparkles className="w-6 h-6 text-black opacity-40" />
             {t.addExpense}
           </SheetTitle>
         </SheetHeader>
@@ -119,7 +119,7 @@ export function AddExpenseDrawer() {
                     onKeyDown={(e) => e.key === 'Enter' && handleAiTextSubmit()}
                     className="bg-muted border-none rounded-2xl h-14 text-sm font-bold px-6"
                   />
-                  <Button size="icon" className="h-14 w-14 rounded-2xl shrink-0" onClick={handleAiTextSubmit} disabled={isProcessing}>
+                  <Button size="icon" className="h-14 w-14 rounded-2xl shrink-0 bg-black text-white" onClick={handleAiTextSubmit} disabled={isProcessing}>
                     {isProcessing ? <Loader2 className="animate-spin w-5 h-5" /> : <Send className="w-5 h-5" />}
                   </Button>
                 </div>
@@ -174,7 +174,7 @@ export function AddExpenseDrawer() {
               </div>
 
               <div className="pt-4">
-                <Button className="w-full rounded-[2rem] h-16 text-base font-black uppercase tracking-widest shadow-xl shadow-primary/20 gap-3" onClick={handleSave} disabled={!amount || !description}>
+                <Button className="w-full rounded-[2rem] h-16 text-base font-black uppercase tracking-widest shadow-xl gap-3 bg-black text-white hover:bg-black/90" onClick={handleSave} disabled={!amount || !description}>
                   <Plus className="w-6 h-6" /> Save Expense
                 </Button>
               </div>

@@ -61,11 +61,10 @@ export function AddGroupExpenseDialog({ groupId }: { groupId: string }) {
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-md w-[95%] rounded-3xl p-0 overflow-hidden">
-        {/* Header changed from primary to neutral/muted */}
         <DialogHeader className="p-6 bg-muted text-foreground border-b border-border/50">
           <DialogTitle className="font-headline font-black uppercase">{t.addExpense}</DialogTitle>
         </DialogHeader>
-        <div className="p-6 space-y-4 bg-white">
+        <div className="p-6 space-y-4 bg-card">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1">
               <Label className="text-[10px] font-black uppercase text-muted-foreground">{t.spent} (₹)</Label>
@@ -118,7 +117,7 @@ export function AddGroupExpenseDialog({ groupId }: { groupId: string }) {
           <Button 
             onClick={handleAdd} 
             disabled={!amount || !location || isSubmitting}
-            className="w-full h-14 rounded-2xl font-black uppercase tracking-widest gap-2 shadow-lg shadow-primary/20 mt-4"
+            className="w-full h-14 rounded-2xl font-black uppercase tracking-widest gap-2 shadow-lg mt-4 bg-black text-white hover:bg-black/90"
           >
             {isSubmitting ? "Saving..." : <><CheckCircle2 className="w-5 h-5" /> {t.save}</>}
           </Button>

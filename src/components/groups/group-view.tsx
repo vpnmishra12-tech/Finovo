@@ -170,7 +170,7 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
               • {format(groupData.createdAt.toDate(), 'dd MMM yyyy')}
             </span>
           )}
-          <Button variant="outline" size="sm" onClick={handleShareId} className="h-7 px-3 rounded-xl uppercase text-[8px] gap-1.5 border-primary/20 shrink-0">
+          <Button variant="outline" size="sm" onClick={handleShareId} className="h-7 px-3 rounded-xl uppercase text-[8px] gap-1.5 border-border shrink-0">
             <Share2 className="w-2.5 h-2.5" /> Invite
           </Button>
         </div>
@@ -180,9 +180,9 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
         <CardContent className="p-6 space-y-4">
           <div className="flex items-center justify-between">
             <span className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">{t.totalGroupExpense}</span>
-            <Wallet className="w-5 h-5 text-primary opacity-40" />
+            <Wallet className="w-5 h-5 text-black opacity-20" />
           </div>
-          <p className="text-4xl font-headline font-black text-primary">₹{totalSpent.toLocaleString()}</p>
+          <p className="text-4xl font-headline font-black text-black">₹{totalSpent.toLocaleString()}</p>
           
           <div className="pt-4 space-y-2 border-t border-muted/20">
             <p className="text-[9px] uppercase tracking-widest text-muted-foreground">Contributions</p>
@@ -215,11 +215,11 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
           </div>
 
           {isExpensesLoading ? (
-            <div className="flex items-center justify-center py-10"><Loader2 className="w-6 h-6 animate-spin text-primary" /></div>
+            <div className="flex items-center justify-center py-10"><Loader2 className="w-6 h-6 animate-spin text-black opacity-30" /></div>
           ) : expenses && expenses.length > 0 ? (
             <div className="grid gap-3">
               {expenses.map((expense) => (
-                <Card key={expense.id} className="border-none shadow-sm rounded-2xl overflow-hidden group bg-card">
+                <Card key={expense.id} className="border-none shadow-sm rounded-2xl overflow-hidden group bg-card border border-border/20">
                   <CardContent className="p-4 space-y-3">
                     <div className="flex justify-between items-start">
                       <div className="space-y-1">
@@ -228,7 +228,7 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
                         </Badge>
                         <h4 className="font-bold text-base leading-tight">{expense.description || expense.location}</h4>
                       </div>
-                      <p className="text-xl font-headline font-black text-primary">₹{expense.amount.toLocaleString()}</p>
+                      <p className="text-xl font-headline font-black text-black">₹{expense.amount.toLocaleString()}</p>
                     </div>
 
                     <div className="grid grid-cols-2 gap-2 text-[9px] text-muted-foreground uppercase tracking-tight">
@@ -243,12 +243,12 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
 
                     <div className="flex items-center justify-between pt-2 border-t border-muted/50">
                       <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center text-[10px] font-black text-primary">
+                        <div className="w-6 h-6 bg-muted rounded-full flex items-center justify-center text-[10px] font-black text-black">
                           {expense.paidByName.charAt(0)}
                         </div>
                         <div className="flex flex-col">
                           <span className="text-[8px] uppercase tracking-widest opacity-60">Paid by</span>
-                          <span className="text-[10px] text-primary uppercase">{expense.paidBy === user?.uid ? "Me" : expense.paidByName}</span>
+                          <span className="text-[10px] text-black uppercase font-bold">{expense.paidBy === user?.uid ? "Me" : expense.paidByName}</span>
                         </div>
                       </div>
                       
@@ -272,11 +272,11 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
         <TabsContent value="members" className="space-y-4 m-0">
           <div className="bg-muted/30 p-4 rounded-3xl space-y-4">
             <h4 className="text-[10px] uppercase tracking-widest text-muted-foreground flex items-center gap-2">
-              <UserPlus className="w-4 h-4 text-primary" /> Manually Add Friend
+              <UserPlus className="w-4 h-4 text-black opacity-40" /> Manually Add Friend
             </h4>
             <div className="grid gap-2">
               <Input placeholder="Friend's Name" value={newMemberName} onChange={(e) => setNewMemberName(e.target.value)} className="bg-card border-none h-10 rounded-xl" />
-              <Button onClick={handleAddMember} disabled={!newMemberName} className="h-10 rounded-xl uppercase tracking-widest text-[10px] gap-2">
+              <Button onClick={handleAddMember} disabled={!newMemberName} className="h-10 rounded-xl uppercase tracking-widest text-[10px] gap-2 bg-black text-white hover:bg-black/90">
                 Add to List
               </Button>
             </div>
@@ -286,9 +286,9 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
             <h4 className="text-[10px] uppercase tracking-widest text-muted-foreground ml-1">Current Members</h4>
             <div className="grid gap-2">
               {members?.map((member) => (
-                <div key={member.id} className="flex items-center justify-between p-3 bg-card rounded-2xl border border-primary/5 shadow-sm">
+                <div key={member.id} className="flex items-center justify-between p-3 bg-card rounded-2xl border border-border/30 shadow-sm">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center text-primary text-xs">
+                    <div className="w-8 h-8 bg-muted rounded-full flex items-center justify-center text-black font-bold text-xs">
                       {member.name.charAt(0)}
                     </div>
                     <div className="flex flex-col">

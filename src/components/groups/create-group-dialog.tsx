@@ -57,16 +57,15 @@ export function CreateGroupDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="w-full h-9 bg-white text-black hover:bg-muted rounded-xl font-black uppercase tracking-widest text-[9px] shadow-sm border border-border/50 px-1">
+        <Button className="w-full h-9 bg-card text-black hover:bg-muted rounded-xl font-black uppercase tracking-widest text-[9px] shadow-sm border border-border/50 px-1">
           {t.createGroup}
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-md w-[95%] rounded-3xl overflow-hidden p-0">
-        {/* Header changed from primary to neutral/muted */}
         <DialogHeader className="p-6 bg-muted text-foreground border-b border-border/50">
           <DialogTitle className="font-headline font-black uppercase">{t.createGroup}</DialogTitle>
         </DialogHeader>
-        <div className="p-6 space-y-6 bg-white">
+        <div className="p-6 space-y-6 bg-card">
           <div className="space-y-2">
             <Label className="text-[10px] font-black uppercase text-muted-foreground">{t.groupName}</Label>
             <Input 
@@ -80,13 +79,13 @@ export function CreateGroupDialog() {
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <Label className="text-[10px] font-black uppercase text-muted-foreground">{t.addMember}s</Label>
-              <Button variant="ghost" size="sm" onClick={addMemberField} className="h-8 text-[9px] font-black uppercase text-primary">
+              <Button variant="ghost" size="sm" onClick={addMemberField} className="h-8 text-[9px] font-black uppercase text-black opacity-60">
                 <UserPlus className="w-3 h-3 mr-1" /> {t.addPerson}
               </Button>
             </div>
             
             {members.map((m, i) => (
-              <div key={i} className="flex flex-col gap-2 p-3 bg-muted/50 rounded-2xl border border-primary/5">
+              <div key={i} className="flex flex-col gap-2 p-3 bg-muted/50 rounded-2xl border border-border/30">
                 <div className="flex items-center gap-2">
                   <Input 
                     placeholder={t.memberName} 
@@ -103,7 +102,7 @@ export function CreateGroupDialog() {
           <Button 
             onClick={handleCreate} 
             disabled={!groupName || isSubmitting}
-            className="w-full h-14 rounded-2xl font-black uppercase tracking-widest gap-2"
+            className="w-full h-14 rounded-2xl font-black uppercase tracking-widest gap-2 bg-black text-white hover:bg-black/90"
           >
             {isSubmitting ? "Creating..." : <><CheckCircle2 className="w-5 h-5" /> {t.save}</>}
           </Button>
