@@ -127,8 +127,7 @@ export default function Home() {
             {activeTab === 'dashboard' ? (
               <div className="flex-1 flex flex-col animate-in fade-in duration-300 overflow-hidden">
                 
-                {/* Change 2: Dashboard and Overview in one line, Avatar removed (moved to Header) */}
-                <div className="flex items-baseline gap-2 shrink-0 px-5 mt-1 mb-2">
+                <div className="flex items-center gap-2 shrink-0 px-5 mt-1 mb-2">
                   <h2 className="text-2xl font-headline font-black uppercase text-black leading-none tracking-tight">DASHBOARD</h2>
                   <span className="text-[8px] font-bold uppercase text-gray-400 tracking-[0.2em] leading-none">OVERVIEW</span>
                 </div>
@@ -179,7 +178,6 @@ export default function Home() {
                     </div>
                   </div>
 
-                  {/* Change 3: Ad box sitting flush with the blue bottom bar (no margin) */}
                   <div className="mt-auto shrink-0 w-full px-0">
                     <AdBanner />
                   </div>
