@@ -34,8 +34,8 @@ export function MonthlyHistory({ expenses }: { expenses: Expense[] }) {
   if (sortedMonths.length === 0) return null;
 
   return (
-    <Card className="border-none bg-card shadow-sm overflow-hidden flex flex-col h-[140px]">
-      <CardHeader className="pb-1 pt-2 shrink-0">
+    <Card className="border-none bg-card shadow-sm overflow-hidden flex flex-col h-[180px]">
+      <CardHeader className="pb-1 pt-3 shrink-0">
         <CardTitle className="text-[9px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
           <CalendarDays className="w-3 h-3" />
           {t.monthlyTrends}

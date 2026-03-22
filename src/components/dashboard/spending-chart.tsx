@@ -35,13 +35,13 @@ export function SpendingChart({ expenses }: { expenses: Expense[] }) {
   };
 
   return (
-    <Card className="border-none bg-card shadow-sm overflow-hidden">
-      <CardHeader className="pb-1 pt-2">
+    <Card className="border-none bg-card shadow-sm overflow-hidden h-[180px] flex flex-col">
+      <CardHeader className="pb-1 pt-3 shrink-0">
         <CardTitle className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">
           {t.expenses}
         </CardTitle>
       </CardHeader>
-      <CardContent className="h-[140px] p-0">
+      <CardContent className="flex-1 p-0 overflow-hidden">
         {data.length > 0 ? (
           <ChartContainer config={config} className="h-full w-full">
             <PieChart>
