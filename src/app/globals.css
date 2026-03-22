@@ -4,13 +4,13 @@
 
 @layer base {
   :root {
-    --background: 40 40% 98%; /* White Cream Background */
+    --background: 40 30% 98%; /* Unified Premium Off-White */
     --foreground: 0 0% 0%; /* Black Fonts */
-    --card: 0 0% 100%;
+    --card: 40 30% 98%; /* Same as background for consistency */
     --card-foreground: 0 0% 0%;
-    --popover: 40 40% 98%;
+    --popover: 40 30% 98%;
     --popover-foreground: 0 0% 0%;
-    --primary: 221 30% 50%; /* 50% Softer Slate Blue */
+    --primary: 221 30% 50%; /* Softer Slate Blue */
     --primary-foreground: 0 0% 100%;
     --secondary: 40 20% 94%;
     --secondary-foreground: 0 0% 0%;

@@ -132,7 +132,6 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
 
   return (
     <div className="space-y-4 animate-in fade-in slide-in-from-left-4 duration-300 pb-24 px-1">
-      {/* Header section remains neutral */}
       <div className="flex flex-col gap-3">
         <div className="relative flex items-center justify-center min-h-[40px]">
           <Button variant="ghost" size="icon" onClick={onBack} className="absolute left-0 rounded-full h-8 w-8">
@@ -150,7 +149,7 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
                   <Trash2 className="w-4 h-4" />
                 </Button>
               </AlertDialogTrigger>
-              <AlertDialogContent className="rounded-3xl w-[92%]">
+              <AlertDialogContent className="rounded-3xl w-[92%] bg-card">
                 <AlertDialogHeader>
                   <AlertDialogTitle>Delete Group?</AlertDialogTitle>
                   <AlertDialogDescription>This will remove the group for everyone. Action cannot be undone.</AlertDialogDescription>
@@ -177,8 +176,7 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
         </div>
       </div>
 
-      {/* Main Total Card - Changed from bg-primary to bg-white/off-white */}
-      <Card className="bg-white text-black border border-border/50 shadow-sm rounded-[2rem] overflow-hidden">
+      <Card className="bg-card text-black border border-border/50 shadow-sm rounded-[2rem] overflow-hidden">
         <CardContent className="p-6 space-y-4">
           <div className="flex items-center justify-between">
             <span className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">{t.totalGroupExpense}</span>
@@ -221,7 +219,7 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
           ) : expenses && expenses.length > 0 ? (
             <div className="grid gap-3">
               {expenses.map((expense) => (
-                <Card key={expense.id} className="border-none shadow-sm rounded-2xl overflow-hidden group bg-white">
+                <Card key={expense.id} className="border-none shadow-sm rounded-2xl overflow-hidden group bg-card">
                   <CardContent className="p-4 space-y-3">
                     <div className="flex justify-between items-start">
                       <div className="space-y-1">

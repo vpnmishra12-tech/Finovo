@@ -338,8 +338,7 @@ export function BillSplitTool() {
         </Tabs>
 
         <div className="pt-6">
-          {/* Changed summary box from bg-primary to bg-white/off-white with border */}
-          <div className="flex items-center justify-between p-6 bg-white border border-border/50 rounded-[2rem] text-black shadow-lg relative overflow-hidden">
+          <div className="flex items-center justify-between p-6 bg-card border border-border/50 rounded-[2rem] text-black shadow-lg relative overflow-hidden">
             <div className="absolute top-0 right-0 w-32 h-32 bg-muted/50 rounded-full -mr-16 -mt-16" />
             <div className="flex flex-col relative z-10">
               <span className="text-[9px] uppercase tracking-widest text-muted-foreground">{t.yourShare}</span>

@@ -62,7 +62,7 @@ export default function Home() {
 
   if (loading) {
     return (
-      <div className="fixed inset-0 flex items-center justify-center bg-[#FDFBF7]">
+      <div className="fixed inset-0 flex items-center justify-center bg-background">
         <Wallet className="w-10 h-10 text-primary animate-bounce" />
       </div>
     );
@@ -70,7 +70,7 @@ export default function Home() {
 
   const GridCard = ({ icon: Icon, label, color, onClick }: { icon: any, label: string, color: string, onClick: () => void }) => (
     <Card 
-      className="border-none shadow-sm active:scale-95 transition-all cursor-pointer rounded-[1rem] bg-white h-24 flex items-center overflow-hidden"
+      className="border-none shadow-sm active:scale-95 transition-all cursor-pointer rounded-[1rem] bg-card h-24 flex items-center overflow-hidden"
       onClick={onClick}
     >
       <CardContent className="p-3.5 flex items-center gap-3.5 w-full">
@@ -118,16 +118,15 @@ export default function Home() {
   }
 
   return (
-    <div className="fixed inset-0 bg-[#FDFBF7] flex flex-col overflow-hidden text-black font-body select-none">
+    <div className="fixed inset-0 bg-background flex flex-col overflow-hidden text-black font-body select-none">
       <Header />
       
       <main className="flex-1 overflow-hidden relative">
         {!user ? (
-          <div className="h-full flex flex-col items-center justify-center p-6 bg-[#FDFBF7]">
+          <div className="h-full flex flex-col items-center justify-center p-6 bg-background">
             <div className="w-full max-w-sm flex flex-col items-center space-y-6">
               <div className="flex flex-col items-center text-center space-y-3">
-                {/* Changed icon container from bg-primary to bg-white/off-white */}
-                <div className="bg-white p-4 rounded-full shadow-lg border border-border/50">
+                <div className="bg-card p-4 rounded-full shadow-lg border border-border/50">
                   <Wallet className="w-7 h-7 text-primary" />
                 </div>
                 <div>
@@ -145,7 +144,7 @@ export default function Home() {
                     placeholder="Email Address" 
                     value={email} 
                     onChange={(e) => setEmail(e.target.value)}
-                    className="h-12 bg-white border border-gray-100 rounded-full px-8 text-black shadow-sm focus-visible:ring-primary font-normal"
+                    className="h-12 bg-card border border-border rounded-full px-8 text-black shadow-sm focus-visible:ring-primary font-normal"
                   />
                   <div className="space-y-1">
                     <Input 
@@ -153,7 +152,7 @@ export default function Home() {
                       placeholder="Password" 
                       value={password} 
                       onChange={(e) => setPassword(e.target.value)}
-                      className="h-12 bg-white border border-gray-100 rounded-full px-8 text-black shadow-sm focus-visible:ring-primary font-normal"
+                      className="h-12 bg-card border border-border rounded-full px-8 text-black shadow-sm focus-visible:ring-primary font-normal"
                     />
                     {isLoginView && (
                       <div className="text-right pr-4">

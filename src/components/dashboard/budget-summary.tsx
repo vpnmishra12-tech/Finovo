@@ -47,8 +47,7 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
 
   return (
     <div className="space-y-2">
-      {/* Main Budget Card - Changed from bg-primary to bg-white/off-white */}
-      <Card className="bg-white text-black border border-border/50 shadow-sm rounded-[1.5rem] overflow-hidden relative h-32 flex items-center">
+      <Card className="bg-card text-black border border-border/50 shadow-sm rounded-[1.5rem] overflow-hidden relative h-32 flex items-center">
         <CardContent className="p-5 w-full relative">
           <div className="flex justify-between items-start">
             <div className="space-y-0.5">
@@ -62,7 +61,7 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
                     <Pencil className="w-3.5 h-3.5 text-black" strokeWidth={2.5} />
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="max-w-[320px] rounded-[1.5rem]">
+                <DialogContent className="max-w-[320px] rounded-[1.5rem] bg-card">
                   <DialogHeader><DialogTitle className="font-headline uppercase font-black text-sm">SET BUDGET</DialogTitle></DialogHeader>
                   <div className="flex flex-col gap-2 py-3">
                     <Input type="number" placeholder="Enter amount" value={newBudget} onChange={(e) => setNewBudget(e.target.value)} className="h-10 rounded-lg font-normal" />
@@ -76,9 +75,8 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
         </CardContent>
       </Card>
 
-      {/* Spent & Overspent Cards */}
       <div className="grid grid-cols-2 gap-2">
-        <Card className="bg-white border-none shadow-sm rounded-[1rem] overflow-hidden h-24 flex items-center">
+        <Card className="bg-card border-none shadow-sm rounded-[1rem] overflow-hidden h-24 flex items-center">
           <CardContent className="p-3 w-full flex flex-col justify-between h-full">
             <div>
               <p className="text-[8px] text-gray-400 mb-0.5 uppercase tracking-widest font-normal">SPENT</p>
@@ -90,7 +88,7 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
           </CardContent>
         </Card>
 
-        <Card className="bg-white border-none shadow-sm rounded-[1rem] overflow-hidden h-24 flex items-center">
+        <Card className="bg-card border-none shadow-sm rounded-[1rem] overflow-hidden h-24 flex items-center">
           <CardContent className="p-3 w-full flex flex-col justify-between h-full">
             <div>
               <p className="text-[8px] text-gray-400 mb-0.5 uppercase tracking-widest font-normal">OVERSPENT BY</p>
