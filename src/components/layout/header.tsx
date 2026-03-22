@@ -1,10 +1,10 @@
-
 "use client";
 
 import { useAuth } from '@/lib/contexts/auth-context';
 import { Button } from '@/components/ui/button';
-import { Wallet, Bell, Settings, LogOut, Share2 } from 'lucide-react';
+import { Bell, Settings, LogOut, Share2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -36,10 +36,13 @@ export function Header() {
   return (
     <header className="sticky top-0 z-[100] w-full bg-[#1D4ED8] shrink-0 border-none">
       <div className="container flex h-16 items-center justify-between px-6 max-w-6xl mx-auto">
-        <div className="flex items-center gap-2">
-          <div className="bg-white/10 p-1.5 rounded-lg border border-white/20 shadow-sm">
-            <Wallet className="w-4 h-4 text-white" />
-          </div>
+        <div className="flex items-center gap-3">
+          {/* Change 1: Avatar icon replacing Wallet icon next to FINOVO */}
+          <Avatar className="h-8 w-8 border border-white/20 shadow-sm">
+            <AvatarFallback className="bg-white text-primary text-[10px] font-black uppercase">
+              {user?.email?.charAt(0) || 'V'}
+            </AvatarFallback>
+          </Avatar>
           <div className="flex items-center gap-1">
             <h1 className="font-headline font-black text-lg text-white tracking-tight uppercase leading-none">
               FINOVO

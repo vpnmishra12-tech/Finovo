@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from 'react';
@@ -9,13 +8,12 @@ import { Header } from '@/components/layout/header';
 import { BudgetSummary } from '@/components/dashboard/budget-summary';
 import { AdBanner } from '@/components/dashboard/ad-banner';
 import { 
-  Wallet, History, Calculator, Users, LayoutGrid, Home as HomeIcon, ArrowRight, AlertTriangle
+  History, Calculator, Users, LayoutGrid, Home as HomeIcon, ArrowRight, AlertTriangle, Wallet
 } from 'lucide-react';
 import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import { collection, query, orderBy, limit } from 'firebase/firestore';
 import { Expense } from '@/lib/expenses';
 import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -129,16 +127,10 @@ export default function Home() {
             {activeTab === 'dashboard' ? (
               <div className="flex-1 flex flex-col animate-in fade-in duration-300 overflow-hidden">
                 
-                <div className="flex items-center gap-3 shrink-0 px-5 mt-1 mb-2">
-                  <Avatar className="h-12 w-12 border-2 border-white shadow-lg">
-                    <AvatarFallback className="bg-black text-white text-lg font-black uppercase">
-                      {user.email?.charAt(0) || 'V'}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="flex flex-col">
-                    <span className="text-[8px] font-bold uppercase text-gray-400 tracking-[0.2em] leading-none mb-0.5">OVERVIEW</span>
-                    <h2 className="text-2xl font-headline font-black uppercase text-black leading-none tracking-tight">DASHBOARD</h2>
-                  </div>
+                {/* Change 2: Dashboard and Overview in one line, Avatar removed (moved to Header) */}
+                <div className="flex items-baseline gap-2 shrink-0 px-5 mt-1 mb-2">
+                  <h2 className="text-2xl font-headline font-black uppercase text-black leading-none tracking-tight">DASHBOARD</h2>
+                  <span className="text-[8px] font-bold uppercase text-gray-400 tracking-[0.2em] leading-none">OVERVIEW</span>
                 </div>
 
                 <div className="flex-1 flex flex-col overflow-hidden">
@@ -150,7 +142,6 @@ export default function Home() {
                       year={new Date().getFullYear()} 
                     />
 
-                    {/* Alert moved here, below Monthly Budget Summary */}
                     <div className="mb-2">
                       <Alert className="py-1.5 px-3 rounded-[0.8rem] border bg-[#FFF1F1] text-[#D32F2F] border-[#FFE4E4] flex items-center gap-2 shrink-0">
                         <AlertTriangle className="h-3 w-3 shrink-0" />
@@ -188,7 +179,8 @@ export default function Home() {
                     </div>
                   </div>
 
-                  <div className="mt-auto shrink-0 w-full px-0 mb-0.5">
+                  {/* Change 3: Ad box sitting flush with the blue bottom bar (no margin) */}
+                  <div className="mt-auto shrink-0 w-full px-0">
                     <AdBanner />
                   </div>
                 </div>
