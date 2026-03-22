@@ -55,7 +55,7 @@ export function Header() {
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className="h-10 w-10 text-white hover:bg-white/10 rounded-full"
+                className="h-10 w-10 bg-white text-primary hover:bg-white/90 rounded-full border border-white/20 shadow-sm"
               >
                 <Settings className="w-5 h-5" />
               </Button>
