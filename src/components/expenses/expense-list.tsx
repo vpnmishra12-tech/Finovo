@@ -81,7 +81,7 @@ export function ExpenseList({ expenses, isLoading }: { expenses: Expense[], isLo
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between px-1">
+      <div className="flex items-center justify-center px-1">
         <h3 className="font-headline font-bold text-xl">{t.history}</h3>
       </div>
       <div className="grid gap-3">
