@@ -19,9 +19,12 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { cn } from '@/lib/utils';
 
+// Dynamic imports for components
 const BillSplitTool = dynamic(() => import('@/components/bill-split/bill-split-tool').then(mod => mod.BillSplitTool), { ssr: false });
 const ExpenseList = dynamic(() => import('@/components/expenses/expense-list').then(mod => mod.ExpenseList), { ssr: false });
 const GroupModule = dynamic(() => import('@/components/groups/group-module').then(mod => mod.GroupModule), { ssr: false });
+const SpendingChart = dynamic(() => import('@/components/dashboard/spending-chart').then(mod => mod.SpendingChart), { ssr: false });
+const MonthlyHistory = dynamic(() => import('@/components/dashboard/monthly-history').then(mod => mod.MonthlyHistory), { ssr: false });
 
 type NavTab = 'dashboard' | 'history' | 'splitter' | 'groups';
 
@@ -180,7 +183,15 @@ export default function Home() {
               </div>
             ) : (
               <div className="flex-1 overflow-y-auto no-scrollbar pb-20 px-5">
-                {activeTab === 'history' && <ExpenseList expenses={expenses || []} isLoading={isExpensesLoading} />}
+                {activeTab === 'history' && (
+                  <div className="space-y-4 animate-in fade-in duration-300">
+                    <div className="grid grid-cols-2 gap-2">
+                      <SpendingChart expenses={expenses || []} />
+                      <MonthlyHistory expenses={expenses || []} />
+                    </div>
+                    <ExpenseList expenses={expenses || []} isLoading={isExpensesLoading} />
+                  </div>
+                )}
                 {activeTab === 'splitter' && <BillSplitTool />}
                 {activeTab === 'groups' && <GroupModule />}
               </div>
