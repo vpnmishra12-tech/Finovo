@@ -141,15 +141,6 @@ export default function Home() {
                   </div>
                 </div>
 
-                <div className="px-5 mb-2">
-                  <Alert className="py-1.5 px-3 rounded-[0.8rem] border bg-[#FFF1F1] text-[#D32F2F] border-[#FFE4E4] flex items-center gap-2 shrink-0">
-                    <AlertTriangle className="h-3 w-3 shrink-0" />
-                    <AlertDescription className="text-[8px] font-black uppercase tracking-tight leading-tight">
-                      ALERT: 100% BUDGET REACHED. YOU ARE OVERSPENDING!
-                    </AlertDescription>
-                  </Alert>
-                </div>
-
                 <div className="flex-1 flex flex-col overflow-hidden">
                   <div className="flex-1 overflow-y-auto no-scrollbar px-5 space-y-4 pb-2">
                     <BudgetSummary 
@@ -158,6 +149,16 @@ export default function Home() {
                       month={new Date().getMonth()+1} 
                       year={new Date().getFullYear()} 
                     />
+
+                    {/* Alert moved here, below Monthly Budget Summary */}
+                    <div className="mb-2">
+                      <Alert className="py-1.5 px-3 rounded-[0.8rem] border bg-[#FFF1F1] text-[#D32F2F] border-[#FFE4E4] flex items-center gap-2 shrink-0">
+                        <AlertTriangle className="h-3 w-3 shrink-0" />
+                        <AlertDescription className="text-[8px] font-black uppercase tracking-tight leading-tight">
+                          ALERT: 100% BUDGET REACHED. YOU ARE OVERSPENDING!
+                        </AlertDescription>
+                      </Alert>
+                    </div>
 
                     <div className="grid grid-cols-2 gap-3 shrink-0">
                       <GridCard 
@@ -187,7 +188,7 @@ export default function Home() {
                     </div>
                   </div>
 
-                  <div className="mt-auto shrink-0 w-full px-0 mb-0">
+                  <div className="mt-auto shrink-0 w-full px-0 mb-0.5">
                     <AdBanner />
                   </div>
                 </div>
