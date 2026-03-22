@@ -52,7 +52,7 @@ export default function Home() {
 
   const GridCard = ({ icon: Icon, label, color, onClick }: { icon: any, label: string, color: string, onClick: () => void }) => (
     <Card 
-      className="border-none shadow-sm active:scale-95 transition-all cursor-pointer rounded-[1rem] bg-white h-[6.79rem] flex items-center overflow-hidden"
+      className="border-none shadow-sm active:scale-95 transition-all cursor-pointer rounded-[1rem] bg-white h-24 flex items-center overflow-hidden"
       onClick={onClick}
     >
       <CardContent className="p-3.5 flex items-center gap-3.5 w-full">
@@ -127,13 +127,13 @@ export default function Home() {
             {activeTab === 'dashboard' ? (
               <div className="flex-1 flex flex-col animate-in fade-in duration-300 overflow-hidden">
                 
-                <div className="flex items-center gap-2 shrink-0 px-5 mt-1 mb-2">
+                <div className="flex items-center gap-2 shrink-0 px-5 mt-1 mb-1">
                   <h2 className="text-2xl font-headline font-black uppercase text-black leading-none tracking-tight">DASHBOARD</h2>
                   <span className="text-[8px] font-bold uppercase text-gray-400 tracking-[0.2em] leading-none">OVERVIEW</span>
                 </div>
 
                 <div className="flex-1 flex flex-col overflow-hidden">
-                  <div className="flex-1 overflow-y-auto no-scrollbar px-5 space-y-4 pb-2">
+                  <div className="flex-1 overflow-y-auto no-scrollbar px-5 space-y-2 pb-2">
                     <BudgetSummary 
                       userId={user.uid} 
                       totalSpent={expenses?.reduce((sum, e) => sum + e.amount, 0) || 0} 
@@ -141,7 +141,7 @@ export default function Home() {
                       year={new Date().getFullYear()} 
                     />
 
-                    <div className="mb-2">
+                    <div className="mb-0">
                       <Alert className="py-[0.97rem] px-3 rounded-[0.8rem] border bg-[#FFF1F1] text-[#D32F2F] border-[#FFE4E4] flex items-center gap-2 shrink-0">
                         <AlertTriangle className="h-3 w-3 shrink-0" />
                         <AlertDescription className="text-[8px] font-black uppercase tracking-tight leading-tight">
@@ -150,7 +150,7 @@ export default function Home() {
                       </Alert>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-3 shrink-0">
+                    <div className="grid grid-cols-2 gap-2 shrink-0">
                       <GridCard 
                         icon={LayoutGrid} 
                         label="Dashboard" 
