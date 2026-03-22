@@ -52,7 +52,7 @@ export default function Home() {
 
   const GridCard = ({ icon: Icon, label, color, onClick }: { icon: any, label: string, color: string, onClick: () => void }) => (
     <Card 
-      className="border-none shadow-sm active:scale-95 transition-all cursor-pointer rounded-[1rem] bg-white h-28 flex items-center overflow-hidden"
+      className="border-none shadow-sm active:scale-95 transition-all cursor-pointer rounded-[1rem] bg-white h-26 flex items-center overflow-hidden"
       onClick={onClick}
     >
       <CardContent className="p-3.5 flex items-center gap-3.5 w-full">
@@ -142,7 +142,7 @@ export default function Home() {
                     />
 
                     <div className="mb-2">
-                      <Alert className="py-4 px-3 rounded-[0.8rem] border bg-[#FFF1F1] text-[#D32F2F] border-[#FFE4E4] flex items-center gap-2 shrink-0">
+                      <Alert className="py-3.5 px-3 rounded-[0.8rem] border bg-[#FFF1F1] text-[#D32F2F] border-[#FFE4E4] flex items-center gap-2 shrink-0">
                         <AlertTriangle className="h-3 w-3 shrink-0" />
                         <AlertDescription className="text-[8px] font-black uppercase tracking-tight leading-tight">
                           ALERT: 100% BUDGET REACHED. YOU ARE OVERSPENDING!
@@ -178,7 +178,7 @@ export default function Home() {
                     </div>
                   </div>
 
-                  <div className="mt-auto shrink-0 w-full px-0 mb-0.5">
+                  <div className="mt-auto shrink-0 w-full px-0 mb-0">
                     <AdBanner />
                   </div>
                 </div>
