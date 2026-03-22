@@ -62,7 +62,6 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
     const textToCopy = groupId;
     let copied = false;
 
-    // Direct copy attempt first
     try {
       if (navigator.clipboard && window.isSecureContext) {
         await navigator.clipboard.writeText(textToCopy);
@@ -72,7 +71,6 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
       console.warn("Primary clipboard failed", err);
     }
 
-    // Fallback for older browsers or non-secure contexts
     if (!copied) {
       try {
         const textArea = document.createElement("textarea");
@@ -94,7 +92,6 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
       toast({ title: "ID Copied!", description: "Group ID automatically saved." });
     }
 
-    // Trigger share sheet if available
     if (navigator.share) {
       try {
         const shareText = `Join my Finovo group '${groupData?.name || 'Finance'}'! Use this ID: ${groupId}`;
@@ -103,9 +100,7 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
           text: shareText,
           url: window.location.origin
         });
-      } catch (err) {
-        // Silent error if user cancels share
-      }
+      } catch (err) {}
     }
   };
 
@@ -137,45 +132,49 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
 
   return (
     <div className="space-y-4 animate-in fade-in slide-in-from-left-4 duration-300 pb-24 px-1">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" onClick={onBack} className="rounded-full h-8 w-8">
+      {/* Redesigned Header: Centered Title, Multi-info single line */}
+      <div className="flex flex-col gap-3">
+        <div className="relative flex items-center justify-center min-h-[40px]">
+          <Button variant="ghost" size="icon" onClick={onBack} className="absolute left-0 rounded-full h-8 w-8">
             <ArrowLeft className="w-5 h-5" />
           </Button>
-          <div className="flex flex-col">
-            <h2 className="text-lg font-headline font-black uppercase tracking-tight truncate max-w-[150px]">{groupData?.name || "Loading..."}</h2>
-            <div className="flex items-center gap-2">
-              <span className="text-[10px] font-black uppercase text-primary">CODE: {groupId}</span>
-              {groupData?.createdAt && (
-                <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">
-                  • {format(groupData.createdAt.toDate(), 'dd MMM yyyy')}
-                </span>
-              )}
-            </div>
+          
+          <h2 className="text-lg font-headline font-black uppercase tracking-tight truncate max-w-[200px] text-center px-8">
+            {groupData?.name || "Loading..."}
+          </h2>
+
+          <div className="absolute right-0">
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive/50 hover:text-destructive">
+                  <Trash2 className="w-4 h-4" />
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent className="rounded-3xl w-[92%]">
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Delete Group?</AlertDialogTitle>
+                  <AlertDialogDescription>This will remove the group for everyone. Action cannot be undone.</AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel className="rounded-xl">Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleDeleteGroup} className="bg-destructive text-destructive-foreground rounded-xl">Delete</AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </div>
         </div>
-        
-        <div className="flex items-center gap-1">
-          <Button variant="outline" size="sm" onClick={handleShareId} className="h-8 rounded-xl font-black uppercase text-[9px] gap-2 border-primary/20">
-            <Share2 className="w-3 h-3" /> Invite
+
+        {/* Info Row: Code, Date, Invite in one line */}
+        <div className="flex items-center justify-center gap-2 flex-nowrap overflow-hidden">
+          <span className="text-[10px] font-black uppercase text-primary shrink-0">CODE: {groupId}</span>
+          {groupData?.createdAt && (
+            <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground whitespace-nowrap shrink-0">
+              • {format(groupData.createdAt.toDate(), 'dd MMM yyyy')}
+            </span>
+          )}
+          <Button variant="outline" size="sm" onClick={handleShareId} className="h-7 px-3 rounded-xl font-black uppercase text-[8px] gap-1.5 border-primary/20 shrink-0">
+            <Share2 className="w-2.5 h-2.5" /> Invite
           </Button>
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive/50 hover:text-destructive">
-                <Trash2 className="w-4 h-4" />
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent className="rounded-3xl w-[92%]">
-              <AlertDialogHeader>
-                <AlertDialogTitle>Delete Group?</AlertDialogTitle>
-                <AlertDialogDescription>This will remove the group for everyone. Action cannot be undone.</AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel className="rounded-xl">Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={handleDeleteGroup} className="bg-destructive text-destructive-foreground rounded-xl">Delete</AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
         </div>
       </div>
 
