@@ -52,7 +52,7 @@ export default function Home() {
 
   const GridCard = ({ icon: Icon, label, color, onClick }: { icon: any, label: string, color: string, onClick: () => void }) => (
     <Card 
-      className="border-none shadow-sm active:scale-95 transition-all cursor-pointer rounded-[1rem] bg-white h-28 flex items-center overflow-hidden"
+      className="border-none shadow-sm active:scale-95 transition-all cursor-pointer rounded-[1rem] bg-white h-[6.9rem] flex items-center overflow-hidden"
       onClick={onClick}
     >
       <CardContent className="p-3.5 flex items-center gap-3.5 w-full">
@@ -129,7 +129,7 @@ export default function Home() {
                 
                 <div className="flex items-center gap-2 shrink-0 px-5 mt-1 mb-2">
                   <h2 className="text-2xl font-headline font-black uppercase text-black leading-none tracking-tight">DASHBOARD</h2>
-                  <span className="text-[8px] font-bold uppercase text-gray-400 tracking-[0.2em] leading-none self-center">OVERVIEW</span>
+                  <span className="text-[8px] font-bold uppercase text-gray-400 tracking-[0.2em] leading-none">OVERVIEW</span>
                 </div>
 
                 <div className="flex-1 flex flex-col overflow-hidden">
@@ -142,7 +142,7 @@ export default function Home() {
                     />
 
                     <div className="mb-2">
-                      <Alert className="py-4 px-3 rounded-[0.8rem] border bg-[#FFF1F1] text-[#D32F2F] border-[#FFE4E4] flex items-center gap-2 shrink-0">
+                      <Alert className="py-[0.985rem] px-3 rounded-[0.8rem] border bg-[#FFF1F1] text-[#D32F2F] border-[#FFE4E4] flex items-center gap-2 shrink-0">
                         <AlertTriangle className="h-3 w-3 shrink-0" />
                         <AlertDescription className="text-[8px] font-black uppercase tracking-tight leading-tight">
                           ALERT: 100% BUDGET REACHED. YOU ARE OVERSPENDING!
@@ -208,7 +208,7 @@ export default function Home() {
             <Calculator className="w-5 h-5" />
             <span className="text-[8px] font-black uppercase tracking-widest">Split</span>
           </button>
-          <button onClick={() => setActiveTab('dashboard')} className={cn("flex flex-col items-center gap-1 transition-colors", activeTab === 'groups' ? "text-white" : "text-white/50")}>
+          <button onClick={() => setActiveTab('groups')} className={cn("flex flex-col items-center gap-1 transition-colors", activeTab === 'groups' ? "text-white" : "text-white/50")}>
             <Users className="w-5 h-5" />
             <span className="text-[8px] font-black uppercase tracking-widest">Groups</span>
           </button>
