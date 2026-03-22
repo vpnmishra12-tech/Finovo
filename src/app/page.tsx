@@ -54,14 +54,14 @@ export default function Home() {
 
   const GridCard = ({ icon: Icon, label, color, onClick }: { icon: any, label: string, color: string, onClick: () => void }) => (
     <Card 
-      className="border-none shadow-sm active:scale-95 transition-all cursor-pointer rounded-[1rem] bg-white h-[4.5rem] flex items-center overflow-hidden"
+      className="border-none shadow-sm active:scale-95 transition-all cursor-pointer rounded-[1rem] bg-white h-24 flex items-center overflow-hidden"
       onClick={onClick}
     >
-      <CardContent className="p-2.5 flex items-center gap-2.5 w-full">
-        <div className={cn("p-1.5 rounded-lg shrink-0", color)}>
-          <Icon className="w-4 h-4" />
+      <CardContent className="p-3.5 flex items-center gap-3.5 w-full">
+        <div className={cn("p-2.5 rounded-xl shrink-0", color)}>
+          <Icon className="w-5 h-5" />
         </div>
-        <span className="font-headline font-black text-[9px] uppercase tracking-wider text-black leading-tight flex-1">
+        <span className="font-headline font-black text-[11px] uppercase tracking-wider text-black leading-tight flex-1">
           {label}
         </span>
       </CardContent>
@@ -151,7 +151,7 @@ export default function Home() {
                 </div>
 
                 <div className="flex-1 flex flex-col overflow-hidden">
-                  <div className="flex-1 overflow-y-auto no-scrollbar px-5 space-y-3 pb-2">
+                  <div className="flex-1 overflow-y-auto no-scrollbar px-5 space-y-4 pb-2">
                     <BudgetSummary 
                       userId={user.uid} 
                       totalSpent={expenses?.reduce((sum, e) => sum + e.amount, 0) || 0} 
@@ -159,7 +159,7 @@ export default function Home() {
                       year={new Date().getFullYear()} 
                     />
 
-                    <div className="grid grid-cols-2 gap-2 shrink-0">
+                    <div className="grid grid-cols-2 gap-3 shrink-0">
                       <GridCard 
                         icon={LayoutGrid} 
                         label="Dashboard" 
@@ -187,7 +187,7 @@ export default function Home() {
                     </div>
                   </div>
 
-                  <div className="mt-auto shrink-0 w-full px-0">
+                  <div className="mt-auto shrink-0 w-full px-0 mb-1">
                     <AdBanner />
                   </div>
                 </div>
