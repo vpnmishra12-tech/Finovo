@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Users, UserPlus, Trash2, Calculator, CheckCircle2, ArrowRightLeft, Coins, AlertCircle, Plane } from 'lucide-react';
+import { UserPlus, Trash2, CheckCircle2, ArrowRightLeft, AlertCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
@@ -211,14 +211,14 @@ export function BillSplitTool() {
       <CardContent className="p-6 space-y-6">
         <Tabs value={splitType} onValueChange={(v) => setSplitType(v as any)} className="w-full">
           <TabsList className="grid w-full grid-cols-3 bg-muted h-12 rounded-xl p-1 mb-6">
-            <TabsTrigger value="equal" className="rounded-lg gap-2 font-black text-[10px] uppercase">
-              <Users className="w-3 h-3" /> {t.splitEqual}
+            <TabsTrigger value="equal" className="rounded-lg font-black text-[10px] uppercase">
+              {t.splitEqual}
             </TabsTrigger>
-            <TabsTrigger value="custom" className="rounded-lg gap-2 font-black text-[10px] uppercase">
-              <Coins className="w-3 h-3" /> {t.splitCustom}
+            <TabsTrigger value="custom" className="rounded-lg font-black text-[10px] uppercase">
+              {t.splitCustom}
             </TabsTrigger>
-            <TabsTrigger value="group" className="rounded-lg gap-2 font-black text-[10px] uppercase">
-              <Plane className="w-3 h-3" /> {t.splitGroup}
+            <TabsTrigger value="group" className="rounded-lg font-black text-[10px] uppercase">
+              {t.splitGroup}
             </TabsTrigger>
           </TabsList>
 
