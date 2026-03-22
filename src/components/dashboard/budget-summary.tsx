@@ -48,7 +48,7 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
   return (
     <div className="space-y-2">
       {/* Main Budget Card */}
-      <Card className="bg-[#1D4ED8] text-primary-foreground border-none shadow-xl rounded-[1.5rem] overflow-hidden relative h-32 flex items-center">
+      <Card className="bg-[#00BFFF] text-primary-foreground border-none shadow-xl rounded-[1.5rem] overflow-hidden relative h-32 flex items-center">
         <CardContent className="p-5 w-full relative">
           <div className="flex justify-between items-start">
             <div className="space-y-0.5">
