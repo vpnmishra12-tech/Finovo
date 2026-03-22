@@ -126,8 +126,9 @@ export default function Home() {
           <div className="h-full flex flex-col items-center justify-center p-6 bg-[#FDFBF7]">
             <div className="w-full max-w-sm flex flex-col items-center space-y-6">
               <div className="flex flex-col items-center text-center space-y-3">
-                <div className="bg-primary p-4 rounded-full shadow-2xl shadow-primary/30">
-                  <Wallet className="w-7 h-7 text-white" />
+                {/* Changed icon container from bg-primary to bg-white/off-white */}
+                <div className="bg-white p-4 rounded-full shadow-lg border border-border/50">
+                  <Wallet className="w-7 h-7 text-primary" />
                 </div>
                 <div>
                   <h1 className="text-3xl font-headline font-black text-black tracking-tight uppercase leading-none">FINOVO</h1>

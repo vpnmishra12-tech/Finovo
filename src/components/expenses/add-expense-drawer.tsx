@@ -82,15 +82,16 @@ export function AddExpenseDrawer() {
         <Button 
           variant="ghost" 
           size="icon" 
-          className="h-8 w-8 bg-white/10 hover:bg-white/20 p-0 rounded-full border border-white/20"
+          className="h-8 w-8 bg-muted hover:bg-muted/80 p-0 rounded-full border border-border"
         >
-          <Plus className="w-3.5 h-3.5 text-white" strokeWidth={2.5} />
+          <Plus className="w-3.5 h-3.5 text-black" strokeWidth={2.5} />
         </Button>
       </SheetTrigger>
       <SheetContent side="bottom" className="rounded-t-[3rem] p-0 border-none shadow-2xl h-[85vh] focus:outline-none bg-white overflow-hidden">
-        <SheetHeader className="p-6 px-8 bg-primary text-primary-foreground shrink-0 rounded-t-[3rem]">
-          <SheetTitle className="font-headline text-2xl flex items-center gap-3 text-white">
-            <Sparkles className="w-6 h-6" />
+        {/* Header changed from primary to neutral/white */}
+        <SheetHeader className="p-6 px-8 bg-white border-b border-border/50 text-foreground shrink-0 rounded-t-[3rem]">
+          <SheetTitle className="font-headline text-2xl flex items-center gap-3 text-black">
+            <Sparkles className="w-6 h-6 text-primary" />
             {t.addExpense}
           </SheetTitle>
         </SheetHeader>

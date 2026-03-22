@@ -57,17 +57,17 @@ export function GroupModule() {
 
   return (
     <div className="space-y-4 pb-20 px-1">
-      {/* Symmetrical 3-Column Grid */}
+      {/* Changed top boxes from blue to white/off-white */}
       <div className="grid grid-cols-3 gap-1.5 w-full mb-4">
-        {/* Uniform Blue Box for Groups Title */}
-        <div className="h-9 bg-primary text-white flex items-center justify-center rounded-xl uppercase tracking-widest text-[9px] shadow-sm text-center px-1">
+        {/* Uniform White Box for Groups Title */}
+        <div className="h-9 bg-white text-black flex items-center justify-center rounded-xl uppercase tracking-widest text-[9px] shadow-sm text-center px-1 border border-border/50">
           {t.groups}
         </div>
         
-        {/* Uniform Blue Box for Join Group Button */}
+        {/* Uniform White Box for Join Group Button */}
         <Dialog open={isJoinDialogOpen} onOpenChange={setIsJoinDialogOpen}>
           <DialogTrigger asChild>
-            <Button className="h-9 w-full bg-primary text-white hover:bg-primary/90 rounded-xl uppercase tracking-widest text-[9px] shadow-sm border-none px-1">
+            <Button className="h-9 w-full bg-white text-black hover:bg-muted rounded-xl uppercase tracking-widest text-[9px] shadow-sm border border-border/50 px-1">
               {t.joinGroup}
             </Button>
           </DialogTrigger>
@@ -90,7 +90,7 @@ export function GroupModule() {
           </DialogContent>
         </Dialog>
 
-        {/* Create Group Dialog Trigger */}
+        {/* Create Group Dialog Trigger (White) */}
         <CreateGroupDialog />
       </div>
 
@@ -103,7 +103,7 @@ export function GroupModule() {
           {groups.map((group) => (
             <Card 
               key={group.id} 
-              className="border-none shadow-sm hover:shadow-md transition-all cursor-pointer group rounded-2xl overflow-hidden active:scale-[0.98]"
+              className="border-none shadow-sm hover:shadow-md transition-all cursor-pointer group rounded-2xl overflow-hidden active:scale-[0.98] bg-white"
               onClick={() => setSelectedGroupId(group.id)}
             >
               <CardContent className="p-4 flex items-center justify-between">

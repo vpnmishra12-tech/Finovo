@@ -338,11 +338,12 @@ export function BillSplitTool() {
         </Tabs>
 
         <div className="pt-6">
-          <div className="flex items-center justify-between p-6 bg-primary rounded-[2rem] text-primary-foreground shadow-2xl relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-16 -mt-16" />
+          {/* Changed summary box from bg-primary to bg-white/off-white with border */}
+          <div className="flex items-center justify-between p-6 bg-white border border-border/50 rounded-[2rem] text-black shadow-lg relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-muted/50 rounded-full -mr-16 -mt-16" />
             <div className="flex flex-col relative z-10">
-              <span className="text-[9px] uppercase tracking-widest opacity-80">{t.yourShare}</span>
-              <span className="text-3xl font-headline font-black">₹{(splitType === 'equal' ? equalShare : splitType === 'custom' ? customShare : groupShare).toLocaleString()}</span>
+              <span className="text-[9px] uppercase tracking-widest text-muted-foreground">{t.yourShare}</span>
+              <span className="text-3xl font-headline font-black text-primary">₹{(splitType === 'equal' ? equalShare : splitType === 'custom' ? customShare : groupShare).toLocaleString()}</span>
             </div>
             <Button 
               onClick={handleSaveMyShare} 
@@ -351,7 +352,7 @@ export function BillSplitTool() {
                 splitType === 'custom' ? (customBillVal <= 0 || !customNamesEntered || isCustomMismatch) : 
                 (groupTotalPaid <= 0 || !groupNamesEntered)
               } 
-              className="rounded-2xl h-14 px-8 bg-white text-primary hover:bg-white/90 uppercase tracking-widest text-[10px] gap-2 shadow-xl relative z-10"
+              className="rounded-2xl h-14 px-8 bg-primary text-white hover:bg-primary/90 uppercase tracking-widest text-[10px] gap-2 shadow-xl relative z-10"
             >
               <CheckCircle2 className="w-5 h-5" /> {t.saveMyShare}
             </Button>

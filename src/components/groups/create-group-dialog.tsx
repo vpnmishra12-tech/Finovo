@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from 'react';
@@ -58,15 +57,16 @@ export function CreateGroupDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="w-full h-9 bg-primary text-white hover:bg-primary/90 rounded-xl font-black uppercase tracking-widest text-[9px] shadow-sm border-none px-1">
+        <Button className="w-full h-9 bg-white text-black hover:bg-muted rounded-xl font-black uppercase tracking-widest text-[9px] shadow-sm border border-border/50 px-1">
           {t.createGroup}
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-md w-[95%] rounded-3xl overflow-hidden p-0">
-        <DialogHeader className="p-6 bg-primary text-primary-foreground">
+        {/* Header changed from primary to neutral/muted */}
+        <DialogHeader className="p-6 bg-muted text-foreground border-b border-border/50">
           <DialogTitle className="font-headline font-black uppercase">{t.createGroup}</DialogTitle>
         </DialogHeader>
-        <div className="p-6 space-y-6">
+        <div className="p-6 space-y-6 bg-white">
           <div className="space-y-2">
             <Label className="text-[10px] font-black uppercase text-muted-foreground">{t.groupName}</Label>
             <Input 

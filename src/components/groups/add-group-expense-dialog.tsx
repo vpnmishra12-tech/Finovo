@@ -56,15 +56,16 @@ export function AddGroupExpenseDialog({ groupId }: { groupId: string }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="sm" className="h-9 rounded-xl font-black uppercase text-[10px] tracking-widest gap-2 bg-primary/10 text-black hover:bg-primary/20">
+        <Button size="sm" className="h-9 rounded-xl font-black uppercase text-[10px] tracking-widest gap-2 bg-muted text-black hover:bg-muted/80 border border-border/50">
           <Plus className="w-3 h-3" /> {t.addExpense}
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-md w-[95%] rounded-3xl p-0 overflow-hidden">
-        <DialogHeader className="p-6 bg-primary text-primary-foreground">
+        {/* Header changed from primary to neutral/muted */}
+        <DialogHeader className="p-6 bg-muted text-foreground border-b border-border/50">
           <DialogTitle className="font-headline font-black uppercase">{t.addExpense}</DialogTitle>
         </DialogHeader>
-        <div className="p-6 space-y-4">
+        <div className="p-6 space-y-4 bg-white">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1">
               <Label className="text-[10px] font-black uppercase text-muted-foreground">{t.spent} (₹)</Label>

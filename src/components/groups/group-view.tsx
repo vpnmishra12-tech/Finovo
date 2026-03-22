@@ -132,7 +132,7 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
 
   return (
     <div className="space-y-4 animate-in fade-in slide-in-from-left-4 duration-300 pb-24 px-1">
-      {/* Redesigned Header */}
+      {/* Header section remains neutral */}
       <div className="flex flex-col gap-3">
         <div className="relative flex items-center justify-center min-h-[40px]">
           <Button variant="ghost" size="icon" onClick={onBack} className="absolute left-0 rounded-full h-8 w-8">
@@ -164,7 +164,6 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
           </div>
         </div>
 
-        {/* Info Row: Code, Date, Invite in one line */}
         <div className="flex items-center justify-center gap-2 flex-nowrap overflow-hidden">
           <span className="text-[10px] uppercase text-black shrink-0">CODE: {groupId}</span>
           {groupData?.createdAt && (
@@ -178,21 +177,22 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
         </div>
       </div>
 
-      <Card className="bg-primary text-primary-foreground border-none shadow-xl rounded-[2rem] overflow-hidden">
+      {/* Main Total Card - Changed from bg-primary to bg-white/off-white */}
+      <Card className="bg-white text-black border border-border/50 shadow-sm rounded-[2rem] overflow-hidden">
         <CardContent className="p-6 space-y-4">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] uppercase tracking-[0.2em] opacity-80">{t.totalGroupExpense}</span>
-            <Wallet className="w-5 h-5 opacity-40" />
+            <span className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">{t.totalGroupExpense}</span>
+            <Wallet className="w-5 h-5 text-primary opacity-40" />
           </div>
-          <p className="text-4xl font-headline font-black">₹{totalSpent.toLocaleString()}</p>
+          <p className="text-4xl font-headline font-black text-primary">₹{totalSpent.toLocaleString()}</p>
           
-          <div className="pt-4 space-y-2 border-t border-white/10">
-            <p className="text-[9px] uppercase tracking-widest opacity-70">Contributions</p>
+          <div className="pt-4 space-y-2 border-t border-muted/20">
+            <p className="text-[9px] uppercase tracking-widest text-muted-foreground">Contributions</p>
             <div className="flex flex-wrap gap-2">
               {memberTotals && Object.values(memberTotals).map((m, i) => (
-                <div key={i} className="bg-white/10 px-3 py-1.5 rounded-full flex items-center gap-2">
-                  <span className="text-[10px]">{m.name}:</span>
-                  <span className="text-[10px] font-black">₹{m.total.toLocaleString()}</span>
+                <div key={i} className="bg-muted/50 px-3 py-1.5 rounded-full flex items-center gap-2 border border-border/30">
+                  <span className="text-[10px] text-muted-foreground">{m.name}:</span>
+                  <span className="text-[10px] font-black text-black">₹{m.total.toLocaleString()}</span>
                 </div>
               ))}
             </div>
@@ -221,7 +221,7 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
           ) : expenses && expenses.length > 0 ? (
             <div className="grid gap-3">
               {expenses.map((expense) => (
-                <Card key={expense.id} className="border-none shadow-sm rounded-2xl overflow-hidden group">
+                <Card key={expense.id} className="border-none shadow-sm rounded-2xl overflow-hidden group bg-white">
                   <CardContent className="p-4 space-y-3">
                     <div className="flex justify-between items-start">
                       <div className="space-y-1">
