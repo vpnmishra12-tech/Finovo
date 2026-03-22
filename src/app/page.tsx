@@ -124,7 +124,7 @@ export default function Home() {
             </div>
           </div>
         ) : (
-          <div className="h-full flex flex-col max-w-6xl mx-auto px-5 py-2 space-y-2 overflow-hidden">
+          <div className="h-full flex flex-col max-w-6xl mx-auto px-5 pt-2 pb-0 space-y-2 overflow-hidden">
             {activeTab === 'dashboard' ? (
               <div className="flex-1 flex flex-col space-y-1 animate-in fade-in duration-300 overflow-hidden">
                 
