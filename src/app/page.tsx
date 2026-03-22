@@ -128,8 +128,7 @@ export default function Home() {
         ) : (
           <div className="h-full flex flex-col max-w-6xl mx-auto pt-2 pb-0 overflow-hidden">
             {activeTab === 'dashboard' ? (
-              <div className="flex-1 flex flex-col animate-in fade-in duration-300 overflow-hidden">
-                
+              <div className="flex-1 flex flex-col overflow-hidden">
                 <div className="flex-1 flex flex-col overflow-hidden">
                   <div className="flex-1 overflow-y-auto no-scrollbar px-5 space-y-2 pb-2">
                     <BudgetSummary 
@@ -184,7 +183,7 @@ export default function Home() {
             ) : (
               <div className="flex-1 overflow-y-auto no-scrollbar pb-20 px-5">
                 {activeTab === 'history' && (
-                  <div className="space-y-4 animate-in fade-in duration-300">
+                  <div className="space-y-4">
                     <div className="max-w-md mx-auto w-full">
                       <SpendingChart expenses={expenses || []} />
                     </div>
