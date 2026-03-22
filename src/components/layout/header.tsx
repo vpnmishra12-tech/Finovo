@@ -55,9 +55,9 @@ export function Header() {
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className="h-10 w-10 bg-white text-primary hover:bg-white/90 rounded-full border border-white/20 shadow-sm"
+                className="h-8 w-8 bg-white text-primary hover:bg-white/90 rounded-full border border-white/20 shadow-sm p-0"
               >
-                <Settings className="w-5 h-5" />
+                <Settings className="w-4 h-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56 rounded-[1rem] p-2 mt-2 shadow-2xl">
