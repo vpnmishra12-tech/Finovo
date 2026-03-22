@@ -166,7 +166,7 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
 
         {/* Info Row: Code, Date, Invite in one line */}
         <div className="flex items-center justify-center gap-2 flex-nowrap overflow-hidden">
-          <span className="text-[10px] font-black uppercase text-primary shrink-0">CODE: {groupId}</span>
+          <span className="text-[10px] font-black uppercase text-black shrink-0">CODE: {groupId}</span>
           {groupData?.createdAt && (
             <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground whitespace-nowrap shrink-0">
               • {format(groupData.createdAt.toDate(), 'dd MMM yyyy')}

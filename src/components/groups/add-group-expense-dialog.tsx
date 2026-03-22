@@ -56,7 +56,7 @@ export function AddGroupExpenseDialog({ groupId }: { groupId: string }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="sm" className="h-9 rounded-xl font-black uppercase text-[10px] tracking-widest gap-2 bg-primary/10 text-primary hover:bg-primary/20">
+        <Button size="sm" className="h-9 rounded-xl font-black uppercase text-[10px] tracking-widest gap-2 bg-primary/10 text-black hover:bg-primary/20">
           <Plus className="w-3 h-3" /> {t.addExpense}
         </Button>
       </DialogTrigger>
