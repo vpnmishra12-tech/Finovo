@@ -58,7 +58,7 @@ export function CreateGroupDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="h-9 px-4 bg-primary text-white hover:bg-primary/90 rounded-xl font-black uppercase tracking-widest text-[10px] shadow-sm border-none">
+        <Button className="w-full h-9 bg-primary text-white hover:bg-primary/90 rounded-xl font-black uppercase tracking-widest text-[9px] shadow-sm border-none px-1">
           {t.createGroup}
         </Button>
       </DialogTrigger>
@@ -112,4 +112,3 @@ export function CreateGroupDialog() {
     </Dialog>
   );
 }
-

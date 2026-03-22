@@ -58,17 +58,17 @@ export function GroupModule() {
 
   return (
     <div className="space-y-4 pb-20 px-1">
-      {/* Groups Header Row - Perfectly Symmetrical Boxes with Uniform Gap */}
-      <div className="flex items-center gap-2 h-10 mb-4 overflow-x-auto no-scrollbar">
+      {/* Symmetrical 3-Column Grid to fit all screens without scrolling */}
+      <div className="grid grid-cols-3 gap-1.5 w-full mb-4">
         {/* Uniform Blue Box for Groups Title */}
-        <div className="h-9 px-4 bg-primary text-white flex items-center justify-center rounded-xl font-black uppercase tracking-widest text-[10px] shadow-sm shrink-0">
+        <div className="h-9 bg-primary text-white flex items-center justify-center rounded-xl font-black uppercase tracking-widest text-[9px] shadow-sm text-center px-1">
           {t.groups}
         </div>
         
         {/* Uniform Blue Box for Join Group Button */}
         <Dialog open={isJoinDialogOpen} onOpenChange={setIsJoinDialogOpen}>
           <DialogTrigger asChild>
-            <Button className="h-9 px-4 bg-primary text-white hover:bg-primary/90 rounded-xl font-black uppercase tracking-widest text-[10px] shadow-sm border-none shrink-0">
+            <Button className="h-9 w-full bg-primary text-white hover:bg-primary/90 rounded-xl font-black uppercase tracking-widest text-[9px] shadow-sm border-none px-1">
               {t.joinGroup}
             </Button>
           </DialogTrigger>
@@ -91,7 +91,7 @@ export function GroupModule() {
           </DialogContent>
         </Dialog>
 
-        {/* Create Group Dialog Trigger - Now aligned in the same row with gap-2 */}
+        {/* Create Group Dialog Trigger */}
         <CreateGroupDialog />
       </div>
 
