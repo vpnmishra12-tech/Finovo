@@ -58,12 +58,18 @@ export function GroupModule() {
 
   return (
     <div className="space-y-4 pb-20 px-1">
-      <div className="flex items-center justify-between h-10 mb-2">
-        <h2 className="text-xl font-headline font-black uppercase tracking-tight">{t.groups}</h2>
+      {/* Groups Header Row */}
+      <div className="flex items-center justify-between h-10 mb-4">
+        {/* Styled Groups Title Box */}
+        <div className="h-9 px-4 bg-primary text-white flex items-center rounded-xl font-headline font-black uppercase tracking-tight text-[10px]">
+          {t.groups}
+        </div>
+        
         <div className="flex items-center gap-2">
+          {/* Join Group Button - Consistent Blue Box */}
           <Dialog open={isJoinDialogOpen} onOpenChange={setIsJoinDialogOpen}>
             <DialogTrigger asChild>
-              <Button className="h-9 rounded-xl font-black uppercase tracking-widest text-[10px] gap-2 px-4 shadow-sm">
+              <Button className="h-9 rounded-xl font-black uppercase tracking-widest text-[10px] gap-2 px-4 shadow-sm bg-primary text-white hover:bg-primary/90">
                 <UserPlus className="w-3.5 h-3.5" /> {t.joinGroup}
               </Button>
             </DialogTrigger>
@@ -85,6 +91,8 @@ export function GroupModule() {
               </div>
             </DialogContent>
           </Dialog>
+
+          {/* Create Group Dialog - Trigger is a Consistent Blue Box */}
           <CreateGroupDialog />
         </div>
       </div>
