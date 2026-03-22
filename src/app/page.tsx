@@ -187,7 +187,7 @@ export default function Home() {
                     </div>
                   </div>
 
-                  <div className="mt-auto shrink-0 w-full px-0 mb-0">
+                  <div className="mt-auto shrink-0 w-full px-0 mb-0.5">
                     <AdBanner />
                   </div>
                 </div>
@@ -204,20 +204,20 @@ export default function Home() {
       </main>
 
       {user && (
-        <div className="h-20 bg-white border-t flex items-center justify-around px-4 pb-4 shadow-inner shrink-0 z-50">
-          <button onClick={() => setActiveTab('dashboard')} className={cn("flex flex-col items-center gap-1 transition-colors", activeTab === 'dashboard' ? "text-primary" : "text-gray-400")}>
+        <div className="h-20 bg-[#1D4ED8] border-t border-white/10 flex items-center justify-around px-4 pb-4 shadow-inner shrink-0 z-50">
+          <button onClick={() => setActiveTab('dashboard')} className={cn("flex flex-col items-center gap-1 transition-colors", activeTab === 'dashboard' ? "text-white" : "text-white/50")}>
             <HomeIcon className="w-5 h-5" />
             <span className="text-[8px] font-black uppercase tracking-widest">Home</span>
           </button>
-          <button onClick={() => setActiveTab('history')} className={cn("flex flex-col items-center gap-1 transition-colors", activeTab === 'history' ? "text-primary" : "text-gray-400")}>
+          <button onClick={() => setActiveTab('history')} className={cn("flex flex-col items-center gap-1 transition-colors", activeTab === 'history' ? "text-white" : "text-white/50")}>
             <History className="w-5 h-5" />
             <span className="text-[8px] font-black uppercase tracking-widest">Bills</span>
           </button>
-          <button onClick={() => setActiveTab('splitter')} className={cn("flex flex-col items-center gap-1 transition-colors", activeTab === 'splitter' ? "text-primary" : "text-gray-400")}>
+          <button onClick={() => setActiveTab('splitter')} className={cn("flex flex-col items-center gap-1 transition-colors", activeTab === 'splitter' ? "text-white" : "text-white/50")}>
             <Calculator className="w-5 h-5" />
             <span className="text-[8px] font-black uppercase tracking-widest">Split</span>
           </button>
-          <button onClick={() => setActiveTab('groups')} className={cn("flex flex-col items-center gap-1 transition-colors", activeTab === 'groups' ? "text-primary" : "text-gray-400")}>
+          <button onClick={() => setActiveTab('groups')} className={cn("flex flex-col items-center gap-1 transition-colors", activeTab === 'groups' ? "text-white" : "text-white/50")}>
             <Users className="w-5 h-5" />
             <span className="text-[8px] font-black uppercase tracking-widest">Groups</span>
           </button>
