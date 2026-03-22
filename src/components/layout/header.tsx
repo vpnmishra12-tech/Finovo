@@ -2,7 +2,7 @@
 
 import { useAuth } from '@/lib/contexts/auth-context';
 import { Button } from '@/components/ui/button';
-import { Bell, Settings, LogOut, Share2 } from 'lucide-react';
+import { Bell, Settings, LogOut, Share2, Key } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 export function Header() {
-  const { user, logout } = useAuth();
+  const { user, logout, resetPassword } = useAuth();
   const { toast } = useToast();
 
   const handleAppShare = async () => {
@@ -31,6 +31,12 @@ export function Header() {
         });
       }
     } catch (err) {}
+  };
+
+  const handleChangePassword = async () => {
+    if (user?.email) {
+      await resetPassword(user.email);
+    }
   };
   
   return (
@@ -71,6 +77,11 @@ export function Header() {
               <DropdownMenuItem onClick={handleAppShare} className="rounded-lg h-10 gap-3 cursor-pointer">
                 <Share2 className="w-4 h-4 text-muted-foreground" />
                 <span className="text-xs">Share App</span>
+              </DropdownMenuItem>
+
+              <DropdownMenuItem onClick={handleChangePassword} className="rounded-lg h-10 gap-3 cursor-pointer">
+                <Key className="w-4 h-4 text-muted-foreground" />
+                <span className="text-xs">Change Password</span>
               </DropdownMenuItem>
 
               <DropdownMenuItem className="rounded-lg h-10 gap-3 cursor-pointer">
