@@ -137,9 +137,9 @@ export default function Home() {
                     />
 
                     <div className="mb-0">
-                      <Alert className="py-[0.97rem] px-3 rounded-[0.8rem] border bg-[#FFF1F1] text-[#D32F2F] border-[#FFE4E4] flex items-center gap-2 shrink-0 [&>svg]:relative [&>svg]:top-0 [&>svg]:left-0 [&>svg~*]:pl-0">
-                        <AlertTriangle className="h-3 w-3 shrink-0" />
-                        <AlertDescription className="text-[8px] font-black uppercase tracking-tight leading-tight">
+                      <Alert className="py-[0.97rem] px-3 rounded-[0.8rem] border bg-[#FFF1F1] text-[#D32F2F] border-[#FFE4E4] flex flex-row items-center gap-2 shrink-0 overflow-hidden min-h-[40px] [&>svg]:relative [&>svg]:top-0 [&>svg]:left-0 [&>svg~*]:pl-0">
+                        <AlertTriangle className="h-4 w-4 shrink-0" />
+                        <AlertDescription className="text-[8px] font-black uppercase tracking-tight leading-none">
                           ALERT: 100% BUDGET REACHED. YOU ARE OVERSPENDING!
                         </AlertDescription>
                       </Alert>
