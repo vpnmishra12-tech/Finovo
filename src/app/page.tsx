@@ -127,73 +127,72 @@ export default function Home() {
           </div>
         ) : (
           <div className="h-full flex flex-col max-w-6xl mx-auto pt-2 pb-0 overflow-hidden">
-            {activeTab === 'dashboard' ? (
-              <div className="flex-1 flex flex-col overflow-hidden">
-                <div className="flex-1 flex flex-col overflow-hidden">
-                  <div className="flex-1 overflow-y-auto no-scrollbar px-5 space-y-2 pb-2">
-                    <BudgetSummary 
-                      userId={user.uid} 
-                      totalSpent={expenses?.reduce((sum, e) => sum + e.amount, 0) || 0} 
-                      month={new Date().getMonth()+1} 
-                      year={new Date().getFullYear()} 
-                    />
+            <div className="flex-1 overflow-hidden relative">
+              {activeTab === 'dashboard' ? (
+                <div className="h-full overflow-y-auto no-scrollbar px-5 space-y-2 pb-2">
+                  <BudgetSummary 
+                    userId={user.uid} 
+                    totalSpent={expenses?.reduce((sum, e) => sum + e.amount, 0) || 0} 
+                    month={new Date().getMonth()+1} 
+                    year={new Date().getFullYear()} 
+                  />
 
-                    <div className="mb-0">
-                      <Alert className="py-[0.97rem] px-3 rounded-[0.8rem] border bg-[#FFF1F1] text-[#D32F2F] border-[#FFE4E4] flex flex-row items-center gap-2 shrink-0 overflow-hidden min-h-[40px] [&>svg]:relative [&>svg]:top-0 [&>svg]:left-0 [&>svg~*]:pl-0">
-                        <AlertTriangle className="h-4 w-4 shrink-0" />
-                        <AlertDescription className="text-[8px] font-black uppercase tracking-tight leading-none">
-                          ALERT: 100% BUDGET REACHED. YOU ARE OVERSPENDING!
-                        </AlertDescription>
-                      </Alert>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-2 shrink-0">
-                      <GridCard 
-                        icon={LayoutGrid} 
-                        label="Dashboard" 
-                        color="text-blue-600 bg-blue-50" 
-                        onClick={() => setActiveTab('dashboard')} 
-                      />
-                      <GridCard 
-                        icon={History} 
-                        label="Recent History" 
-                        color="text-orange-600 bg-orange-50" 
-                        onClick={() => setActiveTab('history')} 
-                      />
-                      <GridCard 
-                        icon={Calculator} 
-                        label="Split Your Bill" 
-                        color="text-purple-600 bg-purple-50" 
-                        onClick={() => setActiveTab('splitter')} 
-                      />
-                      <GridCard 
-                        icon={Users} 
-                        label="Groups" 
-                        color="text-green-600 bg-green-50" 
-                        onClick={() => setActiveTab('groups')} 
-                      />
-                    </div>
+                  <div className="mb-0">
+                    <Alert className="py-[0.97rem] px-3 rounded-[0.8rem] border bg-[#FFF1F1] text-[#D32F2F] border-[#FFE4E4] flex flex-row items-center gap-2 shrink-0 overflow-hidden min-h-[40px] [&>svg]:relative [&>svg]:top-0 [&>svg]:left-0 [&>svg~*]:pl-0">
+                      <AlertTriangle className="h-4 w-4 shrink-0" />
+                      <AlertDescription className="text-[8px] font-black uppercase tracking-tight leading-none">
+                        ALERT: 100% BUDGET REACHED. YOU ARE OVERSPENDING!
+                      </AlertDescription>
+                    </Alert>
                   </div>
 
-                  <div className="mt-auto shrink-0 w-full px-0 mb-0">
-                    <AdBanner />
+                  <div className="grid grid-cols-2 gap-2 shrink-0">
+                    <GridCard 
+                      icon={LayoutGrid} 
+                      label="Dashboard" 
+                      color="text-blue-600 bg-blue-50" 
+                      onClick={() => setActiveTab('dashboard')} 
+                    />
+                    <GridCard 
+                      icon={History} 
+                      label="Recent History" 
+                      color="text-orange-600 bg-orange-50" 
+                      onClick={() => setActiveTab('history')} 
+                    />
+                    <GridCard 
+                      icon={Calculator} 
+                      label="Split Your Bill" 
+                      color="text-purple-600 bg-purple-50" 
+                      onClick={() => setActiveTab('splitter')} 
+                    />
+                    <GridCard 
+                      icon={Users} 
+                      label="Groups" 
+                      color="text-green-600 bg-green-50" 
+                      onClick={() => setActiveTab('groups')} 
+                    />
                   </div>
                 </div>
-              </div>
-            ) : (
-              <div className="flex-1 overflow-y-auto no-scrollbar pb-20 px-5">
-                {activeTab === 'history' && (
-                  <div className="space-y-4">
-                    <div className="max-w-md mx-auto w-full">
-                      <SpendingChart expenses={expenses || []} />
+              ) : (
+                <div className="h-full overflow-y-auto no-scrollbar pb-20 px-5">
+                  {activeTab === 'history' && (
+                    <div className="space-y-4">
+                      <div className="max-w-md mx-auto w-full">
+                        <SpendingChart expenses={expenses || []} />
+                      </div>
+                      <ExpenseList expenses={expenses || []} isLoading={isExpensesLoading} />
                     </div>
-                    <ExpenseList expenses={expenses || []} isLoading={isExpensesLoading} />
-                  </div>
-                )}
-                {activeTab === 'splitter' && <BillSplitTool />}
-                {activeTab === 'groups' && <GroupModule />}
-              </div>
-            )}
+                  )}
+                  {activeTab === 'splitter' && <BillSplitTool />}
+                  {activeTab === 'groups' && <GroupModule />}
+                </div>
+              )}
+            </div>
+
+            {/* Ad Banner - Sticky at the bottom of the content area for all pages */}
+            <div className="mt-auto shrink-0 w-full px-0 mb-0">
+              <AdBanner />
+            </div>
           </div>
         )}
       </main>
