@@ -8,7 +8,7 @@ import { Header } from '@/components/layout/header';
 import { BudgetSummary } from '@/components/dashboard/budget-summary';
 import { AdBanner } from '@/components/dashboard/ad-banner';
 import { 
-  Wallet, History, Calculator, Users, LayoutGrid, Home as HomeIcon, ArrowRight, AlertTriangle, Plus
+  Wallet, History, Calculator, Users, LayoutGrid, Home as HomeIcon, ArrowRight, AlertTriangle
 } from 'lucide-react';
 import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import { collection, query, orderBy, limit } from 'firebase/firestore';
@@ -20,7 +20,6 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { cn } from '@/lib/utils';
 
-const AddExpenseDrawer = dynamic(() => import('@/components/expenses/add-expense-drawer').then(mod => mod.AddExpenseDrawer), { ssr: false });
 const BillSplitTool = dynamic(() => import('@/components/bill-split/bill-split-tool').then(mod => mod.BillSplitTool), { ssr: false });
 const ExpenseList = dynamic(() => import('@/components/expenses/expense-list').then(mod => mod.ExpenseList), { ssr: false });
 const GroupModule = dynamic(() => import('@/components/groups/group-module').then(mod => mod.GroupModule), { ssr: false });
@@ -186,10 +185,6 @@ export default function Home() {
                   <div className="mt-auto shrink-0 pb-0">
                     <AdBanner />
                   </div>
-                </div>
-                
-                <div className="absolute right-5 bottom-24 z-40">
-                  <AddExpenseDrawer />
                 </div>
               </div>
             ) : (

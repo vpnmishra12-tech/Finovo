@@ -80,9 +80,11 @@ export function AddExpenseDrawer() {
     <Sheet open={open} onOpenChange={(val) => { setOpen(val); if (!val) resetForm(); }}>
       <SheetTrigger asChild>
         <Button 
-          className="h-20 w-20 rounded-full shadow-[0_15px_30px_-5px_rgba(37,99,235,0.4)] hover:scale-105 transition-transform active:scale-95 bg-primary text-primary-foreground border-4 border-white"
+          variant="ghost" 
+          size="icon" 
+          className="h-8 w-8 bg-white/10 hover:bg-white/20 p-0 rounded-full border border-white/20"
         >
-          <Plus className="w-10 h-10" />
+          <Plus className="w-3.5 h-3.5 text-white" />
         </Button>
       </SheetTrigger>
       <SheetContent side="bottom" className="rounded-t-[3rem] p-0 border-none shadow-2xl h-[85vh] focus:outline-none bg-white overflow-hidden">

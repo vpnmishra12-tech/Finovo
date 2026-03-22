@@ -11,6 +11,9 @@ import { Pencil } from 'lucide-react';
 import { useFirestore, useDoc, useMemoFirebase } from '@/firebase';
 import { doc } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
+import dynamic from 'next/dynamic';
+
+const AddExpenseDrawer = dynamic(() => import('@/components/expenses/add-expense-drawer').then(mod => mod.AddExpenseDrawer), { ssr: false });
 
 export function BudgetSummary({ userId, totalSpent, month, year }: { userId: string, totalSpent: number, month: number, year: number }) {
   const { t } = useLanguage();
@@ -52,20 +55,23 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
               <p className="text-[8px] font-black opacity-70 uppercase tracking-[0.2em]">MONTHLY BUDGET</p>
               <p className="text-4xl font-headline font-black leading-none tracking-tight">₹{budget.toLocaleString()}</p>
             </div>
-            <Dialog open={open} onOpenChange={setOpen}>
-              <DialogTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-8 w-8 bg-white/10 hover:bg-white/20 p-0 rounded-full border border-white/20">
-                  <Pencil className="w-3.5 h-3.5 text-white" />
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="max-w-[320px] rounded-[1.5rem]">
-                <DialogHeader><DialogTitle className="font-headline uppercase font-black text-sm">{t.actions.setBudget}</DialogTitle></DialogHeader>
-                <div className="flex flex-col gap-2 py-3">
-                  <Input type="number" placeholder="Enter amount" value={newBudget} onChange={(e) => setNewBudget(e.target.value)} className="h-10 rounded-lg font-bold" />
-                  <Button onClick={handleSetBudget} className="w-full h-10 rounded-lg font-black uppercase tracking-widest text-xs">Update</Button>
-                </div>
-              </DialogContent>
-            </Dialog>
+            <div className="flex flex-col gap-1.5 items-center">
+              <Dialog open={open} onOpenChange={setOpen}>
+                <DialogTrigger asChild>
+                  <Button variant="ghost" size="icon" className="h-8 w-8 bg-white/10 hover:bg-white/20 p-0 rounded-full border border-white/20">
+                    <Pencil className="w-3.5 h-3.5 text-white" />
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-[320px] rounded-[1.5rem]">
+                  <DialogHeader><DialogTitle className="font-headline uppercase font-black text-sm">{t.actions.setBudget}</DialogTitle></DialogHeader>
+                  <div className="flex flex-col gap-2 py-3">
+                    <Input type="number" placeholder="Enter amount" value={newBudget} onChange={(e) => setNewBudget(e.target.value)} className="h-10 rounded-lg font-bold" />
+                    <Button onClick={handleSetBudget} className="w-full h-10 rounded-lg font-black uppercase tracking-widest text-xs">Update</Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
+              <AddExpenseDrawer />
+            </div>
           </div>
         </CardContent>
       </Card>
