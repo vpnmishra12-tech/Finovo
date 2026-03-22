@@ -204,8 +204,7 @@ export function BillSplitTool() {
   return (
     <Card className="border-none bg-card shadow-sm overflow-hidden rounded-3xl">
       <CardHeader className="bg-primary/5 pb-4">
-        <CardTitle className="text-xl font-headline font-black uppercase tracking-tight flex items-center gap-2">
-          <Calculator className="w-5 h-5 text-primary" />
+        <CardTitle className="text-xl font-headline font-black uppercase tracking-tight text-center">
           {t.splitTitle}
         </CardTitle>
       </CardHeader>
