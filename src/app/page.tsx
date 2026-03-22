@@ -127,11 +127,6 @@ export default function Home() {
             {activeTab === 'dashboard' ? (
               <div className="flex-1 flex flex-col animate-in fade-in duration-300 overflow-hidden">
                 
-                <div className="flex items-center gap-2 shrink-0 px-5 mt-1 mb-1">
-                  <h2 className="text-2xl font-headline font-black uppercase text-black leading-none tracking-tight">DASHBOARD</h2>
-                  <span className="text-[8px] font-bold uppercase text-gray-400 tracking-[0.2em] leading-none">OVERVIEW</span>
-                </div>
-
                 <div className="flex-1 flex flex-col overflow-hidden">
                   <div className="flex-1 overflow-y-auto no-scrollbar px-5 space-y-2 pb-2">
                     <BudgetSummary 

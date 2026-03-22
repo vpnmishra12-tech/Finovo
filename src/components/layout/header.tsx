@@ -35,18 +35,20 @@ export function Header() {
   
   return (
     <header className="sticky top-0 z-[100] w-full bg-primary shrink-0 border-none">
-      <div className="container flex h-16 items-center justify-between px-6 max-w-6xl mx-auto">
+      <div className="container relative flex h-16 items-center justify-between px-6 max-w-6xl mx-auto">
         <div className="flex items-center gap-3">
           <Avatar className="h-8 w-8 border border-white/20 shadow-sm">
             <AvatarFallback className="bg-white text-primary text-[10px] font-black uppercase">
               {user?.email?.charAt(0) || 'V'}
             </AvatarFallback>
           </Avatar>
-          <div className="flex items-center gap-1">
-            <h1 className="font-headline font-black text-lg text-white tracking-tight uppercase leading-none">
-              FINOVO
-            </h1>
-          </div>
+        </div>
+
+        {/* Centered Dashboard Title */}
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+          <h1 className="font-headline font-black text-lg text-white tracking-tight uppercase leading-none">
+            DASHBOARD
+          </h1>
         </div>
 
         <div className="flex items-center">
