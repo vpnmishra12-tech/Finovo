@@ -57,14 +57,14 @@ export function GroupModule() {
   }
 
   return (
-    <div className="space-y-4 animate-in fade-in slide-in-from-right-4 duration-300 pb-20 px-1">
-      <div className="flex items-center justify-between">
+    <div className="space-y-4 pb-20 px-1">
+      <div className="flex items-center justify-between h-10">
         <h2 className="text-xl font-headline font-black uppercase tracking-tight">{t.groups}</h2>
-        <div className="flex gap-2">
+        <div className="flex items-center gap-2">
           <Dialog open={isJoinDialogOpen} onOpenChange={setIsJoinDialogOpen}>
             <DialogTrigger asChild>
-              <Button variant="outline" className="rounded-xl font-black uppercase tracking-widest text-[10px] gap-2 border-primary/20">
-                <UserPlus className="w-3 h-3" /> {t.joinGroup}
+              <Button variant="outline" className="h-9 rounded-xl font-black uppercase tracking-widest text-[10px] gap-2 border-primary/20 px-4">
+                <UserPlus className="w-3.5 h-3.5" /> {t.joinGroup}
               </Button>
             </DialogTrigger>
             <DialogContent className="max-w-md w-[92%] rounded-3xl">

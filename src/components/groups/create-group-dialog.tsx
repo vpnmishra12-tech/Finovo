@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from 'react';
@@ -57,8 +58,8 @@ export function CreateGroupDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="rounded-xl font-black uppercase tracking-widest text-[10px] gap-2">
-          <Plus className="w-4 h-4" /> {t.createGroup}
+        <Button className="h-9 rounded-xl font-black uppercase tracking-widest text-[10px] gap-2 px-4">
+          <Plus className="w-3.5 h-3.5" /> {t.createGroup}
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-md w-[95%] rounded-3xl overflow-hidden p-0">
