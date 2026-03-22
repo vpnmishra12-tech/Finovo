@@ -44,8 +44,8 @@ export function SpendingChart({ expenses }: { expenses: Expense[] }) {
                 data={data}
                 cx="50%"
                 cy="50%"
-                innerRadius={35}
-                outerRadius={55}
+                innerRadius={55}
+                outerRadius={80}
                 paddingAngle={4}
                 dataKey="value"
               >
