@@ -24,6 +24,7 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
   const { toast } = useToast();
 
   const [newMemberName, setNewMemberName] = useState("");
+  const [showSettlements, setShowSettlements] = useState(false);
 
   const groupRef = useMemoFirebase(() => {
     if (!firestore || !groupId) return null;
@@ -74,25 +75,18 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
     
     const averageShare = totalSpent / numMembers;
 
-    // Create a map of how much each member has paid
     const paidByMemberMap: Record<string, number> = {};
     members.forEach(m => {
-      // Use member ID as key. If member has a userId, we might use that, 
-      // but for manual members we use doc ID. Let's be consistent.
       paidByMemberMap[m.id] = 0;
     });
 
     expenses.forEach(exp => {
-      // We need to link expense paidBy (which is a userId) back to a member document id.
-      // If the member is registered, their doc ID is their userId.
-      // If manual, they have a random doc ID.
       const member = members.find(m => m.userId === exp.paidBy || m.id === exp.paidBy);
       if (member) {
         paidByMemberMap[member.id] += exp.amount;
       }
     });
 
-    // Calculate balances (Paid - Share)
     let balances = members.map(m => ({
       name: m.name,
       balance: (paidByMemberMap[m.id] || 0) - averageShare
@@ -135,9 +129,7 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
         await navigator.clipboard.writeText(textToCopy);
         copied = true;
       }
-    } catch (err) {
-      console.warn("Primary clipboard failed", err);
-    }
+    } catch (err) {}
 
     if (!copied) {
       try {
@@ -151,9 +143,7 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
         textArea.select();
         copied = document.execCommand('copy');
         document.body.removeChild(textArea);
-      } catch (err) {
-        console.error("Fallback copy failed", err);
-      }
+      } catch (err) {}
     }
 
     if (copied) {
@@ -182,9 +172,7 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
           text: message,
           url: window.location.origin
         });
-      } catch (err) {
-        console.warn("Navigator share failed", err);
-      }
+      } catch (err) {}
     } else {
       const waUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
       window.open(waUrl, '_blank');
@@ -283,24 +271,46 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
             </div>
           </div>
 
-          {/* New Settlement Section */}
+          {/* Settlement Section with Toggle */}
           {settlements.length > 0 && (
-            <div className="pt-4 space-y-3 border-t border-dashed border-muted/50">
-              <h4 className="text-[10px] uppercase text-muted-foreground font-black tracking-widest flex items-center gap-2">
-                <ArrowRightLeft className="w-3.5 h-3.5" /> Final Settlement
-              </h4>
-              <div className="space-y-2">
-                {settlements.map((s, idx) => (
-                  <div key={idx} className="bg-muted/30 p-3 rounded-xl flex items-center justify-between shadow-sm border border-border/10">
-                    <p className="text-[11px] leading-tight">
-                      <span className="font-bold uppercase">{s.from}</span>
-                      <span className="mx-2 text-muted-foreground">{t.payTo}</span>
-                      <span className="font-bold uppercase">{s.to}</span>
-                    </p>
-                    <span className="font-headline font-black text-sm">₹{s.amount.toLocaleString()}</span>
+            <div className="pt-4 border-t border-dashed border-muted/50">
+              {!showSettlements ? (
+                <Button 
+                  variant="ghost" 
+                  onClick={() => setShowSettlements(true)}
+                  className="w-full h-10 rounded-xl text-[10px] uppercase font-black tracking-widest gap-2 text-primary/60 hover:text-primary"
+                >
+                  <ArrowRightLeft className="w-4 h-4" /> {t.viewSettlement}
+                </Button>
+              ) : (
+                <div className="space-y-3 animate-in fade-in zoom-in-95 duration-200">
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-[10px] uppercase text-muted-foreground font-black tracking-widest flex items-center gap-2">
+                      <ArrowRightLeft className="w-3.5 h-3.5" /> Final Settlement
+                    </h4>
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      onClick={() => setShowSettlements(false)}
+                      className="h-6 px-2 text-[9px] uppercase font-black opacity-50 hover:opacity-100"
+                    >
+                      {t.hideSettlement}
+                    </Button>
                   </div>
-                ))}
-              </div>
+                  <div className="space-y-2">
+                    {settlements.map((s, idx) => (
+                      <div key={idx} className="bg-muted/30 p-3 rounded-xl flex items-center justify-between shadow-sm border border-border/10">
+                        <p className="text-[11px] leading-tight">
+                          <span className="font-bold uppercase">{s.from}</span>
+                          <span className="mx-2 text-muted-foreground">{t.payTo}</span>
+                          <span className="font-bold uppercase">{s.to}</span>
+                        </p>
+                        <span className="font-headline font-black text-sm">₹{s.amount.toLocaleString()}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </CardContent>

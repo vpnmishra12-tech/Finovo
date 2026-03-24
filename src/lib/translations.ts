@@ -49,6 +49,8 @@ export const translations = {
     saveMyShare: "Save My Share",
     whoPaid: "Who paid the full bill?",
     settlement: "Money Exchange (Who pays whom?)",
+    viewSettlement: "View Final Settlement",
+    hideSettlement: "Hide",
     owes: "will pay",
     payTo: "pay to",
     to: "to",
