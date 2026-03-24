@@ -34,19 +34,30 @@ const advicePrompt = ai.definePrompt({
   input: { schema: AgentAdvisorInputSchema },
   output: { schema: AgentAdvisorOutputSchema },
   prompt: `You are Finovo's AI Guardian Agent. 
-  {{#if (eq type 'advice')}}
-    The user has spent ₹{{{context.spent}}} out of a budget of ₹{{{context.budget}}}. 
-    There are {{{context.daysRemaining}}} days left in the month.
-    Give blunt, realistic, and helpful financial advice. If they are overspending, activate "Survival Mode" advice. 
-    Make it sound like a smart financial coach.
-  {{else}}
-    The user needs to ask {{{context.debtorName}}} for ₹{{{context.amount}}} they owe.
-    Tone: {{{context.tone}}}.
-    {{#if (eq context.tone 'funny')}}Make it hilarious but clear.{{/if}}
-    {{#if (eq context.tone 'professional')}}Make it sound like a bank or a polite secretary.{{/if}}
-    {{#if (eq context.tone 'desi')}}Use Hinglish/casual vibes like "Bhai, scene set kar de".{{/if}}
-    Write a short message they can send on WhatsApp.
-  {{/if}}`,
+
+Input Type: {{{type}}}
+
+Context Information:
+- Spent: ₹{{{context.spent}}}
+- Budget: ₹{{{context.budget}}}
+- Days Remaining: {{{context.daysRemaining}}}
+- Debtor: {{{context.debtorName}}}
+- Amount: ₹{{{context.amount}}}
+- Tone: {{{context.tone}}}
+
+Your Tasks:
+1. If the type is 'advice': 
+   Analyze the spending (₹{{{context.spent}}} out of ₹{{{context.budget}}}) with {{{context.daysRemaining}}} days left. 
+   Give blunt, realistic, and helpful financial advice. If they are overspending (ratio > 0.8), activate "Survival Mode" advice. 
+   Make it sound like a smart financial coach.
+
+2. If the type is 'reminder':
+   The user needs to ask {{{context.debtorName}}} for ₹{{{context.amount}}} they owe.
+   Tone requested: {{{context.tone}}}.
+   - If 'funny': Make it hilarious but clear.
+   - If 'professional': Make it sound like a bank or a polite secretary.
+   - If 'desi': Use Hinglish/casual vibes like "Bhai, scene set kar de".
+   Write a short, punchy message they can send on WhatsApp.`,
 });
 
 const agentAdvisorFlow = ai.defineFlow(
@@ -57,6 +68,9 @@ const agentAdvisorFlow = ai.defineFlow(
   },
   async (input) => {
     const { output } = await advicePrompt(input);
-    return output!;
+    if (!output) {
+      throw new Error('Agent failed to generate a response.');
+    }
+    return output;
   }
 );

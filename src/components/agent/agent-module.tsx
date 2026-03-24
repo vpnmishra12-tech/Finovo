@@ -1,16 +1,14 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useLanguage } from '@/lib/contexts/language-context';
 import { useAuth } from '@/lib/contexts/auth-context';
 import { useFirestore, useCollection, useMemoFirebase, useDoc } from '@/firebase';
 import { collection, query, where, doc } from 'firebase/firestore';
-import { Group, GroupExpense, GroupMember } from '@/lib/groups';
+import { Group } from '@/lib/groups';
 import { Expense, MonthlyBudget } from '@/lib/expenses';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { ShieldCheck, Zap, MessageCircle, Share2, Loader2, Info, UserCheck, AlertTriangle } from 'lucide-react';
 import { getAgentAdvice } from '@/ai/flows/agent-advisor-flow';
 import { useToast } from '@/hooks/use-toast';
@@ -24,6 +22,7 @@ export function AgentModule() {
 
   const [advice, setAdvice] = useState<string | null>(null);
   const [isLoadingAdvice, setIsLoadingAdvice] = useState(false);
+  const [isGeneratingReminder, setIsGeneratingReminder] = useState<string | null>(null);
   const [reminderTone, setReminderTone] = useState<'funny' | 'professional' | 'desi'>('funny');
 
   const currentMonth = new Date().getMonth() + 1;
@@ -59,26 +58,21 @@ export function AgentModule() {
 
   const [debts, setDebts] = useState<{name: string, amount: number}[]>([]);
 
-  // Calculate debts across all groups
+  // Calculate simulated debts across all groups for MVP
   useEffect(() => {
-    if (!userGroups || !firestore || !user) return;
-    
-    // This is a simplified simulation of settlement logic to show who owes the user
-    // In a real app, this would be more complex, but for MVP we'll show potential recoveries
-    const fetchDebts = async () => {
-      const foundDebts: {name: string, amount: number}[] = [];
-      // To keep it fast, we'll just show some data if groups exist
-      if (userGroups.length > 0) {
-        foundDebts.push({ name: "Friend A", amount: 450 });
-        foundDebts.push({ name: "Friend B", amount: 120 });
-      }
-      setDebts(foundDebts);
-    };
-    fetchDebts();
-  }, [userGroups, firestore, user]);
+    if (userGroups && userGroups.length > 0) {
+      setDebts([
+        { name: "Rahul Sharma", amount: 450 },
+        { name: "Amit Kumar", amount: 120 }
+      ]);
+    } else {
+      setDebts([]);
+    }
+  }, [userGroups]);
 
   const handleGetAdvice = async () => {
     setIsLoadingAdvice(true);
+    setAdvice(null);
     try {
       const res = await getAgentAdvice({
         type: 'advice',
@@ -90,14 +84,14 @@ export function AgentModule() {
       });
       setAdvice(res.message);
     } catch (err) {
-      toast({ variant: 'destructive', title: 'Error', description: 'Failed to connect to Agent.' });
+      toast({ variant: 'destructive', title: 'Error', description: 'Agent is temporarily unavailable.' });
     } finally {
       setIsLoadingAdvice(false);
     }
   };
 
   const handleGenerateReminder = async (debtorName: string, amount: number) => {
-    toast({ title: 'Agent is thinking...', description: `Generating ${reminderTone} reminder...` });
+    setIsGeneratingReminder(debtorName);
     try {
       const res = await getAgentAdvice({
         type: 'reminder',
@@ -110,8 +104,11 @@ export function AgentModule() {
       
       const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(res.message)}`;
       window.open(whatsappUrl, '_blank');
+      toast({ title: 'Reminder Ready!', description: 'WhatsApp opened.' });
     } catch (err) {
       toast({ variant: 'destructive', title: 'Error', description: 'Failed to generate reminder.' });
+    } finally {
+      setIsGeneratingReminder(null);
     }
   };
 
@@ -141,7 +138,7 @@ export function AgentModule() {
         </CardHeader>
         <CardContent className="space-y-4">
           {advice ? (
-            <div className="bg-white/80 p-4 rounded-2xl border border-border/50 text-[11px] leading-relaxed italic text-black font-medium">
+            <div className="bg-white/80 p-4 rounded-2xl border border-border/50 text-[11px] leading-relaxed italic text-black font-medium animate-in zoom-in-95 duration-300">
               "{advice}"
             </div>
           ) : (
@@ -152,7 +149,7 @@ export function AgentModule() {
           <Button 
             onClick={handleGetAdvice} 
             disabled={isLoadingAdvice}
-            className="w-full h-11 rounded-xl font-black uppercase text-[10px] tracking-widest gap-2"
+            className="w-full h-11 rounded-xl font-black uppercase text-[10px] tracking-widest gap-2 shadow-sm"
           >
             {isLoadingAdvice ? <Loader2 className="w-4 h-4 animate-spin" /> : <><Info className="w-4 h-4" /> {t.agent.getAdvice}</>}
           </Button>
@@ -206,9 +203,14 @@ export function AgentModule() {
                     <Button 
                       size="sm" 
                       onClick={() => handleGenerateReminder(debt.name, debt.amount)}
+                      disabled={isGeneratingReminder === debt.name}
                       className="h-8 rounded-lg text-[8px] font-black uppercase tracking-widest gap-1"
                     >
-                      <Share2 className="w-3 h-3" /> {t.agent.generateReminder}
+                      {isGeneratingReminder === debt.name ? (
+                        <Loader2 className="w-3 h-3 animate-spin" />
+                      ) : (
+                        <><Share2 className="w-3 h-3" /> {t.agent.generateReminder}</>
+                      )}
                     </Button>
                   </div>
                 ))}
