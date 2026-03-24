@@ -51,35 +51,62 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
       <Card className="bg-card text-black border border-border/50 shadow-sm rounded-[1.5rem] overflow-hidden relative h-32 flex items-center">
         <CardContent className="p-5 w-full relative">
           <div className="flex justify-between items-center">
+            {/* Left Side: Budget Info */}
             <div className="space-y-0.5">
               <p className="text-[8px] text-muted-foreground uppercase tracking-[0.2em] font-normal">MONTHLY BUDGET</p>
               <p className="text-4xl font-headline font-black leading-none tracking-tight">₹{budget.toLocaleString()}</p>
             </div>
             
-            <div className="flex flex-col gap-3 items-end">
-              {/* Set Budget Action */}
-              <div className="flex items-center gap-2 group">
-                <span className="text-[7px] font-black uppercase tracking-[0.15em] text-muted-foreground opacity-50 text-right min-w-[65px]">Set Budget</span>
+            {/* Right Side: Actions Pair (Perfectly Aligned) */}
+            <div className="flex flex-col gap-3">
+              {/* Set Budget Action Row */}
+              <div className="flex items-center justify-end gap-3 group">
+                <span className="text-[8px] font-black uppercase tracking-[0.1em] text-muted-foreground opacity-60 text-right min-w-[80px] transition-opacity group-hover:opacity-100">
+                  Set Budget
+                </span>
                 <Dialog open={open} onOpenChange={setOpen}>
                   <DialogTrigger asChild>
-                    <Button variant="ghost" size="icon" className="h-8 w-8 bg-muted hover:bg-muted/80 p-0 rounded-full border border-border shrink-0">
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      className="h-8 w-8 bg-muted hover:bg-muted/80 p-0 rounded-full border border-border shrink-0 shadow-sm transition-transform active:scale-90"
+                    >
                       <Pencil className="w-3.5 h-3.5 text-black" strokeWidth={2.5} />
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="max-w-[320px] rounded-[1.5rem] bg-card">
-                    <DialogHeader><DialogTitle className="font-headline uppercase font-black text-sm text-black">SET BUDGET</DialogTitle></DialogHeader>
-                    <div className="flex flex-col gap-2 py-3">
-                      <Input type="number" placeholder="Enter amount" value={newBudget} onChange={(e) => setNewBudget(e.target.value)} className="h-10 rounded-lg font-normal bg-muted border-none" />
-                      <Button onClick={handleSetBudget} className="w-full h-10 rounded-lg uppercase tracking-widest text-xs font-black bg-primary text-white">Update</Button>
+                  <DialogContent className="max-w-[320px] rounded-[1.5rem] bg-card border-none shadow-2xl">
+                    <DialogHeader>
+                      <DialogTitle className="font-headline uppercase font-black text-sm text-black tracking-widest">
+                        SET BUDGET
+                      </DialogTitle>
+                    </DialogHeader>
+                    <div className="flex flex-col gap-3 py-4">
+                      <Input 
+                        type="number" 
+                        placeholder="Enter amount" 
+                        value={newBudget} 
+                        onChange={(e) => setNewBudget(e.target.value)} 
+                        className="h-12 rounded-xl font-bold bg-muted border-none text-center text-xl" 
+                      />
+                      <Button 
+                        onClick={handleSetBudget} 
+                        className="w-full h-12 rounded-xl uppercase tracking-widest text-xs font-black bg-primary text-white shadow-lg"
+                      >
+                        Update
+                      </Button>
                     </div>
                   </DialogContent>
                 </Dialog>
               </div>
 
-              {/* Add Expense Action */}
-              <div className="flex items-center gap-2 group">
-                <span className="text-[7px] font-black uppercase tracking-[0.15em] text-muted-foreground opacity-50 text-right min-w-[65px]">Add Expense</span>
-                <AddExpenseDrawer />
+              {/* Add Expense Action Row */}
+              <div className="flex items-center justify-end gap-3 group">
+                <span className="text-[8px] font-black uppercase tracking-[0.1em] text-muted-foreground opacity-60 text-right min-w-[80px] transition-opacity group-hover:opacity-100">
+                  Add Expense
+                </span>
+                <div className="shrink-0">
+                  <AddExpenseDrawer />
+                </div>
               </div>
             </div>
           </div>
