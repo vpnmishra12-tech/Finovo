@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
-import { ArrowLeft, MapPin, Calendar, Trash2, Wallet, UserPlus, Share2, Loader2 } from 'lucide-react';
+import { ArrowLeft, MapPin, Calendar, Trash2, Wallet, UserPlus, Share2, Loader2, MessageSquareShare } from 'lucide-react';
 import { AddGroupExpenseDialog } from './add-group-expense-dialog';
 import { format } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
@@ -101,6 +101,26 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
           url: window.location.origin
         });
       } catch (err) {}
+    }
+  };
+
+  const handleShareExpense = async (expense: GroupExpense) => {
+    const message = `${t.shareMessage}${expense.amount} ${t.shareAt} ${expense.location} ${t.shareFor} ${expense.description || expense.category} (Group: ${groupData?.name}).`;
+    const shareUrl = window.location.origin;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'Finovo Expense Update',
+          text: message,
+          url: shareUrl
+        });
+      } catch (err) {
+        console.warn("Navigator share failed", err);
+      }
+    } else {
+      const waUrl = `https://wa.me/?text=${encodeURIComponent(message + " Check at: " + shareUrl)}`;
+      window.open(waUrl, '_blank');
     }
   };
 
@@ -211,7 +231,7 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
         <TabsContent value="expenses" className="space-y-4 m-0">
           <div className="flex items-center justify-between px-1">
             <h3 className="text-[10px] uppercase tracking-widest text-muted-foreground">Recent Activity</h3>
-            <AddGroupExpenseDialog groupId={groupId} />
+            <AddGroupExpenseDialog groupId={groupId} groupName={groupData?.name || "Group"} />
           </div>
 
           {isExpensesLoading ? (
@@ -252,11 +272,16 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
                         </div>
                       </div>
                       
-                      {expense.paidBy === user?.uid && (
-                        <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive/40 hover:text-destructive" onClick={() => handleDeleteExpense(expense.id)}>
-                          <Trash2 className="w-4 h-4" />
+                      <div className="flex items-center gap-1">
+                        <Button variant="ghost" size="icon" className="h-8 w-8 text-primary/40 hover:text-primary" onClick={() => handleShareExpense(expense)}>
+                          <MessageSquareShare className="w-4 h-4" />
                         </Button>
-                      )}
+                        {expense.paidBy === user?.uid && (
+                          <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive/40 hover:text-destructive" onClick={() => handleDeleteExpense(expense.id)}>
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        )}
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
