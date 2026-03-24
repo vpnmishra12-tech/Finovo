@@ -243,9 +243,9 @@ export function BillSplitTool() {
                 splitType === 'equal' ? (equalBillVal <= 0 || equalPeopleCount <= 0) : 
                 (customBillVal <= 0 || !customNamesEntered || isCustomMismatch)
               } 
-              className="rounded-2xl h-14 px-8 bg-primary text-primary-foreground hover:bg-primary/90 uppercase tracking-widest text-[10px] gap-2 shadow-xl relative z-10"
+              className="rounded-xl h-11 px-6 bg-primary text-primary-foreground hover:bg-primary/90 uppercase tracking-widest text-[9px] gap-2 shadow-md relative z-10"
             >
-              <CheckCircle2 className="w-5 h-5" /> {t.saveMyShare}
+              <CheckCircle2 className="w-4 h-4" /> {t.saveMyShare}
             </Button>
           </div>
         </div>
