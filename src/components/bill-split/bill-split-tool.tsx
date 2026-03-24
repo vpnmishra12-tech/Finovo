@@ -231,11 +231,11 @@ export function BillSplitTool() {
         </Tabs>
 
         <div className="pt-6">
-          <div className="flex items-center justify-between p-6 bg-card border border-border/50 rounded-[2rem] text-black shadow-lg relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-muted/30 rounded-full -mr-16 -mt-16" />
+          <div className="flex items-center justify-between p-5 bg-card border border-border/50 rounded-[1.5rem] text-black shadow-lg relative overflow-hidden min-h-[90px]">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-muted/30 rounded-full -mr-16 -mt-16 pointer-events-none" />
             <div className="flex flex-col relative z-10">
-              <span className="text-[9px] uppercase tracking-widest text-muted-foreground">{t.yourShare}</span>
-              <span className="text-3xl font-headline font-black text-black">₹{(splitType === 'equal' ? equalShare : customShare).toLocaleString()}</span>
+              <span className="text-[8px] uppercase tracking-widest text-muted-foreground font-black whitespace-nowrap">{t.yourShare}</span>
+              <span className="text-2xl font-headline font-black text-black leading-tight tracking-tight">₹{(splitType === 'equal' ? equalShare : customShare).toLocaleString()}</span>
             </div>
             <Button 
               onClick={handleSaveMyShare} 
@@ -243,9 +243,9 @@ export function BillSplitTool() {
                 splitType === 'equal' ? (equalBillVal <= 0 || equalPeopleCount <= 0) : 
                 (customBillVal <= 0 || !customNamesEntered || isCustomMismatch)
               } 
-              className="rounded-xl h-11 px-6 bg-primary text-primary-foreground hover:bg-primary/90 uppercase tracking-widest text-[9px] gap-2 shadow-md relative z-10"
+              className="rounded-xl h-10 px-4 bg-primary text-primary-foreground hover:bg-primary/90 uppercase tracking-widest text-[8px] gap-2 shadow-md relative z-10 shrink-0 ml-2"
             >
-              <CheckCircle2 className="w-4 h-4" /> {t.saveMyShare}
+              <CheckCircle2 className="w-3.5 h-3.5" /> {t.saveMyShare}
             </Button>
           </div>
         </div>
