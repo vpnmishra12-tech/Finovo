@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { UserPlus, Trash2, CheckCircle2, ArrowRightLeft, AlertCircle } from 'lucide-react';
+import { UserPlus, Trash2, CheckCircle2, AlertCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
@@ -32,22 +32,17 @@ export function BillSplitTool() {
   const firestore = useFirestore();
   const { toast } = useToast();
 
-  const [splitType, setSplitType] = useState<'equal' | 'custom' | 'group'>('equal');
+  const [splitType, setSplitType] = useState<'equal' | 'custom'>('equal');
 
   // Equal split
   const [equalTotalBill, setEqualTotalBill] = useState<string>("");
   const [equalNumPeople, setEqualNumPeople] = useState<string>("2");
 
-  // Custom and Group
+  // Custom Split
   const [customTotalBill, setCustomTotalBill] = useState<string>("");
   const [customParticipants, setCustomParticipants] = useState<Participant[]>([
     { id: 'c1', name: '', paid: 0 },
     { id: 'c2', name: '', paid: 0 }
-  ]);
-
-  const [groupParticipants, setGroupParticipants] = useState<Participant[]>([
-    { id: 'g1', name: '', paid: 0 },
-    { id: 'g2', name: '', paid: 0 }
   ]);
 
   // Derived values for Equal Split
@@ -97,46 +92,6 @@ export function BillSplitTool() {
     return results;
   }, [customParticipants, customBillVal, splitType, customShare, isCustomMismatch, customNamesEntered]);
 
-  // Derived values for Group Trip
-  const groupTotalPaid = groupParticipants.reduce((sum, p) => sum + p.paid, 0);
-  const groupShare = groupParticipants.length > 0 ? parseFloat((groupTotalPaid / groupParticipants.length).toFixed(2)) : 0;
-  const groupNamesEntered = groupParticipants.every(p => p.name.trim().length > 0);
-
-  const groupSettlements = useMemo(() => {
-    if (splitType !== 'group' || groupTotalPaid <= 0 || !groupNamesEntered) return [];
-    
-    let balances = groupParticipants.map((p) => ({
-      name: p.name.trim(),
-      balance: p.paid - groupShare
-    }));
-
-    const results: Settlement[] = [];
-    let debtors = balances.filter(b => b.balance < -0.01).sort((a, b) => a.balance - b.balance);
-    let creditors = balances.filter(b => b.balance > 0.01).sort((a, b) => b.balance - a.balance);
-
-    let dIdx = 0, cIdx = 0;
-    while (dIdx < debtors.length && cIdx < creditors.length) {
-      const debtor = debtors[dIdx];
-      const creditor = creditors[cIdx];
-      const amount = Math.min(Math.abs(debtor.balance), creditor.balance);
-      
-      if (amount > 0.01) {
-        results.push({ 
-          from: debtor.name, 
-          to: creditor.name, 
-          amount: parseFloat(amount.toFixed(2)) 
-        });
-      }
-      
-      debtor.balance += amount;
-      creditor.balance -= amount;
-      
-      if (Math.abs(debtor.balance) < 0.01) dIdx++;
-      if (Math.abs(creditor.balance) < 0.01) cIdx++;
-    }
-    return results;
-  }, [groupParticipants, groupTotalPaid, splitType, groupShare, groupNamesEntered]);
-
   const addCustomPerson = () => setCustomParticipants([...customParticipants, { id: Date.now().toString(), name: '', paid: 0 }]);
   const removeCustomPerson = (id: string) => {
     if (customParticipants.length <= 2) return;
@@ -144,20 +99,6 @@ export function BillSplitTool() {
   };
   const updateCustomParticipant = (id: string, field: keyof Participant, value: string | number) => {
     setCustomParticipants(prev => prev.map(p => {
-      if (p.id === id) {
-        return { ...p, [field]: typeof value === 'string' ? (field === 'name' ? value : (parseFloat(value) || 0)) : value };
-      }
-      return p;
-    }));
-  };
-
-  const addGroupPerson = () => setGroupParticipants([...groupParticipants, { id: Date.now().toString(), name: '', paid: 0 }]);
-  const removeGroupPerson = (id: string) => {
-    if (groupParticipants.length <= 2) return;
-    setGroupParticipants(groupParticipants.filter(p => p.id !== id));
-  };
-  const updateGroupParticipant = (id: string, field: keyof Participant, value: string | number) => {
-    setGroupParticipants(prev => prev.map(p => {
       if (p.id === id) {
         return { ...p, [field]: typeof value === 'string' ? (field === 'name' ? value : (parseFloat(value) || 0)) : value };
       }
@@ -179,10 +120,6 @@ export function BillSplitTool() {
       shareToSave = customShare;
       billDesc = `Custom Split: ${customTotalBill}`;
       canSave = customBillVal > 0 && customNamesEntered && !isCustomMismatch;
-    } else {
-      shareToSave = groupShare;
-      billDesc = `Group Trip: ${groupTotalPaid}`;
-      canSave = groupTotalPaid > 0 && groupNamesEntered;
     }
 
     if (shareToSave <= 0 || !canSave) {
@@ -210,15 +147,12 @@ export function BillSplitTool() {
       </CardHeader>
       <CardContent className="p-6 space-y-6">
         <Tabs value={splitType} onValueChange={(v) => setSplitType(v as any)} className="w-full">
-          <TabsList className="grid w-full grid-cols-3 bg-muted h-12 rounded-xl p-1 mb-6">
+          <TabsList className="grid w-full grid-cols-2 bg-muted h-12 rounded-xl p-1 mb-6">
             <TabsTrigger value="equal" className="rounded-lg uppercase text-[10px]">
               {t.splitEqual}
             </TabsTrigger>
             <TabsTrigger value="custom" className="rounded-lg uppercase text-[10px]">
               {t.splitCustom}
-            </TabsTrigger>
-            <TabsTrigger value="group" className="rounded-lg uppercase text-[10px]">
-              {t.splitGroup}
             </TabsTrigger>
           </TabsList>
 
@@ -294,47 +228,6 @@ export function BillSplitTool() {
               </div>
             )}
           </TabsContent>
-
-          <TabsContent value="group" className="space-y-6 m-0">
-            <div className="bg-muted/50 p-4 rounded-2xl space-y-1 border border-border/50">
-              <p className="text-[10px] uppercase text-muted-foreground tracking-widest">{t.totalGroupExpense}</p>
-              <p className="text-3xl font-headline font-black text-black">₹{groupTotalPaid.toLocaleString()}</p>
-              <p className="text-[9px] text-muted-foreground uppercase">{t.groupDesc}</p>
-            </div>
-            <div className="space-y-3 max-h-[300px] overflow-y-auto pr-1">
-              {groupParticipants.map((p) => (
-                <div key={p.id} className="flex flex-col gap-2 bg-muted/30 p-4 rounded-2xl border border-border/30">
-                  <div className="flex items-center gap-2">
-                    <Input value={p.name} onChange={(e) => updateGroupParticipant(p.id, 'name', e.target.value)} placeholder="Enter Name" className="h-10 bg-card border-none rounded-xl flex-1" />
-                    <Button variant="ghost" size="icon" onClick={() => removeGroupPerson(p.id)} disabled={groupParticipants.length <= 2}><Trash2 className="w-4 h-4" /></Button>
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <Label className="text-[10px] uppercase text-muted-foreground ml-1">He/She Paid</Label>
-                    <Input type="number" value={p.paid || ""} onChange={(e) => updateGroupParticipant(p.id, 'paid', e.target.value)} placeholder="0.00" className="h-10 rounded-xl bg-card border-none text-sm text-black" />
-                  </div>
-                </div>
-              ))}
-            </div>
-            <Button variant="outline" onClick={addGroupPerson} className="w-full h-12 rounded-2xl border-dashed border-2 gap-2 text-[10px] uppercase"><UserPlus className="w-4 h-4" /> {t.addPerson}</Button>
-            {groupNamesEntered && groupTotalPaid > 0 && (
-              <div className="space-y-4 pt-4 border-t border-dashed">
-                <h4 className="text-[10px] uppercase text-muted-foreground flex items-center gap-2"><ArrowRightLeft className="w-4 h-4" /> {t.settlement}</h4>
-                <div className="bg-muted/30 rounded-3xl p-5 space-y-3">
-                  {groupSettlements.map((s, idx) => (
-                    <div key={`group-s-${idx}`} className="flex items-center gap-2 p-4 bg-card rounded-2xl shadow-sm border border-border/30">
-                      <p className="text-[11px]">
-                        <span className="text-black font-bold uppercase tracking-widest">{s.from}</span>
-                        <span className="mx-1 text-muted-foreground">{t.owes}</span>
-                        <span className="font-headline font-black text-black mx-1 text-sm">₹{s.amount.toLocaleString()}</span>
-                        <span className="mx-1 text-muted-foreground">{t.to}</span>
-                        <span className="text-black font-bold uppercase tracking-widest">{s.to}</span>
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </TabsContent>
         </Tabs>
 
         <div className="pt-6">
@@ -342,14 +235,13 @@ export function BillSplitTool() {
             <div className="absolute top-0 right-0 w-32 h-32 bg-muted/30 rounded-full -mr-16 -mt-16" />
             <div className="flex flex-col relative z-10">
               <span className="text-[9px] uppercase tracking-widest text-muted-foreground">{t.yourShare}</span>
-              <span className="text-3xl font-headline font-black text-black">₹{(splitType === 'equal' ? equalShare : splitType === 'custom' ? customShare : groupShare).toLocaleString()}</span>
+              <span className="text-3xl font-headline font-black text-black">₹{(splitType === 'equal' ? equalShare : customShare).toLocaleString()}</span>
             </div>
             <Button 
               onClick={handleSaveMyShare} 
               disabled={
                 splitType === 'equal' ? (equalBillVal <= 0 || equalPeopleCount <= 0) : 
-                splitType === 'custom' ? (customBillVal <= 0 || !customNamesEntered || isCustomMismatch) : 
-                (groupTotalPaid <= 0 || !groupNamesEntered)
+                (customBillVal <= 0 || !customNamesEntered || isCustomMismatch)
               } 
               className="rounded-2xl h-14 px-8 bg-primary text-primary-foreground hover:bg-primary/90 uppercase tracking-widest text-[10px] gap-2 shadow-xl relative z-10"
             >
