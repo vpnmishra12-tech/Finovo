@@ -32,15 +32,18 @@ const auditPrompt = ai.definePrompt({
   name: 'billAuditPrompt',
   input: { schema: BillAuditInputSchema },
   output: { schema: BillAuditOutputSchema },
-  prompt: `You are an expert Forensic Accountant. Your task is to audit the provided bill/receipt image.
+  prompt: `You are an expert Forensic Accountant. Your task is to audit the provided bill/receipt image with extreme scrutiny.
 
 Check for the following:
-1. **Mathematical Accuracy**: Add up all line items and taxes. Does it match the printed "Total"?
-2. **Hidden/Extra Charges**: Identify if there are "Service Charges" (often optional in some regions), "Handling Fees", or "Misc Charges" that seem unnecessary.
-3. **Tax Audit**: Verify if GST/VAT percentages are applied correctly to the taxable amount.
-4. **Overcharging**: Check if any item price looks unusually high or duplicated.
+1. **Mathematical Accuracy**: Sum up every single line item and tax. Does the math add up to the final 'Grand Total'? Even a 1 rupee difference is an error.
+2. **Hidden/Illegal Charges**: Detect 'Service Charges' (often optional/illegal), 'Misc Fees', 'Handling Charges', or 'Container Charges' that look suspicious. 
+3. **GST/VAT Audit**: Check if the tax percentage applied matches the tax amount. Ensure tax is not calculated on top of other taxes (tax on tax).
+4. **Duplication Check**: Look for items listed twice or similar-looking entries that might be a double-charge.
+5. **Overcharging**: If possible, identify if the GST number (GSTIN) is missing which might indicate a fake bill.
 
-If you find a discrepancy (even of 1 rupee), set isCorrect to false and list the errors.
+If you find ANY discrepancy or suspicious charge, set isCorrect to false and list the errors clearly.
+
+In the 'suggestedAction', provide a clear, firm sentence the user can say to the merchant to get a refund or correction.
 
 Here is the bill photo: {{media url=billPhotoDataUri}}`,
 });
