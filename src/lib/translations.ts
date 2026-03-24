@@ -72,6 +72,23 @@ export const translations = {
     allTime: "Full Trip / All Time",
     monthlyStatement: "Monthly Statements",
     noExpensesMonth: "No expenses recorded for this month.",
+    agent: {
+      title: "Your AI Agent",
+      survivalMode: "Survival Mode",
+      socialShield: "Social Shield",
+      generateReminder: "Generate Reminder",
+      survivalActive: "Survival Mode Active!",
+      survivalHealthy: "Financial Health: Good",
+      askAgent: "Ask your Guardian",
+      getAdvice: "Get AI Advice",
+      debtTitle: "Who owes you?",
+      reminderTone: "Tone",
+      tones: {
+        funny: "Funny",
+        professional: "Professional",
+        desi: "Desi/Casual"
+      }
+    },
     alerts: {
       halfway: "Warning: You have spent 50% of your budget!",
       critical: "Urgent: 75% budget used. Watch your spending!",

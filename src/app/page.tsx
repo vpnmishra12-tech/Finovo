@@ -8,7 +8,7 @@ import { Header } from '@/components/layout/header';
 import { BudgetSummary } from '@/components/dashboard/budget-summary';
 import { AdBanner } from '@/components/dashboard/ad-banner';
 import { 
-  History, Calculator, Users, LayoutGrid, Home as HomeIcon, ArrowRight, AlertTriangle, Wallet, CheckCircle2, AlertCircle
+  History, Calculator, Users, LayoutGrid, Home as HomeIcon, ArrowRight, AlertTriangle, Wallet, CheckCircle2, AlertCircle, ShieldCheck
 } from 'lucide-react';
 import { useFirestore, useCollection, useMemoFirebase, useDoc } from '@/firebase';
 import { collection, query, orderBy, limit, doc, where } from 'firebase/firestore';
@@ -26,8 +26,9 @@ const ExpenseList = dynamic(() => import('@/components/expenses/expense-list').t
 const GroupModule = dynamic(() => import('@/components/groups/group-module').then(mod => mod.GroupModule), { ssr: false });
 const SpendingChart = dynamic(() => import('@/components/dashboard/spending-chart').then(mod => mod.SpendingChart), { ssr: false });
 const MonthlyHistory = dynamic(() => import('@/components/dashboard/monthly-history').then(mod => mod.MonthlyHistory), { ssr: false });
+const AgentModule = dynamic(() => import('@/components/agent/agent-module').then(mod => mod.AgentModule), { ssr: false });
 
-type NavTab = 'dashboard' | 'history' | 'splitter' | 'groups';
+type NavTab = 'dashboard' | 'history' | 'splitter' | 'groups' | 'agent';
 
 export default function Home() {
   const { user, loading, login, signup, resetPassword } = useAuth();
@@ -153,7 +154,7 @@ export default function Home() {
       <main className="flex-1 overflow-hidden relative">
         {!user ? (
           <div className="h-full flex flex-col items-center justify-center p-6 bg-background">
-            <div className="w-full max-w-sm flex flex-col items-center space-y-6">
+            <div className="w-full max-sm flex flex-col items-center space-y-6">
               <div className="flex flex-col items-center text-center space-y-3">
                 <div className="bg-card p-4 rounded-full shadow-lg border border-border/50">
                   <Wallet className="w-7 h-7 text-primary" />
@@ -234,10 +235,10 @@ export default function Home() {
 
                   <div className="grid grid-cols-2 gap-2 shrink-0">
                     <GridCard 
-                      icon={LayoutGrid} 
-                      label="Dashboard" 
-                      color="text-blue-600 bg-blue-50" 
-                      onClick={() => setActiveTab('dashboard')} 
+                      icon={ShieldCheck} 
+                      label="Your AI Agent" 
+                      color="text-red-600 bg-red-50" 
+                      onClick={() => setActiveTab('agent')} 
                     />
                     <GridCard 
                       icon={History} 
@@ -272,6 +273,7 @@ export default function Home() {
                   )}
                   {activeTab === 'splitter' && <BillSplitTool />}
                   {activeTab === 'groups' && <GroupModule />}
+                  {activeTab === 'agent' && <AgentModule />}
                 </div>
               )}
             </div>
@@ -288,6 +290,10 @@ export default function Home() {
           <button onClick={() => setActiveTab('dashboard')} className={cn("flex flex-col items-center gap-1 transition-colors", activeTab === 'dashboard' ? "text-white" : "text-white/50")}>
             <HomeIcon className="w-5 h-5" />
             <span className="text-[8px] uppercase tracking-widest font-normal">Home</span>
+          </button>
+          <button onClick={() => setActiveTab('agent')} className={cn("flex flex-col items-center gap-1 transition-colors", activeTab === 'agent' ? "text-white" : "text-white/50")}>
+            <ShieldCheck className="w-5 h-5" />
+            <span className="text-[8px] uppercase tracking-widest font-normal">Agent</span>
           </button>
           <button onClick={() => setActiveTab('history')} className={cn("flex flex-col items-center gap-1 transition-colors", activeTab === 'history' ? "text-white" : "text-white/50")}>
             <History className="w-5 h-5" />
