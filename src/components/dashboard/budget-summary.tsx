@@ -58,27 +58,27 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
             
             <div className="flex flex-col gap-3 items-end">
               {/* Set Budget Action */}
-              <div className="flex items-center gap-2">
-                <span className="text-[7px] font-black uppercase tracking-[0.2em] text-muted-foreground opacity-60">Set Budget</span>
+              <div className="flex items-center gap-2 group">
+                <span className="text-[7px] font-black uppercase tracking-[0.15em] text-muted-foreground opacity-50 text-right min-w-[65px]">Set Budget</span>
                 <Dialog open={open} onOpenChange={setOpen}>
                   <DialogTrigger asChild>
-                    <Button variant="ghost" size="icon" className="h-7 w-7 bg-muted hover:bg-muted/80 p-0 rounded-full border border-border shrink-0">
-                      <Pencil className="w-3 h-3 text-black" strokeWidth={3} />
+                    <Button variant="ghost" size="icon" className="h-8 w-8 bg-muted hover:bg-muted/80 p-0 rounded-full border border-border shrink-0">
+                      <Pencil className="w-3.5 h-3.5 text-black" strokeWidth={2.5} />
                     </Button>
                   </DialogTrigger>
                   <DialogContent className="max-w-[320px] rounded-[1.5rem] bg-card">
-                    <DialogHeader><DialogTitle className="font-headline uppercase font-black text-sm">SET BUDGET</DialogTitle></DialogHeader>
+                    <DialogHeader><DialogTitle className="font-headline uppercase font-black text-sm text-black">SET BUDGET</DialogTitle></DialogHeader>
                     <div className="flex flex-col gap-2 py-3">
-                      <Input type="number" placeholder="Enter amount" value={newBudget} onChange={(e) => setNewBudget(e.target.value)} className="h-10 rounded-lg font-normal" />
-                      <Button onClick={handleSetBudget} className="w-full h-10 rounded-lg uppercase tracking-widest text-xs font-normal">Update</Button>
+                      <Input type="number" placeholder="Enter amount" value={newBudget} onChange={(e) => setNewBudget(e.target.value)} className="h-10 rounded-lg font-normal bg-muted border-none" />
+                      <Button onClick={handleSetBudget} className="w-full h-10 rounded-lg uppercase tracking-widest text-xs font-black bg-primary text-white">Update</Button>
                     </div>
                   </DialogContent>
                 </Dialog>
               </div>
 
               {/* Add Expense Action */}
-              <div className="flex items-center gap-2">
-                <span className="text-[7px] font-black uppercase tracking-[0.2em] text-muted-foreground opacity-60">Add Expense</span>
+              <div className="flex items-center gap-2 group">
+                <span className="text-[7px] font-black uppercase tracking-[0.15em] text-muted-foreground opacity-50 text-right min-w-[65px]">Add Expense</span>
                 <AddExpenseDrawer />
               </div>
             </div>
