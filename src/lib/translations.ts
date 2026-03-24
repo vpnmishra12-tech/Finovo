@@ -62,9 +62,8 @@ export const translations = {
     category: "Category",
     description: "Description",
     notifyGroup: "Notify Group Members",
-    shareMessage: "Hi! I added a new group expense of ₹",
-    shareAt: "at",
-    shareFor: "for",
+    shareMessage: "New expense added in group: ",
+    shareLinkText: "Check details in Finovo App: ",
     shareSuccess: "Notification Ready!",
     alerts: {
       halfway: "Warning: You have spent 50% of your budget!",

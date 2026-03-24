@@ -104,22 +104,22 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
     }
   };
 
-  const handleShareExpense = async (expense: GroupExpense) => {
-    const message = `${t.shareMessage}${expense.amount} ${t.shareAt} ${expense.location} ${t.shareFor} ${expense.description || expense.category} (Group: ${groupData?.name}).`;
-    const shareUrl = window.location.origin;
+  const handleShareExpense = async () => {
+    // Hidden details message to ensure users open the app
+    const message = `${t.shareMessage}${groupData?.name || 'our group'}. ${t.shareLinkText}${window.location.origin}`;
 
     if (navigator.share) {
       try {
         await navigator.share({
           title: 'Finovo Expense Update',
           text: message,
-          url: shareUrl
+          url: window.location.origin
         });
       } catch (err) {
         console.warn("Navigator share failed", err);
       }
     } else {
-      const waUrl = `https://wa.me/?text=${encodeURIComponent(message + " Check at: " + shareUrl)}`;
+      const waUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
       window.open(waUrl, '_blank');
     }
   };
@@ -273,7 +273,7 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
                       </div>
                       
                       <div className="flex items-center gap-1">
-                        <Button variant="ghost" size="icon" className="h-8 w-8 text-primary/40 hover:text-primary" onClick={() => handleShareExpense(expense)}>
+                        <Button variant="ghost" size="icon" className="h-8 w-8 text-primary/40 hover:text-primary" onClick={() => handleShareExpense()}>
                           <MessageSquareShare className="w-4 h-4" />
                         </Button>
                         {expense.paidBy === user?.uid && (

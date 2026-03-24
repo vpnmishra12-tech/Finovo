@@ -47,7 +47,6 @@ export function AddGroupExpenseDialog({ groupId, groupName }: { groupId: string,
       setLastAddedExpense(expenseData);
       
       toast({ title: "Success", description: "Expense added to group!" });
-      // We don't close immediately so they can see the Notify button
     } catch (err) {
       toast({ variant: "destructive", title: "Error", description: "Failed to add expense." });
     } finally {
@@ -58,22 +57,21 @@ export function AddGroupExpenseDialog({ groupId, groupName }: { groupId: string,
   const handleNotify = async () => {
     if (!lastAddedExpense) return;
     
-    const message = `${t.shareMessage}${lastAddedExpense.amount} ${t.shareAt} ${lastAddedExpense.location} ${t.shareFor} ${lastAddedExpense.description || lastAddedExpense.category} (Group: ${groupName}).`;
-    const shareUrl = window.location.origin;
+    // Minimal message to create curiosity and force app opening
+    const message = `${t.shareMessage}${groupName}. ${t.shareLinkText}${window.location.origin}`;
 
     if (navigator.share) {
       try {
         await navigator.share({
           title: 'Finovo Expense Update',
           text: message,
-          url: shareUrl
+          url: window.location.origin
         });
       } catch (err) {
         console.warn("Navigator share failed", err);
       }
     } else {
-      // Fallback to WhatsApp Direct Link
-      const waUrl = `https://wa.me/?text=${encodeURIComponent(message + " Check at: " + shareUrl)}`;
+      const waUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
       window.open(waUrl, '_blank');
     }
     
