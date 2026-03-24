@@ -49,27 +49,37 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
     <div className="space-y-2">
       <Card className="bg-card text-black border border-border/50 shadow-sm rounded-[1.5rem] overflow-hidden relative h-32 flex items-center">
         <CardContent className="p-5 w-full relative">
-          <div className="flex justify-between items-start">
+          <div className="flex justify-between items-center">
             <div className="space-y-0.5">
               <p className="text-[8px] text-muted-foreground uppercase tracking-[0.2em] font-normal">MONTHLY BUDGET</p>
               <p className="text-4xl font-headline font-black leading-none tracking-tight">₹{budget.toLocaleString()}</p>
             </div>
-            <div className="flex flex-col gap-1.5 items-center">
-              <Dialog open={open} onOpenChange={setOpen}>
-                <DialogTrigger asChild>
-                  <Button variant="ghost" size="icon" className="h-8 w-8 bg-muted hover:bg-muted/80 p-0 rounded-full border border-border">
-                    <Pencil className="w-3.5 h-3.5 text-black" strokeWidth={2.5} />
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="max-w-[320px] rounded-[1.5rem] bg-card">
-                  <DialogHeader><DialogTitle className="font-headline uppercase font-black text-sm">SET BUDGET</DialogTitle></DialogHeader>
-                  <div className="flex flex-col gap-2 py-3">
-                    <Input type="number" placeholder="Enter amount" value={newBudget} onChange={(e) => setNewBudget(e.target.value)} className="h-10 rounded-lg font-normal" />
-                    <Button onClick={handleSetBudget} className="w-full h-10 rounded-lg uppercase tracking-widest text-xs font-normal">Update</Button>
-                  </div>
-                </DialogContent>
-              </Dialog>
-              <AddExpenseDrawer />
+            
+            <div className="flex flex-col gap-3 items-end">
+              {/* Set Budget Action */}
+              <div className="flex items-center gap-2">
+                <span className="text-[7px] font-black uppercase tracking-[0.2em] text-muted-foreground opacity-60">Set Budget</span>
+                <Dialog open={open} onOpenChange={setOpen}>
+                  <DialogTrigger asChild>
+                    <Button variant="ghost" size="icon" className="h-7 w-7 bg-muted hover:bg-muted/80 p-0 rounded-full border border-border shrink-0">
+                      <Pencil className="w-3 h-3 text-black" strokeWidth={3} />
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-[320px] rounded-[1.5rem] bg-card">
+                    <DialogHeader><DialogTitle className="font-headline uppercase font-black text-sm">SET BUDGET</DialogTitle></DialogHeader>
+                    <div className="flex flex-col gap-2 py-3">
+                      <Input type="number" placeholder="Enter amount" value={newBudget} onChange={(e) => setNewBudget(e.target.value)} className="h-10 rounded-lg font-normal" />
+                      <Button onClick={handleSetBudget} className="w-full h-10 rounded-lg uppercase tracking-widest text-xs font-normal">Update</Button>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              </div>
+
+              {/* Add Expense Action */}
+              <div className="flex items-center gap-2">
+                <span className="text-[7px] font-black uppercase tracking-[0.2em] text-muted-foreground opacity-60">Add Bill</span>
+                <AddExpenseDrawer />
+              </div>
             </div>
           </div>
         </CardContent>
