@@ -39,7 +39,7 @@ Key Auditing Rules:
 2. **Dynamic Tax Verification**: 
    - Tax rates vary by product category (e.g., 5%, 12%, 18%, 28% in India). 
    - First, check if the tax amount shown matches the percentage stated on the bill (Math Check).
-   - Second, use your knowledge of standard tax slabs for the detected merchant type. If a restaurant is charging 28% GST (which is usually 5% or 18%), flag it as "Suspicious Tax Rate".
+   - Second, use your current, up-to-date knowledge of standard tax slabs for the detected merchant type. If a restaurant is charging 28% GST (which is usually 5% or 18%), flag it as "Suspicious Tax Rate".
    - Ensure tax is calculated on the Sub-Total, not on top of other taxes (Cascading tax check).
 3. **Hidden / Illegal Charges**: 
    - Detect "Service Charges". Note that in many regions like India, Service Charge is optional and cannot be forced.
