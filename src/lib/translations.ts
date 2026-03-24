@@ -68,6 +68,10 @@ export const translations = {
     shareMessage: "New expense added in group: ",
     shareLinkText: "Check details in Finovo App: ",
     shareSuccess: "Notification Ready!",
+    pastMonths: "Past Months",
+    currentMonth: "Current Month",
+    monthlyStatement: "Monthly Statement",
+    noExpensesMonth: "No expenses recorded for this month.",
     alerts: {
       halfway: "Warning: You have spent 50% of your budget!",
       critical: "Urgent: 75% budget used. Watch your spending!",

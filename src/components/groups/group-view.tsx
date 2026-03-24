@@ -11,11 +11,12 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
-import { ArrowLeft, MapPin, Calendar, Trash2, Wallet, UserPlus, Share2, Loader2, MessageSquareShare, ArrowRightLeft } from 'lucide-react';
+import { ArrowLeft, MapPin, Calendar, Trash2, Wallet, UserPlus, Share2, Loader2, MessageSquareShare, ArrowRightLeft, History } from 'lucide-react';
 import { AddGroupExpenseDialog } from './add-group-expense-dialog';
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => void }) {
   const { user } = useAuth();
@@ -25,6 +26,12 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
 
   const [newMemberName, setNewMemberName] = useState("");
   const [showSettlements, setShowSettlements] = useState(false);
+  
+  // Monthly Logic
+  const today = new Date();
+  const currentMonthKey = format(today, 'yyyy-MM');
+  const [selectedMonth, setSelectedMonth] = useState(currentMonthKey);
+  const [showHistory, setShowHistory] = useState(false);
 
   const groupRef = useMemoFirebase(() => {
     if (!firestore || !groupId) return null;
@@ -33,7 +40,6 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
 
   const { data: groupData } = useDoc<Group>(groupRef);
 
-  // Mark group as seen when viewed
   useEffect(() => {
     if (groupData?.lastActivityAt) {
       localStorage.setItem(`group_seen_${groupId}`, groupData.lastActivityAt.toMillis().toString());
@@ -53,12 +59,33 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
     return collection(firestore, 'groups', groupId, 'members');
   }, [firestore, groupId]);
 
-  const { data: expenses, isLoading: isExpensesLoading } = useCollection<GroupExpense>(expensesQuery);
+  const { data: allExpenses, isLoading: isExpensesLoading } = useCollection<GroupExpense>(expensesQuery);
   const { data: members, isLoading: isMembersLoading } = useCollection<GroupMember>(membersQuery);
 
-  const totalSpent = expenses?.reduce((sum, exp) => sum + exp.amount, 0) || 0;
+  // Filter expenses by selected month
+  const filteredExpenses = useMemo(() => {
+    if (!allExpenses) return [];
+    return allExpenses.filter(exp => {
+      const date = exp.transactionDate instanceof Timestamp ? exp.transactionDate.toDate() : parseISO(exp.transactionDate as string);
+      return format(date, 'yyyy-MM') === selectedMonth;
+    });
+  }, [allExpenses, selectedMonth]);
+
+  // Extract all available months for history
+  const availableMonths = useMemo(() => {
+    if (!allExpenses) return [currentMonthKey];
+    const months = new Set<string>();
+    months.add(currentMonthKey);
+    allExpenses.forEach(exp => {
+      const date = exp.transactionDate instanceof Timestamp ? exp.transactionDate.toDate() : parseISO(exp.transactionDate as string);
+      months.add(format(date, 'yyyy-MM'));
+    });
+    return Array.from(months).sort((a, b) => b.localeCompare(a));
+  }, [allExpenses, currentMonthKey]);
+
+  const totalSpent = filteredExpenses.reduce((sum, exp) => sum + exp.amount, 0);
   
-  const memberTotals = expenses?.reduce((acc, exp) => {
+  const memberTotals = filteredExpenses.reduce((acc, exp) => {
     acc[exp.paidBy] = {
       name: exp.paidByName,
       total: (acc[exp.paidBy]?.total || 0) + exp.amount
@@ -66,9 +93,8 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
     return acc;
   }, {} as Record<string, {name: string, total: number}>);
 
-  // Settlement Calculation Logic
   const settlements = useMemo(() => {
-    if (!members || !expenses || totalSpent <= 0) return [];
+    if (!members || filteredExpenses.length === 0 || totalSpent <= 0) return [];
 
     const numMembers = members.length;
     if (numMembers === 0) return [];
@@ -80,7 +106,7 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
       paidByMemberMap[m.id] = 0;
     });
 
-    expenses.forEach(exp => {
+    filteredExpenses.forEach(exp => {
       const member = members.find(m => m.userId === exp.paidBy || m.id === exp.paidBy);
       if (member) {
         paidByMemberMap[member.id] += exp.amount;
@@ -118,44 +144,23 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
     }
 
     return results;
-  }, [members, expenses, totalSpent]);
+  }, [members, filteredExpenses, totalSpent]);
 
   const handleShareId = async () => {
     const textToCopy = groupId;
     let copied = false;
-
     try {
       if (navigator.clipboard && window.isSecureContext) {
         await navigator.clipboard.writeText(textToCopy);
         copied = true;
       }
     } catch (err) {}
-
-    if (!copied) {
-      try {
-        const textArea = document.createElement("textarea");
-        textArea.value = textToCopy;
-        textArea.style.position = "fixed";
-        textArea.style.left = "-9999px";
-        textArea.style.top = "0";
-        document.body.appendChild(textArea);
-        textArea.focus();
-        textArea.select();
-        copied = document.execCommand('copy');
-        document.body.removeChild(textArea);
-      } catch (err) {}
-    }
-
-    if (copied) {
-      toast({ title: "ID Copied!", description: "Group ID automatically saved." });
-    }
-
+    if (copied) toast({ title: "ID Copied!" });
     if (navigator.share) {
       try {
-        const shareText = `Join my Finovo group '${groupData?.name || 'Finance'}'! Use this ID: ${groupId}`;
         await navigator.share({
           title: 'Finovo Group Invite',
-          text: shareText,
+          text: `Join my Finovo group '${groupData?.name || 'Finance'}'! Use this ID: ${groupId}`,
           url: window.location.origin
         });
       } catch (err) {}
@@ -164,7 +169,6 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
 
   const handleShareExpense = async () => {
     const message = `${t.shareMessage}${groupData?.name || 'our group'}. ${t.shareLinkText}${window.location.origin}`;
-
     if (navigator.share) {
       try {
         await navigator.share({
@@ -174,36 +178,19 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
         });
       } catch (err) {}
     } else {
-      const waUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
-      window.open(waUrl, '_blank');
+      window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
     }
-  };
-
-  const handleAddMember = () => {
-    if (!firestore || !groupId || !newMemberName) return;
-    addMemberToGroup(firestore, groupId, newMemberName);
-    setNewMemberName("");
-    toast({ title: "Member Added", description: `${newMemberName} added to the list.` });
-  };
-
-  const handleDeleteExpense = (id: string) => {
-    if (!firestore || !groupId) return;
-    deleteGroupExpense(firestore, groupId, id);
-    toast({ title: "Deleted", description: "Expense removed." });
   };
 
   const handleDeleteGroup = () => {
     if (!firestore || !groupId) return;
     deleteGroup(firestore, groupId);
-    toast({ title: "Group Deleted", description: "Group removed." });
+    toast({ title: "Group Deleted" });
     onBack();
   };
 
-  const handleRemoveMember = (memberId: string) => {
-    if (!firestore || !groupId) return;
-    removeMemberFromGroup(firestore, groupId, memberId);
-    toast({ title: "Removed", description: "Member removed." });
-  };
+  const [year, month] = selectedMonth.split('-');
+  const monthName = t.months[month as keyof typeof t.months];
 
   return (
     <div className="space-y-4 animate-in fade-in slide-in-from-left-4 duration-300 pb-24 px-1">
@@ -212,12 +199,13 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
           <Button variant="ghost" size="icon" onClick={onBack} className="absolute left-0 rounded-full h-8 w-8">
             <ArrowLeft className="w-5 h-5" />
           </Button>
-          
           <h2 className="text-lg font-headline font-black uppercase tracking-tight truncate max-w-[200px] text-center px-8">
             {groupData?.name || "Loading..."}
           </h2>
-
-          <div className="absolute right-0">
+          <div className="absolute right-0 flex gap-1">
+            <Button variant="ghost" size="icon" onClick={() => setShowHistory(!showHistory)} className="h-8 w-8 text-black opacity-40 hover:opacity-100">
+              <History className="w-4 h-4" />
+            </Button>
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive/50 hover:text-destructive">
@@ -238,14 +226,35 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
           </div>
         </div>
 
+        {showHistory && (
+          <div className="bg-muted/30 rounded-2xl p-3 animate-in fade-in zoom-in-95 duration-200">
+            <p className="text-[10px] uppercase font-black text-muted-foreground tracking-widest mb-2 ml-1">{t.pastMonths}</p>
+            <ScrollArea className="h-20">
+              <div className="flex flex-wrap gap-2">
+                {availableMonths.map(m => {
+                  const [y, mon] = m.split('-');
+                  return (
+                    <Button 
+                      key={m} 
+                      variant={selectedMonth === m ? "default" : "outline"} 
+                      size="sm" 
+                      onClick={() => { setSelectedMonth(m); setShowHistory(false); }}
+                      className="h-8 rounded-xl text-[9px] uppercase font-black tracking-widest"
+                    >
+                      {t.months[mon as keyof typeof t.months]} {y}
+                    </Button>
+                  );
+                })}
+              </div>
+            </ScrollArea>
+          </div>
+        )}
+
         <div className="flex items-center justify-center gap-2 flex-nowrap overflow-hidden">
-          <span className="text-[10px] uppercase text-black shrink-0">CODE: {groupId}</span>
-          {groupData?.createdAt && (
-            <span className="text-[8px] uppercase tracking-widest text-muted-foreground whitespace-nowrap shrink-0">
-              • {format(groupData.createdAt.toDate(), 'dd MMM yyyy')}
-            </span>
-          )}
-          <Button variant="outline" size="sm" onClick={handleShareId} className="h-7 px-3 rounded-xl uppercase text-[8px] gap-1.5 border-border shrink-0">
+          <Badge variant="outline" className="h-7 border-border px-3 rounded-xl uppercase text-[9px] font-black tracking-widest bg-card">
+            {monthName} {year}
+          </Badge>
+          <Button variant="outline" size="sm" onClick={handleShareId} className="h-7 px-3 rounded-xl uppercase text-[8px] gap-1.5 border-border shrink-0 bg-card">
             <Share2 className="w-2.5 h-2.5" /> Invite
           </Button>
         </div>
@@ -262,16 +271,15 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
           <div className="pt-4 space-y-2 border-t border-muted/20">
             <p className="text-[9px] uppercase tracking-widest text-muted-foreground">Contributions</p>
             <div className="flex flex-wrap gap-2">
-              {memberTotals && Object.values(memberTotals).map((m, i) => (
+              {Object.values(memberTotals).length > 0 ? Object.values(memberTotals).map((m, i) => (
                 <div key={i} className="bg-muted/50 px-3 py-1.5 rounded-full flex items-center gap-2 border border-border/30">
                   <span className="text-[10px] text-muted-foreground">{m.name}:</span>
                   <span className="text-[10px] font-black text-black">₹{m.total.toLocaleString()}</span>
                 </div>
-              ))}
+              )) : <span className="text-[10px] text-muted-foreground italic opacity-50">No contributions yet</span>}
             </div>
           </div>
 
-          {/* Settlement Section with Toggle */}
           {settlements.length > 0 && (
             <div className="pt-4 border-t border-dashed border-muted/50">
               {!showSettlements ? (
@@ -318,25 +326,21 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
 
       <Tabs defaultValue="expenses" className="w-full">
         <TabsList className="grid w-full grid-cols-2 bg-muted h-12 rounded-xl p-1 mb-4">
-          <TabsTrigger value="expenses" className="rounded-lg gap-2 uppercase text-[10px]">
-            Expenses
-          </TabsTrigger>
-          <TabsTrigger value="members" className="rounded-lg gap-2 uppercase text-[10px]">
-            Members
-          </TabsTrigger>
+          <TabsTrigger value="expenses" className="rounded-lg gap-2 uppercase text-[10px]">Expenses</TabsTrigger>
+          <TabsTrigger value="members" className="rounded-lg gap-2 uppercase text-[10px]">Members</TabsTrigger>
         </TabsList>
 
         <TabsContent value="expenses" className="space-y-4 m-0">
           <div className="flex items-center justify-between px-1">
-            <h3 className="text-[10px] uppercase tracking-widest text-muted-foreground">Recent Activity</h3>
-            <AddGroupExpenseDialog groupId={groupId} groupName={groupData?.name || "Group"} />
+            <h3 className="text-[10px] uppercase tracking-widest text-muted-foreground">Activity • {monthName}</h3>
+            {selectedMonth === currentMonthKey && <AddGroupExpenseDialog groupId={groupId} groupName={groupData?.name || "Group"} />}
           </div>
 
           {isExpensesLoading ? (
             <div className="flex items-center justify-center py-10"><Loader2 className="w-6 h-6 animate-spin text-black opacity-30" /></div>
-          ) : expenses && expenses.length > 0 ? (
+          ) : filteredExpenses.length > 0 ? (
             <div className="grid gap-3">
-              {expenses.map((expense) => (
+              {filteredExpenses.map((expense) => (
                 <Card key={expense.id} className="border-none shadow-sm rounded-2xl overflow-hidden group bg-card border border-border/20">
                   <CardContent className="p-4 space-y-3">
                     <div className="flex justify-between items-start">
@@ -348,7 +352,6 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
                       </div>
                       <p className="text-xl font-headline font-black text-black">₹{expense.amount.toLocaleString()}</p>
                     </div>
-
                     <div className="grid grid-cols-2 gap-2 text-[9px] text-muted-foreground uppercase tracking-tight">
                       <div className="flex items-center gap-1.5 truncate"><MapPin className="w-3 h-3 shrink-0" /> {expense.location}</div>
                       <div className="flex items-center gap-1.5 justify-end">
@@ -358,7 +361,6 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
                           : format(new Date(expense.transactionDate as string), 'dd MMM, HH:mm')}
                       </div>
                     </div>
-
                     <div className="flex items-center justify-between pt-2 border-t border-muted/50">
                       <div className="flex items-center gap-2">
                         <div className="w-6 h-6 bg-muted rounded-full flex items-center justify-center text-[10px] font-black text-black">
@@ -369,13 +371,12 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
                           <span className="text-[10px] text-black uppercase font-bold">{expense.paidBy === user?.uid ? "Me" : expense.paidByName}</span>
                         </div>
                       </div>
-                      
                       <div className="flex items-center gap-1">
                         <Button variant="ghost" size="icon" className="h-8 w-8 text-primary/40 hover:text-primary" onClick={() => handleShareExpense()}>
                           <MessageSquareShare className="w-4 h-4" />
                         </Button>
                         {expense.paidBy === user?.uid && (
-                          <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive/40 hover:text-destructive" onClick={() => handleDeleteExpense(expense.id)}>
+                          <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive/40 hover:text-destructive" onClick={() => deleteGroupExpense(firestore!, groupId, expense.id)}>
                             <Trash2 className="w-4 h-4" />
                           </Button>
                         )}
@@ -387,7 +388,7 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
             </div>
           ) : (
             <div className="text-center py-12 bg-muted/20 rounded-3xl border-2 border-dashed border-muted-foreground/10 text-muted-foreground text-[10px] uppercase">
-              No expenses yet. Add one!
+              {t.noExpensesMonth}
             </div>
           )}
         </TabsContent>
@@ -399,30 +400,25 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
             </h4>
             <div className="grid gap-2">
               <Input placeholder="Friend's Name" value={newMemberName} onChange={(e) => setNewMemberName(e.target.value)} className="bg-card border-none h-10 rounded-xl" />
-              <Button onClick={handleAddMember} disabled={!newMemberName} className="h-10 rounded-xl uppercase tracking-widest text-[10px] gap-2 bg-primary text-primary-foreground hover:bg-primary/90">
+              <Button onClick={() => { addMemberToGroup(firestore!, groupId, newMemberName); setNewMemberName(""); }} disabled={!newMemberName} className="h-10 rounded-xl uppercase tracking-widest text-[10px] gap-2 bg-primary text-primary-foreground">
                 Add to List
               </Button>
             </div>
           </div>
-
           <div className="space-y-3">
             <h4 className="text-[10px] uppercase tracking-widest text-muted-foreground ml-1">Current Members</h4>
             <div className="grid gap-2">
               {members?.map((member) => (
                 <div key={member.id} className="flex items-center justify-between p-3 bg-card rounded-2xl border border-border/30 shadow-sm">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-muted rounded-full flex items-center justify-center text-black font-bold text-xs">
-                      {member.name.charAt(0)}
-                    </div>
+                    <div className="w-8 h-8 bg-muted rounded-full flex items-center justify-center text-black font-bold text-xs">{member.name.charAt(0)}</div>
                     <div className="flex flex-col">
                       <span className="text-sm leading-tight">{member.name} {member.userId === user?.uid && "(Me)"}</span>
                       <span className="text-[8px] text-muted-foreground uppercase tracking-widest">ID: {member.id.substring(0,6)}</span>
                     </div>
                   </div>
                   {member.userId !== groupData?.createdBy && member.userId !== user?.uid && (
-                    <Button variant="ghost" size="icon" onClick={() => handleRemoveMember(member.id)} className="h-8 w-8 text-muted-foreground/50">
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
+                    <Button variant="ghost" size="icon" onClick={() => removeMemberFromGroup(firestore!, groupId, member.id)} className="h-8 w-8 text-muted-foreground/50"><Trash2 className="w-4 h-4" /></Button>
                   )}
                 </div>
               ))}
