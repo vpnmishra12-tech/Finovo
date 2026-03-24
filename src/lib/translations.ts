@@ -1,3 +1,4 @@
+
 export const translations = {
   en: {
     appName: "Finovo - Expense Tracker",
@@ -111,6 +112,7 @@ export const translations = {
       Recharge: "Recharge",
       Shopping: "Shopping",
       EMI: "EMI",
+      Subscription: "Subscription",
       Miscellaneous: "MiSc/ Other",
       Cab: "Cab",
       Breakfast: "Breakfast",

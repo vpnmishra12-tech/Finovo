@@ -2,10 +2,6 @@
 'use server';
 /**
  * @fileOverview A Genkit flow for extracting expense details from a bill photo.
- *
- * - extractBillPhotoExpense - A function that handles the extraction process from a bill photo.
- * - ExtractBillPhotoExpenseInput - The input type for the extractBillPhotoExpense function.
- * - ExtractBillPhotoExpenseOutput - The return type for the extractBillPhotoExpense function.
  */
 
 import { ai } from '@/ai/genkit';
@@ -24,8 +20,8 @@ const ExtractBillPhotoExpenseOutputSchema = z.object({
   amount: z.number().describe('The total amount extracted from the bill.'),
   merchant: z.string().describe('The name of the merchant identified on the bill.'),
   category: z
-    .enum(['Food', 'Transport', 'Bills', 'Shopping', 'EMI', 'Recharge', 'Miscellaneous'])
-    .describe('The suggested expense category from the predefined list: Food, Transport, Bills, Shopping, EMI, Recharge, Miscellaneous.'),
+    .enum(['Food', 'Transport', 'Bills', 'Shopping', 'EMI', 'Recharge', 'Subscription', 'Miscellaneous'])
+    .describe('The suggested expense category from the predefined list.'),
 });
 export type ExtractBillPhotoExpenseOutput = z.infer<typeof ExtractBillPhotoExpenseOutputSchema>;
 
@@ -44,7 +40,10 @@ const extractBillPhotoExpensePrompt = ai.definePrompt({
 From the provided bill photo, your task is to:
 1. Extract the total amount of the expense.
 2. Identify the merchant's name.
-3. Categorize the expense into one of the following predefined categories: Food, Transport, Bills, Shopping, EMI, Recharge, Miscellaneous.
+3. Categorize the expense into one of the following: Food, Transport, Bills, Shopping, EMI, Recharge, Subscription, Miscellaneous.
+
+Guidelines:
+- If it's a receipt for a monthly service (like a gym membership bill or a software subscription invoice), use the 'Subscription' category.
 
 Here is the bill photo: {{media url=billPhotoDataUri}}`,
 });

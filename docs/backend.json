@@ -21,7 +21,7 @@
       "properties": {
         "userId": { "type": "string" },
         "amount": { "type": "number" },
-        "category": { "type": "string", "enum": ["Food", "Transport", "Bills", "Shopping", "EMI", "Recharge", "Miscellaneous"] },
+        "category": { "type": "string", "enum": ["Food", "Transport", "Bills", "Shopping", "EMI", "Recharge", "Subscription", "Miscellaneous"] },
         "description": { "type": "string" },
         "transactionDate": { "type": "string", "format": "date" },
         "captureMethod": { "type": "string", "enum": ["Text", "Voice", "Camera"] },

@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from 'react';
@@ -31,7 +32,7 @@ export function AddExpenseDrawer() {
   const [description, setDescription] = useState("");
   const [textInput, setTextInput] = useState("");
 
-  const mainCategories = ['Food', 'Transport', 'Bills', 'Recharge', 'Shopping', 'EMI', 'Miscellaneous'];
+  const mainCategories = ['Food', 'Transport', 'Bills', 'Recharge', 'Shopping', 'EMI', 'Subscription', 'Miscellaneous'];
 
   const resetForm = () => {
     setAmount("");
