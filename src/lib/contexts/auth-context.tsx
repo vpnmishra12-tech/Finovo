@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
@@ -25,7 +26,6 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const auth = useFirebaseServiceAuth();
-  // Immediate check for current user to reduce loading flicker
   const [user, setUser] = useState<User | null>(auth?.currentUser || null);
   const [loading, setLoading] = useState(true);
   const isMounted = useRef(true);
@@ -34,11 +34,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (!auth) return;
     
-    // High-speed auth listener
+    // Check for previous session hint to reduce loading perceived time
+    const authHint = localStorage.getItem('finovo_auth_hint');
+    if (!authHint) {
+      // If no hint, we might be a new user or logged out
+      // We don't force loading false yet, but this allows shell to show faster
+    }
+
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
       if (isMounted.current) {
         setUser(firebaseUser);
         setLoading(false);
+        if (firebaseUser) {
+          localStorage.setItem('finovo_auth_hint', 'true');
+        } else {
+          localStorage.removeItem('finovo_auth_hint');
+        }
       }
     });
 
@@ -52,7 +63,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (!auth) return;
     try {
       toast({ title: "Logging in...", description: "Please wait" });
-      await signInWithEmailAndPassword(auth, email, password);
+      const cred = await signInWithEmailAndPassword(auth, email, password);
+      if (cred.user) localStorage.setItem('finovo_auth_hint', 'true');
       toast({ title: "Login Successful!", description: "Welcome back!" });
     } catch (error: any) {
       console.error("Login Error:", error);
@@ -72,7 +84,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (!auth) return;
     try {
       toast({ title: "Creating Account...", description: "Please wait" });
-      await createUserWithEmailAndPassword(auth, email, password);
+      const cred = await createUserWithEmailAndPassword(auth, email, password);
+      if (cred.user) localStorage.setItem('finovo_auth_hint', 'true');
       toast({ title: "Success!", description: "Account created successfully." });
     } catch (error: any) {
       console.error("Signup Error:", error);
@@ -92,6 +105,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (!auth) return;
     try {
       await signOut(auth);
+      localStorage.removeItem('finovo_auth_hint');
       toast({
         title: "Logged Out",
         description: "See you next time!",

@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useMemo, useEffect } from 'react';
@@ -8,7 +9,7 @@ import { Header } from '@/components/layout/header';
 import { BudgetSummary } from '@/components/dashboard/budget-summary';
 import { AdBanner } from '@/components/dashboard/ad-banner';
 import { 
-  History, Calculator, Users, LayoutGrid, Home as HomeIcon, ArrowRight, AlertTriangle, Wallet, CheckCircle2, AlertCircle, ShieldCheck
+  History, Calculator, Users, ArrowRight, AlertTriangle, Wallet, CheckCircle2, AlertCircle, ShieldCheck, Home as HomeIcon
 } from 'lucide-react';
 import { useFirestore, useCollection, useMemoFirebase, useDoc } from '@/firebase';
 import { collection, query, orderBy, limit, doc, where } from 'firebase/firestore';
@@ -19,14 +20,14 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { cn } from '@/lib/utils';
+import { Skeleton } from '@/components/ui/skeleton';
 
-// Dynamic imports for components
-const BillSplitTool = dynamic(() => import('@/components/bill-split/bill-split-tool').then(mod => mod.BillSplitTool), { ssr: false });
-const ExpenseList = dynamic(() => import('@/components/expenses/expense-list').then(mod => mod.ExpenseList), { ssr: false });
-const GroupModule = dynamic(() => import('@/components/groups/group-module').then(mod => mod.GroupModule), { ssr: false });
+// Dynamic imports for sub-modules to keep main bundle light
+const BillSplitTool = dynamic(() => import('@/components/bill-split/bill-split-tool').then(mod => mod.BillSplitTool), { ssr: false, loading: () => <Skeleton className="h-[400px] w-full rounded-3xl" /> });
+const ExpenseList = dynamic(() => import('@/components/expenses/expense-list').then(mod => mod.ExpenseList), { ssr: false, loading: () => <Skeleton className="h-[300px] w-full rounded-3xl" /> });
+const GroupModule = dynamic(() => import('@/components/groups/group-module').then(mod => mod.GroupModule), { ssr: false, loading: () => <Skeleton className="h-[400px] w-full rounded-3xl" /> });
 const SpendingChart = dynamic(() => import('@/components/dashboard/spending-chart').then(mod => mod.SpendingChart), { ssr: false });
-const MonthlyHistory = dynamic(() => import('@/components/dashboard/monthly-history').then(mod => mod.MonthlyHistory), { ssr: false });
-const AgentModule = dynamic(() => import('@/components/agent/agent-module').then(mod => mod.AgentModule), { ssr: false });
+const AgentModule = dynamic(() => import('@/components/agent/agent-module').then(mod => mod.AgentModule), { ssr: false, loading: () => <Skeleton className="h-[500px] w-full rounded-3xl" /> });
 
 type NavTab = 'dashboard' | 'history' | 'splitter' | 'groups' | 'agent';
 
@@ -35,16 +36,21 @@ export default function Home() {
   const { t } = useLanguage();
   const firestore = useFirestore();
   const [activeTab, setActiveTab] = useState<NavTab>('dashboard');
-  
   const [isLoginView, setIsLoginView] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [hasAuthHint, setHasAuthHint] = useState(false);
+
+  useEffect(() => {
+    // Check for auth hint immediately on mount
+    const hint = localStorage.getItem('finovo_auth_hint');
+    if (hint === 'true') setHasAuthHint(true);
+  }, []);
 
   const currentMonth = new Date().getMonth() + 1;
   const currentYear = new Date().getFullYear();
   const budgetId = `${currentYear}-${currentMonth}`;
 
-  // Fetching expenses for totals
   const expensesQuery = useMemoFirebase(() => {
     if (!firestore || !user?.uid) return null;
     return query(collection(firestore, 'users', user.uid, 'expenses'), orderBy('createdAt', 'desc'), limit(50));
@@ -52,7 +58,6 @@ export default function Home() {
 
   const { data: expenses, isLoading: isExpensesLoading } = useCollection<Expense>(expensesQuery);
 
-  // Fetching budget to compare with totals
   const budgetRef = useMemoFirebase(() => {
     if (!firestore || !user?.uid) return null;
     return doc(firestore, 'users', user.uid, 'monthlyBudgets', budgetId);
@@ -62,7 +67,6 @@ export default function Home() {
   const budget = budgetData?.budgetAmount || 5000;
   const totalSpent = expenses?.reduce((sum, e) => sum + e.amount, 0) || 0;
 
-  // Notification Logic for Groups
   const groupsQuery = useMemoFirebase(() => {
     if (!firestore || !user?.uid) return null;
     return query(collection(firestore, 'groups'), where('memberIds', 'array-contains', user.uid));
@@ -73,7 +77,6 @@ export default function Home() {
 
   useEffect(() => {
     if (!userGroups) return;
-    
     const checkUnread = () => {
       const anyUnread = userGroups.some(group => {
         if (!group.lastActivityAt) return false;
@@ -83,14 +86,21 @@ export default function Home() {
       });
       setHasUnreadGroups(anyUnread);
     };
-
     checkUnread();
   }, [userGroups, activeTab]);
 
-  if (loading) {
+  // Shell Loading State: If we have an auth hint, we show the shell instead of the splash
+  // This removes the "Bouncing Wallet" wait for return users.
+  if (loading && !hasAuthHint) {
     return (
-      <div className="fixed inset-0 flex items-center justify-center bg-background">
-        <Wallet className="w-10 h-10 text-primary animate-bounce" />
+      <div className="fixed inset-0 flex flex-col items-center justify-center bg-background z-[200]">
+        <div className="relative">
+          <div className="absolute inset-0 bg-primary/10 rounded-full animate-ping scale-150" />
+          <Wallet className="w-10 h-10 text-primary animate-pulse relative z-10" />
+        </div>
+        <p className="mt-8 text-[10px] font-headline font-black uppercase tracking-[0.5em] text-primary/40 animate-pulse">
+          INITIALIZING CORE
+        </p>
       </div>
     );
   }
@@ -114,7 +124,6 @@ export default function Home() {
     </Card>
   );
 
-  // Alert bar logic
   const percentUsed = (totalSpent / budget) * 100;
   let alertBar = null;
 
@@ -152,8 +161,8 @@ export default function Home() {
       <Header />
       
       <main className="flex-1 overflow-hidden relative">
-        {!user ? (
-          <div className="h-full flex flex-col items-center justify-center p-6 bg-background">
+        {(!user && !loading) ? (
+          <div className="h-full flex flex-col items-center justify-center p-6 bg-background animate-in fade-in duration-500">
             <div className="w-full max-sm flex flex-col items-center space-y-6">
               <div className="flex flex-col items-center text-center space-y-3">
                 <div className="bg-card p-4 rounded-full shadow-lg border border-border/50">
@@ -216,12 +225,12 @@ export default function Home() {
             </div>
           </div>
         ) : (
-          <div className="h-full flex flex-col max-w-6xl mx-auto pt-2 pb-0 overflow-hidden">
+          <div className="h-full flex flex-col max-w-6xl mx-auto pt-2 pb-0 overflow-hidden animate-in fade-in duration-300">
             <div className="flex-1 overflow-hidden relative">
               {activeTab === 'dashboard' ? (
                 <div className="h-full overflow-y-auto no-scrollbar px-5 space-y-2 pb-2">
                   <BudgetSummary 
-                    userId={user.uid} 
+                    userId={user?.uid || ""} 
                     totalSpent={totalSpent} 
                     month={currentMonth} 
                     year={currentYear} 
@@ -285,7 +294,7 @@ export default function Home() {
         )}
       </main>
 
-      {user && (
+      {(user || (loading && hasAuthHint)) && (
         <div className="h-16 bg-primary border-t border-white/10 flex items-center justify-around px-4 shadow-inner shrink-0 z-50">
           <button onClick={() => setActiveTab('dashboard')} className={cn("flex flex-col items-center gap-1 transition-colors", activeTab === 'dashboard' ? "text-white" : "text-white/50")}>
             <HomeIcon className="w-5 h-5" />
