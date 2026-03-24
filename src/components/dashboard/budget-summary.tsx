@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from 'react';
@@ -77,7 +78,7 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
 
               {/* Add Expense Action */}
               <div className="flex items-center gap-2">
-                <span className="text-[7px] font-black uppercase tracking-[0.2em] text-muted-foreground opacity-60">Add Bill</span>
+                <span className="text-[7px] font-black uppercase tracking-[0.2em] text-muted-foreground opacity-60">Add Expense</span>
                 <AddExpenseDrawer />
               </div>
             </div>
