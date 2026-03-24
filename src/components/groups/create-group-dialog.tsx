@@ -102,7 +102,7 @@ export function CreateGroupDialog() {
           <Button 
             onClick={handleCreate} 
             disabled={!groupName || isSubmitting}
-            className="w-full h-14 rounded-2xl font-black uppercase tracking-widest gap-2 bg-black text-white hover:bg-black/90"
+            className="w-full h-14 rounded-2xl font-black uppercase tracking-widest gap-2 bg-primary text-primary-foreground hover:bg-primary/90"
           >
             {isSubmitting ? "Creating..." : <><CheckCircle2 className="w-5 h-5" /> {t.save}</>}
           </Button>

@@ -276,7 +276,7 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
             </h4>
             <div className="grid gap-2">
               <Input placeholder="Friend's Name" value={newMemberName} onChange={(e) => setNewMemberName(e.target.value)} className="bg-card border-none h-10 rounded-xl" />
-              <Button onClick={handleAddMember} disabled={!newMemberName} className="h-10 rounded-xl uppercase tracking-widest text-[10px] gap-2 bg-black text-white hover:bg-black/90">
+              <Button onClick={handleAddMember} disabled={!newMemberName} className="h-10 rounded-xl uppercase tracking-widest text-[10px] gap-2 bg-primary text-primary-foreground hover:bg-primary/90">
                 Add to List
               </Button>
             </div>

@@ -351,7 +351,7 @@ export function BillSplitTool() {
                 splitType === 'custom' ? (customBillVal <= 0 || !customNamesEntered || isCustomMismatch) : 
                 (groupTotalPaid <= 0 || !groupNamesEntered)
               } 
-              className="rounded-2xl h-14 px-8 bg-black text-white hover:bg-black/90 uppercase tracking-widest text-[10px] gap-2 shadow-xl relative z-10"
+              className="rounded-2xl h-14 px-8 bg-primary text-primary-foreground hover:bg-primary/90 uppercase tracking-widest text-[10px] gap-2 shadow-xl relative z-10"
             >
               <CheckCircle2 className="w-5 h-5" /> {t.saveMyShare}
             </Button>

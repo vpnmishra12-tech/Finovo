@@ -1,12 +1,12 @@
 {
   "name": "Finovo - Expense Tracker",
   "short_name": "Finovo",
-  "description": "Ultra Premium AI-powered expense tracker with 3D Neon Digital Wallet Icon.",
+  "description": "Ultra Premium AI-powered expense tracker with #2C2D2D Theme.",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#FDFBF7",
-  "theme_color": "#5973A6",
+  "theme_color": "#2C2D2D",
   "icons": [
     {
       "src": "https://images.unsplash.com/photo-1621416848446-991125c75b06?w=192&h=192&fit=crop&q=80&v=3500",

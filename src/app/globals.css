@@ -10,7 +10,7 @@
     --card-foreground: 0 0% 0%;
     --popover: 40 30% 98%;
     --popover-foreground: 0 0% 0%;
-    --primary: 221 30% 50%; /* Softer Slate Blue */
+    --primary: 180 1% 17%; /* Charcoal Gray #2C2D2D */
     --primary-foreground: 0 0% 100%;
     --secondary: 40 20% 94%;
     --secondary-foreground: 0 0% 0%;
@@ -22,7 +22,7 @@
     --destructive-foreground: 0 0% 100%;
     --border: 40 20% 90%;
     --input: 40 20% 90%;
-    --ring: 221 30% 50%;
+    --ring: 180 1% 17%;
     --radius: 2rem;
   }
 }
