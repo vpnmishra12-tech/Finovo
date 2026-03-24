@@ -235,16 +235,16 @@ export default function Home() {
 
                   <div className="grid grid-cols-2 gap-2 shrink-0">
                     <GridCard 
-                      icon={ShieldCheck} 
-                      label="Your AI Agent" 
-                      color="text-red-600 bg-red-50" 
-                      onClick={() => setActiveTab('agent')} 
-                    />
-                    <GridCard 
                       icon={History} 
                       label="Recent History" 
                       color="text-orange-600 bg-orange-50" 
                       onClick={() => setActiveTab('history')} 
+                    />
+                    <GridCard 
+                      icon={ShieldCheck} 
+                      label="Your AI Agent" 
+                      color="text-red-600 bg-red-50" 
+                      onClick={() => setActiveTab('agent')} 
                     />
                     <GridCard 
                       icon={Calculator} 
@@ -291,13 +291,13 @@ export default function Home() {
             <HomeIcon className="w-5 h-5" />
             <span className="text-[8px] uppercase tracking-widest font-normal">Home</span>
           </button>
-          <button onClick={() => setActiveTab('agent')} className={cn("flex flex-col items-center gap-1 transition-colors", activeTab === 'agent' ? "text-white" : "text-white/50")}>
-            <ShieldCheck className="w-5 h-5" />
-            <span className="text-[8px] uppercase tracking-widest font-normal">Agent</span>
-          </button>
           <button onClick={() => setActiveTab('history')} className={cn("flex flex-col items-center gap-1 transition-colors", activeTab === 'history' ? "text-white" : "text-white/50")}>
             <History className="w-5 h-5" />
             <span className="text-[8px] uppercase tracking-widest font-normal">Bills</span>
+          </button>
+          <button onClick={() => setActiveTab('agent')} className={cn("flex flex-col items-center gap-1 transition-colors", activeTab === 'agent' ? "text-white" : "text-white/50")}>
+            <ShieldCheck className="w-5 h-5" />
+            <span className="text-[8px] uppercase tracking-widest font-normal">Agent</span>
           </button>
           <button onClick={() => setActiveTab('splitter')} className={cn("flex flex-col items-center gap-1 transition-colors", activeTab === 'splitter' ? "text-white" : "text-white/50")}>
             <Calculator className="w-5 h-5" />
