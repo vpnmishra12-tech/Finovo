@@ -292,7 +292,7 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
                       variant="ghost" 
                       size="sm" 
                       onClick={() => setShowSettlements(false)}
-                      className="h-6 px-2 text-[9px] uppercase font-black opacity-50 hover:opacity-100"
+                      className="h-8 px-2 text-[10px] uppercase font-black tracking-widest text-muted-foreground hover:text-primary transition-colors"
                     >
                       {t.hideSettlement}
                     </Button>
