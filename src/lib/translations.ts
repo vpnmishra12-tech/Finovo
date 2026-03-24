@@ -84,6 +84,13 @@ export const translations = {
       detecting: "Auditing Receipt...",
       summary: "AI Summary",
       advice: "What to do?",
+      subTitle: "Subscription Audit",
+      subDesc: "Detect hidden recurring charges and monthly drains.",
+      subButton: "Scan Recurring Expenses",
+      scanning: "Scanning Patterns...",
+      noSubs: "No recurring subscriptions found.",
+      foundSubs: "Subscriptions Found",
+      totalDrain: "Annual Drain",
       errors: {
         math: "Total Calculation Error",
         service: "Hidden Service Charge Found",
