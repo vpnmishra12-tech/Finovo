@@ -74,19 +74,21 @@ export const translations = {
     noExpensesMonth: "No expenses recorded for this month.",
     agent: {
       title: "Your AI Agent",
-      survivalMode: "Survival Mode",
-      socialShield: "Social Shield",
-      generateReminder: "Generate Reminder",
-      survivalActive: "Survival Mode Active!",
-      survivalHealthy: "Financial Health: Good",
-      askAgent: "Ask your Guardian",
-      getAdvice: "Get AI Advice",
-      debtTitle: "Who owes you?",
-      reminderTone: "Tone",
-      tones: {
-        funny: "Funny",
-        professional: "Professional",
-        desi: "Desi/Casual"
+      auditorTitle: "Bill Auditor",
+      auditorDesc: "Scan your bill to catch hidden charges and math errors.",
+      scanButton: "Scan & Audit Bill",
+      uploadButton: "Upload Bill Image",
+      auditResult: "Audit Result",
+      isCorrect: "Bill is Accurate",
+      hasErrors: "Issues Detected!",
+      detecting: "Auditing Receipt...",
+      summary: "AI Summary",
+      advice: "What to do?",
+      errors: {
+        math: "Total Calculation Error",
+        service: "Hidden Service Charge Found",
+        gst: "Incorrect GST Calculation",
+        overcharge: "Price Mismatch"
       }
     },
     alerts: {

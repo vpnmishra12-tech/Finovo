@@ -5,3 +5,4 @@ import '@/ai/flows/extract-text-expense.ts';
 import '@/ai/flows/extract-bill-photo-expense.ts';
 import '@/ai/flows/extract-voice-expense.ts';
 import '@/ai/flows/agent-advisor-flow.ts';
+import '@/ai/flows/bill-audit-flow.ts';
