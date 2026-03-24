@@ -180,7 +180,7 @@ export function AgentModule() {
                   </p>
                 </div>
               </div>
-              <div className="bg-muted/30 p-3 rounded-xl border border-border/5 flex items-center gap-3">
+              <div className="bg-muted/30 p-3 rounded-xl border border-border/50 flex items-center gap-3">
                 <TrendingUp className="w-4 h-4 text-primary shrink-0" />
                 <p className="text-[10px] text-muted-foreground font-medium italic">
                   Tip: You visited this category {monthlyInsight.count} times. Breaking it down might save you more!
@@ -193,7 +193,7 @@ export function AgentModule() {
                 <TrendingUp className="w-6 h-6 text-muted-foreground/30" />
               </div>
               <div className="space-y-1">
-                <p className="text-[11px] font-black uppercase text-muted-foreground tracking-widest">{t.agent.noSubs}</p>
+                <p className="text-[11px] font-black uppercase text-muted-foreground tracking-widest">{t.agent.noExpensesLastMonth}</p>
                 <p className="text-[9px] text-muted-foreground max-w-[200px] leading-relaxed">
                   Add some expenses for last month so I can analyze your spending habits!
                 </p>
