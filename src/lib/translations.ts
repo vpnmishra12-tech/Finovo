@@ -75,6 +75,9 @@ export const translations = {
     noExpensesMonth: "No expenses recorded for this month.",
     agent: {
       title: "Your AI Agent",
+      biggestExpenseTitle: "Monthly Insight",
+      biggestCategory: "Biggest Spend",
+      times: "times",
       auditorTitle: "Bill Auditor",
       auditorDesc: "Scan your bill to catch hidden charges and math errors.",
       scanButton: "Scan & Audit Bill",

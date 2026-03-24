@@ -1,11 +1,12 @@
+
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useMemo } from 'react';
 import { useLanguage } from '@/lib/contexts/language-context';
 import { useAuth } from '@/lib/contexts/auth-context';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ShieldCheck, Camera, Search, Info, RefreshCcw, Wallet, Loader2, CheckCircle2, AlertTriangle, AlertCircle } from 'lucide-react';
+import { ShieldCheck, Camera, Search, Info, RefreshCcw, Wallet, Loader2, CheckCircle2, AlertTriangle, AlertCircle, TrendingUp } from 'lucide-react';
 import { auditBill, type BillAuditOutput } from '@/ai/flows/bill-audit-flow';
 import { detectSubscriptions, type SubscriptionDetectorOutput } from '@/ai/flows/subscription-detector-flow';
 import { useToast } from '@/hooks/use-toast';
@@ -14,6 +15,7 @@ import { collection, query, orderBy, limit } from 'firebase/firestore';
 import { Expense } from '@/lib/expenses';
 import { cn } from '@/lib/utils';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { format, subMonths } from 'date-fns';
 
 export function AgentModule() {
   const { t } = useLanguage();
@@ -28,13 +30,52 @@ export function AgentModule() {
   const [isScanningSubs, setIsScanningSubs] = useState(false);
   const [subResult, setSubResult] = useState<SubscriptionDetectorOutput | null>(null);
 
-  // Fetch recent expenses for subscription audit
+  // Fetch recent expenses for subscription audit and monthly insight
   const expensesQuery = useMemoFirebase(() => {
     if (!firestore || !user?.uid) return null;
     return query(collection(firestore, 'users', user.uid, 'expenses'), orderBy('transactionDate', 'desc'), limit(100));
   }, [firestore, user?.uid]);
 
   const { data: expenses } = useCollection<Expense>(expensesQuery);
+
+  // Calculate Monthly Insight (Biggest category expense from last month)
+  const monthlyInsight = useMemo(() => {
+    if (!expenses || expenses.length === 0) return null;
+
+    const now = new Date();
+    const lastMonth = subMonths(now, 1);
+    const lastMonthStr = format(lastMonth, 'yyyy-MM');
+
+    const categoryStats: Record<string, { total: number; count: number }> = {};
+
+    expenses.forEach(exp => {
+      // exp.transactionDate is typically "YYYY-MM-DD"
+      if (exp.transactionDate && exp.transactionDate.startsWith(lastMonthStr)) {
+        if (!categoryStats[exp.category]) {
+          categoryStats[exp.category] = { total: 0, count: 0 };
+        }
+        categoryStats[exp.category].total += exp.amount;
+        categoryStats[exp.category].count += 1;
+      }
+    });
+
+    const categories = Object.keys(categoryStats);
+    if (categories.length === 0) return null;
+
+    let biggestCat = categories[0];
+    categories.forEach(cat => {
+      if (categoryStats[cat].total > categoryStats[biggestCat].total) {
+        biggestCat = cat;
+      }
+    });
+
+    return {
+      category: biggestCat,
+      total: categoryStats[biggestCat].total,
+      count: categoryStats[biggestCat].count,
+      monthName: format(lastMonth, 'MMMM')
+    };
+  }, [expenses]);
 
   const handleProcessImage = async (file: File) => {
     setIsAuditing(true);
@@ -108,6 +149,29 @@ export function AgentModule() {
           <p className="text-[10px] text-white/60 uppercase tracking-widest font-bold">Your Personal Financial Guardian</p>
         </div>
       </div>
+
+      {/* Monthly Insight Card */}
+      {monthlyInsight && (
+        <Card className="border-none shadow-sm rounded-[1.5rem] bg-card overflow-hidden animate-in zoom-in-95 duration-500">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-[10px] uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+              <TrendingUp className="w-4 h-4 text-primary" /> {t.agent.biggestExpenseTitle} ({monthlyInsight.monthName})
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-4 pt-0">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-[9px] font-black uppercase text-muted-foreground tracking-widest">{t.agent.biggestCategory}</p>
+                <h4 className="font-headline font-black text-xl uppercase leading-tight">{t.categories[monthlyInsight.category as keyof typeof t.categories] || monthlyInsight.category}</h4>
+              </div>
+              <div className="text-right">
+                <p className="text-2xl font-headline font-black text-black">₹{monthlyInsight.total.toLocaleString()}</p>
+                <p className="text-[9px] font-black uppercase text-red-600 tracking-widest">Spent {monthlyInsight.count} {t.agent.times}</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       <Tabs defaultValue="auditor" className="w-full">
         <TabsList className="grid w-full grid-cols-2 bg-muted h-12 rounded-2xl p-1 mb-4">
