@@ -21,10 +21,10 @@ const SubscriptionDetectorOutputSchema = z.object({
     amount: z.number().describe('The recurring amount.'),
     frequency: z.string().describe('The pattern frequency (e.g., Monthly, Yearly).'),
     confidence: z.number().describe('Confidence level 0-1.'),
-    reason: z.string().describe('Why this was flagged as a subscription.'),
+    reason: z.string().describe('Why this was flagged as a subscription (e.g., Fixed amount pattern or keyword match).'),
   })),
   totalAnnualDrain: z.number().describe('The total estimated cost per year for all detected subscriptions.'),
-  summary: z.string().describe('A brief advice on potential savings.'),
+  summary: z.string().describe('A brief advice on potential savings or what to review.'),
 });
 export type SubscriptionDetectorOutput = z.infer<typeof SubscriptionDetectorOutputSchema>;
 
@@ -38,19 +38,19 @@ const detectorPrompt = ai.definePrompt({
   output: { schema: SubscriptionDetectorOutputSchema },
   prompt: `You are a Forensic Financial Auditor specialized in detecting "Subscription Leaks" and recurring patterns in spending.
 
-Analyze the following list of user expenses:
+Analyze the following list of user expenses provided by the user:
 {{#each expenses}}
 - Date: {{{transactionDate}}}, Amount: ₹{{{amount}}}, Desc: {{{description}}}
 {{/each}}
 
-Your Tasks:
-1. Identify Recurring Payments: Look for same/similar amounts paid to the same merchant or for the same purpose periodically (e.g., every ~30 days or once a year).
-2. Look for Keywords: Flag anything with "Netflix", "Spotify", "Amazon Prime", "Disney", "Rent", "Gym", "Premium", "Subscription", "DTH", "Insurance", "SIP", "EMI", "Renew".
-3. Calculate Frequency: Determine if it's Monthly, Quarterly, or Yearly.
-4. Estimated Annual Drain: Sum up the annual cost of all identified subscriptions.
-5. Provide Advice: If there are redundant subscriptions or high monthly drains, suggest what to review.
+Your Analysis Strategy:
+1. **Recurring Pattern Match**: Look for the exact same amount or very similar amounts (±10%) paid to the same merchant or for the same category at regular intervals (e.g., once every 28-32 days, or once every ~365 days).
+2. **Keyword Intelligence**: Even if a payment appears only once in the list, if the description contains terms like "Netflix", "Spotify", "Youtube Premium", "Gym", "Amazon Prime", "Disney", "Zomato Gold", "Swiggy One", "DTH", "Insurance Premium", "iCloud", "Adobe", or "Software Subscription", flag it as a potential monthly subscription.
+3. **Calculate Frequency**: Identify if the pattern is Monthly, Quarterly, or Yearly.
+4. **Confidence Score**: Set a higher confidence if you see 2+ occurrences of the same payment. Set a lower confidence if it's based on keywords only.
+5. **Estimate Annual Drain**: Calculate how much this will cost the user in a full year (e.g., Monthly amount * 12).
 
-Format your response as structured JSON.`,
+Provide a structured JSON output with the findings. If no subscriptions are found, return an empty array for 'subscriptions' and 0 for 'totalAnnualDrain'.`,
 });
 
 const subscriptionDetectorFlow = ai.defineFlow(

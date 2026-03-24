@@ -5,7 +5,7 @@ import { useLanguage } from '@/lib/contexts/language-context';
 import { useAuth } from '@/lib/contexts/auth-context';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ShieldCheck, Camera, Image as ImageIcon, Loader2, AlertTriangle, CheckCircle2, Search, Info, RefreshCcw, Wallet, ArrowRight } from 'lucide-react';
+import { ShieldCheck, Camera, Search, Info, RefreshCcw, Wallet, Loader2, CheckCircle2, AlertTriangle, AlertCircle } from 'lucide-react';
 import { auditBill, type BillAuditOutput } from '@/ai/flows/bill-audit-flow';
 import { detectSubscriptions, type SubscriptionDetectorOutput } from '@/ai/flows/subscription-detector-flow';
 import { useToast } from '@/hooks/use-toast';
@@ -81,7 +81,11 @@ export function AgentModule() {
         }))
       });
       setSubResult(result);
-      toast({ title: "Audit Complete", description: `Found ${result.subscriptions.length} patterns.` });
+      if (result.subscriptions.length === 0) {
+        toast({ title: "Audit Complete", description: "No subscription leaks detected yet." });
+      } else {
+        toast({ title: "Audit Complete", description: `Found ${result.subscriptions.length} recurring leaks.` });
+      }
     } catch (err) {
       toast({ variant: 'destructive', title: 'Error', description: 'Failed to scan subscriptions.' });
     } finally {
@@ -193,9 +197,12 @@ export function AgentModule() {
               <CardTitle className="text-[10px] uppercase tracking-widest text-muted-foreground">{t.agent.subTitle}</CardTitle>
             </CardHeader>
             <CardContent className="p-6 pt-0 space-y-4">
-              <p className="text-[10px] text-muted-foreground uppercase tracking-tight leading-relaxed">
-                {t.agent.subDesc}
-              </p>
+              <div className="bg-muted/30 p-4 rounded-2xl flex gap-3">
+                <AlertCircle className="w-5 h-5 text-primary shrink-0" />
+                <p className="text-[10px] text-muted-foreground uppercase tracking-tight leading-relaxed">
+                  {t.agent.howItWorks}
+                </p>
+              </div>
               <Button
                 onClick={handleSubAudit}
                 disabled={isScanningSubs}
@@ -217,7 +224,7 @@ export function AgentModule() {
             </div>
           )}
 
-          {subResult && (
+          {subResult && subResult.subscriptions.length > 0 ? (
             <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
               <div className="grid grid-cols-2 gap-2">
                 <Card className="bg-red-50 border-none rounded-2xl p-4">
@@ -260,6 +267,10 @@ export function AgentModule() {
                 </div>
               </Card>
             </div>
+          ) : subResult && (
+             <div className="text-center py-10 bg-muted/10 rounded-3xl border-2 border-dashed border-border/50">
+                <p className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">{t.agent.noSubs}</p>
+             </div>
           )}
         </TabsContent>
       </Tabs>
@@ -267,7 +278,7 @@ export function AgentModule() {
       {/* Trust Banner */}
       <div className="p-4 bg-muted/10 rounded-2xl text-center border border-border/5">
         <p className="text-[8px] font-black text-muted-foreground uppercase tracking-[0.3em]">
-          AI Powered Audit Engine v1.1
+          AI Powered Audit Engine v1.2
         </p>
       </div>
     </div>
