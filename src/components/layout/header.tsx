@@ -2,7 +2,7 @@
 
 import { useAuth } from '@/lib/contexts/auth-context';
 import { Button } from '@/components/ui/button';
-import { Bell, Settings, LogOut, Share2, Key } from 'lucide-react';
+import { Settings, LogOut, Share2, Key } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
@@ -82,11 +82,6 @@ export function Header() {
               <DropdownMenuItem onClick={handleChangePassword} className="rounded-lg h-10 gap-3 cursor-pointer">
                 <Key className="w-4 h-4 text-muted-foreground" />
                 <span className="text-xs">Change Password</span>
-              </DropdownMenuItem>
-
-              <DropdownMenuItem className="rounded-lg h-10 gap-3 cursor-pointer">
-                <Bell className="w-4 h-4 text-muted-foreground" />
-                <span className="text-xs">Notifications</span>
               </DropdownMenuItem>
 
               <DropdownMenuSeparator />
