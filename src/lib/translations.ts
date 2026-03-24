@@ -50,6 +50,7 @@ export const translations = {
     whoPaid: "Who paid the full bill?",
     settlement: "Money Exchange (Who pays whom?)",
     owes: "will pay",
+    payTo: "pay to",
     to: "to",
     noPayment: "Settled up!",
     remainingToSplit: "Remaining to assign",
