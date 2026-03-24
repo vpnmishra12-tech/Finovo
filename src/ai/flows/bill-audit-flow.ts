@@ -32,18 +32,24 @@ const auditPrompt = ai.definePrompt({
   name: 'billAuditPrompt',
   input: { schema: BillAuditInputSchema },
   output: { schema: BillAuditOutputSchema },
-  prompt: `You are an expert Forensic Accountant. Your task is to audit the provided bill/receipt image with extreme scrutiny.
+  prompt: `You are an expert Forensic Accountant and Tax Auditor. Your task is to audit the provided bill/receipt image with extreme precision.
 
-Check for the following:
-1. **Mathematical Accuracy**: Sum up every single line item and tax. Does the math add up to the final 'Grand Total'? Even a 1 rupee difference is an error.
-2. **Hidden/Illegal Charges**: Detect 'Service Charges' (often optional/illegal), 'Misc Fees', 'Handling Charges', or 'Container Charges' that look suspicious. 
-3. **GST/VAT Audit**: Check if the tax percentage applied matches the tax amount. Ensure tax is not calculated on top of other taxes (tax on tax).
-4. **Duplication Check**: Look for items listed twice or similar-looking entries that might be a double-charge.
-5. **Overcharging**: If possible, identify if the GST number (GSTIN) is missing which might indicate a fake bill.
+Key Auditing Rules:
+1. **Mathematical Consistency**: Calculate the sum of all individual items manually. Compare this sum to the Sub-Total and Grand Total shown on the bill. Flag any difference, even of 1 Rupee.
+2. **Dynamic Tax Verification**: 
+   - Tax rates vary by product category (e.g., 5%, 12%, 18%, 28% in India). 
+   - First, check if the tax amount shown matches the percentage stated on the bill (Math Check).
+   - Second, use your knowledge of standard tax slabs for the detected merchant type. If a restaurant is charging 28% GST (which is usually 5% or 18%), flag it as "Suspicious Tax Rate".
+   - Ensure tax is calculated on the Sub-Total, not on top of other taxes (Cascading tax check).
+3. **Hidden / Illegal Charges**: 
+   - Detect "Service Charges". Note that in many regions like India, Service Charge is optional and cannot be forced.
+   - Look for "Misc", "Rounding", or "Handling" fees that don't have a clear breakdown.
+4. **Duplicate Entries**: Scrutinize the list for similar items added twice or redundant entries.
+5. **Merchant Integrity**: Check if a GSTIN (GST Number) is present. If it's a large bill without a GSTIN, flag it as a "Potential Fake Bill".
 
-If you find ANY discrepancy or suspicious charge, set isCorrect to false and list the errors clearly.
+If you find ANY discrepancy, set isCorrect to false. 
 
-In the 'suggestedAction', provide a clear, firm sentence the user can say to the merchant to get a refund or correction.
+In 'suggestedAction', provide a firm, polite, and legally-grounded sentence the user can use at the billing counter to resolve the issue.
 
 Here is the bill photo: {{media url=billPhotoDataUri}}`,
 });
