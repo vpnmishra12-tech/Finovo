@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { useAuth } from '@/lib/contexts/auth-context';
 import { useLanguage } from '@/lib/contexts/language-context';
@@ -11,8 +11,9 @@ import {
   History, Calculator, Users, LayoutGrid, Home as HomeIcon, ArrowRight, AlertTriangle, Wallet, CheckCircle2, AlertCircle
 } from 'lucide-react';
 import { useFirestore, useCollection, useMemoFirebase, useDoc } from '@/firebase';
-import { collection, query, orderBy, limit, doc } from 'firebase/firestore';
+import { collection, query, orderBy, limit, doc, where } from 'firebase/firestore';
 import { Expense, MonthlyBudget } from '@/lib/expenses';
+import { Group } from '@/lib/groups';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
@@ -60,6 +61,31 @@ export default function Home() {
   const budget = budgetData?.budgetAmount || 5000;
   const totalSpent = expenses?.reduce((sum, e) => sum + e.amount, 0) || 0;
 
+  // Notification Logic for Groups
+  const groupsQuery = useMemoFirebase(() => {
+    if (!firestore || !user?.uid) return null;
+    return query(collection(firestore, 'groups'), where('memberIds', 'array-contains', user.uid));
+  }, [firestore, user?.uid]);
+
+  const { data: userGroups } = useCollection<Group>(groupsQuery);
+  const [hasUnreadGroups, setHasUnreadGroups] = useState(false);
+
+  useEffect(() => {
+    if (!userGroups) return;
+    
+    const checkUnread = () => {
+      const anyUnread = userGroups.some(group => {
+        if (!group.lastActivityAt) return false;
+        const lastSeen = localStorage.getItem(`group_seen_${group.id}`);
+        if (!lastSeen) return true;
+        return group.lastActivityAt.toMillis() > parseInt(lastSeen);
+      });
+      setHasUnreadGroups(anyUnread);
+    };
+
+    checkUnread();
+  }, [userGroups, activeTab]);
+
   if (loading) {
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-background">
@@ -68,9 +94,9 @@ export default function Home() {
     );
   }
 
-  const GridCard = ({ icon: Icon, label, color, onClick }: { icon: any, label: string, color: string, onClick: () => void }) => (
+  const GridCard = ({ icon: Icon, label, color, onClick, hasDot }: { icon: any, label: string, color: string, onClick: () => void, hasDot?: boolean }) => (
     <Card 
-      className="border-none shadow-sm active:scale-95 transition-all cursor-pointer rounded-[1rem] bg-card h-24 flex items-center overflow-hidden"
+      className="border-none shadow-sm active:scale-95 transition-all cursor-pointer rounded-[1rem] bg-card h-24 flex items-center overflow-hidden relative"
       onClick={onClick}
     >
       <CardContent className="p-3.5 flex items-center gap-3.5 w-full">
@@ -80,6 +106,9 @@ export default function Home() {
         <span className="font-headline text-[11px] uppercase tracking-wider text-black font-normal leading-tight flex-1">
           {label}
         </span>
+        {hasDot && (
+          <div className="absolute top-3 right-3 w-2.5 h-2.5 bg-red-600 rounded-full border-2 border-card" />
+        )}
       </CardContent>
     </Card>
   );
@@ -227,6 +256,7 @@ export default function Home() {
                       label="Groups" 
                       color="text-green-600 bg-green-50" 
                       onClick={() => setActiveTab('groups')} 
+                      hasDot={hasUnreadGroups}
                     />
                   </div>
                 </div>
@@ -267,9 +297,12 @@ export default function Home() {
             <Calculator className="w-5 h-5" />
             <span className="text-[8px] uppercase tracking-widest font-normal">Split</span>
           </button>
-          <button onClick={() => setActiveTab('groups')} className={cn("flex flex-col items-center gap-1 transition-colors", activeTab === 'groups' ? "text-white" : "text-white/50")}>
+          <button onClick={() => setActiveTab('groups')} className={cn("flex flex-col items-center gap-1 transition-colors relative", activeTab === 'groups' ? "text-white" : "text-white/50")}>
             <Users className="w-5 h-5" />
             <span className="text-[8px] uppercase tracking-widest font-normal">Groups</span>
+            {hasUnreadGroups && (
+              <div className="absolute top-0 right-1 w-2 h-2 bg-red-600 rounded-full border border-primary" />
+            )}
           </button>
         </div>
       )}

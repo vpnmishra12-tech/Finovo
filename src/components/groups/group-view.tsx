@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/lib/contexts/auth-context';
 import { useLanguage } from '@/lib/contexts/language-context';
 import { useFirestore, useCollection, useMemoFirebase, useDoc } from '@/firebase';
@@ -31,6 +31,13 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
   }, [firestore, groupId]);
 
   const { data: groupData } = useDoc<Group>(groupRef);
+
+  // Mark group as seen when viewed
+  useEffect(() => {
+    if (groupData?.lastActivityAt) {
+      localStorage.setItem(`group_seen_${groupId}`, groupData.lastActivityAt.toMillis().toString());
+    }
+  }, [groupData, groupId]);
 
   const expensesQuery = useMemoFirebase(() => {
     if (!firestore || !groupId) return null;
@@ -105,7 +112,6 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
   };
 
   const handleShareExpense = async () => {
-    // Hidden details message to ensure users open the app
     const message = `${t.shareMessage}${groupData?.name || 'our group'}. ${t.shareLinkText}${window.location.origin}`;
 
     if (navigator.share) {

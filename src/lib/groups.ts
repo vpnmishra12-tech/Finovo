@@ -7,6 +7,7 @@ export interface Group {
   createdBy: string;
   memberIds: string[];
   createdAt: Timestamp;
+  lastActivityAt?: Timestamp;
 }
 
 export interface GroupMember {
@@ -31,7 +32,6 @@ export interface GroupExpense {
 
 /**
  * Generates a unique 10-character alphanumeric group code.
- * 36^10 combinations (~3.6 Quadrillion) - Practically Unlimited for a lifetime.
  */
 function generateShortId() {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -55,6 +55,7 @@ export async function createGroup(db: Firestore, userId: string, name: string, m
     createdBy: userId,
     memberIds: [userId],
     createdAt: serverTimestamp(),
+    lastActivityAt: serverTimestamp(),
   };
 
   setDocumentNonBlocking(newGroupRef, groupData, {});
@@ -89,7 +90,8 @@ export async function joinGroup(db: Firestore, groupId: string, userId: string, 
   }
 
   await updateDoc(groupRef, {
-    memberIds: arrayUnion(userId)
+    memberIds: arrayUnion(userId),
+    lastActivityAt: serverTimestamp()
   });
 
   const memberRef = doc(collection(db, 'groups', groupId, 'members'), userId);
@@ -102,6 +104,10 @@ export async function joinGroup(db: Firestore, groupId: string, userId: string, 
 export function addMemberToGroup(db: Firestore, groupId: string, name: string) {
   const memberRef = doc(collection(db, 'groups', groupId, 'members'));
   setDocumentNonBlocking(memberRef, { name }, {});
+  
+  // Update last activity
+  const groupRef = doc(db, 'groups', groupId);
+  updateDoc(groupRef, { lastActivityAt: serverTimestamp() });
 }
 
 export function removeMemberFromGroup(db: Firestore, groupId: string, memberId: string) {
@@ -122,6 +128,10 @@ export function addGroupExpense(db: Firestore, groupId: string, data: Omit<Group
     isEdited: false
   };
   addDocumentNonBlocking(colRef, expenseData);
+
+  // Update last activity on group doc
+  const groupRef = doc(db, 'groups', groupId);
+  updateDoc(groupRef, { lastActivityAt: serverTimestamp() });
 }
 
 export function deleteGroupExpense(db: Firestore, groupId: string, expenseId: string) {
