@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useRef, useMemo } from 'react';
@@ -140,7 +139,7 @@ export function AgentModule() {
   };
 
   return (
-    <div className="space-y-4 pb-24 px-1 animate-in fade-in slide-in-from-bottom-4 duration-500 overflow-y-auto no-scrollbar h-full">
+    <div className="space-y-4 pb-24 px-1 overflow-y-auto no-scrollbar h-full">
       {/* Hero Section */}
       <div className="bg-primary p-6 rounded-[2.5rem] text-white relative overflow-hidden shadow-2xl shrink-0">
         <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 blur-2xl" />
@@ -156,7 +155,7 @@ export function AgentModule() {
       </div>
 
       {/* Monthly Insight Section - ALWAYS VISIBLE */}
-      <Card className="border-none shadow-sm rounded-[2rem] bg-card overflow-hidden animate-in zoom-in-95 duration-500">
+      <Card className="border-none shadow-sm rounded-[2rem] bg-card overflow-hidden">
         <CardHeader className="pb-2 pt-5 px-6">
           <CardTitle className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-primary" /> {t.agent.biggestExpenseTitle}
@@ -252,40 +251,38 @@ export function AgentModule() {
           </Card>
 
           {auditResult && (
-            <div className="animate-in zoom-in-95 duration-300">
-              <Card className={cn("border-none shadow-lg rounded-[2rem] overflow-hidden", auditResult.isCorrect ? "bg-green-50" : "bg-red-50")}>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-[10px] uppercase tracking-[0.2em] flex items-center gap-2">
-                    {auditResult.isCorrect ? (
-                      <CheckCircle2 className="w-5 h-5 text-green-600" />
-                    ) : (
-                      <AlertTriangle className="w-5 h-5 text-red-600 animate-bounce" />
-                    )}
-                    {auditResult.isCorrect ? t.agent.isCorrect : t.agent.hasErrors}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="bg-white/80 p-4 rounded-2xl border border-border/50 space-y-3">
-                    <div className="flex justify-between items-center border-b border-dashed border-border pb-2">
-                      <span className="text-[9px] font-black uppercase text-muted-foreground tracking-widest">Calculated Total</span>
-                      <span className="text-xl font-headline font-black text-black">₹{auditResult.detectedTotal}</span>
-                    </div>
-                    <div className="space-y-2">
-                      <p className="text-[9px] font-black uppercase text-muted-foreground tracking-widest flex items-center gap-1">
-                        <Info className="w-3 h-3" /> {t.agent.summary}
-                      </p>
-                      <p className="text-[11px] leading-relaxed text-black font-medium">{auditResult.summary}</p>
-                    </div>
-                  </div>
-                  {!auditResult.isCorrect && (
-                    <div className="p-4 bg-primary text-white rounded-2xl space-y-2">
-                      <p className="text-[9px] font-black uppercase tracking-widest opacity-60">{t.agent.advice}</p>
-                      <p className="text-[11px] font-bold italic leading-tight">"{auditResult.suggestedAction}"</p>
-                    </div>
+            <Card className={cn("border-none shadow-lg rounded-[2rem] overflow-hidden", auditResult.isCorrect ? "bg-green-50" : "bg-red-50")}>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-[10px] uppercase tracking-[0.2em] flex items-center gap-2">
+                  {auditResult.isCorrect ? (
+                    <CheckCircle2 className="w-5 h-5 text-green-600" />
+                  ) : (
+                    <AlertTriangle className="w-5 h-5 text-red-600 animate-bounce" />
                   )}
-                </CardContent>
-              </Card>
-            </div>
+                  {auditResult.isCorrect ? t.agent.isCorrect : t.agent.hasErrors}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="bg-white/80 p-4 rounded-2xl border border-border/50 space-y-3">
+                  <div className="flex justify-between items-center border-b border-dashed border-border pb-2">
+                    <span className="text-[9px] font-black uppercase text-muted-foreground tracking-widest">Calculated Total</span>
+                    <span className="text-xl font-headline font-black text-black">₹{auditResult.detectedTotal}</span>
+                  </div>
+                  <div className="space-y-2">
+                    <p className="text-[9px] font-black uppercase text-muted-foreground tracking-widest flex items-center gap-1">
+                      <Info className="w-3 h-3" /> {t.agent.summary}
+                    </p>
+                    <p className="text-[11px] leading-relaxed text-black font-medium">{auditResult.summary}</p>
+                  </div>
+                </div>
+                {!auditResult.isCorrect && (
+                  <div className="p-4 bg-primary text-white rounded-2xl space-y-2">
+                    <p className="text-[9px] font-black uppercase tracking-widest opacity-60">{t.agent.advice}</p>
+                    <p className="text-[11px] font-bold italic leading-tight">"{auditResult.suggestedAction}"</p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
           )}
         </TabsContent>
 
@@ -323,7 +320,7 @@ export function AgentModule() {
           )}
 
           {subResult && subResult.subscriptions.length > 0 ? (
-            <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="space-y-4">
               <div className="grid grid-cols-2 gap-2">
                 <Card className="bg-red-50 border-none rounded-2xl p-4">
                   <p className="text-[8px] uppercase font-black text-red-600 tracking-widest mb-1">{t.agent.foundSubs}</p>
