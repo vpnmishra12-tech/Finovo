@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from 'react';
@@ -31,7 +30,10 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
   }, [firestore, userId, budgetId]);
 
   const { data: budgetData, isLoading: isBudgetLoading } = useDoc<MonthlyBudget>(budgetRef);
-  const budget = budgetData?.budgetAmount || 5000;
+  
+  // Only use default 5000 if loading is finished and no data exists
+  const budget = budgetData?.budgetAmount ?? (isBudgetLoading ? 0 : 5000);
+  const overspentAmount = Math.max(totalSpent - budget, 0);
 
   const handleSetBudget = async () => {
     const val = parseFloat(newBudget);
@@ -51,14 +53,11 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
     }
   };
 
-  const overspentAmount = Math.max(totalSpent - budget, 0);
-
   return (
     <div className="space-y-2">
       <Card className="bg-card text-black border border-border/50 shadow-sm rounded-[1.5rem] overflow-hidden relative h-32 flex items-center">
         <CardContent className="p-5 w-full relative">
           <div className="flex justify-between items-center">
-            {/* Left Side: Budget Info */}
             <div className="space-y-0.5">
               <p className="text-[8px] text-muted-foreground uppercase tracking-[0.2em] font-normal">MONTHLY BUDGET</p>
               {isBudgetLoading ? (
@@ -68,9 +67,7 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
               )}
             </div>
             
-            {/* Right Side: Actions Pair (Perfectly Aligned) */}
             <div className="flex flex-col gap-3">
-              {/* Set Budget Action Row */}
               <div className="flex items-center justify-end gap-3 group">
                 <span className="text-[8px] font-black uppercase tracking-[0.1em] text-muted-foreground opacity-60 text-right min-w-[80px] transition-opacity group-hover:opacity-100">
                   Set Budget
@@ -110,7 +107,6 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
                 </Dialog>
               </div>
 
-              {/* Add Expense Action Row */}
               <div className="flex items-center justify-end gap-3 group">
                 <span className="text-[8px] font-black uppercase tracking-[0.1em] text-muted-foreground opacity-60 text-right min-w-[80px] transition-opacity group-hover:opacity-100">
                   Add Expense
