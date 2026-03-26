@@ -59,7 +59,7 @@ export default function Home() {
 
   const expensesQuery = useMemoFirebase(() => {
     if (!firestore || !user?.uid) return null;
-    return query(collection(firestore, 'users', user.uid, 'expenses'), orderBy('createdAt', 'desc'), limit(50));
+    return query(collection(firestore, 'users', user.uid, 'expenses'), orderBy('createdAt', 'desc'), limit(100));
   }, [firestore, user?.uid]);
 
   const { data: expenses, isLoading: isExpensesLoading } = useCollection<Expense>(expensesQuery);
@@ -79,7 +79,9 @@ export default function Home() {
   }, [budgetData]);
 
   // Derived Spent Calculation with Caching
-  const totalSpentFromDb = expenses ? expenses.reduce((sum, e) => sum + e.amount, 0) : null;
+  const totalSpentFromDb = useMemo(() => {
+    return expenses ? expenses.reduce((sum, e) => sum + e.amount, 0) : null;
+  }, [expenses]);
   
   useEffect(() => {
     if (totalSpentFromDb !== null) {

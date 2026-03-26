@@ -25,11 +25,15 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
   const [open, setOpen] = useState(false);
 
   const [cachedBudget, setCachedBudget] = useState<number | null>(null);
+  const [cachedSpent, setCachedSpent] = useState<number | null>(null);
 
   useEffect(() => {
-    // Only read from localStorage on client side mount
-    const saved = localStorage.getItem('finovo_last_budget');
-    if (saved) setCachedBudget(parseFloat(saved));
+    // Immediate sync from localStorage to avoid prop-drilling delay
+    const savedBudget = localStorage.getItem('finovo_last_budget');
+    if (savedBudget) setCachedBudget(parseFloat(savedBudget));
+    
+    const savedSpent = localStorage.getItem('finovo_last_spent');
+    if (savedSpent) setCachedSpent(parseFloat(savedSpent));
   }, []);
 
   const budgetId = `${year}-${month}`;
@@ -47,9 +51,12 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
     }
   }, [budgetData]);
 
-  // Use cached budget immediately after mount. Fallback to 5000 only if no cache and database loading is finished.
+  // Priority: Database Value > Cache Value > Default (5000)
   const budget = budgetData?.budgetAmount ?? cachedBudget ?? (isBudgetLoading ? 0 : 5000);
-  const overspentAmount = Math.max(totalSpent - (budget || 0), 0);
+  
+  // Use the larger of prop or cache to ensure we never show "0" if we have history
+  const displaySpent = totalSpent > 0 ? totalSpent : (cachedSpent ?? 0);
+  const overspentAmount = Math.max(displaySpent - (budget || 0), 0);
 
   const handleSetBudget = async () => {
     const val = parseFloat(newBudget);
@@ -58,7 +65,6 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
       if (res.success) {
         setOpen(false);
         setNewBudget("");
-        // Optimistically update cache
         localStorage.setItem('finovo_last_budget', val.toString());
         setCachedBudget(val);
         toast({ title: "Budget updated!" });
@@ -144,10 +150,10 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
           <CardContent className="p-3 w-full flex flex-col justify-between h-full">
             <div>
               <p className="text-[8px] text-gray-400 mb-0.5 uppercase tracking-widest font-normal">SPENT</p>
-              <p className="text-xl font-headline font-black text-black">₹{totalSpent.toLocaleString()}</p>
+              <p className="text-xl font-headline font-black text-black">₹{displaySpent.toLocaleString()}</p>
             </div>
             <div className="w-full h-1 bg-primary/10 rounded-full overflow-hidden shrink-0">
-              <div className="bg-primary h-full" style={{ width: `${budget > 0 ? Math.min((totalSpent/budget)*100, 100) : 0}%` }} />
+              <div className="bg-primary h-full" style={{ width: `${budget > 0 ? Math.min((displaySpent/budget)*100, 100) : 0}%` }} />
             </div>
           </CardContent>
         </Card>
