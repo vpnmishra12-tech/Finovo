@@ -40,11 +40,15 @@ export default function Home() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [hasAuthHint, setHasAuthHint] = useState(false);
+  const [cachedBudget, setCachedBudget] = useState<number | null>(null);
 
   useEffect(() => {
-    // Check for auth hint immediately on mount
+    // Check for auth hint and cached budget immediately on mount
     const hint = localStorage.getItem('finovo_auth_hint');
     if (hint === 'true') setHasAuthHint(true);
+    
+    const savedBudget = localStorage.getItem('finovo_last_budget');
+    if (savedBudget) setCachedBudget(parseFloat(savedBudget));
   }, []);
 
   const currentMonth = new Date().getMonth() + 1;
@@ -65,10 +69,17 @@ export default function Home() {
 
   const { data: budgetData, isLoading: isBudgetLoading } = useDoc<MonthlyBudget>(budgetRef);
   
-  // Logic: Show 0 (with skeleton) while loading to avoid the 5000 flicker.
-  // The default 5000 is only assigned if loading is DONE and no data exists.
+  // Logic: Use cached budget if available to avoid flicker while Firestore loads
   const isBudgetActuallyLoading = isBudgetLoading || !user?.uid;
-  const budget = budgetData?.budgetAmount ?? (isBudgetActuallyLoading ? 0 : 5000);
+  
+  useEffect(() => {
+    if (budgetData?.budgetAmount !== undefined) {
+      localStorage.setItem('finovo_last_budget', budgetData.budgetAmount.toString());
+      setCachedBudget(budgetData.budgetAmount);
+    }
+  }, [budgetData]);
+
+  const budget = budgetData?.budgetAmount ?? (isBudgetActuallyLoading ? (cachedBudget ?? 0) : 5000);
   const totalSpent = expenses?.reduce((sum, e) => sum + e.amount, 0) || 0;
 
   const groupsQuery = useMemoFirebase(() => {
@@ -93,8 +104,6 @@ export default function Home() {
     checkUnread();
   }, [userGroups, activeTab]);
 
-  // Shell Loading: Only show full page loader if we have NO auth hint.
-  // If we have a hint, we show the app layout immediately to feel faster.
   if (loading && !hasAuthHint) {
     return (
       <div className="fixed inset-0 flex flex-col items-center justify-center bg-background z-[200]">

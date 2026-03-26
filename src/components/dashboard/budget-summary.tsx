@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useLanguage } from '@/lib/contexts/language-context';
 import { updateMonthlyBudget, MonthlyBudget } from '@/lib/expenses';
 import { Card, CardContent } from '@/components/ui/card';
@@ -23,6 +23,13 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
   const { toast } = useToast();
   const [newBudget, setNewBudget] = useState("");
   const [open, setOpen] = useState(false);
+  const [cachedBudget, setCachedBudget] = useState<number | null>(null);
+
+  useEffect(() => {
+    // Load cached budget immediately to prevent flicker
+    const saved = localStorage.getItem('finovo_last_budget');
+    if (saved) setCachedBudget(parseFloat(saved));
+  }, []);
 
   const budgetId = `${year}-${month}`;
   const budgetRef = useMemoFirebase(() => {
@@ -32,9 +39,16 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
 
   const { data: budgetData, isLoading: isBudgetLoading } = useDoc<MonthlyBudget>(budgetRef);
   
-  // FIX: If we don't have a userId yet or we are still loading, budget is treated as 'null' to avoid 5000 flash
+  useEffect(() => {
+    if (budgetData?.budgetAmount !== undefined) {
+      localStorage.setItem('finovo_last_budget', budgetData.budgetAmount.toString());
+      setCachedBudget(budgetData.budgetAmount);
+    }
+  }, [budgetData]);
+
+  // Use cache while Firestore is loading to eliminate wait time
   const isActuallyLoading = isBudgetLoading || !userId;
-  const budget = budgetData?.budgetAmount ?? (isActuallyLoading ? 0 : 5000);
+  const budget = budgetData?.budgetAmount ?? (isActuallyLoading ? (cachedBudget ?? 0) : 5000);
   const overspentAmount = Math.max(totalSpent - (budget || 0), 0);
 
   const handleSetBudget = async () => {
@@ -44,6 +58,9 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
       if (res.success) {
         setOpen(false);
         setNewBudget("");
+        // Optimistically update cache
+        localStorage.setItem('finovo_last_budget', val.toString());
+        setCachedBudget(val);
         toast({ title: "Budget updated!" });
       } else {
         toast({ 
@@ -62,7 +79,7 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
           <div className="flex justify-between items-center">
             <div className="space-y-0.5">
               <p className="text-[8px] text-muted-foreground uppercase tracking-[0.2em] font-normal">MONTHLY BUDGET</p>
-              {isActuallyLoading && !budgetData ? (
+              {isActuallyLoading && !cachedBudget ? (
                 <Skeleton className="h-10 w-32 bg-primary/10 rounded-lg" />
               ) : (
                 <p className="text-4xl font-headline font-black leading-none tracking-tight">₹{budget.toLocaleString()}</p>
