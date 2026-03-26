@@ -39,17 +39,22 @@ export default function Home() {
   const [isLoginView, setIsLoginView] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [hasAuthHint, setHasAuthHint] = useState(false);
-  const [cachedBudget, setCachedBudget] = useState<number | null>(null);
 
-  useEffect(() => {
-    // Check for auth hint and cached budget immediately on mount
-    const hint = localStorage.getItem('finovo_auth_hint');
-    if (hint === 'true') setHasAuthHint(true);
-    
-    const savedBudget = localStorage.getItem('finovo_last_budget');
-    if (savedBudget) setCachedBudget(parseFloat(savedBudget));
-  }, []);
+  // Instant-init states from localStorage to prevent flicker
+  const [hasAuthHint, setHasAuthHint] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('finovo_auth_hint') === 'true';
+    }
+    return false;
+  });
+
+  const [cachedBudget, setCachedBudget] = useState<number | null>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('finovo_last_budget');
+      return saved ? parseFloat(saved) : null;
+    }
+    return null;
+  });
 
   const currentMonth = new Date().getMonth() + 1;
   const currentYear = new Date().getFullYear();
@@ -69,9 +74,6 @@ export default function Home() {
 
   const { data: budgetData, isLoading: isBudgetLoading } = useDoc<MonthlyBudget>(budgetRef);
   
-  // Logic: Use cached budget if available to avoid flicker while Firestore loads
-  const isBudgetActuallyLoading = isBudgetLoading || !user?.uid;
-  
   useEffect(() => {
     if (budgetData?.budgetAmount !== undefined) {
       localStorage.setItem('finovo_last_budget', budgetData.budgetAmount.toString());
@@ -79,7 +81,8 @@ export default function Home() {
     }
   }, [budgetData]);
 
-  const budget = budgetData?.budgetAmount ?? (isBudgetActuallyLoading ? (cachedBudget ?? 0) : 5000);
+  // Logic: Show cached budget immediately. If no cache and not loading, then default to 5000.
+  const budget = budgetData?.budgetAmount ?? cachedBudget ?? (isBudgetLoading ? 0 : 5000);
   const totalSpent = expenses?.reduce((sum, e) => sum + e.amount, 0) || 0;
 
   const groupsQuery = useMemoFirebase(() => {
@@ -140,8 +143,8 @@ export default function Home() {
   const percentUsed = budget > 0 ? (totalSpent / budget) * 100 : 0;
   let alertBar = null;
 
-  if (!isBudgetActuallyLoading || budgetData) {
-    if (percentUsed >= 100 && budget > 0) {
+  if (budget > 0) {
+    if (percentUsed >= 100) {
       alertBar = (
         <Alert className="py-[0.97rem] px-3 rounded-[0.8rem] border bg-[#FFF1F1] text-[#D32F2F] border-[#FFE4E4] flex flex-row items-center gap-2 shrink-0 overflow-hidden min-h-[40px] [&>svg]:relative [&>svg]:top-0 [&>svg]:left-0 [&>svg~*]:pl-0">
           <AlertTriangle className="h-4 w-4 shrink-0" />
@@ -150,7 +153,7 @@ export default function Home() {
           </AlertDescription>
         </Alert>
       );
-    } else if (percentUsed >= 80 && budget > 0) {
+    } else if (percentUsed >= 80) {
       alertBar = (
         <Alert className="py-[0.97rem] px-3 rounded-[0.8rem] border bg-[#FFF8F1] text-[#F57C00] border-[#FFEBD6] flex flex-row items-center gap-2 shrink-0 overflow-hidden min-h-[40px] [&>svg]:relative [&>svg]:top-0 [&>svg]:left-0 [&>svg~*]:pl-0">
           <AlertCircle className="h-4 w-4 shrink-0" />
@@ -159,7 +162,7 @@ export default function Home() {
           </AlertDescription>
         </Alert>
       );
-    } else if (percentUsed >= 50 && budget > 0) {
+    } else if (percentUsed >= 50) {
       alertBar = (
         <Alert className="py-[0.97rem] px-3 rounded-[0.8rem] border bg-[#F1FFF1] text-[#2E7D32] border-[#E4FFE4] flex flex-row items-center gap-2 shrink-0 overflow-hidden min-h-[40px] [&>svg]:relative [&>svg]:top-0 [&>svg]:left-0 [&>svg~*]:pl-0">
           <CheckCircle2 className="h-4 w-4 shrink-0" />

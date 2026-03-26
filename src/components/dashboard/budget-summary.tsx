@@ -23,13 +23,15 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
   const { toast } = useToast();
   const [newBudget, setNewBudget] = useState("");
   const [open, setOpen] = useState(false);
-  const [cachedBudget, setCachedBudget] = useState<number | null>(null);
 
-  useEffect(() => {
-    // Load cached budget immediately to prevent flicker
-    const saved = localStorage.getItem('finovo_last_budget');
-    if (saved) setCachedBudget(parseFloat(saved));
-  }, []);
+  // Instant initialization from cache to prevent UI delay
+  const [cachedBudget, setCachedBudget] = useState<number | null>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('finovo_last_budget');
+      return saved ? parseFloat(saved) : null;
+    }
+    return null;
+  });
 
   const budgetId = `${year}-${month}`;
   const budgetRef = useMemoFirebase(() => {
@@ -46,9 +48,8 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
     }
   }, [budgetData]);
 
-  // Use cache while Firestore is loading to eliminate wait time
-  const isActuallyLoading = isBudgetLoading || !userId;
-  const budget = budgetData?.budgetAmount ?? (isActuallyLoading ? (cachedBudget ?? 0) : 5000);
+  // Use cached budget immediately. Fallback to 5000 only if no cache and database loading is finished.
+  const budget = budgetData?.budgetAmount ?? cachedBudget ?? (isBudgetLoading ? 0 : 5000);
   const overspentAmount = Math.max(totalSpent - (budget || 0), 0);
 
   const handleSetBudget = async () => {
@@ -79,7 +80,7 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
           <div className="flex justify-between items-center">
             <div className="space-y-0.5">
               <p className="text-[8px] text-muted-foreground uppercase tracking-[0.2em] font-normal">MONTHLY BUDGET</p>
-              {isActuallyLoading && !cachedBudget ? (
+              {isBudgetLoading && budget === 0 ? (
                 <Skeleton className="h-10 w-32 bg-primary/10 rounded-lg" />
               ) : (
                 <p className="text-4xl font-headline font-black leading-none tracking-tight">₹{budget.toLocaleString()}</p>
