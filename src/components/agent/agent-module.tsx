@@ -112,8 +112,8 @@ export function AgentModule() {
   };
 
   return (
-    <div className="flex flex-col gap-4 pb-6 px-1 h-full overflow-hidden">
-      {/* Dynamic Hero - Larger and Filling */}
+    <div className="flex flex-col gap-3 pb-0 px-1 h-full overflow-hidden">
+      {/* Dynamic Hero */}
       <div className="bg-primary p-6 rounded-[2rem] text-white relative overflow-hidden shadow-xl shrink-0 h-28 flex items-center">
         <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-16 -mt-16 blur-2xl" />
         <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full -ml-12 -mb-12 blur-xl" />
@@ -128,7 +128,7 @@ export function AgentModule() {
         </div>
       </div>
 
-      {/* Insight Section - Expanded height */}
+      {/* Insight Section */}
       <Card className="border-none shadow-md rounded-[2rem] bg-card overflow-hidden shrink-0 h-32 flex items-center">
         <CardContent className="p-6 w-full">
           {monthlyInsight ? (
@@ -155,9 +155,9 @@ export function AgentModule() {
         </CardContent>
       </Card>
 
-      {/* Action Tabs - Filling the remaining space */}
-      <Tabs defaultValue="auditor" className="flex-1 flex flex-col gap-3 min-h-0">
-        <TabsList className="grid w-full grid-cols-2 bg-muted h-12 rounded-[1.5rem] p-1.5">
+      {/* Action Tabs */}
+      <Tabs defaultValue="auditor" className="flex-1 flex flex-col gap-2 min-h-0">
+        <TabsList className="grid w-full grid-cols-2 bg-muted h-11 rounded-[1.5rem] p-1.5 shrink-0">
           <TabsTrigger value="auditor" className="rounded-xl uppercase text-[10px] font-black data-[state=active]:bg-white data-[state=active]:text-primary shadow-sm">
             Bill Auditor
           </TabsTrigger>
@@ -166,63 +166,63 @@ export function AgentModule() {
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="auditor" className="flex-1 m-0 flex flex-col gap-3">
+        <TabsContent value="auditor" className="flex-1 m-0 flex flex-col gap-2 overflow-hidden">
           <Card className="flex-1 border-none shadow-sm rounded-[2rem] bg-card overflow-hidden flex flex-col justify-center">
-            <CardContent className="p-8 space-y-6 flex flex-col items-center">
+            <CardContent className="p-6 space-y-4 flex flex-col items-center">
               <input type="file" accept="image/*" capture="environment" className="hidden" ref={fileInputRef} onChange={onFileChange} />
               
-              <div className="w-20 h-20 bg-muted/50 rounded-full flex items-center justify-center mb-2">
-                <ReceiptText className="w-10 h-10 text-primary opacity-20" />
+              <div className="w-16 h-16 bg-muted/50 rounded-full flex items-center justify-center">
+                <ReceiptText className="w-8 h-8 text-primary opacity-20" />
               </div>
 
-              <div className="w-full space-y-4">
+              <div className="w-full space-y-3">
                 <Button
                   onClick={() => fileInputRef.current?.click()}
                   disabled={isAuditing}
-                  className="w-full h-16 rounded-[1.5rem] font-black uppercase text-xs tracking-[0.2em] gap-3 shadow-xl bg-primary text-white transition-all active:scale-95"
+                  className="w-full h-14 rounded-[1.5rem] font-black uppercase text-xs tracking-[0.2em] gap-3 shadow-xl bg-primary text-white transition-all active:scale-95"
                 >
                   {isAuditing ? <Loader2 className="w-6 h-6 animate-spin" /> : <><Camera className="w-6 h-6" /> {t.agent.scanButton}</>}
                 </Button>
                 
-                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground text-center leading-relaxed max-w-[200px] mx-auto opacity-60">
-                  {isAuditing ? "Scanning mathematical patterns..." : "Find hidden taxes, math errors, or forced service charges."}
+                <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground text-center leading-relaxed max-w-[200px] mx-auto opacity-60">
+                  {isAuditing ? "Scanning patterns..." : "Find hidden taxes or math errors."}
                 </p>
               </div>
             </CardContent>
           </Card>
 
           {auditResult && (
-            <div className={cn("p-6 rounded-[2rem] shadow-lg animate-in fade-in zoom-in-95 h-24 flex flex-col justify-center", auditResult.isCorrect ? "bg-green-50 border border-green-200" : "bg-red-50 border border-red-200")}>
+            <div className={cn("p-4 rounded-[1.5rem] shadow-lg animate-in fade-in zoom-in-95 h-20 flex flex-col justify-center shrink-0", auditResult.isCorrect ? "bg-green-50 border border-green-200" : "bg-red-50 border border-red-200")}>
                <div className="flex items-center justify-between">
-                 <span className="text-xs uppercase font-black tracking-widest flex items-center gap-2">
-                   {auditResult.isCorrect ? <CheckCircle2 className="w-5 h-5 text-green-600" /> : <AlertTriangle className="w-5 h-5 text-red-600" />}
+                 <span className="text-[10px] uppercase font-black tracking-widest flex items-center gap-2">
+                   {auditResult.isCorrect ? <CheckCircle2 className="w-4 h-4 text-green-600" /> : <AlertTriangle className="w-4 h-4 text-red-600" />}
                    {auditResult.isCorrect ? "Accurate" : "Issues Found"}
                  </span>
-                 <span className="font-headline font-black text-xl text-black">₹{auditResult.detectedTotal}</span>
+                 <span className="font-headline font-black text-lg text-black">₹{auditResult.detectedTotal}</span>
                </div>
-               <p className="text-[10px] leading-tight text-black mt-2 font-medium">{auditResult.summary}</p>
+               <p className="text-[9px] leading-tight text-black mt-1.5 font-medium">{auditResult.summary}</p>
             </div>
           )}
         </TabsContent>
 
-        <TabsContent value="subs" className="flex-1 m-0 flex flex-col gap-3">
+        <TabsContent value="subs" className="flex-1 m-0 flex flex-col gap-2 overflow-hidden">
           <Card className="flex-1 border-none shadow-sm rounded-[2rem] bg-card overflow-hidden flex flex-col justify-center">
-            <CardContent className="p-8 space-y-6 flex flex-col items-center">
-              <div className="w-20 h-20 bg-muted/50 rounded-full flex items-center justify-center mb-2">
-                <Sparkles className="w-10 h-10 text-primary opacity-20" />
+            <CardContent className="p-6 space-y-4 flex flex-col items-center">
+              <div className="w-16 h-16 bg-muted/50 rounded-full flex items-center justify-center">
+                <Sparkles className="w-8 h-8 text-primary opacity-20" />
               </div>
 
-              <div className="w-full space-y-6">
-                <div className="bg-muted/30 p-4 rounded-2xl flex gap-3 items-center">
-                  <AlertCircle className="w-5 h-5 text-primary shrink-0" />
+              <div className="w-full space-y-4">
+                <div className="bg-muted/30 p-3 rounded-2xl flex gap-3 items-center">
+                  <AlertCircle className="w-4 h-4 text-primary shrink-0" />
                   <p className="text-[9px] text-muted-foreground uppercase tracking-tight leading-tight font-bold">
-                    Scans your descriptions for leaks like Netflix, Spotify, or Gym.
+                    Scans your descriptions for leaks like Netflix or Gym.
                   </p>
                 </div>
                 <Button
                   onClick={handleSubAudit}
                   disabled={isScanningSubs}
-                  className="w-full h-16 rounded-[1.5rem] font-black uppercase text-xs tracking-[0.2em] gap-3 shadow-xl bg-primary text-white transition-all active:scale-95"
+                  className="w-full h-14 rounded-[1.5rem] font-black uppercase text-xs tracking-[0.2em] gap-3 shadow-xl bg-primary text-white transition-all active:scale-95"
                 >
                   {isScanningSubs ? <Loader2 className="w-6 h-6 animate-spin" /> : <><RefreshCcw className="w-6 h-6" /> {t.agent.subButton}</>}
                 </Button>
@@ -231,22 +231,22 @@ export function AgentModule() {
           </Card>
 
           {subResult && (
-            <div className="p-6 bg-primary text-white rounded-[2rem] flex items-center justify-between shadow-xl animate-in fade-in zoom-in-95 h-24">
+            <div className="p-4 bg-primary text-white rounded-[1.5rem] flex items-center justify-between shadow-xl animate-in fade-in zoom-in-95 h-20 shrink-0">
                <div>
-                 <p className="text-[9px] uppercase font-black text-white/40 tracking-widest mb-1.5">Leaks Detected</p>
-                 <p className="text-2xl font-headline font-black leading-none">{subResult.subscriptions.length} Found</p>
+                 <p className="text-[8px] uppercase font-black text-white/40 tracking-widest mb-1">Leaks Detected</p>
+                 <p className="text-xl font-headline font-black leading-none">{subResult.subscriptions.length} Found</p>
                </div>
                <div className="text-right">
-                 <p className="text-[9px] uppercase font-black text-white/40 tracking-widest mb-1.5">Annual Drain</p>
-                 <p className="text-2xl font-headline font-black leading-none">₹{subResult.totalAnnualDrain.toLocaleString()}</p>
+                 <p className="text-[8px] uppercase font-black text-white/40 tracking-widest mb-1">Annual Drain</p>
+                 <p className="text-xl font-headline font-black leading-none">₹{subResult.totalAnnualDrain.toLocaleString()}</p>
                </div>
             </div>
           )}
         </TabsContent>
       </Tabs>
 
-      {/* Trust Banner - Filling bottom space */}
-      <div className="py-4 text-center shrink-0">
+      {/* Trust Banner */}
+      <div className="pb-1 pt-0 text-center shrink-0">
         <p className="text-[8px] font-black text-primary opacity-10 uppercase tracking-[0.6em]">
           FINOVO AI CORE ENGINE v1.2
         </p>
