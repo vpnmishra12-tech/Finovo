@@ -40,6 +40,12 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
         setOpen(false);
         setNewBudget("");
         toast({ title: "Budget updated!" });
+      } else {
+        toast({ 
+          variant: "destructive",
+          title: "Limit Reached",
+          description: res.message || "You can only update your budget twice a month."
+        });
       }
     }
   };
