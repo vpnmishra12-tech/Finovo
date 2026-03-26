@@ -37,7 +37,7 @@ export function AgentModule() {
 
   const { data: expenses } = useCollection<Expense>(expensesQuery);
 
-  // Calculate Monthly Insight (Biggest category expense from last month)
+  // Calculate Monthly Insight
   const monthlyInsight = useMemo(() => {
     if (!expenses || expenses.length === 0) return null;
 
@@ -139,9 +139,9 @@ export function AgentModule() {
   };
 
   return (
-    <div className="space-y-4 pb-24 px-1 overflow-y-auto no-scrollbar h-full">
+    <div className="space-y-4 pb-32 px-1">
       {/* Hero Section */}
-      <div className="bg-primary p-6 rounded-[2.5rem] text-white relative overflow-hidden shadow-2xl shrink-0">
+      <div className="bg-primary p-6 rounded-[2.5rem] text-white relative overflow-hidden shadow-2xl">
         <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 blur-2xl" />
         <div className="relative z-10 space-y-2">
           <div className="flex items-center gap-3">
@@ -154,7 +154,7 @@ export function AgentModule() {
         </div>
       </div>
 
-      {/* Monthly Insight Section - ALWAYS VISIBLE */}
+      {/* Monthly Insight Section */}
       <Card className="border-none shadow-sm rounded-[2rem] bg-card overflow-hidden">
         <CardHeader className="pb-2 pt-5 px-6">
           <CardTitle className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2">
@@ -242,8 +242,8 @@ export function AgentModule() {
               </div>
 
               {isAuditing && (
-                <div className="flex flex-col items-center justify-center py-4 gap-2 animate-pulse">
-                  <Search className="w-8 h-8 text-primary" />
+                <div className="flex flex-col items-center justify-center py-4 gap-2">
+                  <Search className="w-8 h-8 text-primary animate-pulse" />
                   <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{t.agent.detecting}</p>
                 </div>
               )}
@@ -354,7 +354,6 @@ export function AgentModule() {
 
               <Card className="border-none bg-muted/30 p-4 rounded-2xl">
                 <div className="flex gap-3">
-                  <Info className="w-5 h-5 text-primary shrink-0" />
                   <div className="space-y-1">
                     <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Agent Advice</p>
                     <p className="text-[11px] leading-tight text-black font-medium">{subResult.summary}</p>
