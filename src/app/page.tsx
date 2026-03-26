@@ -65,7 +65,8 @@ export default function Home() {
 
   const { data: budgetData, isLoading: isBudgetLoading } = useDoc<MonthlyBudget>(budgetRef);
   
-  // FIX: Match BudgetSummary logic to prevent 5000 flicker
+  // Logic: Show 0 (with skeleton) while loading to avoid the 5000 flicker.
+  // The default 5000 is only assigned if loading is DONE and no data exists.
   const isBudgetActuallyLoading = isBudgetLoading || !user?.uid;
   const budget = budgetData?.budgetAmount ?? (isBudgetActuallyLoading ? 0 : 5000);
   const totalSpent = expenses?.reduce((sum, e) => sum + e.amount, 0) || 0;
@@ -92,7 +93,8 @@ export default function Home() {
     checkUnread();
   }, [userGroups, activeTab]);
 
-  // Shell Loading State
+  // Shell Loading: Only show full page loader if we have NO auth hint.
+  // If we have a hint, we show the app layout immediately to feel faster.
   if (loading && !hasAuthHint) {
     return (
       <div className="fixed inset-0 flex flex-col items-center justify-center bg-background z-[200]">
@@ -129,7 +131,6 @@ export default function Home() {
   const percentUsed = budget > 0 ? (totalSpent / budget) * 100 : 0;
   let alertBar = null;
 
-  // Only show alerts if we are definitely NOT loading the budget
   if (!isBudgetActuallyLoading || budgetData) {
     if (percentUsed >= 100 && budget > 0) {
       alertBar = (
