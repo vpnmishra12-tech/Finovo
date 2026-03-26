@@ -40,21 +40,15 @@ export default function Home() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  // Instant-init states from localStorage to prevent flicker
-  const [hasAuthHint, setHasAuthHint] = useState<boolean>(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('finovo_auth_hint') === 'true';
-    }
-    return false;
-  });
+  const [hasAuthHint, setHasAuthHint] = useState<boolean>(false);
+  const [cachedBudget, setCachedBudget] = useState<number | null>(null);
 
-  const [cachedBudget, setCachedBudget] = useState<number | null>(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('finovo_last_budget');
-      return saved ? parseFloat(saved) : null;
-    }
-    return null;
-  });
+  useEffect(() => {
+    // Read from localStorage only after component mounts to avoid hydration mismatch
+    setHasAuthHint(localStorage.getItem('finovo_auth_hint') === 'true');
+    const saved = localStorage.getItem('finovo_last_budget');
+    if (saved) setCachedBudget(parseFloat(saved));
+  }, []);
 
   const currentMonth = new Date().getMonth() + 1;
   const currentYear = new Date().getFullYear();

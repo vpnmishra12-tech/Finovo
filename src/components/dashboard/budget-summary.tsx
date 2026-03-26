@@ -24,14 +24,13 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
   const [newBudget, setNewBudget] = useState("");
   const [open, setOpen] = useState(false);
 
-  // Instant initialization from cache to prevent UI delay
-  const [cachedBudget, setCachedBudget] = useState<number | null>(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('finovo_last_budget');
-      return saved ? parseFloat(saved) : null;
-    }
-    return null;
-  });
+  const [cachedBudget, setCachedBudget] = useState<number | null>(null);
+
+  useEffect(() => {
+    // Only read from localStorage on client side mount
+    const saved = localStorage.getItem('finovo_last_budget');
+    if (saved) setCachedBudget(parseFloat(saved));
+  }, []);
 
   const budgetId = `${year}-${month}`;
   const budgetRef = useMemoFirebase(() => {
@@ -48,7 +47,7 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
     }
   }, [budgetData]);
 
-  // Use cached budget immediately. Fallback to 5000 only if no cache and database loading is finished.
+  // Use cached budget immediately after mount. Fallback to 5000 only if no cache and database loading is finished.
   const budget = budgetData?.budgetAmount ?? cachedBudget ?? (isBudgetLoading ? 0 : 5000);
   const overspentAmount = Math.max(totalSpent - (budget || 0), 0);
 
