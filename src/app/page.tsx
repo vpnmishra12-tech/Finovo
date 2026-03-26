@@ -63,8 +63,8 @@ export default function Home() {
     return doc(firestore, 'users', user.uid, 'monthlyBudgets', budgetId);
   }, [firestore, user?.uid, budgetId]);
 
-  const { data: budgetData } = useDoc<MonthlyBudget>(budgetRef);
-  const budget = budgetData?.budgetAmount || 5000;
+  const { data: budgetData, isLoading: isBudgetLoading } = useDoc<MonthlyBudget>(budgetRef);
+  const budget = budgetData?.budgetAmount || (isBudgetLoading ? 0 : 5000);
   const totalSpent = expenses?.reduce((sum, e) => sum + e.amount, 0) || 0;
 
   const groupsQuery = useMemoFirebase(() => {
@@ -124,36 +124,38 @@ export default function Home() {
     </Card>
   );
 
-  const percentUsed = (totalSpent / budget) * 100;
+  const percentUsed = budget > 0 ? (totalSpent / budget) * 100 : 0;
   let alertBar = null;
 
-  if (percentUsed >= 100) {
-    alertBar = (
-      <Alert className="py-[0.97rem] px-3 rounded-[0.8rem] border bg-[#FFF1F1] text-[#D32F2F] border-[#FFE4E4] flex flex-row items-center gap-2 shrink-0 overflow-hidden min-h-[40px] [&>svg]:relative [&>svg]:top-0 [&>svg]:left-0 [&>svg~*]:pl-0">
-        <AlertTriangle className="h-4 w-4 shrink-0" />
-        <AlertDescription className="text-[8px] uppercase tracking-tight font-normal leading-none">
-          {t.alerts.exhausted}
-        </AlertDescription>
-      </Alert>
-    );
-  } else if (percentUsed >= 80) {
-    alertBar = (
-      <Alert className="py-[0.97rem] px-3 rounded-[0.8rem] border bg-[#FFF8F1] text-[#F57C00] border-[#FFEBD6] flex flex-row items-center gap-2 shrink-0 overflow-hidden min-h-[40px] [&>svg]:relative [&>svg]:top-0 [&>svg]:left-0 [&>svg~*]:pl-0">
-        <AlertCircle className="h-4 w-4 shrink-0" />
-        <AlertDescription className="text-[8px] uppercase tracking-tight font-normal leading-none">
-          {t.alerts.critical}
-        </AlertDescription>
-      </Alert>
-    );
-  } else if (percentUsed >= 50) {
-    alertBar = (
-      <Alert className="py-[0.97rem] px-3 rounded-[0.8rem] border bg-[#F1FFF1] text-[#2E7D32] border-[#E4FFE4] flex flex-row items-center gap-2 shrink-0 overflow-hidden min-h-[40px] [&>svg]:relative [&>svg]:top-0 [&>svg]:left-0 [&>svg~*]:pl-0">
-        <CheckCircle2 className="h-4 w-4 shrink-0" />
-        <AlertDescription className="text-[8px] uppercase tracking-tight font-normal leading-none">
-          {t.alerts.halfway}
-        </AlertDescription>
-      </Alert>
-    );
+  if (!isBudgetLoading) {
+    if (percentUsed >= 100) {
+      alertBar = (
+        <Alert className="py-[0.97rem] px-3 rounded-[0.8rem] border bg-[#FFF1F1] text-[#D32F2F] border-[#FFE4E4] flex flex-row items-center gap-2 shrink-0 overflow-hidden min-h-[40px] [&>svg]:relative [&>svg]:top-0 [&>svg]:left-0 [&>svg~*]:pl-0">
+          <AlertTriangle className="h-4 w-4 shrink-0" />
+          <AlertDescription className="text-[8px] uppercase tracking-tight font-normal leading-none">
+            {t.alerts.exhausted}
+          </AlertDescription>
+        </Alert>
+      );
+    } else if (percentUsed >= 80) {
+      alertBar = (
+        <Alert className="py-[0.97rem] px-3 rounded-[0.8rem] border bg-[#FFF8F1] text-[#F57C00] border-[#FFEBD6] flex flex-row items-center gap-2 shrink-0 overflow-hidden min-h-[40px] [&>svg]:relative [&>svg]:top-0 [&>svg]:left-0 [&>svg~*]:pl-0">
+          <AlertCircle className="h-4 w-4 shrink-0" />
+          <AlertDescription className="text-[8px] uppercase tracking-tight font-normal leading-none">
+            {t.alerts.critical}
+          </AlertDescription>
+        </Alert>
+      );
+    } else if (percentUsed >= 50) {
+      alertBar = (
+        <Alert className="py-[0.97rem] px-3 rounded-[0.8rem] border bg-[#F1FFF1] text-[#2E7D32] border-[#E4FFE4] flex flex-row items-center gap-2 shrink-0 overflow-hidden min-h-[40px] [&>svg]:relative [&>svg]:top-0 [&>svg]:left-0 [&>svg~*]:pl-0">
+          <CheckCircle2 className="h-4 w-4 shrink-0" />
+          <AlertDescription className="text-[8px] uppercase tracking-tight font-normal leading-none">
+            {t.alerts.halfway}
+          </AlertDescription>
+        </Alert>
+      );
+    }
   }
 
   return (

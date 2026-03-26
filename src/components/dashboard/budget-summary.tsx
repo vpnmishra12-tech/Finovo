@@ -13,6 +13,7 @@ import { useFirestore, useDoc, useMemoFirebase } from '@/firebase';
 import { doc } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 import dynamic from 'next/dynamic';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const AddExpenseDrawer = dynamic(() => import('@/components/expenses/add-expense-drawer').then(mod => mod.AddExpenseDrawer), { ssr: false });
 
@@ -29,7 +30,7 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
     return doc(firestore, 'users', userId, 'monthlyBudgets', budgetId);
   }, [firestore, userId, budgetId]);
 
-  const { data: budgetData } = useDoc<MonthlyBudget>(budgetRef);
+  const { data: budgetData, isLoading: isBudgetLoading } = useDoc<MonthlyBudget>(budgetRef);
   const budget = budgetData?.budgetAmount || 5000;
 
   const handleSetBudget = async () => {
@@ -60,7 +61,11 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
             {/* Left Side: Budget Info */}
             <div className="space-y-0.5">
               <p className="text-[8px] text-muted-foreground uppercase tracking-[0.2em] font-normal">MONTHLY BUDGET</p>
-              <p className="text-4xl font-headline font-black leading-none tracking-tight">₹{budget.toLocaleString()}</p>
+              {isBudgetLoading ? (
+                <Skeleton className="h-10 w-32 bg-primary/10 rounded-lg" />
+              ) : (
+                <p className="text-4xl font-headline font-black leading-none tracking-tight">₹{budget.toLocaleString()}</p>
+              )}
             </div>
             
             {/* Right Side: Actions Pair (Perfectly Aligned) */}
