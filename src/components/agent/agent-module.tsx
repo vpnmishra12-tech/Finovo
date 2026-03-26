@@ -112,143 +112,142 @@ export function AgentModule() {
   };
 
   return (
-    <div className="flex flex-col gap-3 pb-0 px-1 h-full overflow-hidden">
-      {/* Dynamic Hero */}
-      <div className="bg-primary p-6 rounded-[2rem] text-white relative overflow-hidden shadow-xl shrink-0 h-28 flex items-center">
-        <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-16 -mt-16 blur-2xl" />
-        <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full -ml-12 -mb-12 blur-xl" />
-        <div className="relative z-10 flex items-center gap-4 w-full">
-          <div className="p-3 bg-white/20 rounded-2xl">
-            <ShieldCheck className="w-6 h-6" />
+    <div className="flex flex-col gap-4 pb-1 pt-1 px-1 h-full">
+      {/* Mini Hero */}
+      <div className="bg-primary p-4 rounded-[1.5rem] text-white relative overflow-hidden shadow-lg shrink-0 h-24 flex items-center">
+        <div className="absolute top-0 right-0 w-24 h-24 bg-white/5 rounded-full -mr-12 -mt-12 blur-2xl" />
+        <div className="relative z-10 flex items-center gap-3">
+          <div className="p-2 bg-white/10 rounded-xl">
+            <ShieldCheck className="w-5 h-5" />
           </div>
           <div>
-            <h1 className="text-2xl font-headline font-black uppercase tracking-tight leading-none">{t.agent.title}</h1>
-            <p className="text-[9px] text-white/40 uppercase tracking-[0.3em] font-bold mt-1.5">Financial Guardian v1.2</p>
+            <h1 className="text-xl font-headline font-black uppercase tracking-tight leading-none">{t.agent.title}</h1>
+            <p className="text-[7px] text-white/30 uppercase tracking-[0.4em] font-bold mt-1">Guardian Engine v1.2</p>
           </div>
         </div>
       </div>
 
-      {/* Insight Section */}
-      <Card className="border-none shadow-md rounded-[2rem] bg-card overflow-hidden shrink-0 h-32 flex items-center">
-        <CardContent className="p-6 w-full">
+      {/* Mini Insight Card */}
+      <Card className="border-none shadow-sm rounded-[1.5rem] bg-card overflow-hidden shrink-0 h-20 flex items-center">
+        <CardContent className="p-4 w-full">
           {monthlyInsight ? (
-            <div className="flex items-center justify-between gap-6">
+            <div className="flex items-center justify-between">
               <div className="flex flex-col">
-                <span className="text-[9px] font-black uppercase text-muted-foreground tracking-widest mb-1">Biggest Spend ({monthlyInsight.monthName})</span>
-                <h4 className="font-headline font-black text-2xl uppercase leading-none text-primary">
+                <span className="text-[7px] font-black uppercase text-muted-foreground tracking-widest mb-0.5">{t.agent.biggestCategory} ({monthlyInsight.monthName})</span>
+                <h4 className="font-headline font-black text-lg uppercase leading-none text-primary">
                   {t.categories[monthlyInsight.category as keyof typeof t.categories] || monthlyInsight.category}
                 </h4>
               </div>
               <div className="text-right">
-                <p className="text-3xl font-headline font-black text-black leading-none">₹{monthlyInsight.total.toLocaleString()}</p>
-                <p className="text-[9px] font-black uppercase text-red-600 tracking-widest mt-1.5 flex items-center justify-end gap-1">
-                  <TrendingUp className="w-2.5 h-2.5" /> Used {monthlyInsight.count} Times
+                <p className="text-xl font-headline font-black text-black leading-none">₹{monthlyInsight.total.toLocaleString()}</p>
+                <p className="text-[7px] font-black uppercase text-red-600 tracking-widest mt-1 flex items-center justify-end gap-1">
+                  <TrendingUp className="w-2 h-2" /> {monthlyInsight.count} {t.agent.times}
                 </p>
               </div>
             </div>
           ) : (
-            <div className="flex items-center gap-4 py-2 justify-center opacity-40">
-              <TrendingUp className="w-6 h-6 text-muted-foreground" />
-              <p className="text-[10px] font-black uppercase text-muted-foreground tracking-widest text-center">No major patterns found yet</p>
+            <div className="flex items-center gap-3 py-1 justify-center opacity-30">
+              <TrendingUp className="w-4 h-4 text-muted-foreground" />
+              <p className="text-[8px] font-black uppercase text-muted-foreground tracking-widest">Awaiting spending patterns</p>
             </div>
           )}
         </CardContent>
       </Card>
 
-      {/* Action Tabs */}
+      {/* Compact Action Tabs */}
       <Tabs defaultValue="auditor" className="flex-1 flex flex-col gap-2 min-h-0">
-        <TabsList className="grid w-full grid-cols-2 bg-muted h-11 rounded-[1.5rem] p-1.5 shrink-0">
-          <TabsTrigger value="auditor" className="rounded-xl uppercase text-[10px] font-black data-[state=active]:bg-white data-[state=active]:text-primary shadow-sm">
-            Bill Auditor
+        <TabsList className="grid w-full grid-cols-2 bg-muted h-10 rounded-xl p-1 shrink-0">
+          <TabsTrigger value="auditor" className="rounded-lg uppercase text-[9px] font-black data-[state=active]:bg-white data-[state=active]:text-primary shadow-sm">
+            {t.agent.auditorTitle}
           </TabsTrigger>
-          <TabsTrigger value="subs" className="rounded-xl uppercase text-[10px] font-black data-[state=active]:bg-white data-[state=active]:text-primary shadow-sm">
-            Sub Audit
+          <TabsTrigger value="subs" className="rounded-lg uppercase text-[9px] font-black data-[state=active]:bg-white data-[state=active]:text-primary shadow-sm">
+            {t.agent.subTitle}
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="auditor" className="flex-1 m-0 flex flex-col gap-2 overflow-hidden">
-          <Card className="flex-1 border-none shadow-sm rounded-[2rem] bg-card overflow-hidden flex flex-col justify-center">
-            <CardContent className="p-6 space-y-4 flex flex-col items-center">
+        <TabsContent value="auditor" className="flex-1 m-0 flex flex-col gap-2 bg-transparent">
+          <Card className="flex-1 border-none shadow-sm rounded-[2rem] bg-card flex flex-col justify-center">
+            <CardContent className="p-4 space-y-4 flex flex-col items-center justify-center h-full">
               <input type="file" accept="image/*" capture="environment" className="hidden" ref={fileInputRef} onChange={onFileChange} />
               
-              <div className="w-16 h-16 bg-muted/50 rounded-full flex items-center justify-center">
-                <ReceiptText className="w-8 h-8 text-primary opacity-20" />
+              <div className="w-12 h-12 bg-muted/50 rounded-full flex items-center justify-center">
+                <ReceiptText className="w-6 h-6 text-primary opacity-30" />
               </div>
 
-              <div className="w-full space-y-3">
+              <div className="w-full space-y-2">
                 <Button
                   onClick={() => fileInputRef.current?.click()}
                   disabled={isAuditing}
-                  className="w-full h-14 rounded-[1.5rem] font-black uppercase text-xs tracking-[0.2em] gap-3 shadow-xl bg-primary text-white transition-all active:scale-95"
+                  className="w-full h-12 rounded-xl font-black uppercase text-[10px] tracking-[0.2em] gap-2 shadow-lg bg-primary text-white"
                 >
-                  {isAuditing ? <Loader2 className="w-6 h-6 animate-spin" /> : <><Camera className="w-6 h-6" /> {t.agent.scanButton}</>}
+                  {isAuditing ? <Loader2 className="w-4 h-4 animate-spin" /> : <><Camera className="w-4 h-4" /> {t.agent.scanButton}</>}
                 </Button>
                 
-                <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground text-center leading-relaxed max-w-[200px] mx-auto opacity-60">
-                  {isAuditing ? "Scanning patterns..." : "Find hidden taxes or math errors."}
+                <p className="text-[8px] font-black uppercase tracking-widest text-muted-foreground text-center opacity-60">
+                  {isAuditing ? t.agent.detecting : t.agent.auditorDesc}
                 </p>
               </div>
             </CardContent>
           </Card>
 
           {auditResult && (
-            <div className={cn("p-4 rounded-[1.5rem] shadow-lg animate-in fade-in zoom-in-95 h-20 flex flex-col justify-center shrink-0", auditResult.isCorrect ? "bg-green-50 border border-green-200" : "bg-red-50 border border-red-200")}>
+            <div className={cn("p-3 rounded-xl shadow-md animate-in fade-in zoom-in-95 h-16 flex flex-col justify-center shrink-0 mb-0", auditResult.isCorrect ? "bg-green-50 border border-green-200" : "bg-red-50 border border-red-200")}>
                <div className="flex items-center justify-between">
-                 <span className="text-[10px] uppercase font-black tracking-widest flex items-center gap-2">
-                   {auditResult.isCorrect ? <CheckCircle2 className="w-4 h-4 text-green-600" /> : <AlertTriangle className="w-4 h-4 text-red-600" />}
-                   {auditResult.isCorrect ? "Accurate" : "Issues Found"}
+                 <span className="text-[9px] uppercase font-black tracking-widest flex items-center gap-1.5">
+                   {auditResult.isCorrect ? <CheckCircle2 className="w-3 h-3 text-green-600" /> : <AlertTriangle className="w-3 h-3 text-red-600" />}
+                   {auditResult.isCorrect ? t.agent.isCorrect : t.agent.hasErrors}
                  </span>
-                 <span className="font-headline font-black text-lg text-black">₹{auditResult.detectedTotal}</span>
+                 <span className="font-headline font-black text-base text-black">₹{auditResult.detectedTotal}</span>
                </div>
-               <p className="text-[9px] leading-tight text-black mt-1.5 font-medium">{auditResult.summary}</p>
+               <p className="text-[8px] leading-tight text-black mt-1 font-medium line-clamp-1">{auditResult.summary}</p>
             </div>
           )}
         </TabsContent>
 
-        <TabsContent value="subs" className="flex-1 m-0 flex flex-col gap-2 overflow-hidden">
-          <Card className="flex-1 border-none shadow-sm rounded-[2rem] bg-card overflow-hidden flex flex-col justify-center">
-            <CardContent className="p-6 space-y-4 flex flex-col items-center">
-              <div className="w-16 h-16 bg-muted/50 rounded-full flex items-center justify-center">
-                <Sparkles className="w-8 h-8 text-primary opacity-20" />
+        <TabsContent value="subs" className="flex-1 m-0 flex flex-col gap-2 bg-transparent">
+          <Card className="flex-1 border-none shadow-sm rounded-[2rem] bg-card flex flex-col justify-center">
+            <CardContent className="p-4 space-y-4 flex flex-col items-center justify-center h-full">
+              <div className="w-12 h-12 bg-muted/50 rounded-full flex items-center justify-center">
+                <Sparkles className="w-6 h-6 text-primary opacity-30" />
               </div>
 
-              <div className="w-full space-y-4">
-                <div className="bg-muted/30 p-3 rounded-2xl flex gap-3 items-center">
-                  <AlertCircle className="w-4 h-4 text-primary shrink-0" />
-                  <p className="text-[9px] text-muted-foreground uppercase tracking-tight leading-tight font-bold">
-                    Scans your descriptions for leaks like Netflix or Gym.
+              <div className="w-full space-y-3">
+                <div className="bg-muted/30 p-2.5 rounded-xl flex gap-2 items-center">
+                  <AlertCircle className="w-3 h-3 text-primary shrink-0" />
+                  <p className="text-[8px] text-muted-foreground uppercase tracking-tight leading-tight font-bold">
+                    {t.agent.subDesc}
                   </p>
                 </div>
                 <Button
                   onClick={handleSubAudit}
                   disabled={isScanningSubs}
-                  className="w-full h-14 rounded-[1.5rem] font-black uppercase text-xs tracking-[0.2em] gap-3 shadow-xl bg-primary text-white transition-all active:scale-95"
+                  className="w-full h-12 rounded-xl font-black uppercase text-[10px] tracking-[0.2em] gap-2 shadow-lg bg-primary text-white"
                 >
-                  {isScanningSubs ? <Loader2 className="w-6 h-6 animate-spin" /> : <><RefreshCcw className="w-6 h-6" /> {t.agent.subButton}</>}
+                  {isScanningSubs ? <Loader2 className="w-4 h-4 animate-spin" /> : <><RefreshCcw className="w-4 h-4" /> {t.agent.subButton}</>}
                 </Button>
               </div>
             </CardContent>
           </Card>
 
           {subResult && (
-            <div className="p-4 bg-primary text-white rounded-[1.5rem] flex items-center justify-between shadow-xl animate-in fade-in zoom-in-95 h-20 shrink-0">
+            <div className="p-3 bg-primary text-white rounded-xl flex items-center justify-between shadow-lg animate-in fade-in zoom-in-95 h-16 shrink-0 mb-0">
                <div>
-                 <p className="text-[8px] uppercase font-black text-white/40 tracking-widest mb-1">Leaks Detected</p>
-                 <p className="text-xl font-headline font-black leading-none">{subResult.subscriptions.length} Found</p>
+                 <p className="text-[7px] uppercase font-black text-white/40 tracking-widest mb-0.5">{t.agent.foundSubs}</p>
+                 <p className="text-lg font-headline font-black leading-none">{subResult.subscriptions.length}</p>
                </div>
                <div className="text-right">
-                 <p className="text-[8px] uppercase font-black text-white/40 tracking-widest mb-1">Annual Drain</p>
-                 <p className="text-xl font-headline font-black leading-none">₹{subResult.totalAnnualDrain.toLocaleString()}</p>
+                 <p className="text-[7px] uppercase font-black text-white/40 tracking-widest mb-0.5">{t.agent.totalDrain}</p>
+                 <p className="text-lg font-headline font-black leading-none">₹{subResult.totalAnnualDrain.toLocaleString()}</p>
                </div>
             </div>
           )}
         </TabsContent>
       </Tabs>
 
-      {/* Trust Banner */}
-      <div className="pb-1 pt-0 text-center shrink-0">
-        <p className="text-[8px] font-black text-primary opacity-10 uppercase tracking-[0.6em]">
-          FINOVO AI CORE ENGINE v1.2
+      {/* Trust Banner - Perfectly touching ads line */}
+      <div className="pb-0 pt-0 text-center shrink-0">
+        <p className="text-[7px] font-black text-primary opacity-10 uppercase tracking-[0.5em]">
+          FINOVO AI CORE v1.2
         </p>
       </div>
     </div>
