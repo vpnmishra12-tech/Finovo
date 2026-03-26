@@ -139,9 +139,9 @@ export function AgentModule() {
   };
 
   return (
-    <div className="space-y-4 pb-32 px-1">
+    <div className="flex flex-col gap-4 pb-52 px-1">
       {/* Hero Section */}
-      <div className="bg-primary p-6 rounded-[2.5rem] text-white relative overflow-hidden shadow-2xl">
+      <div className="bg-primary p-6 rounded-[2.5rem] text-white relative overflow-hidden shadow-2xl shrink-0">
         <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 blur-2xl" />
         <div className="relative z-10 space-y-2">
           <div className="flex items-center gap-3">
@@ -155,7 +155,7 @@ export function AgentModule() {
       </div>
 
       {/* Monthly Insight Section */}
-      <Card className="border-none shadow-sm rounded-[2rem] bg-card overflow-hidden">
+      <Card className="border-none shadow-sm rounded-[2rem] bg-card overflow-hidden shrink-0">
         <CardHeader className="pb-2 pt-5 px-6">
           <CardTitle className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-primary" /> {t.agent.biggestExpenseTitle}
@@ -202,7 +202,7 @@ export function AgentModule() {
         </CardContent>
       </Card>
 
-      <Tabs defaultValue="auditor" className="w-full">
+      <Tabs defaultValue="auditor" className="w-full shrink-0">
         <TabsList className="grid w-full grid-cols-2 bg-muted h-12 rounded-2xl p-1 mb-4">
           <TabsTrigger value="auditor" className="rounded-xl uppercase text-[10px] font-black data-[state=active]:bg-white data-[state=active]:text-primary">
             Bill Auditor
@@ -370,7 +370,7 @@ export function AgentModule() {
       </Tabs>
 
       {/* Trust Banner */}
-      <div className="py-4 text-center opacity-30">
+      <div className="py-8 text-center opacity-30 shrink-0">
         <p className="text-[8px] font-black text-primary uppercase tracking-[0.5em]">
           FINOVO AI CORE ENGINE v1.2
         </p>
