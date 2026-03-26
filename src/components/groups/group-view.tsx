@@ -194,6 +194,10 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
         </div>
 
         <div className="flex items-center justify-center gap-2 flex-nowrap overflow-hidden">
+          <div className="bg-muted/50 px-3 h-7 rounded-xl flex items-center justify-center border border-border/30 shrink-0">
+            <span className="text-[9px] font-black uppercase tracking-widest text-primary/60 mr-1.5">ID:</span>
+            <span className="text-[10px] font-headline font-black tracking-tight text-black select-all">{groupId}</span>
+          </div>
           <Button variant="outline" size="sm" onClick={handleShareId} className="h-7 px-3 rounded-xl uppercase text-[8px] gap-1.5 border-border shrink-0 bg-card">
             <Share2 className="w-2.5 h-2.5" /> Invite Friend
           </Button>
