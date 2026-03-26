@@ -64,7 +64,10 @@ export default function Home() {
   }, [firestore, user?.uid, budgetId]);
 
   const { data: budgetData, isLoading: isBudgetLoading } = useDoc<MonthlyBudget>(budgetRef);
-  const budget = budgetData?.budgetAmount || (isBudgetLoading ? 0 : 5000);
+  
+  // FIX: Match BudgetSummary logic to prevent 5000 flicker
+  const isBudgetActuallyLoading = isBudgetLoading || !user?.uid;
+  const budget = budgetData?.budgetAmount ?? (isBudgetActuallyLoading ? 0 : 5000);
   const totalSpent = expenses?.reduce((sum, e) => sum + e.amount, 0) || 0;
 
   const groupsQuery = useMemoFirebase(() => {
@@ -89,8 +92,7 @@ export default function Home() {
     checkUnread();
   }, [userGroups, activeTab]);
 
-  // Shell Loading State: If we have an auth hint, we show the shell instead of the splash
-  // This removes the "Bouncing Wallet" wait for return users.
+  // Shell Loading State
   if (loading && !hasAuthHint) {
     return (
       <div className="fixed inset-0 flex flex-col items-center justify-center bg-background z-[200]">
@@ -127,8 +129,9 @@ export default function Home() {
   const percentUsed = budget > 0 ? (totalSpent / budget) * 100 : 0;
   let alertBar = null;
 
-  if (!isBudgetLoading) {
-    if (percentUsed >= 100) {
+  // Only show alerts if we are definitely NOT loading the budget
+  if (!isBudgetActuallyLoading || budgetData) {
+    if (percentUsed >= 100 && budget > 0) {
       alertBar = (
         <Alert className="py-[0.97rem] px-3 rounded-[0.8rem] border bg-[#FFF1F1] text-[#D32F2F] border-[#FFE4E4] flex flex-row items-center gap-2 shrink-0 overflow-hidden min-h-[40px] [&>svg]:relative [&>svg]:top-0 [&>svg]:left-0 [&>svg~*]:pl-0">
           <AlertTriangle className="h-4 w-4 shrink-0" />
@@ -137,7 +140,7 @@ export default function Home() {
           </AlertDescription>
         </Alert>
       );
-    } else if (percentUsed >= 80) {
+    } else if (percentUsed >= 80 && budget > 0) {
       alertBar = (
         <Alert className="py-[0.97rem] px-3 rounded-[0.8rem] border bg-[#FFF8F1] text-[#F57C00] border-[#FFEBD6] flex flex-row items-center gap-2 shrink-0 overflow-hidden min-h-[40px] [&>svg]:relative [&>svg]:top-0 [&>svg]:left-0 [&>svg~*]:pl-0">
           <AlertCircle className="h-4 w-4 shrink-0" />
@@ -146,7 +149,7 @@ export default function Home() {
           </AlertDescription>
         </Alert>
       );
-    } else if (percentUsed >= 50) {
+    } else if (percentUsed >= 50 && budget > 0) {
       alertBar = (
         <Alert className="py-[0.97rem] px-3 rounded-[0.8rem] border bg-[#F1FFF1] text-[#2E7D32] border-[#E4FFE4] flex flex-row items-center gap-2 shrink-0 overflow-hidden min-h-[40px] [&>svg]:relative [&>svg]:top-0 [&>svg]:left-0 [&>svg~*]:pl-0">
           <CheckCircle2 className="h-4 w-4 shrink-0" />

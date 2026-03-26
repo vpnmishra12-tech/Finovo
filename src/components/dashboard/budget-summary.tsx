@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from 'react';
@@ -31,9 +32,10 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
 
   const { data: budgetData, isLoading: isBudgetLoading } = useDoc<MonthlyBudget>(budgetRef);
   
-  // Only use default 5000 if loading is finished and no data exists
-  const budget = budgetData?.budgetAmount ?? (isBudgetLoading ? 0 : 5000);
-  const overspentAmount = Math.max(totalSpent - budget, 0);
+  // FIX: If we don't have a userId yet or we are still loading, budget is treated as 'null' to avoid 5000 flash
+  const isActuallyLoading = isBudgetLoading || !userId;
+  const budget = budgetData?.budgetAmount ?? (isActuallyLoading ? 0 : 5000);
+  const overspentAmount = Math.max(totalSpent - (budget || 0), 0);
 
   const handleSetBudget = async () => {
     const val = parseFloat(newBudget);
@@ -60,7 +62,7 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
           <div className="flex justify-between items-center">
             <div className="space-y-0.5">
               <p className="text-[8px] text-muted-foreground uppercase tracking-[0.2em] font-normal">MONTHLY BUDGET</p>
-              {isBudgetLoading ? (
+              {isActuallyLoading && !budgetData ? (
                 <Skeleton className="h-10 w-32 bg-primary/10 rounded-lg" />
               ) : (
                 <p className="text-4xl font-headline font-black leading-none tracking-tight">₹{budget.toLocaleString()}</p>
@@ -128,7 +130,7 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
               <p className="text-xl font-headline font-black text-black">₹{totalSpent.toLocaleString()}</p>
             </div>
             <div className="w-full h-1 bg-primary/10 rounded-full overflow-hidden shrink-0">
-              <div className="bg-primary h-full" style={{ width: `${Math.min((totalSpent/budget)*100, 100)}%` }} />
+              <div className="bg-primary h-full" style={{ width: `${budget > 0 ? Math.min((totalSpent/budget)*100, 100) : 0}%` }} />
             </div>
           </CardContent>
         </Card>
