@@ -42,12 +42,15 @@ export default function Home() {
 
   const [hasAuthHint, setHasAuthHint] = useState<boolean>(false);
   const [cachedBudget, setCachedBudget] = useState<number | null>(null);
+  const [cachedTotalSpent, setCachedTotalSpent] = useState<number | null>(null);
 
   useEffect(() => {
     // Read from localStorage only after component mounts to avoid hydration mismatch
     setHasAuthHint(localStorage.getItem('finovo_auth_hint') === 'true');
-    const saved = localStorage.getItem('finovo_last_budget');
-    if (saved) setCachedBudget(parseFloat(saved));
+    const savedBudget = localStorage.getItem('finovo_last_budget');
+    if (savedBudget) setCachedBudget(parseFloat(savedBudget));
+    const savedSpent = localStorage.getItem('finovo_last_spent');
+    if (savedSpent) setCachedTotalSpent(parseFloat(savedSpent));
   }, []);
 
   const currentMonth = new Date().getMonth() + 1;
@@ -75,9 +78,18 @@ export default function Home() {
     }
   }, [budgetData]);
 
-  // Logic: Show cached budget immediately. If no cache and not loading, then default to 5000.
+  // Derived Spent Calculation with Caching
+  const totalSpentFromDb = expenses ? expenses.reduce((sum, e) => sum + e.amount, 0) : null;
+  
+  useEffect(() => {
+    if (totalSpentFromDb !== null) {
+      localStorage.setItem('finovo_last_spent', totalSpentFromDb.toString());
+      setCachedTotalSpent(totalSpentFromDb);
+    }
+  }, [totalSpentFromDb]);
+
   const budget = budgetData?.budgetAmount ?? cachedBudget ?? (isBudgetLoading ? 0 : 5000);
-  const totalSpent = expenses?.reduce((sum, e) => sum + e.amount, 0) || 0;
+  const totalSpent = totalSpentFromDb ?? cachedTotalSpent ?? 0;
 
   const groupsQuery = useMemoFirebase(() => {
     if (!firestore || !user?.uid) return null;
