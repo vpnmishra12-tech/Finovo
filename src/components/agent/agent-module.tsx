@@ -112,8 +112,8 @@ export function AgentModule() {
   };
 
   return (
-    <div className="flex flex-col gap-3 pb-0 pt-1 px-1 h-full overflow-hidden">
-      {/* Mini Hero - Slightly taller for 2% boost */}
+    <div className="flex flex-col gap-3 pb-24 pt-1 px-1 min-h-full">
+      {/* Mini Hero */}
       <div className="bg-primary p-5 rounded-[1.5rem] text-white relative overflow-hidden shadow-lg shrink-0 h-28 flex items-center">
         <div className="absolute top-0 right-0 w-28 h-28 bg-white/5 rounded-full -mr-12 -mt-12 blur-2xl" />
         <div className="relative z-10 flex items-center gap-3">
@@ -127,7 +127,7 @@ export function AgentModule() {
         </div>
       </div>
 
-      {/* Mini Insight Card - Slightly taller */}
+      {/* Mini Insight Card */}
       <Card className="border-none shadow-sm rounded-[1.5rem] bg-card overflow-hidden shrink-0 h-24 flex items-center">
         <CardContent className="p-5 w-full">
           {monthlyInsight ? (
@@ -154,8 +154,8 @@ export function AgentModule() {
         </CardContent>
       </Card>
 
-      {/* Compact Action Tabs - Stretched for full fill */}
-      <Tabs defaultValue="auditor" className="flex-1 flex flex-col gap-2 min-h-0">
+      {/* Compact Action Tabs - Removed height constraints for scrolling */}
+      <Tabs defaultValue="auditor" className="flex flex-col gap-2">
         <TabsList className="grid w-full grid-cols-2 bg-muted h-11 rounded-xl p-1 shrink-0">
           <TabsTrigger value="auditor" className="rounded-lg uppercase text-[10px] font-black data-[state=active]:bg-white data-[state=active]:text-primary shadow-sm">
             {t.agent.auditorTitle}
@@ -165,9 +165,9 @@ export function AgentModule() {
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="auditor" className="flex-1 m-0 flex flex-col gap-2 bg-transparent overflow-visible">
-          <Card className="flex-1 border-none shadow-sm rounded-[2rem] bg-card flex flex-col justify-center">
-            <CardContent className="p-5 space-y-4 flex flex-col items-center justify-center h-full">
+        <TabsContent value="auditor" className="m-0 flex flex-col gap-2 bg-transparent">
+          <Card className="border-none shadow-sm rounded-[2rem] bg-card">
+            <CardContent className="p-5 py-10 space-y-4 flex flex-col items-center justify-center">
               <input type="file" accept="image/*" capture="environment" className="hidden" ref={fileInputRef} onChange={onFileChange} />
               
               <div className="w-14 h-14 bg-muted/50 rounded-full flex items-center justify-center">
@@ -191,7 +191,7 @@ export function AgentModule() {
           </Card>
 
           {auditResult && (
-            <div className={cn("p-4 rounded-xl shadow-md animate-in fade-in zoom-in-95 h-20 flex flex-col justify-center shrink-0 mb-1", auditResult.isCorrect ? "bg-green-50 border border-green-200" : "bg-red-50 border border-red-200")}>
+            <div className={cn("p-4 rounded-xl shadow-md animate-in fade-in zoom-in-95 flex flex-col justify-center shrink-0 mb-1", auditResult.isCorrect ? "bg-green-50 border border-green-200" : "bg-red-50 border border-red-200")}>
                <div className="flex items-center justify-between">
                  <span className="text-[10px] uppercase font-black tracking-widest flex items-center gap-2">
                    {auditResult.isCorrect ? <CheckCircle2 className="w-4 h-4 text-green-600" /> : <AlertTriangle className="w-4 h-4 text-red-600" />}
@@ -199,14 +199,14 @@ export function AgentModule() {
                  </span>
                  <span className="font-headline font-black text-lg text-black">₹{auditResult.detectedTotal}</span>
                </div>
-               <p className="text-[9px] leading-tight text-black mt-1 font-medium line-clamp-1">{auditResult.summary}</p>
+               <p className="text-[9px] leading-tight text-black mt-1 font-medium line-clamp-2">{auditResult.summary}</p>
             </div>
           )}
         </TabsContent>
 
-        <TabsContent value="subs" className="flex-1 m-0 flex flex-col gap-2 bg-transparent overflow-visible">
-          <Card className="flex-1 border-none shadow-sm rounded-[2rem] bg-card flex flex-col justify-center">
-            <CardContent className="p-5 space-y-4 flex flex-col items-center justify-center h-full">
+        <TabsContent value="subs" className="m-0 flex flex-col gap-2 bg-transparent">
+          <Card className="border-none shadow-sm rounded-[2rem] bg-card">
+            <CardContent className="p-5 py-10 space-y-4 flex flex-col items-center justify-center">
               <div className="w-14 h-14 bg-muted/50 rounded-full flex items-center justify-center">
                 <Sparkles className="w-7 h-7 text-primary opacity-30" />
               </div>
@@ -230,7 +230,7 @@ export function AgentModule() {
           </Card>
 
           {subResult && (
-            <div className="p-4 bg-primary text-white rounded-xl flex items-center justify-between shadow-lg animate-in fade-in zoom-in-95 h-20 shrink-0 mb-1">
+            <div className="p-4 bg-primary text-white rounded-xl flex items-center justify-between shadow-lg animate-in fade-in zoom-in-95 shrink-0 mb-1">
                <div>
                  <p className="text-[8px] uppercase font-black text-white/40 tracking-widest mb-1">{t.agent.foundSubs}</p>
                  <p className="text-xl font-headline font-black leading-none">{subResult.subscriptions.length}</p>
@@ -244,8 +244,8 @@ export function AgentModule() {
         </TabsContent>
       </Tabs>
 
-      {/* Trust Banner - Compact at the very bottom */}
-      <div className="pb-1 pt-0 text-center shrink-0">
+      {/* Trust Banner */}
+      <div className="pb-4 pt-4 text-center shrink-0">
         <p className="text-[7px] font-black text-primary opacity-10 uppercase tracking-[0.5em]">
           FINOVO AI CORE v1.2
         </p>
