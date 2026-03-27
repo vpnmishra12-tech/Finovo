@@ -43,14 +43,26 @@ export default function Home() {
   const [hasAuthHint, setHasAuthHint] = useState<boolean>(false);
   const [cachedBudget, setCachedBudget] = useState<number | null>(null);
   const [cachedTotalSpent, setCachedTotalSpent] = useState<number | null>(null);
+  const [cachedExpenses, setCachedExpenses] = useState<Expense[]>([]);
 
   useEffect(() => {
     // Read from localStorage only after component mounts to avoid hydration mismatch
     setHasAuthHint(localStorage.getItem('finovo_auth_hint') === 'true');
+    
     const savedBudget = localStorage.getItem('finovo_last_budget');
     if (savedBudget) setCachedBudget(parseFloat(savedBudget));
+    
     const savedSpent = localStorage.getItem('finovo_last_spent');
     if (savedSpent) setCachedTotalSpent(parseFloat(savedSpent));
+
+    const savedExpenses = localStorage.getItem('finovo_last_expenses');
+    if (savedExpenses) {
+      try {
+        setCachedExpenses(JSON.parse(savedExpenses));
+      } catch (e) {
+        console.error("Failed to parse cached expenses", e);
+      }
+    }
   }, []);
 
   const currentMonth = new Date().getMonth() + 1;
@@ -88,10 +100,17 @@ export default function Home() {
       localStorage.setItem('finovo_last_spent', totalSpentFromDb.toString());
       setCachedTotalSpent(totalSpentFromDb);
     }
-  }, [totalSpentFromDb]);
+    if (expenses && expenses.length > 0) {
+      // We don't want to cache Firestore Timestamps directly as they don't serialize well to JSON
+      // but the data-fns parsing in chart can handle the date strings or simple objects
+      localStorage.setItem('finovo_last_expenses', JSON.stringify(expenses));
+      setCachedExpenses(expenses);
+    }
+  }, [totalSpentFromDb, expenses]);
 
   const budget = budgetData?.budgetAmount ?? cachedBudget ?? (isBudgetLoading ? 0 : 5000);
   const totalSpent = totalSpentFromDb ?? cachedTotalSpent ?? 0;
+  const displayExpenses = (expenses && expenses.length > 0) ? expenses : cachedExpenses;
 
   const groupsQuery = useMemoFirebase(() => {
     if (!firestore || !user?.uid) return null;
@@ -301,9 +320,9 @@ export default function Home() {
                   {activeTab === 'history' && (
                     <div className="space-y-4">
                       <div className="max-w-md mx-auto w-full">
-                        <SpendingChart expenses={expenses || []} />
+                        <SpendingChart expenses={displayExpenses} />
                       </div>
-                      <ExpenseList expenses={expenses || []} isLoading={isExpensesLoading} />
+                      <ExpenseList expenses={displayExpenses} isLoading={isExpensesLoading && displayExpenses.length === 0} />
                     </div>
                   )}
                   {activeTab === 'splitter' && <BillSplitTool />}
