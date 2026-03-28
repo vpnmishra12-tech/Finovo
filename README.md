@@ -5,9 +5,9 @@ Smart AI-powered expense tracking with a Premium 3D Digital Wallet interface.
 
 ---
 
-## 📱 GitHub par Code Push Kaise Karein (Ekdum Simple Steps):
+## 📱 GitHub par Code Push Kaise Karein (Chote Bacche Wala Rasta):
 
-Agar "Git repo not found" aa raha hai, toh Studio ke **Terminal** (niche wala tab) mein ye commands ek-ek karke copy-paste karein aur Enter dabayein:
+Bhai, Terminal mein niche diye gaye commands ko **ek-ek karke** copy karein aur Enter dabayein. **Space ka dhyan rakhein!**
 
 1. **Step 1 (Naya Start):**
    ```bash
@@ -15,6 +15,7 @@ Agar "Git repo not found" aa raha hai, toh Studio ke **Terminal** (niche wala ta
    ```
 
 2. **Step 2 (Saari files pakdein):**
+   *Dhyan dein: `add` ke baad ek SPACE hai aur phir ek DOT `.` hai*
    ```bash
    git add .
    ```
@@ -29,23 +30,27 @@ Agar "Git repo not found" aa raha hai, toh Studio ke **Terminal** (niche wala ta
    git branch -M main
    ```
 
-5. **Step 5 (Purani settings saaf karke naya link jodein):**
-   *Ye line sabse zaroori hai error hatane ke liye:*
+5. **Step 5 (Purani settings saaf karein):**
    ```bash
    git remote remove origin
+   ```
+
+6. **Step 6 (Apna GitHub link jodein):**
+   ```bash
    git remote add origin https://github.com/vpnmishra12-tech/Finovo.git
    ```
 
-6. **Step 6 (GitHub par bhejien):**
+7. **Step 7 (GitHub par bhejien):**
    ```bash
    git push -u origin main
    ```
 
 ---
 
-## 🛠 Troubleshooting (Agar ab bhi na ho):
+## 🛠 Troubleshooting (Agar error aaye):
 
-*   **Repo check karein:** Browser mein [github.com/vpnmishra12-tech/Finovo](https://github.com/vpnmishra12-tech/Finovo) par ja kar dekhiye ki kya repo sach mein bani hai?
-*   **Password:** Agar password maange, toh GitHub ka normal password nahi, balki **"Personal Access Token" (PAT)** daalna hota hai.
+*   **Error: Remote origin already exists?** Step 5 dobara karein.
+*   **Error: Not a git repository?** Step 1 (`git init`) dobara karein.
+*   **Password mang raha hai?** GitHub ka **Personal Access Token** daalein, apna normal password nahi.
 
 *Finovo - Built for Speed, Style, and Smart Finances.*
