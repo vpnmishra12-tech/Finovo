@@ -7,8 +7,7 @@ Smart AI-powered expense tracking with a Premium 3D Digital Wallet interface.
 
 Agar aap is project ko apne GitHub par daalna chahte hain, toh ye commands terminal mein ek-ek karke run karein:
 
-1. **Naya Repo Banayein**: [GitHub.com](https://github.com/new) par jayein aur ek empty repository create karein. Uska link copy karein.
-2. **Terminal Open Karein**: Studio ke terminal mein ye commands likhein:
+1. **Terminal Open Karein**: Studio ke terminal mein ye commands likhein:
 
 ```bash
 # 1. Git setup karein
@@ -23,10 +22,11 @@ git commit -m "Finovo Initial Commit"
 # 4. Main branch set karein
 git branch -M main
 
-# 5. Apna GitHub link connect karein (URL ki jagah apna link dalein)
-git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
+# 5. Apna GitHub link connect karein
+git remote add origin https://github.com/vpnmishra12-tech/Finovo.git
 
 # 6. Code upload karein
+# Note: Agar password maange toh GitHub ka Personal Access Token (PAT) use karein.
 git push -u origin main
 ```
 
