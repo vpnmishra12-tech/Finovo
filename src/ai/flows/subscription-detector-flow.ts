@@ -11,6 +11,7 @@ const SubscriptionDetectorInputSchema = z.object({
     description: z.string(),
     amount: z.number(),
     transactionDate: z.string(),
+    category: z.string().optional(),
   })).describe('List of past expenses to analyze for recurring patterns.'),
 });
 export type SubscriptionDetectorInput = z.infer<typeof SubscriptionDetectorInputSchema>;
@@ -34,22 +35,21 @@ export async function detectSubscriptions(input: SubscriptionDetectorInput): Pro
     input: { schema: SubscriptionDetectorInputSchema },
     output: { schema: SubscriptionDetectorOutputSchema },
     config: {
-      temperature: 0, // Forensic precision ke liye 0 temperature, no creativity
+      temperature: 0.1,
     },
-    prompt: `Analyze the provided expense list for RECURRING SUBSCRIPTIONS ONLY (e.g., Netflix, Spotify, Gym, iCloud, Mobile Postpaid, or any amount paid every month/year).
+    prompt: `Analyze the provided expense list for RECURRING SUBSCRIPTIONS.
 
-RULES:
-1. If no recurring patterns or subscription-related keywords are found, return an EMPTY array for subscriptions.
-2. Do NOT invent or hallucinate subscriptions. 
-3. One-time purchases should NOT be included.
-4. Total Annual Drain is the sum of (amount * 12) for monthly subs.
+STRICT RULE:
+1. ONLY consider an expense as a subscription if its "category" field is exactly "Subscription".
+2. If the category is NOT "Subscription", you MUST IGNORE it, even if the description looks like a subscription.
+3. Sum the annual cost (amount * 12 for monthly) of ONLY the valid subscriptions found.
 
 Expenses:
 {{#each expenses}}
-- Date: {{{transactionDate}}}, Amount: ₹{{{amount}}}, Desc: {{{description}}}
+- Date: {{{transactionDate}}}, Amount: ₹{{{amount}}}, Category: {{{category}}}, Desc: {{{description}}}
 {{/each}}
 
-Strictly return results based ONLY on the data above.`,
+If no valid subscriptions are found with category "Subscription", return an empty array for subscriptions and 0 for drain.`,
   });
 
   const { output } = await detectorPrompt(input);

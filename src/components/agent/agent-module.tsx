@@ -100,7 +100,12 @@ export function AgentModule() {
     setSubResult(null);
     try {
       const result = await detectSubscriptions({ 
-        expenses: expenses.map(e => ({ description: e.description, amount: e.amount, transactionDate: e.transactionDate }))
+        expenses: expenses.map(e => ({ 
+          description: e.description, 
+          amount: e.amount, 
+          transactionDate: e.transactionDate,
+          category: e.category 
+        }))
       });
       setSubResult(result);
       toast({ title: "Audit Complete", description: result.subscriptions.length > 0 ? `Found ${result.subscriptions.length} leaks.` : "No leaks found." });
@@ -154,7 +159,7 @@ export function AgentModule() {
         </CardContent>
       </Card>
 
-      {/* Compact Action Tabs - Removed height constraints for scrolling */}
+      {/* Compact Action Tabs */}
       <Tabs defaultValue="auditor" className="flex flex-col gap-2">
         <TabsList className="grid w-full grid-cols-2 bg-muted h-11 rounded-xl p-1 shrink-0">
           <TabsTrigger value="auditor" className="rounded-lg uppercase text-[10px] font-black data-[state=active]:bg-white data-[state=active]:text-primary shadow-sm">
