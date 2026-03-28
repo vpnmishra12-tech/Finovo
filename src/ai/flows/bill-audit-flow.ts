@@ -29,20 +29,15 @@ export async function auditBill(input: BillAuditInput): Promise<BillAuditOutput>
     name: 'billAuditPrompt',
     input: { schema: BillAuditInputSchema },
     output: { schema: BillAuditOutputSchema },
-    prompt: `You are an expert Forensic Accountant and Tax Auditor. Your task is to audit the provided bill/receipt image with extreme precision.
+    config: {
+      temperature: 0, // Forensic precision ke liye 0 temperature
+    },
+    prompt: `Audit this bill/receipt image. 
+1. Sum all items and verify against total.
+2. Check for hidden or optional charges.
+3. Verify tax logic.
 
-Key Auditing Rules:
-1. **Mathematical Consistency**: Calculate the sum of all individual items manually. Compare this sum to the Sub-Total and Grand Total shown on the bill. Flag any difference, even of 1 Rupee.
-2. **Dynamic Tax Verification**: 
-   - Tax rates vary by product category.
-   - First, check if the tax amount shown matches the percentage stated on the bill.
-   - Second, use your current knowledge of standard tax slabs for the merchant type.
-3. **Hidden / Illegal Charges**: Detect "Service Charges" and flag optional ones.
-4. **Merchant Integrity**: Check for GSTIN if applicable.
-
-If you find ANY discrepancy, set isCorrect to false. Provide a firm sentence for the user in suggestedAction.
-
-Here is the bill photo: {{media url=billPhotoDataUri}}`,
+Bill Photo: {{media url=billPhotoDataUri}}`,
   });
 
   const { output } = await auditPrompt(input);
