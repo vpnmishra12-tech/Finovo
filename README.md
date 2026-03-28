@@ -3,41 +3,49 @@
 
 Smart AI-powered expense tracking with a Premium 3D Digital Wallet interface.
 
-## 📁 GitHub par Code Push Kaise Karein (Simple Steps):
+---
 
-Agar aap "Git repo not found" ya koi aur error dekh rahe hain, toh niche diye gaye commands ko ek-ek karke Studio ke **Terminal** mein copy-paste karein:
+## 📱 GitHub par Code Push Kaise Karein (Ekdum Simple Steps):
 
-1. **Terminal Open Karein**: Studio ke bilkul niche "Terminal" tab par click karein.
+Agar "Git repo not found" aa raha hai, toh Studio ke **Terminal** (niche wala tab) mein ye commands ek-ek karke copy-paste karein aur Enter dabayein:
 
-2. **Git Reset aur Push**:
-```bash
-# 1. Purani settings saaf karein
-git init
+1. **Step 1 (Naya Start):**
+   ```bash
+   git init
+   ```
 
-# 2. Saari files add karein
-git add .
+2. **Step 2 (Saari files pakdein):**
+   ```bash
+   git add .
+   ```
 
-# 3. Message likhein
-git commit -m "Finovo Initial Commit"
+3. **Step 3 (Naam dein):**
+   ```bash
+   git commit -m "Finovo Initial Commit"
+   ```
 
-# 4. Main branch set karein
-git branch -M main
+4. **Step 4 (Main branch):**
+   ```bash
+   git branch -M main
+   ```
 
-# 5. Purana link remove karke naya connect karein (Sabse Important)
-git remote remove origin
-git remote add origin https://github.com/vpnmishra12-tech/Finovo.git
+5. **Step 5 (Purani settings saaf karke naya link jodein):**
+   *Ye line sabse zaroori hai error hatane ke liye:*
+   ```bash
+   git remote remove origin
+   git remote add origin https://github.com/vpnmishra12-tech/Finovo.git
+   ```
 
-# 6. Code upload karein
-git push -u origin main
-```
+6. **Step 6 (GitHub par bhejien):**
+   ```bash
+   git push -u origin main
+   ```
 
 ---
 
-## 📱 Troubleshooting (Agar Error aaye):
+## 🛠 Troubleshooting (Agar ab bhi na ho):
 
-*   **Password maang raha hai?**
-    GitHub ab aapka normal login password nahi leta. Aapko GitHub Settings mein ja kar ek **"Personal Access Token" (PAT)** banana hoga aur usey password ki jagah paste karna hoga.
-*   **Repository not found?**
-    Ek baar browser mein check karein ki kya aapne [github.com/new](https://github.com/new) par ja kar **"Finovo"** naam ki empty repo banayi hai? Bina repo banaye push nahi hoga.
+*   **Repo check karein:** Browser mein [github.com/vpnmishra12-tech/Finovo](https://github.com/vpnmishra12-tech/Finovo) par ja kar dekhiye ki kya repo sach mein bani hai?
+*   **Password:** Agar password maange, toh GitHub ka normal password nahi, balki **"Personal Access Token" (PAT)** daalna hota hai.
 
 *Finovo - Built for Speed, Style, and Smart Finances.*
