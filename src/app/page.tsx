@@ -48,7 +48,6 @@ export default function Home() {
 
   useEffect(() => {
     setHasHydrated(true);
-    // Read from localStorage only after component mounts to avoid hydration mismatch
     setHasAuthHint(localStorage.getItem('finovo_auth_hint') === 'true');
     
     const savedBudget = localStorage.getItem('finovo_last_budget');
@@ -92,7 +91,6 @@ export default function Home() {
     }
   }, [budgetData]);
 
-  // Derived Spent Calculation with Caching
   const totalSpentFromDb = useMemo(() => {
     return expenses ? expenses.reduce((sum, e) => sum + e.amount, 0) : null;
   }, [expenses]);
@@ -134,7 +132,6 @@ export default function Home() {
     checkUnread();
   }, [userGroups, activeTab]);
 
-  // Prevent Hydration Error by waiting for mount
   if (!hasHydrated) {
     return <div className="fixed inset-0 bg-background" />;
   }
@@ -173,6 +170,7 @@ export default function Home() {
   );
 
   const percentUsed = budget > 0 ? (totalSpent / budget) * 100 : 0;
+  const roundedPercent = Math.round(percentUsed);
   let alertBar = null;
 
   if (budget > 0) {
@@ -185,12 +183,12 @@ export default function Home() {
           </AlertDescription>
         </Alert>
       );
-    } else if (percentUsed >= 80) {
+    } else if (percentUsed >= 75) {
       alertBar = (
         <Alert className="py-[0.97rem] px-3 rounded-[0.8rem] border bg-[#FFF8F1] text-[#F57C00] border-[#FFEBD6] flex flex-row items-center gap-2 shrink-0 overflow-hidden min-h-[40px] [&>svg]:relative [&>svg]:top-0 [&>svg]:left-0 [&>svg~*]:pl-0">
           <AlertCircle className="h-4 w-4 shrink-0" />
           <AlertDescription className="text-[8px] uppercase tracking-tight font-normal leading-none">
-            {t.alerts.critical}
+            {t.alerts.critical.replace('{percent}', roundedPercent.toString())}
           </AlertDescription>
         </Alert>
       );
@@ -199,7 +197,7 @@ export default function Home() {
         <Alert className="py-[0.97rem] px-3 rounded-[0.8rem] border bg-[#F1FFF1] text-[#2E7D32] border-[#E4FFE4] flex flex-row items-center gap-2 shrink-0 overflow-hidden min-h-[40px] [&>svg]:relative [&>svg]:top-0 [&>svg]:left-0 [&>svg~*]:pl-0">
           <CheckCircle2 className="h-4 w-4 shrink-0" />
           <AlertDescription className="text-[8px] uppercase tracking-tight font-normal leading-none">
-            {t.alerts.halfway}
+            {t.alerts.halfway.replace('{percent}', roundedPercent.toString())}
           </AlertDescription>
         </Alert>
       );

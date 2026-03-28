@@ -105,8 +105,8 @@ export const translations = {
       }
     },
     alerts: {
-      halfway: "Warning: You have spent 50% of your budget!",
-      critical: "Urgent: 75% budget used. Watch your spending!",
+      halfway: "Warning: You have spent {percent}% of your budget!",
+      critical: "Urgent: {percent}% budget used. Watch your spending!",
       exhausted: "Alert: 100% budget reached. You are overspending!"
     },
     categories: {
