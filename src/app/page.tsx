@@ -40,12 +40,14 @@ export default function Home() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const [hasHydrated, setHasHydrated] = useState(false);
   const [hasAuthHint, setHasAuthHint] = useState<boolean>(false);
   const [cachedBudget, setCachedBudget] = useState<number | null>(null);
   const [cachedTotalSpent, setCachedTotalSpent] = useState<number | null>(null);
   const [cachedExpenses, setCachedExpenses] = useState<Expense[]>([]);
 
   useEffect(() => {
+    setHasHydrated(true);
     // Read from localStorage only after component mounts to avoid hydration mismatch
     setHasAuthHint(localStorage.getItem('finovo_auth_hint') === 'true');
     
@@ -53,7 +55,7 @@ export default function Home() {
     if (savedBudget) setCachedBudget(parseFloat(savedBudget));
     
     const savedSpent = localStorage.getItem('finovo_last_spent');
-    if (savedSpent) setCachedSpent(parseFloat(savedSpent));
+    if (savedSpent) setCachedTotalSpent(parseFloat(savedSpent));
 
     const savedExpenses = localStorage.getItem('finovo_last_expenses');
     if (savedExpenses) {
@@ -131,6 +133,11 @@ export default function Home() {
     };
     checkUnread();
   }, [userGroups, activeTab]);
+
+  // Prevent Hydration Error by waiting for mount
+  if (!hasHydrated) {
+    return <div className="fixed inset-0 bg-background" />;
+  }
 
   if (loading && !hasAuthHint) {
     return (
