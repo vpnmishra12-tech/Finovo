@@ -53,7 +53,7 @@ export default function Home() {
     if (savedBudget) setCachedBudget(parseFloat(savedBudget));
     
     const savedSpent = localStorage.getItem('finovo_last_spent');
-    if (savedSpent) setCachedTotalSpent(parseFloat(savedSpent));
+    if (savedSpent) setCachedSpent(parseFloat(savedSpent));
 
     const savedExpenses = localStorage.getItem('finovo_last_expenses');
     if (savedExpenses) {
@@ -101,8 +101,6 @@ export default function Home() {
       setCachedTotalSpent(totalSpentFromDb);
     }
     if (expenses && expenses.length > 0) {
-      // We don't want to cache Firestore Timestamps directly as they don't serialize well to JSON
-      // but the data-fns parsing in chart can handle the date strings or simple objects
       localStorage.setItem('finovo_last_expenses', JSON.stringify(expenses));
       setCachedExpenses(expenses);
     }
@@ -202,170 +200,172 @@ export default function Home() {
   }
 
   return (
-    <div className="fixed inset-0 bg-background flex flex-col overflow-hidden text-black font-body select-none">
-      <Header />
-      
-      <main className="flex-1 overflow-hidden relative">
-        {(!user && !loading) ? (
-          <div className="h-full flex flex-col items-center justify-center p-6 bg-background animate-in fade-in duration-500">
-            <div className="w-full max-sm flex flex-col items-center space-y-6">
-              <div className="flex flex-col items-center text-center space-y-3">
-                <div className="bg-card p-4 rounded-full shadow-lg border border-border/50">
-                  <Wallet className="w-7 h-7 text-primary" />
+    <div className="fixed inset-0 bg-[#F3F4F6] flex justify-center items-center overflow-hidden">
+      <div className="w-full max-w-[480px] h-full bg-background flex flex-col overflow-hidden text-black font-body select-none shadow-2xl relative">
+        <Header />
+        
+        <main className="flex-1 overflow-hidden relative">
+          {(!user && !loading) ? (
+            <div className="h-full flex flex-col items-center justify-center p-6 bg-background animate-in fade-in duration-500">
+              <div className="w-full max-sm flex flex-col items-center space-y-6">
+                <div className="flex flex-col items-center text-center space-y-3">
+                  <div className="bg-card p-4 rounded-full shadow-lg border border-border/50">
+                    <Wallet className="w-7 h-7 text-primary" />
+                  </div>
+                  <div>
+                    <h1 className="text-3xl font-headline font-black text-black tracking-tight uppercase leading-none">FINOVO</h1>
+                    <p className="text-[9px] uppercase text-gray-400 font-normal tracking-[0.4em] pt-1">
+                      {isLoginView ? 'Welcome Back' : 'Create Account'}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h1 className="text-3xl font-headline font-black text-black tracking-tight uppercase leading-none">FINOVO</h1>
-                  <p className="text-[9px] uppercase text-gray-400 font-normal tracking-[0.4em] pt-1">
-                    {isLoginView ? 'Welcome Back' : 'Create Account'}
-                  </p>
-                </div>
-              </div>
 
-              <div className="w-full space-y-3">
-                <div className="space-y-2">
-                  <Input 
-                    type="email" 
-                    placeholder="Email Address" 
-                    value={email} 
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="h-12 bg-card border border-border rounded-full px-8 text-black shadow-sm focus-visible:ring-primary font-normal"
-                  />
-                  <div className="space-y-1">
+                <div className="w-full space-y-3">
+                  <div className="space-y-2">
                     <Input 
-                      type="password" 
-                      placeholder="Password" 
-                      value={password} 
-                      onChange={(e) => setPassword(e.target.value)}
+                      type="email" 
+                      placeholder="Email Address" 
+                      value={email} 
+                      onChange={(e) => setEmail(e.target.value)}
                       className="h-12 bg-card border border-border rounded-full px-8 text-black shadow-sm focus-visible:ring-primary font-normal"
                     />
-                    {isLoginView && (
-                      <div className="text-right pr-4">
-                        <button 
-                          onClick={() => resetPassword(email)}
-                          className="text-[9px] uppercase text-gray-400 tracking-widest hover:text-primary transition-colors font-normal"
-                        >
-                          Forgot Password?
-                        </button>
-                      </div>
-                    )}
+                    <div className="space-y-1">
+                      <Input 
+                        type="password" 
+                        placeholder="Password" 
+                        value={password} 
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="h-12 bg-card border border-border rounded-full px-8 text-black shadow-sm focus-visible:ring-primary font-normal"
+                      />
+                      {isLoginView && (
+                        <div className="text-right pr-4">
+                          <button 
+                            onClick={() => resetPassword(email)}
+                            className="text-[9px] uppercase text-gray-400 tracking-widest hover:text-primary transition-colors font-normal"
+                          >
+                            Forgot Password?
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
-                
-                <Button 
-                  onClick={() => isLoginView ? login(email, password) : signup(email, password)}
-                  className="w-full h-12 rounded-full uppercase tracking-widest text-[10px] shadow-xl shadow-primary/20 gap-3 font-normal"
-                >
-                  {isLoginView ? 'Login Now' : 'Sign Up Now'} <ArrowRight className="w-3 h-3" />
-                </Button>
-
-                <div className="text-center pt-2">
-                  <button 
-                    onClick={() => setIsLoginView(!isLoginView)} 
-                    className="text-[9px] uppercase text-primary tracking-widest hover:underline font-normal"
+                  
+                  <Button 
+                    onClick={() => isLoginView ? login(email, password) : signup(email, password)}
+                    className="w-full h-12 rounded-full uppercase tracking-widest text-[10px] shadow-xl shadow-primary/20 gap-3 font-normal"
                   >
-                    {isLoginView ? 'New here? Create Account' : 'Already have an account? Login'}
-                  </button>
+                    {isLoginView ? 'Login Now' : 'Sign Up Now'} <ArrowRight className="w-3 h-3" />
+                  </Button>
+
+                  <div className="text-center pt-2">
+                    <button 
+                      onClick={() => setIsLoginView(!isLoginView)} 
+                      className="text-[9px] uppercase text-primary tracking-widest hover:underline font-normal"
+                    >
+                      {isLoginView ? 'New here? Create Account' : 'Already have an account? Login'}
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        ) : (
-          <div className="h-full flex flex-col max-w-6xl mx-auto pt-2 pb-0 overflow-hidden animate-in fade-in duration-300">
-            <div className="flex-1 overflow-hidden relative">
-              {activeTab === 'dashboard' ? (
-                <div className="h-full overflow-y-auto no-scrollbar px-5 space-y-2 pb-2">
-                  <BudgetSummary 
-                    userId={user?.uid || ""} 
-                    totalSpent={totalSpent} 
-                    month={currentMonth} 
-                    year={currentYear} 
-                  />
+          ) : (
+            <div className="h-full flex flex-col pt-2 pb-0 overflow-hidden animate-in fade-in duration-300">
+              <div className="flex-1 overflow-hidden relative">
+                {activeTab === 'dashboard' ? (
+                  <div className="h-full overflow-y-auto no-scrollbar px-5 space-y-2 pb-2">
+                    <BudgetSummary 
+                      userId={user?.uid || ""} 
+                      totalSpent={totalSpent} 
+                      month={currentMonth} 
+                      year={currentYear} 
+                    />
 
-                  {alertBar && (
-                    <div className="mb-0">
-                      {alertBar}
-                    </div>
-                  )}
-
-                  <div className="grid grid-cols-2 gap-2 shrink-0">
-                    <GridCard 
-                      icon={History} 
-                      label="Recent History" 
-                      color="text-orange-600 bg-orange-50" 
-                      onClick={() => setActiveTab('history')} 
-                    />
-                    <GridCard 
-                      icon={ShieldCheck} 
-                      label="Your AI Agent" 
-                      color="text-red-600 bg-red-50" 
-                      onClick={() => setActiveTab('agent')} 
-                    />
-                    <GridCard 
-                      icon={Calculator} 
-                      label="Split Your Bill" 
-                      color="text-purple-600 bg-purple-50" 
-                      onClick={() => setActiveTab('splitter')} 
-                    />
-                    <GridCard 
-                      icon={Users} 
-                      label="Groups" 
-                      color="text-green-600 bg-green-50" 
-                      onClick={() => setActiveTab('groups')} 
-                      hasDot={hasUnreadGroups}
-                    />
-                  </div>
-                </div>
-              ) : (
-                <div className="h-full overflow-y-auto no-scrollbar pb-2 px-5">
-                  {activeTab === 'history' && (
-                    <div className="space-y-4">
-                      <div className="max-w-md mx-auto w-full">
-                        <SpendingChart expenses={displayExpenses} />
+                    {alertBar && (
+                      <div className="mb-0">
+                        {alertBar}
                       </div>
-                      <ExpenseList expenses={displayExpenses} isLoading={isExpensesLoading && displayExpenses.length === 0} />
-                    </div>
-                  )}
-                  {activeTab === 'splitter' && <BillSplitTool />}
-                  {activeTab === 'groups' && <GroupModule />}
-                  {activeTab === 'agent' && <AgentModule />}
-                </div>
-              )}
-            </div>
+                    )}
 
-            <div className="mt-auto shrink-0 w-full px-0 mb-0">
-              <AdBanner />
+                    <div className="grid grid-cols-2 gap-2 shrink-0">
+                      <GridCard 
+                        icon={History} 
+                        label="Recent History" 
+                        color="text-orange-600 bg-orange-50" 
+                        onClick={() => setActiveTab('history')} 
+                      />
+                      <GridCard 
+                        icon={ShieldCheck} 
+                        label="Your AI Agent" 
+                        color="text-red-600 bg-red-50" 
+                        onClick={() => setActiveTab('agent')} 
+                      />
+                      <GridCard 
+                        icon={Calculator} 
+                        label="Split Your Bill" 
+                        color="text-purple-600 bg-purple-50" 
+                        onClick={() => setActiveTab('splitter')} 
+                      />
+                      <GridCard 
+                        icon={Users} 
+                        label="Groups" 
+                        color="text-green-600 bg-green-50" 
+                        onClick={() => setActiveTab('groups')} 
+                        hasDot={hasUnreadGroups}
+                      />
+                    </div>
+                  </div>
+                ) : (
+                  <div className="h-full overflow-y-auto no-scrollbar pb-2 px-5">
+                    {activeTab === 'history' && (
+                      <div className="space-y-4">
+                        <div className="max-w-md mx-auto w-full">
+                          <SpendingChart expenses={displayExpenses} />
+                        </div>
+                        <ExpenseList expenses={displayExpenses} isLoading={isExpensesLoading && displayExpenses.length === 0} />
+                      </div>
+                    )}
+                    {activeTab === 'splitter' && <BillSplitTool />}
+                    {activeTab === 'groups' && <GroupModule />}
+                    {activeTab === 'agent' && <AgentModule />}
+                  </div>
+                )}
+              </div>
+
+              <div className="mt-auto shrink-0 w-full px-0 mb-0">
+                <AdBanner />
+              </div>
             </div>
+          )}
+        </main>
+
+        {(user || (loading && hasAuthHint)) && (
+          <div className="h-16 bg-primary border-t border-white/10 flex items-center justify-around px-4 shadow-inner shrink-0 z-50">
+            <button onClick={() => setActiveTab('dashboard')} className={cn("flex flex-col items-center gap-1 transition-colors", activeTab === 'dashboard' ? "text-white" : "text-white/50")}>
+              <HomeIcon className="w-5 h-5" />
+              <span className="text-[8px] uppercase tracking-widest font-normal">Home</span>
+            </button>
+            <button onClick={() => setActiveTab('history')} className={cn("flex flex-col items-center gap-1 transition-colors", activeTab === 'history' ? "text-white" : "text-white/50")}>
+              <History className="w-5 h-5" />
+              <span className="text-[8px] uppercase tracking-widest font-normal">Bills</span>
+            </button>
+            <button onClick={() => setActiveTab('agent')} className={cn("flex flex-col items-center gap-1 transition-colors", activeTab === 'agent' ? "text-white" : "text-white/50")}>
+              <ShieldCheck className="w-5 h-5" />
+              <span className="text-[8px] uppercase tracking-widest font-normal">Agent</span>
+            </button>
+            <button onClick={() => setActiveTab('splitter')} className={cn("flex flex-col items-center gap-1 transition-colors", activeTab === 'splitter' ? "text-white" : "text-white/50")}>
+              <Calculator className="w-5 h-5" />
+              <span className="text-[8px] uppercase tracking-widest font-normal">Split</span>
+            </button>
+            <button onClick={() => setActiveTab('groups')} className={cn("flex flex-col items-center gap-1 transition-colors relative", activeTab === 'groups' ? "text-white" : "text-white/50")}>
+              <Users className="w-5 h-5" />
+              <span className="text-[8px] uppercase tracking-widest font-normal">Groups</span>
+              {hasUnreadGroups && (
+                <div className="absolute top-0 right-1 w-2 h-2 bg-red-600 rounded-full border border-primary" />
+              )}
+            </button>
           </div>
         )}
-      </main>
-
-      {(user || (loading && hasAuthHint)) && (
-        <div className="h-16 bg-primary border-t border-white/10 flex items-center justify-around px-4 shadow-inner shrink-0 z-50">
-          <button onClick={() => setActiveTab('dashboard')} className={cn("flex flex-col items-center gap-1 transition-colors", activeTab === 'dashboard' ? "text-white" : "text-white/50")}>
-            <HomeIcon className="w-5 h-5" />
-            <span className="text-[8px] uppercase tracking-widest font-normal">Home</span>
-          </button>
-          <button onClick={() => setActiveTab('history')} className={cn("flex flex-col items-center gap-1 transition-colors", activeTab === 'history' ? "text-white" : "text-white/50")}>
-            <History className="w-5 h-5" />
-            <span className="text-[8px] uppercase tracking-widest font-normal">Bills</span>
-          </button>
-          <button onClick={() => setActiveTab('agent')} className={cn("flex flex-col items-center gap-1 transition-colors", activeTab === 'agent' ? "text-white" : "text-white/50")}>
-            <ShieldCheck className="w-5 h-5" />
-            <span className="text-[8px] uppercase tracking-widest font-normal">Agent</span>
-          </button>
-          <button onClick={() => setActiveTab('splitter')} className={cn("flex flex-col items-center gap-1 transition-colors", activeTab === 'splitter' ? "text-white" : "text-white/50")}>
-            <Calculator className="w-5 h-5" />
-            <span className="text-[8px] uppercase tracking-widest font-normal">Split</span>
-          </button>
-          <button onClick={() => setActiveTab('groups')} className={cn("flex flex-col items-center gap-1 transition-colors relative", activeTab === 'groups' ? "text-white" : "text-white/50")}>
-            <Users className="w-5 h-5" />
-            <span className="text-[8px] uppercase tracking-widest font-normal">Groups</span>
-            {hasUnreadGroups && (
-              <div className="absolute top-0 right-1 w-2 h-2 bg-red-600 rounded-full border border-primary" />
-            )}
-          </button>
-        </div>
-      )}
+      </div>
     </div>
   );
 }
