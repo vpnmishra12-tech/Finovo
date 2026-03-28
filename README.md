@@ -5,12 +5,12 @@ Smart AI-powered expense tracking with a Premium 3D Digital Wallet interface.
 
 ## 📁 GitHub par Code Push Kaise Karein (Simple Steps):
 
-Agar aap is project ko apne GitHub par daalna chahte hain, toh ye commands terminal mein ek-ek karke run karein:
+Agar aap "Git repo not found" error dekh rahe hain, toh iska matlab hai aapne GitHub par abhi tak repository **create** nahi ki hai. Pehle [github.com/new](https://github.com/new) par ja kar **"Finovo"** naam ki repo banayein, phir ye commands terminal mein chalayein:
 
 1. **Terminal Open Karein**: Studio ke terminal mein ye commands likhein:
 
 ```bash
-# 1. Git setup karein
+# 1. Git setup karein (agar pehle nahi kiya)
 git init
 
 # 2. Saari files add karein
@@ -22,7 +22,8 @@ git commit -m "Finovo Initial Commit"
 # 4. Main branch set karein
 git branch -M main
 
-# 5. Apna GitHub link connect karein
+# 5. Purana link remove karke naya connect karein
+git remote remove origin
 git remote add origin https://github.com/vpnmishra12-tech/Finovo.git
 
 # 6. Code upload karein
@@ -32,17 +33,13 @@ git push -u origin main
 
 ---
 
-## 🌟 Quick Start Guide:
+## 📱 Troubleshooting (Git Errors):
 
-1. **Add your first expense**: Click the floating **Plus (+)** button. Try **Voice** input and say *"Bought lunch for 300 rupees"*.
-2. **Set a Budget**: On the dashboard, click the edit icon next to "Monthly Budget" to set your spending limit.
-3. **PWA Install**: Open this in Chrome/Safari on mobile and "Add to Home Screen" for the full app experience.
-
-## 📱 Troubleshooting & Icon Fix:
-
-Agar icon purana dikh raha hai (Laptop/Machine wala), toh ye steps follow karein:
-1. Chrome settings mein jayein.
-2. **Privacy & Security** > **Clear browsing data** karein (Cache clear karein).
-3. App ko refresh karein, naya **3D Neon Wallet** icon load ho jayega.
+*   **Error: Remote origin already exists?**
+    Pehle `git remote remove origin` chalayein, phir naya link add karein.
+*   **Error: Repository not found?**
+    Browser mein GitHub par ja kar check karein ki kya aapne "Finovo" naam ki repo banayi hai.
+*   **Password Prompt?**
+    GitHub ab normal password nahi leta. Aapko **GitHub Settings > Developer Settings > Personal Access Tokens** mein ja kar ek token banana hoga aur usey password ki jagah paste karna hoga.
 
 *Finovo - Built for Speed, Style, and Smart Finances.*
