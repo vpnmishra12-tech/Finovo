@@ -22,7 +22,7 @@ export const translations = {
     confirmDelete: "Are you sure you want to delete this?",
     overspentLastMonth: "Last Month Debt",
     limitReached: "Limit Reached",
-    limitDesc: "You can only change your budget twice a month.",
+    limitDesc: "You can only change your budget three times a month.",
     sponsored: "Sponsored",
     billSplitter: "Split Your Bill",
     groups: "Groups",

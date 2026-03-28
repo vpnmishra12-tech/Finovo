@@ -72,7 +72,7 @@ export function BudgetSummary({ userId, totalSpent, month, year }: { userId: str
         toast({ 
           variant: "destructive",
           title: "Limit Reached",
-          description: res.message || "You can only update your budget twice a month."
+          description: res.message || "You can only update your budget three times a month."
         });
       }
     }

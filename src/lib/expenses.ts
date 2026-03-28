@@ -46,7 +46,7 @@ export function deleteExpense(db: Firestore, userId: string, expenseId: string) 
 
 /**
  * Updates or sets the monthly budget for a specific month.
- * Limit: Only 2 updates per month.
+ * Limit: Only 3 updates per month.
  */
 export async function updateMonthlyBudget(db: Firestore, userId: string, amount: number, month?: number, year?: number): Promise<{ success: boolean; message?: string }> {
   const now = new Date();
@@ -58,8 +58,8 @@ export async function updateMonthlyBudget(db: Firestore, userId: string, amount:
   const budgetSnap = await getDoc(docRef);
   const currentData = budgetSnap.exists() ? budgetSnap.data() as MonthlyBudget : null;
 
-  if (currentData && currentData.updateCount >= 2) {
-    return { success: false, message: "Budget change limit reached (Max 2 per month)" };
+  if (currentData && currentData.updateCount >= 3) {
+    return { success: false, message: "Budget change limit reached (Max 3 per month)" };
   }
 
   const budgetData = {
