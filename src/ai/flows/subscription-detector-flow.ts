@@ -34,17 +34,22 @@ export async function detectSubscriptions(input: SubscriptionDetectorInput): Pro
     input: { schema: SubscriptionDetectorInputSchema },
     output: { schema: SubscriptionDetectorOutputSchema },
     config: {
-      temperature: 0.1, // Consistency ke liye low temperature
+      temperature: 0, // Forensic precision ke liye 0 temperature, no creativity
     },
-    prompt: `Analyze these expenses and identify recurring subscriptions (like Netflix, Gym, etc.).
-Look for patterns in amounts and dates.
+    prompt: `Analyze the provided expense list for RECURRING SUBSCRIPTIONS ONLY (e.g., Netflix, Spotify, Gym, iCloud, Mobile Postpaid, or any amount paid every month/year).
+
+RULES:
+1. If no recurring patterns or subscription-related keywords are found, return an EMPTY array for subscriptions.
+2. Do NOT invent or hallucinate subscriptions. 
+3. One-time purchases should NOT be included.
+4. Total Annual Drain is the sum of (amount * 12) for monthly subs.
 
 Expenses:
 {{#each expenses}}
-- {{{transactionDate}}}, ₹{{{amount}}}, {{{description}}}
+- Date: {{{transactionDate}}}, Amount: ₹{{{amount}}}, Desc: {{{description}}}
 {{/each}}
 
-Identify recurring payments, estimate annual cost, and provide a summary.`,
+Strictly return results based ONLY on the data above.`,
   });
 
   const { output } = await detectorPrompt(input);
