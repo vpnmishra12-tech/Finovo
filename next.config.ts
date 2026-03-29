@@ -26,13 +26,13 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  // Removed experimental flags that can cause build failures in CI
   eslint: {
     ignoreDuringBuilds: true,
   },
   typescript: {
     ignoreBuildErrors: true,
   },
+  trailingSlash: true,
 };
 
 export default nextConfig;

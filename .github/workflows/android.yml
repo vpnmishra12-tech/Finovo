@@ -26,7 +26,7 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm install
+        run: npm install --legacy-peer-deps
 
       - name: Build Next.js App
         run: npm run build
@@ -36,6 +36,7 @@ jobs:
       - name: Initialize and Sync Capacitor
         run: |
           npx cap add android || true
+          mkdir -p android/app/src/main/assets/public
           npx cap sync android
 
       - name: Build Android APK
