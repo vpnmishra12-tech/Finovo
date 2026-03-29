@@ -1,6 +1,4 @@
 /**
- * @fileOverview Mock Genkit initialization for static builds.
- * Genkit requires a Node.js environment and cannot run in a static APK.
+ * @fileOverview Empty Genkit stub for client compatibility.
  */
-
 export const ai = null as any;

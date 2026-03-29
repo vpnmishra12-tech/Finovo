@@ -1,20 +1,13 @@
 /**
  * @fileOverview Safe Client-Side AI Stubs for Static Export.
- * These functions replace Server Actions to prevent build errors.
- * They return a consistent "Requires Server" response in APK mode.
+ * This file contains NO Server Actions and NO imports from flows to avoid Node.js dependency errors.
  */
 
-const OFFLINE_ERROR = {
-  error: "AI Features require a live server connection and are not available in this static build.",
-  message: "AI Features require a live server.",
-  isCorrect: true,
-  summary: "AI Audit is only available in the web version.",
-  subscriptions: [],
-  totalAnnualDrain: 0
-};
-
 export async function getAgentAdvice(input: any) {
-  return { message: "AI Advice is currently unavailable in the offline app.", title: "AI Offline" };
+  return { 
+    message: "AI Advice is currently unavailable in the offline app. Please use the web version for smart insights.", 
+    title: "AI Offline" 
+  };
 }
 
 export async function auditBill(input: any) {

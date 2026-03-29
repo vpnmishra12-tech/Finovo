@@ -2,46 +2,39 @@ name: Build Android APK
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   workflow_dispatch:
-
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'zulu'
-
-      - name: Setup Node.js
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
-          cache: 'npm'
+          node-version: 18
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
 
       - name: Install dependencies
         run: npm install --force
 
-      - name: Build Next.js App (Export Mode)
+      - name: Build web app
         run: npm run build
         env:
-          NEXT_TELEMETRY_DISABLED: 1
           NEXT_PUBLIC_IS_EXPORT: 'true'
           NODE_ENV: production
 
-      - name: Initialize Capacitor
-        run: |
-          npx cap add android || true
-          mkdir -p android/app/src/main/assets/public
-          npx cap sync android
+      - name: Sync Capacitor
+        run: npx cap sync android
 
       - name: Build Android APK
         run: |
