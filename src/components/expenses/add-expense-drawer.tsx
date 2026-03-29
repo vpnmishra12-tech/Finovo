@@ -18,6 +18,7 @@ import { VoiceInput } from './capture-modes/voice-input';
 import { CameraInput } from './capture-modes/camera-input';
 import { useToast } from '@/hooks/use-toast';
 import { useFirestore } from '@/firebase';
+import { showInterstitialAd } from '@/lib/ad-manager';
 
 export function AddExpenseDrawer() {
   const { user } = useAuth();
@@ -42,8 +43,13 @@ export function AddExpenseDrawer() {
     setIsProcessing(false);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!firestore || !user?.uid) return;
+    
+    // 1. Trigger Interstitial Ad (Frequency Capped)
+    await showInterstitialAd();
+
+    // 2. Perform Save
     saveExpense(firestore, user.uid, {
       amount: parseFloat(amount),
       category: category as any,
@@ -51,6 +57,7 @@ export function AddExpenseDrawer() {
       transactionDate: new Date().toISOString().split('T')[0],
       captureMethod: 'Text',
     });
+    
     toast({ title: "Expense recorded!" });
     setOpen(false);
     resetForm();

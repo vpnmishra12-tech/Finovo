@@ -1,11 +1,12 @@
-'use client';
+
+"use client";
 
 import { useState, useRef, useMemo } from 'react';
 import { useLanguage } from '@/lib/contexts/language-context';
 import { useAuth } from '@/lib/contexts/auth-context';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ShieldCheck, Camera, Search, Info, RefreshCcw, Wallet, Loader2, CheckCircle2, AlertTriangle, AlertCircle, TrendingUp, Sparkles, ReceiptText } from 'lucide-react';
+import { ShieldCheck, Camera, Search, Info, RefreshCcw, Wallet, Loader2, CheckCircle2, AlertTriangle, AlertCircle, TrendingUp, Sparkles, ReceiptText, PlayCircle } from 'lucide-react';
 import { auditBill, type BillAuditOutput } from '@/ai/flows/bill-audit-flow';
 import { detectSubscriptions, type SubscriptionDetectorOutput } from '@/ai/flows/subscription-detector-flow';
 import { useToast } from '@/hooks/use-toast';
@@ -15,6 +16,7 @@ import { Expense } from '@/lib/expenses';
 import { cn } from '@/lib/utils';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { format, subMonths, startOfMonth, endOfMonth, isWithinInterval, parseISO } from 'date-fns';
+import { showRewardedAd } from '@/lib/ad-manager';
 
 export function AgentModule() {
   const { t } = useLanguage();
@@ -28,6 +30,8 @@ export function AgentModule() {
 
   const [isScanningSubs, setIsScanningSubs] = useState(false);
   const [subResult, setSubResult] = useState<SubscriptionDetectorOutput | null>(null);
+
+  const [isWatchingAd, setIsWatchingAd] = useState(false);
 
   const expensesQuery = useMemoFirebase(() => {
     if (!firestore || !user?.uid) return null;
@@ -68,6 +72,16 @@ export function AgentModule() {
   }, [expenses]);
 
   const handleProcessImage = async (file: File) => {
+    // 1. Reward User for watching an ad before audit
+    setIsWatchingAd(true);
+    const granted = await showRewardedAd();
+    setIsWatchingAd(false);
+
+    if (!granted) {
+      toast({ variant: 'destructive', title: 'Ad Not Finished', description: 'Please watch the full ad to use AI Audit.' });
+      return;
+    }
+
     setIsAuditing(true);
     setAuditResult(null);
     const reader = new FileReader();
@@ -96,6 +110,17 @@ export function AgentModule() {
       toast({ title: "No Data", description: "Add expenses first." });
       return;
     }
+
+    // 1. Reward User for watching an ad before scan
+    setIsWatchingAd(true);
+    const granted = await showRewardedAd();
+    setIsWatchingAd(false);
+
+    if (!granted) {
+      toast({ variant: 'destructive', title: 'Ad Not Finished', description: 'Please watch the full ad for free scan.' });
+      return;
+    }
+
     setIsScanningSubs(true);
     setSubResult(null);
     try {
@@ -131,6 +156,15 @@ export function AgentModule() {
           </div>
         </div>
       </div>
+
+      {/* Ad Watch Overlay Indicator */}
+      {isWatchingAd && (
+        <div className="fixed inset-0 z-[200] bg-black/90 flex flex-col items-center justify-center p-8 animate-in fade-in duration-300">
+           <PlayCircle className="w-16 h-16 text-white animate-pulse mb-6" />
+           <p className="text-white font-headline font-black text-xl uppercase tracking-widest text-center">Loading Video Ad...</p>
+           <p className="text-white/40 text-[10px] uppercase tracking-[0.5em] mt-2 text-center">Please wait for reward</p>
+        </div>
+      )}
 
       {/* Mini Insight Card */}
       <Card className="border-none shadow-sm rounded-[1.5rem] bg-card overflow-hidden shrink-0 h-24 flex items-center">
@@ -182,7 +216,7 @@ export function AgentModule() {
               <div className="w-full space-y-3">
                 <Button
                   onClick={() => fileInputRef.current?.click()}
-                  disabled={isAuditing}
+                  disabled={isAuditing || isWatchingAd}
                   className="w-full h-14 rounded-xl font-black uppercase text-[11px] tracking-[0.2em] gap-3 shadow-lg bg-primary text-white"
                 >
                   {isAuditing ? <Loader2 className="w-5 h-5 animate-spin" /> : <><Camera className="w-5 h-5" /> {t.agent.scanButton}</>}
@@ -225,7 +259,7 @@ export function AgentModule() {
                 </div>
                 <Button
                   onClick={handleSubAudit}
-                  disabled={isScanningSubs}
+                  disabled={isScanningSubs || isWatchingAd}
                   className="w-full h-14 rounded-xl font-black uppercase text-[11px] tracking-[0.2em] gap-3 shadow-lg bg-primary text-white"
                 >
                   {isScanningSubs ? <Loader2 className="w-5 h-5 animate-spin" /> : <><RefreshCcw className="w-5 h-5" /> {t.agent.subButton}</>}
