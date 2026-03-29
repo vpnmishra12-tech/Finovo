@@ -38,16 +38,10 @@ const nextConfig: NextConfig = {
   trailingSlash: true,
   distDir: isExport ? 'out' : '.next',
   webpack: (config) => {
-    // CRITICAL: When exporting for APK, we completely strip the AI flows
-    // This is the ONLY way to prevent Next.js 15 from failing on 'use server' directives
+    // CRITICAL: When exporting for APK, we completely strip the AI directory
+    // This prevents Next.js 15 from finding 'use server' directives during static analysis
     if (isExport) {
-      config.resolve.alias['@/ai/flows/extract-text-expense'] = false;
-      config.resolve.alias['@/ai/flows/extract-bill-photo-expense'] = false;
-      config.resolve.alias['@/ai/flows/extract-voice-expense'] = false;
-      config.resolve.alias['@/ai/flows/agent-advisor-flow'] = false;
-      config.resolve.alias['@/ai/flows/bill-audit-flow'] = false;
-      config.resolve.alias['@/ai/flows/subscription-detector-flow'] = false;
-      config.resolve.alias['@/ai/genkit'] = false;
+      config.resolve.alias['@/ai'] = false;
     }
     return config;
   },
