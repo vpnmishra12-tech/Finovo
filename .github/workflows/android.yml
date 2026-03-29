@@ -13,13 +13,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # ✅ FIX 1: Node 20 required
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      # ✅ FIX 2: Java 17 (Capacitor safe)
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
@@ -32,8 +30,13 @@ jobs:
       - name: Build web app
         run: npm run build
 
-      - name: Sync Capacitor
-        run: npx cap sync android
+      - name: Add and Sync Capacitor
+        run: |
+          # Create android folder if it doesn't exist
+          if [ ! -d "android" ]; then
+            npx cap add android
+          fi
+          npx cap sync android
 
       - name: Build APK
         run: |

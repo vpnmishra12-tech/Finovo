@@ -1,6 +1,6 @@
 /**
  * @fileOverview A flow for AI Agent advice.
- * Removed 'use server' and Genkit imports for static build compatibility.
+ * Explicitly removed server-side only logic for static export compatibility.
  */
 
 export type AgentAdvisorInput = {
@@ -21,5 +21,5 @@ export type AgentAdvisorOutput = {
 };
 
 export async function getAgentAdvice(input: AgentAdvisorInput): Promise<AgentAdvisorOutput> {
-  return { message: "AI Offline", title: "AI Offline" };
+  return { message: "AI Features require a live server connection.", title: "AI Offline" };
 }
