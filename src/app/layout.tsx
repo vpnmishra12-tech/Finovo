@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useState } from 'react';
@@ -30,24 +29,20 @@ export default function RootLayout({
   const [hasHydrated, setHasHydrated] = useState(false);
 
   useEffect(() => {
-    // Set hydrated to true immediately to render the app shell
+    // Set hydrated to true immediately for Capacitor environment
     setHasHydrated(true);
     
-    // Initialize AdMob safely in the background after a short delay
-    // This prevents the main thread from blocking during app startup
+    // Safely initialize AdMob in background
     const startAds = async () => {
       try {
         await initializeAdMob();
+        // Short delay before showing banner for stability
         setTimeout(async () => {
           try {
             await showBannerAd();
-          } catch (e) {
-            console.warn('Banner show skipped', e);
-          }
-        }, 3000); // 3 second delay for stability
-      } catch (e) {
-        console.warn('Ads init failed', e);
-      }
+          } catch (e) {}
+        }, 2000);
+      } catch (e) {}
     };
     
     startAds();
@@ -57,7 +52,6 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable}`}>
       <body className="font-body antialiased min-h-screen bg-background text-foreground selection:bg-primary/30">
         {!hasHydrated ? (
-          // Solid splash color to prevent white flicker during JS load
           <div className="fixed inset-0 bg-background" />
         ) : (
           <FirebaseClientProvider>

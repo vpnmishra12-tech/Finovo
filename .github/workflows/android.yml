@@ -18,7 +18,7 @@ jobs:
         with:
           node-version: 20
 
-      # ✅ FIX: Capacitor 7 requires Java 21 for compilation
+      # ✅ Capacitor 7 requires Java 21
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
@@ -33,11 +33,23 @@ jobs:
 
       - name: Add and Sync Capacitor
         run: |
-          # Create android folder if it doesn't exist
           if [ ! -d "android" ]; then
             npx cap add android
           fi
           npx cap sync android
+
+      # 🔥 CRITICAL FIX: Inject AdMob App ID into AndroidManifest.xml to prevent crash
+      - name: Inject AdMob App ID
+        run: |
+          MANIFEST_PATH="android/app/src/main/AndroidManifest.xml"
+          APP_ID="ca-app-pub-9915809769396833~2579253457"
+          if grep -q "com.google.android.gms.ads.APPLICATION_ID" "$MANIFEST_PATH"; then
+            echo "AdMob ID already exists"
+          else
+            # Insert meta-data tag before the closing </application> tag
+            sed -i "/<\/application>/i \        <meta-data android:name=\"com.google.android.gms.ads.APPLICATION_ID\" android:value=\"$APP_ID\"/>" "$MANIFEST_PATH"
+            echo "AdMob ID injected successfully"
+          fi
 
       - name: Build APK
         run: |

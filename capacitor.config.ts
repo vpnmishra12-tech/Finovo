@@ -1,4 +1,3 @@
-
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
@@ -7,12 +6,11 @@ const config: CapacitorConfig = {
   webDir: 'out',
   plugins: {
     AdMob: {
-      // Your real AdMob App ID
       appId: 'ca-app-pub-9915809769396833~2579253457',
     },
   },
   server: {
-    // Critical for Next.js routing and Firebase Auth on Android
+    // Required for Next.js routing and Firebase to work on Android
     androidScheme: 'https',
     hostname: 'localhost',
     cleartext: true

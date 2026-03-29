@@ -1,4 +1,3 @@
-
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
@@ -12,9 +11,8 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  // Set trailingSlash to false for Capacitor to ensure index.html is at the root
+  // Ensure trailingSlash is false for Capacitor compatibility
   trailingSlash: false,
-  distDir: 'out',
 };
 
 export default nextConfig;
