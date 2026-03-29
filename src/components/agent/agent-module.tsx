@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useRef, useMemo } from 'react';
@@ -90,15 +89,14 @@ export function AgentModule() {
     reader.onloadend = async () => {
       const dataUri = reader.result as string;
       try {
-        // @ts-ignore - handled by webpack alias
-        const { auditBill } = await import('@/ai/flows/bill-audit-flow');
-        if (!auditBill) throw new Error("AI Unavailable");
+        const actions = await import('@/ai/server-actions');
+        if (!actions || !actions.auditBill) throw new Error("AI Offline");
 
-        const result = await auditBill({ billPhotoDataUri: dataUri });
+        const result = await actions.auditBill({ billPhotoDataUri: dataUri });
         setAuditResult(result);
         toast({ title: result.isCorrect ? "Bill looks clean!" : "Errors found!" });
       } catch (err) {
-        toast({ variant: 'destructive', title: 'Error', description: 'AI Audit failed or unavailable in this build.' });
+        toast({ variant: 'destructive', title: 'Offline Mode', description: 'AI features are restricted in APK builds.' });
       } finally {
         setIsAuditing(false);
       }
@@ -113,7 +111,7 @@ export function AgentModule() {
 
   const handleSubAudit = async () => {
     if (process.env.NEXT_PUBLIC_IS_EXPORT === 'true') {
-      toast({ title: "AI Offline", description: "Subscription Scan requires a server connection.", variant: "destructive" });
+      toast({ title: "AI Offline", description: "Subscription Scan is restricted in APK mode.", variant: "destructive" });
       return;
     }
 
@@ -134,11 +132,10 @@ export function AgentModule() {
     setIsScanningSubs(true);
     setSubResult(null);
     try {
-      // @ts-ignore - handled by webpack alias
-      const { detectSubscriptions } = await import('@/ai/flows/subscription-detector-flow');
-      if (!detectSubscriptions) throw new Error("AI Unavailable");
+      const actions = await import('@/ai/server-actions');
+      if (!actions || !actions.detectSubscriptions) throw new Error("AI Offline");
 
-      const result = await detectSubscriptions({ 
+      const result = await actions.detectSubscriptions({ 
         expenses: expenses.map(e => ({ 
           description: e.description, 
           amount: e.amount, 
@@ -149,7 +146,7 @@ export function AgentModule() {
       setSubResult(result);
       toast({ title: "Audit Complete", description: result.subscriptions.length > 0 ? `Found ${result.subscriptions.length} leaks.` : "No leaks found." });
     } catch (err) {
-      toast({ variant: 'destructive', title: 'Error', description: 'AI Scan failed or unavailable.' });
+      toast({ variant: 'destructive', title: 'Offline Mode', description: 'AI features are restricted in APK builds.' });
     } finally {
       setIsScanningSubs(false);
     }

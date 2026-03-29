@@ -1,4 +1,3 @@
-'use server';
 /**
  * @fileOverview A Genkit flow to extract expense details from a transcribed voice input.
  */
@@ -18,10 +17,6 @@ const ExtractVoiceExpenseOutputSchema = z.object({
   description: z.string().describe('A brief, concise description of the expense.'),
 });
 export type ExtractVoiceExpenseOutput = z.infer<typeof ExtractVoiceExpenseOutputSchema>;
-
-export async function extractVoiceExpense(input: ExtractVoiceExpenseInput): Promise<ExtractVoiceExpenseOutput> {
-  return extractVoiceExpenseFlow(input);
-}
 
 const extractVoiceExpensePrompt = ai.definePrompt({
   name: 'extractVoiceExpensePrompt',
@@ -65,3 +60,7 @@ const extractVoiceExpenseFlow = ai.defineFlow(
     return output;
   }
 );
+
+export async function extractVoiceExpense(input: ExtractVoiceExpenseInput): Promise<ExtractVoiceExpenseOutput> {
+  return extractVoiceExpenseFlow(input);
+}

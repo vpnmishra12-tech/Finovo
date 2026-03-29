@@ -1,4 +1,3 @@
-'use server';
 /**
  * @fileOverview A Genkit flow for extracting expense details from a bill photo.
  */
@@ -23,12 +22,6 @@ const ExtractBillPhotoExpenseOutputSchema = z.object({
     .describe('The suggested expense category from the predefined list.'),
 });
 export type ExtractBillPhotoExpenseOutput = z.infer<typeof ExtractBillPhotoExpenseOutputSchema>;
-
-export async function extractBillPhotoExpense(
-  input: ExtractBillPhotoExpenseInput
-): Promise<ExtractBillPhotoExpenseOutput> {
-  return extractBillPhotoExpenseFlow(input);
-}
 
 const extractBillPhotoExpensePrompt = ai.definePrompt({
   name: 'extractBillPhotoExpensePrompt',
@@ -61,3 +54,9 @@ const extractBillPhotoExpenseFlow = ai.defineFlow(
     return output;
   }
 );
+
+export async function extractBillPhotoExpense(
+  input: ExtractBillPhotoExpenseInput
+): Promise<ExtractBillPhotoExpenseOutput> {
+  return extractBillPhotoExpenseFlow(input);
+}

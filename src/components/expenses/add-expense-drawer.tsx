@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from 'react';
@@ -64,11 +63,10 @@ export function AddExpenseDrawer() {
   const handleAiTextSubmit = async () => {
     if (!textInput) return;
 
-    // In static APK build, AI flows are stripped to allow build to pass
     if (process.env.NEXT_PUBLIC_IS_EXPORT === 'true') {
       toast({ 
         title: "AI Offline", 
-        description: "AI extraction requires a live server. Please enter manually in APK.",
+        description: "AI extraction is not available in the APK build. Please enter manually.",
         variant: "destructive"
       });
       return;
@@ -76,16 +74,16 @@ export function AddExpenseDrawer() {
 
     setIsProcessing(true);
     try {
-      // @ts-ignore - dynamic import handled by webpack alias during export build
-      const { extractTextExpense } = await import('@/ai/flows/extract-text-expense');
-      if (!extractTextExpense) throw new Error("AI not available");
+      // @ts-ignore - centralized actions isolated for export
+      const { extractTextExpense } = await import('@/ai/server-actions');
+      if (!extractTextExpense) throw new Error("AI Offline");
       
       const result = await extractTextExpense({ textInput });
       setAmount(result.amount.toString());
       setCategory(result.category);
       setDescription(result.description);
     } catch (err) {
-      toast({ title: "AI Unavailable", description: "AI features are restricted in static builds.", variant: "destructive" });
+      toast({ title: "Offline Mode", description: "AI features are restricted in APK builds.", variant: "destructive" });
     } finally {
       setIsProcessing(false);
     }

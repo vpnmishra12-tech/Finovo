@@ -1,4 +1,3 @@
-
 import type {NextConfig} from 'next';
 
 const isExport = process.env.NEXT_PUBLIC_IS_EXPORT === 'true';
@@ -38,10 +37,10 @@ const nextConfig: NextConfig = {
   trailingSlash: true,
   distDir: isExport ? 'out' : '.next',
   webpack: (config) => {
-    // CRITICAL: When exporting for APK, we completely strip the AI directory
-    // This prevents Next.js 15 from finding 'use server' directives during static analysis
+    // CRITICAL: Next.js 15 bypass for 'Server Actions are not supported with static export'
+    // We alias the centralized server-actions file to false during export build.
     if (isExport) {
-      config.resolve.alias['@/ai'] = false;
+      config.resolve.alias['@/ai/server-actions'] = false;
     }
     return config;
   },

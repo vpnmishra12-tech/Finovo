@@ -1,4 +1,3 @@
-'use server';
 /**
  * @fileOverview This file implements a Genkit flow for extracting expense details from a natural language text input.
  */
@@ -19,10 +18,6 @@ const ExtractTextExpenseOutputSchema = z.object({
   description: z.string().describe('A brief description of the expense.'),
 });
 export type ExtractTextExpenseOutput = z.infer<typeof ExtractTextExpenseOutputSchema>;
-
-export async function extractTextExpense(input: ExtractTextExpenseInput): Promise<ExtractTextExpenseOutput> {
-  return extractTextExpenseFlow(input);
-}
 
 const prompt = ai.definePrompt({
   name: 'extractTextExpensePrompt',
@@ -57,3 +52,7 @@ const extractTextExpenseFlow = ai.defineFlow(
     return output!;
   }
 );
+
+export async function extractTextExpense(input: ExtractTextExpenseInput): Promise<ExtractTextExpenseOutput> {
+  return extractTextExpenseFlow(input);
+}

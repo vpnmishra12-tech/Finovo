@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -27,19 +26,20 @@ export function VoiceInput({ onExtracted }: { onExtracted: (data: any) => void }
         setIsListening(false);
         
         if (process.env.NEXT_PUBLIC_IS_EXPORT === 'true') {
-           toast({ title: "AI Offline", description: "AI features require server access." });
+           toast({ title: "AI Offline", description: "AI voice features are not available in APK builds." });
            return;
         }
 
         setIsProcessing(true);
         try {
-          // Dynamic import to avoid build-time 'use server' conflicts during static export
-          const { extractVoiceExpense } = await import('@/ai/flows/extract-voice-expense');
+          // @ts-ignore - centralized actions isolated for export
+          const { extractVoiceExpense } = await import('@/ai/server-actions');
+          if (!extractVoiceExpense) throw new Error("AI Offline");
           const result = await extractVoiceExpense({ transcribedText: transcript });
           onExtracted(result);
         } catch (error) {
           console.error("Voice extraction error", error);
-          toast({ variant: 'destructive', title: 'AI Error', description: 'Could not process voice.' });
+          toast({ variant: 'destructive', title: 'Offline Mode', description: 'AI features are restricted in APK builds.' });
         } finally {
           setIsProcessing(false);
         }

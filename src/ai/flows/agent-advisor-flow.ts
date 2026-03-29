@@ -1,4 +1,3 @@
-'use server';
 /**
  * @fileOverview A Genkit flow for AI Agent advice and reminders.
  */
@@ -24,10 +23,6 @@ const AgentAdvisorOutputSchema = z.object({
   title: z.string().optional().describe('A catchy title for the advice.'),
 });
 export type AgentAdvisorOutput = z.infer<typeof AgentAdvisorOutputSchema>;
-
-export async function getAgentAdvice(input: AgentAdvisorInput): Promise<AgentAdvisorOutput> {
-  return agentAdvisorFlow(input);
-}
 
 const advicePrompt = ai.definePrompt({
   name: 'agentAdvicePrompt',
@@ -74,3 +69,7 @@ const agentAdvisorFlow = ai.defineFlow(
     return output;
   }
 );
+
+export async function getAgentAdvice(input: AgentAdvisorInput): Promise<AgentAdvisorOutput> {
+  return agentAdvisorFlow(input);
+}
