@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useMemo, useEffect } from 'react';
@@ -21,7 +22,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { cn } from '@/lib/utils';
 import { Skeleton } from '@/components/ui/skeleton';
 
-// Dynamic imports for sub-modules to keep main bundle light
+// Dynamic imports with SSR disabled for Capacitor stability
 const BillSplitTool = dynamic(() => import('@/components/bill-split/bill-split-tool').then(mod => mod.BillSplitTool), { ssr: false, loading: () => <Skeleton className="h-[400px] w-full rounded-3xl" /> });
 const ExpenseList = dynamic(() => import('@/components/expenses/expense-list').then(mod => mod.ExpenseList), { ssr: false, loading: () => <Skeleton className="h-[300px] w-full rounded-3xl" /> });
 const GroupModule = dynamic(() => import('@/components/groups/group-module').then(mod => mod.GroupModule), { ssr: false, loading: () => <Skeleton className="h-[400px] w-full rounded-3xl" /> });
@@ -47,7 +48,8 @@ export default function Home() {
 
   useEffect(() => {
     setHasHydrated(true);
-    setHasAuthHint(localStorage.getItem('finovo_auth_hint') === 'true');
+    const hint = localStorage.getItem('finovo_auth_hint');
+    setHasAuthHint(hint === 'true');
     
     const savedBudget = localStorage.getItem('finovo_last_budget');
     if (savedBudget) setCachedBudget(parseFloat(savedBudget));
@@ -59,9 +61,7 @@ export default function Home() {
     if (savedExpenses) {
       try {
         setCachedExpenses(JSON.parse(savedExpenses));
-      } catch (e) {
-        // Silently handle corrupted cache
-      }
+      } catch (e) {}
     }
   }, []);
 
@@ -122,30 +122,25 @@ export default function Home() {
       setHasUnreadGroups(false);
       return;
     }
-    const checkUnread = () => {
-      const anyUnread = userGroups.some(group => {
-        if (!group?.lastActivityAt) return false;
-        const lastSeen = localStorage.getItem(`group_seen_${group.id}`);
-        if (!lastSeen) return true;
-        
-        try {
-          let lastActivityMillis = 0;
-          if (group.lastActivityAt instanceof Timestamp) {
-            lastActivityMillis = group.lastActivityAt.toMillis();
-          } else if (typeof group.lastActivityAt === 'object' && 'seconds' in group.lastActivityAt) {
-            lastActivityMillis = (group.lastActivityAt as any).seconds * 1000;
-          } else {
-            lastActivityMillis = new Date(group.lastActivityAt as any).getTime();
-          }
-          
-          return !isNaN(lastActivityMillis) && lastActivityMillis > parseInt(lastSeen);
-        } catch (e) {
-          return false;
+    const anyUnread = userGroups.some(group => {
+      if (!group?.lastActivityAt) return false;
+      const lastSeen = localStorage.getItem(`group_seen_${group.id}`);
+      if (!lastSeen) return true;
+      try {
+        let lastActivityMillis = 0;
+        if (group.lastActivityAt instanceof Timestamp) {
+          lastActivityMillis = group.lastActivityAt.toMillis();
+        } else if (typeof group.lastActivityAt === 'object' && 'seconds' in group.lastActivityAt) {
+          lastActivityMillis = (group.lastActivityAt as any).seconds * 1000;
+        } else {
+          lastActivityMillis = new Date(group.lastActivityAt as any).getTime();
         }
-      });
-      setHasUnreadGroups(anyUnread);
-    };
-    checkUnread();
+        return !isNaN(lastActivityMillis) && lastActivityMillis > parseInt(lastSeen);
+      } catch (e) {
+        return false;
+      }
+    });
+    setHasUnreadGroups(anyUnread);
   }, [userGroups, activeTab]);
 
   if (!hasHydrated) {
@@ -160,7 +155,7 @@ export default function Home() {
           <Wallet className="w-10 h-10 text-primary relative z-10" />
         </div>
         <p className="mt-8 text-[10px] font-headline font-black uppercase tracking-[0.5em] text-primary/40 animate-pulse">
-          INITIALIZING CORE
+          LOADING FINOVO
         </p>
       </div>
     );
@@ -192,7 +187,7 @@ export default function Home() {
   if (budget > 0) {
     if (percentUsed >= 100) {
       alertBar = (
-        <Alert className="py-[0.97rem] px-3 rounded-[0.8rem] border bg-[#FFF1F1] text-[#D32F2F] border-[#FFE4E4] flex flex-row items-center gap-2 shrink-0 overflow-hidden min-h-[40px] [&>svg]:relative [&>svg]:top-0 [&>svg]:left-0 [&>svg~*]:pl-0">
+        <Alert className="py-3 px-3 rounded-[0.8rem] border bg-[#FFF1F1] text-[#D32F2F] border-[#FFE4E4] flex flex-row items-center gap-2 shrink-0 overflow-hidden min-h-[40px] [&>svg]:relative [&>svg]:top-0 [&>svg]:left-0 [&>svg~*]:pl-0">
           <AlertTriangle className="h-4 w-4 shrink-0" />
           <AlertDescription className="text-[8px] uppercase tracking-tight font-normal leading-none">
             {t.alerts.exhausted}
@@ -201,7 +196,7 @@ export default function Home() {
       );
     } else if (percentUsed >= 75) {
       alertBar = (
-        <Alert className="py-[0.97rem] px-3 rounded-[0.8rem] border bg-[#FFF8F1] text-[#F57C00] border-[#FFEBD6] flex flex-row items-center gap-2 shrink-0 overflow-hidden min-h-[40px] [&>svg]:relative [&>svg]:top-0 [&>svg]:left-0 [&>svg~*]:pl-0">
+        <Alert className="py-3 px-3 rounded-[0.8rem] border bg-[#FFF8F1] text-[#F57C00] border-[#FFEBD6] flex flex-row items-center gap-2 shrink-0 overflow-hidden min-h-[40px] [&>svg]:relative [&>svg]:top-0 [&>svg]:left-0 [&>svg~*]:pl-0">
           <AlertCircle className="h-4 w-4 shrink-0" />
           <AlertDescription className="text-[8px] uppercase tracking-tight font-normal leading-none">
             {t.alerts.critical.replace('{percent}', roundedPercent.toString())}
@@ -210,7 +205,7 @@ export default function Home() {
       );
     } else if (percentUsed >= 50) {
       alertBar = (
-        <Alert className="py-[0.97rem] px-3 rounded-[0.8rem] border bg-[#F1FFF1] text-[#2E7D32] border-[#E4FFE4] flex flex-row items-center gap-2 shrink-0 overflow-hidden min-h-[40px] [&>svg]:relative [&>svg]:top-0 [&>svg]:left-0 [&>svg~*]:pl-0">
+        <Alert className="py-3 px-3 rounded-[0.8rem] border bg-[#F1FFF1] text-[#2E7D32] border-[#E4FFE4] flex flex-row items-center gap-2 shrink-0 overflow-hidden min-h-[40px] [&>svg]:relative [&>svg]:top-0 [&>svg]:left-0 [&>svg~*]:pl-0">
           <CheckCircle2 className="h-4 w-4 shrink-0" />
           <AlertDescription className="text-[8px] uppercase tracking-tight font-normal leading-none">
             {t.alerts.halfway.replace('{percent}', roundedPercent.toString())}

@@ -2,7 +2,6 @@
 "use client";
 
 import { useEffect } from 'react';
-import type { Metadata, Viewport } from 'next';
 import { Inter, Space_Grotesk } from 'next/font/google';
 import './globals.css';
 import { FirebaseClientProvider } from '@/firebase/client-provider';
@@ -23,18 +22,20 @@ const spaceGrotesk = Space_Grotesk({
   display: 'swap',
 });
 
-const APP_ICON_URL = 'https://images.unsplash.com/photo-1621416848446-991125c75b06?w=512&h=512&fit=crop&q=80';
-
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   useEffect(() => {
-    // Initialize AdMob and Show Banner on App Launch
+    // Initialize AdMob safely without blocking UI
     const startAds = async () => {
-      await initializeAdMob();
-      await showBannerAd();
+      try {
+        await initializeAdMob();
+        await showBannerAd();
+      } catch (e) {
+        console.warn('Ads init skipped or failed', e);
+      }
     };
     startAds();
   }, []);
