@@ -2,7 +2,8 @@
 import type {NextConfig} from 'next';
 
 const nextConfig: NextConfig = {
-  output: 'export',
+  // Conditional output: 'export' for APK builds, undefined for Vercel SSR
+  output: process.env.NEXT_PUBLIC_IS_EXPORT === 'true' ? 'export' : undefined,
   images: {
     unoptimized: true,
     remotePatterns: [
@@ -33,7 +34,6 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
   trailingSlash: true,
-  distDir: 'out',
 };
 
 export default nextConfig;
