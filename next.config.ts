@@ -38,9 +38,11 @@ const nextConfig: NextConfig = {
   trailingSlash: true,
   distDir: isExport ? 'out' : '.next',
   webpack: (config, { isServer }) => {
-    // When exporting for APK, we must ignore the AI folder entirely to avoid
-    // "Server Actions are not supported with static export" errors.
+    // CRITICAL: When exporting for APK, we redirect all AI flow imports to an empty object
+    // This prevents the "Server Actions are not supported with static export" error
     if (isExport && !isServer) {
+      config.resolve.alias['@/ai/flows'] = false;
+      // Also catch direct imports just in case
       config.resolve.alias['@/ai'] = false;
     }
     return config;

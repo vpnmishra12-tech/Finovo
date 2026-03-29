@@ -5,25 +5,38 @@ import { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Camera, Image as ImageIcon, Loader2 } from 'lucide-react';
 import { useLanguage } from '@/lib/contexts/language-context';
-import { extractBillPhotoExpense } from '@/ai/flows/extract-bill-photo-expense';
+import { useToast } from '@/hooks/use-toast';
 
 export function CameraInput({ onExtracted }: { onExtracted: (data: any) => void }) {
   const { t } = useLanguage();
+  const { toast } = useToast();
   const [isProcessing, setIsProcessing] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const processImage = async (file: File) => {
+    if (process.env.NEXT_PUBLIC_IS_EXPORT === 'true') {
+      toast({ title: "AI Offline", description: "AI features require server access." });
+      return;
+    }
+
     setIsProcessing(true);
     try {
       const reader = new FileReader();
       reader.onloadend = async () => {
         const dataUri = reader.result as string;
-        const result = await extractBillPhotoExpense({ billPhotoDataUri: dataUri });
-        onExtracted({
-          ...result,
-          description: `Bill from ${result.merchant}`
-        });
-        setIsProcessing(false);
+        try {
+          // Dynamic import to avoid build-time 'use server' conflicts during static export
+          const { extractBillPhotoExpense } = await import('@/ai/flows/extract-bill-photo-expense');
+          const result = await extractBillPhotoExpense({ billPhotoDataUri: dataUri });
+          onExtracted({
+            ...result,
+            description: `Bill from ${result.merchant}`
+          });
+        } catch (err) {
+          toast({ variant: 'destructive', title: 'AI Error', description: 'Failed to extract data.' });
+        } finally {
+          setIsProcessing(false);
+        }
       };
       reader.readAsDataURL(file);
     } catch (error) {

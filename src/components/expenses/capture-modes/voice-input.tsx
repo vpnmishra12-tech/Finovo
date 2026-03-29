@@ -5,10 +5,11 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Mic, MicOff, Loader2 } from 'lucide-react';
 import { useLanguage } from '@/lib/contexts/language-context';
-import { extractVoiceExpense } from '@/ai/flows/extract-voice-expense';
+import { useToast } from '@/hooks/use-toast';
 
 export function VoiceInput({ onExtracted }: { onExtracted: (data: any) => void }) {
   const { t } = useLanguage();
+  const { toast } = useToast();
   const [isListening, setIsListening] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [recognition, setRecognition] = useState<any>(null);
@@ -24,12 +25,21 @@ export function VoiceInput({ onExtracted }: { onExtracted: (data: any) => void }
       rec.onresult = async (event: any) => {
         const transcript = event.results[0][0].transcript;
         setIsListening(false);
+        
+        if (process.env.NEXT_PUBLIC_IS_EXPORT === 'true') {
+           toast({ title: "AI Offline", description: "AI features require server access." });
+           return;
+        }
+
         setIsProcessing(true);
         try {
+          // Dynamic import to avoid build-time 'use server' conflicts during static export
+          const { extractVoiceExpense } = await import('@/ai/flows/extract-voice-expense');
           const result = await extractVoiceExpense({ transcribedText: transcript });
           onExtracted(result);
         } catch (error) {
           console.error("Voice extraction error", error);
+          toast({ variant: 'destructive', title: 'AI Error', description: 'Could not process voice.' });
         } finally {
           setIsProcessing(false);
         }
@@ -41,7 +51,7 @@ export function VoiceInput({ onExtracted }: { onExtracted: (data: any) => void }
 
       setRecognition(rec);
     }
-  }, [onExtracted]);
+  }, [onExtracted, toast]);
 
   const toggleListening = () => {
     if (!recognition) return;
