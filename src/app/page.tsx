@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useMemo, useEffect } from 'react';
@@ -12,7 +11,7 @@ import {
   History, Calculator, Users, ArrowRight, AlertTriangle, Wallet, CheckCircle2, AlertCircle, ShieldCheck, Home as HomeIcon
 } from 'lucide-react';
 import { useFirestore, useCollection, useMemoFirebase, useDoc } from '@/firebase';
-import { collection, query, orderBy, limit, doc, where } from 'firebase/firestore';
+import { collection, query, orderBy, limit, doc, where, Timestamp } from 'firebase/firestore';
 import { Expense, MonthlyBudget } from '@/lib/expenses';
 import { Group } from '@/lib/groups';
 import { Button } from '@/components/ui/button';
@@ -119,13 +118,22 @@ export default function Home() {
   const [hasUnreadGroups, setHasUnreadGroups] = useState(false);
 
   useEffect(() => {
-    if (!userGroups) return;
+    if (!userGroups || userGroups.length === 0) return;
     const checkUnread = () => {
       const anyUnread = userGroups.some(group => {
         if (!group.lastActivityAt) return false;
         const lastSeen = localStorage.getItem(`group_seen_${group.id}`);
         if (!lastSeen) return true;
-        return group.lastActivityAt.toMillis() > parseInt(lastSeen);
+        
+        // Safety check for Timestamp conversion
+        try {
+          const lastActivityMillis = group.lastActivityAt instanceof Timestamp 
+            ? group.lastActivityAt.toMillis() 
+            : new Date(group.lastActivityAt as any).getTime();
+          return lastActivityMillis > parseInt(lastSeen);
+        } catch (e) {
+          return false;
+        }
       });
       setHasUnreadGroups(anyUnread);
     };
