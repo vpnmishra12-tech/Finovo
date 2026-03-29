@@ -36,7 +36,22 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
 
   useEffect(() => {
     if (groupData?.lastActivityAt) {
-      localStorage.setItem(`group_seen_${groupId}`, groupData.lastActivityAt.toMillis().toString());
+      try {
+        let lastActivityMillis = 0;
+        if (groupData.lastActivityAt instanceof Timestamp) {
+          lastActivityMillis = groupData.lastActivityAt.toMillis();
+        } else if (typeof groupData.lastActivityAt === 'object' && 'seconds' in groupData.lastActivityAt) {
+          lastActivityMillis = (groupData.lastActivityAt as any).seconds * 1000;
+        } else {
+          lastActivityMillis = new Date(groupData.lastActivityAt as any).getTime();
+        }
+        
+        if (!isNaN(lastActivityMillis)) {
+          localStorage.setItem(`group_seen_${groupId}`, lastActivityMillis.toString());
+        }
+      } catch (e) {
+        // Silent error handling for timestamp conversion
+      }
     }
   }, [groupData, groupId]);
 
@@ -56,18 +71,19 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
   const { data: allExpenses, isLoading: isExpensesLoading } = useCollection<GroupExpense>(expensesQuery);
   const { data: members, isLoading: isMembersLoading } = useCollection<GroupMember>(membersQuery);
 
-  const totalSpent = allExpenses?.reduce((sum, exp) => sum + exp.amount, 0) || 0;
+  const totalSpent = (allExpenses && Array.isArray(allExpenses)) ? allExpenses.reduce((sum, exp) => sum + (exp.amount || 0), 0) : 0;
   
-  const memberTotals = allExpenses?.reduce((acc, exp) => {
-    acc[exp.paidBy] = {
-      name: exp.paidByName,
-      total: (acc[exp.paidBy]?.total || 0) + exp.amount
+  const memberTotals = (allExpenses && Array.isArray(allExpenses)) ? allExpenses.reduce((acc, exp) => {
+    const pBy = exp.paidBy || 'unknown';
+    acc[pBy] = {
+      name: exp.paidByName || 'User',
+      total: (acc[pBy]?.total || 0) + (exp.amount || 0)
     };
     return acc;
-  }, {} as Record<string, {name: string, total: number}>) || {};
+  }, {} as Record<string, {name: string, total: number}>) : {};
 
   const settlements = useMemo(() => {
-    if (!members || !allExpenses || allExpenses.length === 0 || totalSpent <= 0) return [];
+    if (!members || !allExpenses || !Array.isArray(allExpenses) || allExpenses.length === 0 || totalSpent <= 0) return [];
 
     const numMembers = members.length;
     if (numMembers === 0) return [];
@@ -82,7 +98,7 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
     allExpenses.forEach(exp => {
       const member = members.find(m => m.userId === exp.paidBy || m.id === exp.paidBy);
       if (member) {
-        paidByMemberMap[member.id] += exp.amount;
+        paidByMemberMap[member.id] += (exp.amount || 0);
       }
     });
 
@@ -310,11 +326,11 @@ export function GroupView({ groupId, onBack }: { groupId: string, onBack: () => 
                     <div className="flex items-center justify-between pt-2 border-t border-muted/50">
                       <div className="flex items-center gap-2">
                         <div className="w-6 h-6 bg-muted rounded-full flex items-center justify-center text-[10px] font-black text-black">
-                          {expense.paidByName.charAt(0)}
+                          {expense.paidByName?.charAt(0) || '?'}
                         </div>
                         <div className="flex flex-col">
                           <span className="text-[8px] uppercase tracking-widest opacity-60">Paid by</span>
-                          <span className="text-[10px] text-black uppercase font-bold">{expense.paidBy === user?.uid ? "Me" : expense.paidByName}</span>
+                          <span className="text-[10px] text-black uppercase font-bold">{expense.paidBy === user?.uid ? "Me" : (expense.paidByName || "User")}</span>
                         </div>
                       </div>
                       <div className="flex items-center gap-1">

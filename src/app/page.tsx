@@ -60,7 +60,7 @@ export default function Home() {
       try {
         setCachedExpenses(JSON.parse(savedExpenses));
       } catch (e) {
-        console.error("Failed to parse cached expenses", e);
+        // Silently handle corrupted cache
       }
     }
   }, []);
@@ -91,7 +91,7 @@ export default function Home() {
   }, [budgetData]);
 
   const totalSpentFromDb = useMemo(() => {
-    return expenses ? expenses.reduce((sum, e) => sum + e.amount, 0) : null;
+    return (expenses && Array.isArray(expenses)) ? expenses.reduce((sum, e) => sum + (e.amount || 0), 0) : null;
   }, [expenses]);
   
   useEffect(() => {
@@ -118,19 +118,27 @@ export default function Home() {
   const [hasUnreadGroups, setHasUnreadGroups] = useState(false);
 
   useEffect(() => {
-    if (!userGroups || userGroups.length === 0) return;
+    if (!userGroups || userGroups.length === 0) {
+      setHasUnreadGroups(false);
+      return;
+    }
     const checkUnread = () => {
       const anyUnread = userGroups.some(group => {
-        if (!group.lastActivityAt) return false;
+        if (!group?.lastActivityAt) return false;
         const lastSeen = localStorage.getItem(`group_seen_${group.id}`);
         if (!lastSeen) return true;
         
-        // Safety check for Timestamp conversion
         try {
-          const lastActivityMillis = group.lastActivityAt instanceof Timestamp 
-            ? group.lastActivityAt.toMillis() 
-            : new Date(group.lastActivityAt as any).getTime();
-          return lastActivityMillis > parseInt(lastSeen);
+          let lastActivityMillis = 0;
+          if (group.lastActivityAt instanceof Timestamp) {
+            lastActivityMillis = group.lastActivityAt.toMillis();
+          } else if (typeof group.lastActivityAt === 'object' && 'seconds' in group.lastActivityAt) {
+            lastActivityMillis = (group.lastActivityAt as any).seconds * 1000;
+          } else {
+            lastActivityMillis = new Date(group.lastActivityAt as any).getTime();
+          }
+          
+          return !isNaN(lastActivityMillis) && lastActivityMillis > parseInt(lastSeen);
         } catch (e) {
           return false;
         }
@@ -149,7 +157,7 @@ export default function Home() {
       <div className="fixed inset-0 flex flex-col items-center justify-center bg-background z-[200]">
         <div className="relative">
           <div className="absolute inset-0 bg-primary/10 rounded-full animate-ping scale-150" />
-          <Wallet className="w-10 h-10 text-primary animate-pulse relative z-10" />
+          <Wallet className="w-10 h-10 text-primary relative z-10" />
         </div>
         <p className="mt-8 text-[10px] font-headline font-black uppercase tracking-[0.5em] text-primary/40 animate-pulse">
           INITIALIZING CORE
