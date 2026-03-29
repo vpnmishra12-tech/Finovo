@@ -1,17 +1,53 @@
+
 /**
  * @fileOverview Manages AdMob logic for Interstitial and Rewarded ads.
- * Bridges web simulation and native APK behavior.
+ * Real integration using @capacitor-community/admob.
  */
 
+import { AdMob, BannerAdOptions, BannerAdSize, BannerAdPosition, InterstitialAdOptions, RewardAdOptions, AdmobConsentStatus } from '@capacitor-community/admob';
+import { Capacitor } from '@capacitor/core';
+
 const LAST_INTERSTITIAL_KEY = 'finovo_last_interstitial';
-const INTERSTITIAL_COOLDOWN = 5 * 60 * 1000; // 5 minutes frequency cap
+const INTERSTITIAL_COOLDOWN = 5 * 60 * 1000;
 
 export const AD_IDS = {
-  APP_ID: 'ca-app-pub-9915809769396833~2579253457',
   BANNER: 'ca-app-pub-9915809769396833/6222984996',
   INTERSTITIAL: 'ca-app-pub-9915809769396833/9966585626',
   REWARDED: 'ca-app-pub-9915809769396833/7887420455',
 };
+
+/**
+ * Initializes AdMob when the app starts.
+ */
+export async function initializeAdMob() {
+  if (Capacitor.isNativePlatform()) {
+    try {
+      await AdMob.initialize();
+    } catch (e) {
+      console.error('AdMob init failed', e);
+    }
+  }
+}
+
+/**
+ * Shows a banner ad.
+ */
+export async function showBannerAd() {
+  if (!Capacitor.isNativePlatform()) return;
+
+  const options: BannerAdOptions = {
+    adId: AD_IDS.BANNER,
+    adSize: BannerAdSize.BANNER,
+    position: BannerAdPosition.BOTTOM_CENTER,
+    margin: 0,
+  };
+
+  try {
+    await AdMob.showBanner(options);
+  } catch (e) {
+    console.error('Banner failed', e);
+  }
+}
 
 /**
  * Checks if we can show an interstitial ad based on frequency capping.
@@ -24,30 +60,40 @@ export function canShowInterstitial(): boolean {
 }
 
 /**
- * Simulates or triggers an Interstitial Ad.
+ * Shows an Interstitial Ad.
  */
 export async function showInterstitialAd(): Promise<void> {
-  if (!canShowInterstitial()) return;
+  if (!Capacitor.isNativePlatform() || !canShowInterstitial()) return;
 
-  console.log("Triggering Interstitial Ad:", AD_IDS.INTERSTITIAL);
-  if (typeof window !== 'undefined') {
+  const options: InterstitialAdOptions = {
+    adId: AD_IDS.INTERSTITIAL,
+  };
+
+  try {
+    await AdMob.prepareInterstitial(options);
+    await AdMob.showInterstitial();
     localStorage.setItem(LAST_INTERSTITIAL_KEY, Date.now().toString());
+  } catch (e) {
+    console.error('Interstitial failed', e);
   }
-  
-  // In a native APK (Capacitor), this would call the bridge.
-  return new Promise((resolve) => {
-    setTimeout(resolve, 500);
-  });
 }
 
 /**
  * Triggers a Rewarded Ad and returns a boolean if the reward was granted.
  */
 export async function showRewardedAd(): Promise<boolean> {
-  console.log("Triggering Rewarded Ad:", AD_IDS.REWARDED);
-  
-  return new Promise((resolve) => {
-    // Simulated delay for ad watching
-    setTimeout(() => resolve(true), 1000);
-  });
+  if (!Capacitor.isNativePlatform()) return true; // Simulation for web
+
+  const options: RewardAdOptions = {
+    adId: AD_IDS.REWARDED,
+  };
+
+  try {
+    await AdMob.prepareRewardVideoAd(options);
+    const reward = await AdMob.showRewardVideoAd();
+    return !!reward;
+  } catch (e) {
+    console.error('Rewarded failed', e);
+    return false;
+  }
 }
