@@ -45,6 +45,7 @@ export function AddExpenseDrawer() {
   const handleSave = async () => {
     if (!firestore || !user?.uid) return;
     
+    // Attempt to show ad before saving (native only)
     await showInterstitialAd();
 
     saveExpense(firestore, user.uid, {
@@ -62,8 +63,14 @@ export function AddExpenseDrawer() {
 
   const handleAiTextSubmit = async () => {
     if (!textInput) return;
+
+    // In static APK build, AI flows are stripped to allow build to pass
     if (process.env.NEXT_PUBLIC_IS_EXPORT === 'true') {
-      toast({ title: "AI Offline", description: "AI features require internet/server access." });
+      toast({ 
+        title: "AI Offline", 
+        description: "AI extraction requires a live server. Please enter manually in APK.",
+        variant: "destructive"
+      });
       return;
     }
 
@@ -71,12 +78,14 @@ export function AddExpenseDrawer() {
     try {
       // @ts-ignore - dynamic import handled by webpack alias during export build
       const { extractTextExpense } = await import('@/ai/flows/extract-text-expense');
+      if (!extractTextExpense) throw new Error("AI not available");
+      
       const result = await extractTextExpense({ textInput });
       setAmount(result.amount.toString());
       setCategory(result.category);
       setDescription(result.description);
     } catch (err) {
-      toast({ title: "AI Error", description: "Could not process text.", variant: "destructive" });
+      toast({ title: "AI Unavailable", description: "AI features are restricted in static builds.", variant: "destructive" });
     } finally {
       setIsProcessing(false);
     }

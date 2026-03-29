@@ -70,6 +70,11 @@ export function AgentModule() {
   }, [expenses]);
 
   const handleProcessImage = async (file: File) => {
+    if (process.env.NEXT_PUBLIC_IS_EXPORT === 'true') {
+      toast({ title: "AI Offline", description: "AI Audit is disabled in APK mode.", variant: "destructive" });
+      return;
+    }
+
     setIsWatchingAd(true);
     const granted = await showRewardedAd();
     setIsWatchingAd(false);
@@ -85,12 +90,15 @@ export function AgentModule() {
     reader.onloadend = async () => {
       const dataUri = reader.result as string;
       try {
+        // @ts-ignore - handled by webpack alias
         const { auditBill } = await import('@/ai/flows/bill-audit-flow');
+        if (!auditBill) throw new Error("AI Unavailable");
+
         const result = await auditBill({ billPhotoDataUri: dataUri });
         setAuditResult(result);
         toast({ title: result.isCorrect ? "Bill looks clean!" : "Errors found!" });
       } catch (err) {
-        toast({ variant: 'destructive', title: 'Error', description: 'Audit failed.' });
+        toast({ variant: 'destructive', title: 'Error', description: 'AI Audit failed or unavailable in this build.' });
       } finally {
         setIsAuditing(false);
       }
@@ -104,6 +112,11 @@ export function AgentModule() {
   };
 
   const handleSubAudit = async () => {
+    if (process.env.NEXT_PUBLIC_IS_EXPORT === 'true') {
+      toast({ title: "AI Offline", description: "Subscription Scan requires a server connection.", variant: "destructive" });
+      return;
+    }
+
     if (!expenses || expenses.length === 0) {
       toast({ title: "No Data", description: "Add expenses first." });
       return;
@@ -121,7 +134,10 @@ export function AgentModule() {
     setIsScanningSubs(true);
     setSubResult(null);
     try {
+      // @ts-ignore - handled by webpack alias
       const { detectSubscriptions } = await import('@/ai/flows/subscription-detector-flow');
+      if (!detectSubscriptions) throw new Error("AI Unavailable");
+
       const result = await detectSubscriptions({ 
         expenses: expenses.map(e => ({ 
           description: e.description, 
@@ -133,7 +149,7 @@ export function AgentModule() {
       setSubResult(result);
       toast({ title: "Audit Complete", description: result.subscriptions.length > 0 ? `Found ${result.subscriptions.length} leaks.` : "No leaks found." });
     } catch (err) {
-      toast({ variant: 'destructive', title: 'Error', description: 'Scan failed.' });
+      toast({ variant: 'destructive', title: 'Error', description: 'AI Scan failed or unavailable.' });
     } finally {
       setIsScanningSubs(false);
     }

@@ -14,8 +14,13 @@ export function CameraInput({ onExtracted }: { onExtracted: (data: any) => void 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const processImage = async (file: File) => {
+    // In static APK build, AI flows are stripped to allow build to pass
     if (process.env.NEXT_PUBLIC_IS_EXPORT === 'true') {
-      toast({ title: "AI Offline", description: "AI features require server access." });
+      toast({ 
+        title: "AI Offline", 
+        description: "Camera extraction is disabled in APK mode. Please type manually.",
+        variant: "destructive"
+      });
       return;
     }
 
@@ -26,14 +31,17 @@ export function CameraInput({ onExtracted }: { onExtracted: (data: any) => void 
         const dataUri = reader.result as string;
         try {
           // Dynamic import to avoid build-time 'use server' conflicts during static export
+          // @ts-ignore - handled by webpack alias
           const { extractBillPhotoExpense } = await import('@/ai/flows/extract-bill-photo-expense');
+          if (!extractBillPhotoExpense) throw new Error("AI not available");
+          
           const result = await extractBillPhotoExpense({ billPhotoDataUri: dataUri });
           onExtracted({
             ...result,
             description: `Bill from ${result.merchant}`
           });
         } catch (err) {
-          toast({ variant: 'destructive', title: 'AI Error', description: 'Failed to extract data.' });
+          toast({ variant: 'destructive', title: 'AI Error', description: 'AI features are restricted in static builds.' });
         } finally {
           setIsProcessing(false);
         }

@@ -4,7 +4,7 @@ import type {NextConfig} from 'next';
 const isExport = process.env.NEXT_PUBLIC_IS_EXPORT === 'true';
 
 const nextConfig: NextConfig = {
-  // Use export only for APK builds to avoid Next.js 15 Server Action conflicts
+  // CRITICAL: Next.js 15 Static Export mode for APK builds
   output: isExport ? 'export' : undefined,
   images: {
     unoptimized: true,
