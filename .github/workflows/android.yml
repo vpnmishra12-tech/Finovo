@@ -28,13 +28,14 @@ jobs:
       - name: Install dependencies
         run: npm install --legacy-peer-deps
 
-      - name: Build Next.js App (Static Export)
+      - name: Build Next.js App
         run: npm run build
         env:
           NEXT_TELEMETRY_DISABLED: 1
           NEXT_PUBLIC_IS_EXPORT: 'true'
+          NODE_ENV: production
 
-      - name: Initialize and Sync Capacitor
+      - name: Initialize Capacitor
         run: |
           npx cap add android || true
           mkdir -p android/app/src/main/assets/public

@@ -1,9 +1,11 @@
 
 import type {NextConfig} from 'next';
 
+const isExport = process.env.NEXT_PUBLIC_IS_EXPORT === 'true';
+
 const nextConfig: NextConfig = {
-  // Conditional output: 'export' ONLY for APK builds, undefined for Vercel/SSR
-  output: process.env.NEXT_PUBLIC_IS_EXPORT === 'true' ? 'export' : undefined,
+  // Use export only for APK builds to avoid Next.js 15 Server Action conflicts
+  output: isExport ? 'export' : undefined,
   images: {
     unoptimized: true,
     remotePatterns: [
@@ -34,6 +36,7 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
   trailingSlash: true,
+  distDir: isExport ? 'out' : '.next',
 };
 
 export default nextConfig;
