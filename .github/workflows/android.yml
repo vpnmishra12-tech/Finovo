@@ -30,8 +30,10 @@ jobs:
 
       - name: Build Next.js App
         run: npm run build
+        env:
+          NEXT_TELEMETRY_DISABLED: 1
 
-      - name: Sync Capacitor
+      - name: Initialize and Sync Capacitor
         run: |
           npx cap add android || true
           npx cap sync android

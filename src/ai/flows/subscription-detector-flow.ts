@@ -1,3 +1,4 @@
+
 'use server';
 /**
  * @fileOverview A Genkit flow for detecting recurring subscription expenses.
@@ -29,15 +30,14 @@ const SubscriptionDetectorOutputSchema = z.object({
 });
 export type SubscriptionDetectorOutput = z.infer<typeof SubscriptionDetectorOutputSchema>;
 
-export async function detectSubscriptions(input: SubscriptionDetectorInput): Promise<SubscriptionDetectorOutput> {
-  const detectorPrompt = ai.definePrompt({
-    name: 'subscriptionDetectorPrompt',
-    input: { schema: SubscriptionDetectorInputSchema },
-    output: { schema: SubscriptionDetectorOutputSchema },
-    config: {
-      temperature: 0.1,
-    },
-    prompt: `Analyze the provided expense list for RECURRING SUBSCRIPTIONS.
+const detectorPrompt = ai.definePrompt({
+  name: 'subscriptionDetectorPrompt',
+  input: { schema: SubscriptionDetectorInputSchema },
+  output: { schema: SubscriptionDetectorOutputSchema },
+  config: {
+    temperature: 0.1,
+  },
+  prompt: `Analyze the provided expense list for RECURRING SUBSCRIPTIONS.
 
 STRICT RULE:
 1. ONLY consider an expense as a subscription if its "category" field is exactly "Subscription".
@@ -50,8 +50,9 @@ Expenses:
 {{/each}}
 
 If no valid subscriptions are found with category "Subscription", return an empty array for subscriptions and 0 for drain.`,
-  });
+});
 
+export async function detectSubscriptions(input: SubscriptionDetectorInput): Promise<SubscriptionDetectorOutput> {
   const { output } = await detectorPrompt(input);
   if (!output) {
     throw new Error('AI failed to detect subscriptions.');

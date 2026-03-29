@@ -1,3 +1,4 @@
+
 'use server';
 /**
  * @fileOverview A Genkit flow for auditing bills and receipts to catch errors.
@@ -24,22 +25,22 @@ const BillAuditOutputSchema = z.object({
 });
 export type BillAuditOutput = z.infer<typeof BillAuditOutputSchema>;
 
-export async function auditBill(input: BillAuditInput): Promise<BillAuditOutput> {
-  const auditPrompt = ai.definePrompt({
-    name: 'billAuditPrompt',
-    input: { schema: BillAuditInputSchema },
-    output: { schema: BillAuditOutputSchema },
-    config: {
-      temperature: 0, // Forensic precision ke liye 0 temperature
-    },
-    prompt: `Audit this bill/receipt image. 
+const auditPrompt = ai.definePrompt({
+  name: 'billAuditPrompt',
+  input: { schema: BillAuditInputSchema },
+  output: { schema: BillAuditOutputSchema },
+  config: {
+    temperature: 0,
+  },
+  prompt: `Audit this bill/receipt image. 
 1. Sum all items and verify against total.
 2. Check for hidden or optional charges.
 3. Verify tax logic.
 
 Bill Photo: {{media url=billPhotoDataUri}}`,
-  });
+});
 
+export async function auditBill(input: BillAuditInput): Promise<BillAuditOutput> {
   const { output } = await auditPrompt(input);
   if (!output) {
     throw new Error('AI failed to audit the bill.');
