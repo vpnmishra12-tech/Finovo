@@ -62,24 +62,30 @@ export function AddExpenseDrawer() {
 
   const handleAiTextSubmit = async () => {
     if (!textInput) return;
+    if (process.env.NEXT_PUBLIC_IS_EXPORT === 'true') {
+      toast({ title: "AI Offline", description: "AI features require internet/server access." });
+      return;
+    }
+
     setIsProcessing(true);
     try {
-      // Dynamic import to bypass build-time static export check for server actions
+      // @ts-ignore - dynamic import handled by webpack alias during export build
       const { extractTextExpense } = await import('@/ai/flows/extract-text-expense');
       const result = await extractTextExpense({ textInput });
       setAmount(result.amount.toString());
       setCategory(result.category);
       setDescription(result.description);
     } catch (err) {
-      toast({ title: "AI Error", variant: "destructive" });
+      toast({ title: "AI Error", description: "Could not process text.", variant: "destructive" });
     } finally {
       setIsProcessing(false);
     }
   };
 
   const handleAiResult = (result: any) => {
-    setAmount(result.amount.toString());
-    setCategory(result.category);
+    if (!result) return;
+    setAmount(result.amount?.toString() || "");
+    setCategory(result.category || "Shopping");
     setDescription(result.description || result.merchant || "Expense from capture");
   };
 

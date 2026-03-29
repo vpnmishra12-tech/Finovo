@@ -37,6 +37,14 @@ const nextConfig: NextConfig = {
   },
   trailingSlash: true,
   distDir: isExport ? 'out' : '.next',
+  webpack: (config, { isServer }) => {
+    // When exporting for APK, we must ignore the AI folder entirely to avoid
+    // "Server Actions are not supported with static export" errors.
+    if (isExport && !isServer) {
+      config.resolve.alias['@/ai'] = false;
+    }
+    return config;
+  },
 };
 
 export default nextConfig;

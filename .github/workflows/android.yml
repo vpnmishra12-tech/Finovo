@@ -26,9 +26,9 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm install --legacy-peer-deps
+        run: npm install --force
 
-      - name: Build Next.js App
+      - name: Build Next.js App (Export Mode)
         run: npm run build
         env:
           NEXT_TELEMETRY_DISABLED: 1
