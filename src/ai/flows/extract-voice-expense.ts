@@ -1,5 +1,6 @@
 /**
  * @fileOverview A Genkit flow to extract expense details from a transcribed voice input.
+ * Removed 'use server' for static export compatibility.
  */
 
 import { ai } from '@/ai/genkit';
@@ -46,21 +47,10 @@ Output: {
 `,
 });
 
-const extractVoiceExpenseFlow = ai.defineFlow(
-  {
-    name: 'extractVoiceExpenseFlow',
-    inputSchema: ExtractVoiceExpenseInputSchema,
-    outputSchema: ExtractVoiceExpenseOutputSchema,
-  },
-  async (input) => {
-    const {output} = await extractVoiceExpensePrompt(input);
-    if (!output) {
-      throw new Error('Failed to extract expense details.');
-    }
-    return output;
-  }
-);
-
 export async function extractVoiceExpense(input: ExtractVoiceExpenseInput): Promise<ExtractVoiceExpenseOutput> {
-  return extractVoiceExpenseFlow(input);
+  const {output} = await extractVoiceExpensePrompt(input);
+  if (!output) {
+    throw new Error('Failed to extract expense details.');
+  }
+  return output;
 }

@@ -1,5 +1,6 @@
 /**
  * @fileOverview A Genkit flow for AI Agent advice and reminders.
+ * Removed 'use server' for static export compatibility.
  */
 
 import { ai } from '@/ai/genkit';
@@ -55,21 +56,10 @@ Your Tasks:
    Write a short, punchy message they can send on WhatsApp.`,
 });
 
-const agentAdvisorFlow = ai.defineFlow(
-  {
-    name: 'agentAdvisorFlow',
-    inputSchema: AgentAdvisorInputSchema,
-    outputSchema: AgentAdvisorOutputSchema,
-  },
-  async (input) => {
-    const { output } = await advicePrompt(input);
-    if (!output) {
-      throw new Error('Agent failed to generate a response.');
-    }
-    return output;
-  }
-);
-
 export async function getAgentAdvice(input: AgentAdvisorInput): Promise<AgentAdvisorOutput> {
-  return agentAdvisorFlow(input);
+  const { output } = await advicePrompt(input);
+  if (!output) {
+    throw new Error('Agent failed to generate a response.');
+  }
+  return output;
 }

@@ -1,5 +1,6 @@
 /**
  * @fileOverview A Genkit flow for detecting recurring subscription expenses.
+ * Removed 'use server' for static export compatibility.
  */
 
 import { ai } from '@/ai/genkit';

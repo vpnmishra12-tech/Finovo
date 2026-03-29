@@ -1,38 +1,48 @@
-'use server';
-
 /**
- * @fileOverview Centralized Server Actions for AI flows.
- * Next.js 15 requires ONLY async functions to be exported from 'use server' files.
- * This file explicitly exports only the functions to avoid compiler errors.
+ * @fileOverview Safe Client-Side AI Stubs for Static Export.
+ * These functions replace Server Actions to prevent build errors.
+ * They return a consistent "Requires Server" response in APK mode.
  */
 
-import { getAgentAdvice as _getAgentAdvice } from './flows/agent-advisor-flow';
-import { auditBill as _auditBill } from './flows/bill-audit-flow';
-import { extractBillPhotoExpense as _extractBillPhotoExpense } from './flows/extract-bill-photo-expense';
-import { extractTextExpense as _extractTextExpense } from './flows/extract-text-expense';
-import { extractVoiceExpense as _extractVoiceExpense } from './flows/extract-voice-expense';
-import { detectSubscriptions as _detectSubscriptions } from './flows/subscription-detector-flow';
+const OFFLINE_ERROR = {
+  error: "AI Features require a live server connection and are not available in this static build.",
+  message: "AI Features require a live server.",
+  isCorrect: true,
+  summary: "AI Audit is only available in the web version.",
+  subscriptions: [],
+  totalAnnualDrain: 0
+};
 
 export async function getAgentAdvice(input: any) {
-  return _getAgentAdvice(input);
+  return { message: "AI Advice is currently unavailable in the offline app.", title: "AI Offline" };
 }
 
 export async function auditBill(input: any) {
-  return _auditBill(input);
+  return {
+    isCorrect: true,
+    detectedErrors: [],
+    summary: "AI Bill Audit is disabled in this static build.",
+    detectedTotal: 0,
+    suggestedAction: "Please check your bill manually."
+  };
 }
 
 export async function extractBillPhotoExpense(input: any) {
-  return _extractBillPhotoExpense(input);
+  throw new Error("AI Extraction is not supported in the offline APK build.");
 }
 
 export async function extractTextExpense(input: any) {
-  return _extractTextExpense(input);
+  throw new Error("AI Text Extraction is not supported in the offline APK build.");
 }
 
 export async function extractVoiceExpense(input: any) {
-  return _extractVoiceExpense(input);
+  throw new Error("AI Voice Extraction is not supported in the offline APK build.");
 }
 
 export async function detectSubscriptions(input: any) {
-  return _detectSubscriptions(input);
+  return {
+    subscriptions: [],
+    totalAnnualDrain: 0,
+    summary: "AI Subscription Detection is disabled in this static build."
+  };
 }

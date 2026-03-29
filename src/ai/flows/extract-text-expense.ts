@@ -1,5 +1,6 @@
 /**
  * @fileOverview This file implements a Genkit flow for extracting expense details from a natural language text input.
+ * Removed 'use server' for static export compatibility.
  */
 
 import { ai } from '@/ai/genkit';
@@ -41,18 +42,7 @@ Please extract the following information and return it in JSON format:
 - 'description': A concise description of the expense.`,
 });
 
-const extractTextExpenseFlow = ai.defineFlow(
-  {
-    name: 'extractTextExpenseFlow',
-    inputSchema: ExtractTextExpenseInputSchema,
-    outputSchema: ExtractTextExpenseOutputSchema,
-  },
-  async (input) => {
-    const { output } = await prompt(input);
-    return output!;
-  }
-);
-
 export async function extractTextExpense(input: ExtractTextExpenseInput): Promise<ExtractTextExpenseOutput> {
-  return extractTextExpenseFlow(input);
+  const { output } = await prompt(input);
+  return output!;
 }

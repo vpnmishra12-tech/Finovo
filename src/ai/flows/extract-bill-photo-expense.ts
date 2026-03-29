@@ -1,5 +1,6 @@
 /**
  * @fileOverview A Genkit flow for extracting expense details from a bill photo.
+ * Removed 'use server' for static export compatibility.
  */
 
 import { ai } from '@/ai/genkit';
@@ -40,23 +41,12 @@ Guidelines:
 Here is the bill photo: {{media url=billPhotoDataUri}}`,
 });
 
-const extractBillPhotoExpenseFlow = ai.defineFlow(
-  {
-    name: 'extractBillPhotoExpenseFlow',
-    inputSchema: ExtractBillPhotoExpenseInputSchema,
-    outputSchema: ExtractBillPhotoExpenseOutputSchema,
-  },
-  async (input) => {
-    const { output } = await extractBillPhotoExpensePrompt(input);
-    if (!output) {
-      throw new Error('Failed to extract expense details from the bill photo.');
-    }
-    return output;
-  }
-);
-
 export async function extractBillPhotoExpense(
   input: ExtractBillPhotoExpenseInput
 ): Promise<ExtractBillPhotoExpenseOutput> {
-  return extractBillPhotoExpenseFlow(input);
+  const { output } = await extractBillPhotoExpensePrompt(input);
+  if (!output) {
+    throw new Error('Failed to extract expense details from the bill photo.');
+  }
+  return output;
 }

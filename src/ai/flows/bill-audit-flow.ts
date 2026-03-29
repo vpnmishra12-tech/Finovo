@@ -1,5 +1,6 @@
 /**
  * @fileOverview A Genkit flow for auditing bills and receipts to catch errors.
+ * Removed 'use server' for static export compatibility.
  */
 
 import { ai } from '@/ai/genkit';
