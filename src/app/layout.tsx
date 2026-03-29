@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Inter, Space_Grotesk } from 'next/font/google';
 import './globals.css';
 import { FirebaseClientProvider } from '@/firebase/client-provider';
@@ -27,30 +27,45 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const [hasHydrated, setHasHydrated] = useState(false);
+
   useEffect(() => {
-    // Initialize AdMob safely without blocking UI
+    setHasHydrated(true);
+    
+    // Initialize AdMob safely in the background
     const startAds = async () => {
       try {
         await initializeAdMob();
-        await showBannerAd();
+        // Delay banner show to ensure layout is ready
+        setTimeout(async () => {
+          try {
+            await showBannerAd();
+          } catch (e) {}
+        }, 2000);
       } catch (e) {
-        console.warn('Ads init skipped or failed', e);
+        console.warn('Ads init skipped', e);
       }
     };
+    
     startAds();
   }, []);
 
   return (
     <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable}`}>
       <body className="font-body antialiased min-h-screen bg-background text-foreground selection:bg-primary/30">
-        <FirebaseClientProvider>
-          <AuthProvider>
-            <LanguageProvider>
-              {children}
-              <Toaster />
-            </LanguageProvider>
-          </AuthProvider>
-        </FirebaseClientProvider>
+        {!hasHydrated ? (
+          // Simple splash background while JS loads to prevent flickering
+          <div className="fixed inset-0 bg-background" />
+        ) : (
+          <FirebaseClientProvider>
+            <AuthProvider>
+              <LanguageProvider>
+                {children}
+                <Toaster />
+              </LanguageProvider>
+            </AuthProvider>
+          </FirebaseClientProvider>
+        )}
       </body>
     </html>
   );

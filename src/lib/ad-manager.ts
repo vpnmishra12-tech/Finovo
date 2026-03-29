@@ -4,7 +4,7 @@
  * Real integration using @capacitor-community/admob.
  */
 
-import { AdMob, BannerAdOptions, BannerAdSize, BannerAdPosition, InterstitialAdOptions, RewardAdOptions, AdmobConsentStatus } from '@capacitor-community/admob';
+import { AdMob, BannerAdOptions, BannerAdSize, BannerAdPosition, InterstitialAdOptions, RewardAdOptions } from '@capacitor-community/admob';
 import { Capacitor } from '@capacitor/core';
 
 const LAST_INTERSTITIAL_KEY = 'finovo_last_interstitial';
@@ -22,9 +22,10 @@ export const AD_IDS = {
 export async function initializeAdMob() {
   if (Capacitor.isNativePlatform()) {
     try {
+      // Ensure AdMob initialization doesn't block the main thread
       await AdMob.initialize();
     } catch (e) {
-      console.error('AdMob init failed', e);
+      console.warn('AdMob init failed', e);
     }
   }
 }
@@ -40,12 +41,13 @@ export async function showBannerAd() {
     adSize: BannerAdSize.BANNER,
     position: BannerAdPosition.BOTTOM_CENTER,
     margin: 0,
+    isTesting: false // User provided real IDs
   };
 
   try {
     await AdMob.showBanner(options);
   } catch (e) {
-    console.error('Banner failed', e);
+    console.warn('Banner failed', e);
   }
 }
 
@@ -74,7 +76,7 @@ export async function showInterstitialAd(): Promise<void> {
     await AdMob.showInterstitial();
     localStorage.setItem(LAST_INTERSTITIAL_KEY, Date.now().toString());
   } catch (e) {
-    console.error('Interstitial failed', e);
+    console.warn('Interstitial failed', e);
   }
 }
 
@@ -93,7 +95,7 @@ export async function showRewardedAd(): Promise<boolean> {
     const reward = await AdMob.showRewardVideoAd();
     return !!reward;
   } catch (e) {
-    console.error('Rewarded failed', e);
+    console.warn('Rewarded failed', e);
     return false;
   }
 }

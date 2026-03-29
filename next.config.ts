@@ -12,7 +12,8 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  trailingSlash: true,
+  // Set trailingSlash to false for Capacitor to ensure index.html is at the root
+  trailingSlash: false,
   distDir: 'out',
 };
 

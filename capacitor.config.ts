@@ -7,12 +7,15 @@ const config: CapacitorConfig = {
   webDir: 'out',
   plugins: {
     AdMob: {
+      // Valid AdMob App ID provided by user
       appId: 'ca-app-pub-9915809769396833~2579253457',
     },
   },
   server: {
+    // Critical for Next.js routing and Firebase Auth on Android
     androidScheme: 'https',
-    hostname: 'localhost'
+    hostname: 'localhost',
+    cleartext: true
   }
 };
 
