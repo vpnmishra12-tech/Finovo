@@ -37,13 +37,17 @@ const nextConfig: NextConfig = {
   },
   trailingSlash: true,
   distDir: isExport ? 'out' : '.next',
-  webpack: (config, { isServer }) => {
-    // CRITICAL: When exporting for APK, we redirect all AI flow imports to an empty object
-    // This prevents the "Server Actions are not supported with static export" error
-    if (isExport && !isServer) {
-      config.resolve.alias['@/ai/flows'] = false;
-      // Also catch direct imports just in case
-      config.resolve.alias['@/ai'] = false;
+  webpack: (config) => {
+    // CRITICAL: When exporting for APK, we completely strip the AI flows
+    // This is the ONLY way to prevent Next.js 15 from failing on 'use server' directives
+    if (isExport) {
+      config.resolve.alias['@/ai/flows/extract-text-expense'] = false;
+      config.resolve.alias['@/ai/flows/extract-bill-photo-expense'] = false;
+      config.resolve.alias['@/ai/flows/extract-voice-expense'] = false;
+      config.resolve.alias['@/ai/flows/agent-advisor-flow'] = false;
+      config.resolve.alias['@/ai/flows/bill-audit-flow'] = false;
+      config.resolve.alias['@/ai/flows/subscription-detector-flow'] = false;
+      config.resolve.alias['@/ai/genkit'] = false;
     }
     return config;
   },
