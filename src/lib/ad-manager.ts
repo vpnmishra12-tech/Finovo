@@ -22,16 +22,16 @@ export const AD_IDS = {
 export async function initializeAdMob() {
   if (Capacitor.isNativePlatform()) {
     try {
-      // Ensure AdMob initialization doesn't block the main thread
+      // Initialize with tracking authorization if needed (iOS)
       await AdMob.initialize();
     } catch (e) {
-      console.warn('AdMob init failed', e);
+      console.warn('AdMob core init failed', e);
     }
   }
 }
 
 /**
- * Shows a banner ad.
+ * Shows a banner ad at the bottom.
  */
 export async function showBannerAd() {
   if (!Capacitor.isNativePlatform()) return;
@@ -41,13 +41,13 @@ export async function showBannerAd() {
     adSize: BannerAdSize.BANNER,
     position: BannerAdPosition.BOTTOM_CENTER,
     margin: 0,
-    isTesting: false // User provided real IDs
+    isTesting: false 
   };
 
   try {
     await AdMob.showBanner(options);
   } catch (e) {
-    console.warn('Banner failed', e);
+    console.warn('Banner display failed', e);
   }
 }
 
@@ -69,6 +69,7 @@ export async function showInterstitialAd(): Promise<void> {
 
   const options: InterstitialAdOptions = {
     adId: AD_IDS.INTERSTITIAL,
+    isTesting: false
   };
 
   try {
@@ -76,7 +77,7 @@ export async function showInterstitialAd(): Promise<void> {
     await AdMob.showInterstitial();
     localStorage.setItem(LAST_INTERSTITIAL_KEY, Date.now().toString());
   } catch (e) {
-    console.warn('Interstitial failed', e);
+    console.warn('Interstitial show failed', e);
   }
 }
 
@@ -84,10 +85,11 @@ export async function showInterstitialAd(): Promise<void> {
  * Triggers a Rewarded Ad and returns a boolean if the reward was granted.
  */
 export async function showRewardedAd(): Promise<boolean> {
-  if (!Capacitor.isNativePlatform()) return true; // Simulation for web
+  if (!Capacitor.isNativePlatform()) return true; // Simulation for web preview
 
   const options: RewardAdOptions = {
     adId: AD_IDS.REWARDED,
+    isTesting: false
   };
 
   try {
@@ -95,7 +97,7 @@ export async function showRewardedAd(): Promise<boolean> {
     const reward = await AdMob.showRewardVideoAd();
     return !!reward;
   } catch (e) {
-    console.warn('Rewarded failed', e);
+    console.warn('Rewarded show failed', e);
     return false;
   }
 }

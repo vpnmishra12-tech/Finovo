@@ -7,7 +7,7 @@ const config: CapacitorConfig = {
   webDir: 'out',
   plugins: {
     AdMob: {
-      // Valid AdMob App ID provided by user
+      // Your real AdMob App ID
       appId: 'ca-app-pub-9915809769396833~2579253457',
     },
   },
