@@ -13,7 +13,6 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/co
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Plus, Send, Keyboard, Mic, Camera, Loader2, Sparkles } from 'lucide-react';
-import { extractTextExpense } from '@/ai/flows/extract-text-expense';
 import { VoiceInput } from './capture-modes/voice-input';
 import { CameraInput } from './capture-modes/camera-input';
 import { useToast } from '@/hooks/use-toast';
@@ -46,10 +45,8 @@ export function AddExpenseDrawer() {
   const handleSave = async () => {
     if (!firestore || !user?.uid) return;
     
-    // 1. Trigger Interstitial Ad (Frequency Capped)
     await showInterstitialAd();
 
-    // 2. Perform Save
     saveExpense(firestore, user.uid, {
       amount: parseFloat(amount),
       category: category as any,
@@ -67,6 +64,8 @@ export function AddExpenseDrawer() {
     if (!textInput) return;
     setIsProcessing(true);
     try {
+      // Dynamic import to bypass build-time static export check for server actions
+      const { extractTextExpense } = await import('@/ai/flows/extract-text-expense');
       const result = await extractTextExpense({ textInput });
       setAmount(result.amount.toString());
       setCategory(result.category);

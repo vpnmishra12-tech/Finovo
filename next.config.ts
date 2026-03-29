@@ -2,7 +2,7 @@
 import type {NextConfig} from 'next';
 
 const nextConfig: NextConfig = {
-  // Conditional output: 'export' for APK builds, undefined for Vercel SSR
+  // Conditional output: 'export' ONLY for APK builds, undefined for Vercel/SSR
   output: process.env.NEXT_PUBLIC_IS_EXPORT === 'true' ? 'export' : undefined,
   images: {
     unoptimized: true,

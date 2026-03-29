@@ -7,8 +7,6 @@ import { useAuth } from '@/lib/contexts/auth-context';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ShieldCheck, Camera, Search, Info, RefreshCcw, Wallet, Loader2, CheckCircle2, AlertTriangle, AlertCircle, TrendingUp, Sparkles, ReceiptText, PlayCircle } from 'lucide-react';
-import { auditBill, type BillAuditOutput } from '@/ai/flows/bill-audit-flow';
-import { detectSubscriptions, type SubscriptionDetectorOutput } from '@/ai/flows/subscription-detector-flow';
 import { useToast } from '@/hooks/use-toast';
 import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import { collection, query, orderBy, limit } from 'firebase/firestore';
@@ -25,11 +23,11 @@ export function AgentModule() {
   const firestore = useFirestore();
 
   const [isAuditing, setIsAuditing] = useState(false);
-  const [auditResult, setAuditResult] = useState<BillAuditOutput | null>(null);
+  const [auditResult, setAuditResult] = useState<any>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [isScanningSubs, setIsScanningSubs] = useState(false);
-  const [subResult, setSubResult] = useState<SubscriptionDetectorOutput | null>(null);
+  const [subResult, setSubResult] = useState<any>(null);
 
   const [isWatchingAd, setIsWatchingAd] = useState(false);
 
@@ -72,7 +70,6 @@ export function AgentModule() {
   }, [expenses]);
 
   const handleProcessImage = async (file: File) => {
-    // 1. Reward User for watching an ad before audit
     setIsWatchingAd(true);
     const granted = await showRewardedAd();
     setIsWatchingAd(false);
@@ -88,6 +85,7 @@ export function AgentModule() {
     reader.onloadend = async () => {
       const dataUri = reader.result as string;
       try {
+        const { auditBill } = await import('@/ai/flows/bill-audit-flow');
         const result = await auditBill({ billPhotoDataUri: dataUri });
         setAuditResult(result);
         toast({ title: result.isCorrect ? "Bill looks clean!" : "Errors found!" });
@@ -111,7 +109,6 @@ export function AgentModule() {
       return;
     }
 
-    // 1. Reward User for watching an ad before scan
     setIsWatchingAd(true);
     const granted = await showRewardedAd();
     setIsWatchingAd(false);
@@ -124,6 +121,7 @@ export function AgentModule() {
     setIsScanningSubs(true);
     setSubResult(null);
     try {
+      const { detectSubscriptions } = await import('@/ai/flows/subscription-detector-flow');
       const result = await detectSubscriptions({ 
         expenses: expenses.map(e => ({ 
           description: e.description, 
@@ -143,7 +141,6 @@ export function AgentModule() {
 
   return (
     <div className="flex flex-col gap-3 pb-24 pt-1 px-1 min-h-full">
-      {/* Mini Hero */}
       <div className="bg-primary p-5 rounded-[1.5rem] text-white relative overflow-hidden shadow-lg shrink-0 h-28 flex items-center">
         <div className="absolute top-0 right-0 w-28 h-28 bg-white/5 rounded-full -mr-12 -mt-12 blur-2xl" />
         <div className="relative z-10 flex items-center gap-3">
@@ -157,7 +154,6 @@ export function AgentModule() {
         </div>
       </div>
 
-      {/* Ad Watch Overlay Indicator */}
       {isWatchingAd && (
         <div className="fixed inset-0 z-[200] bg-black/90 flex flex-col items-center justify-center p-8 animate-in fade-in duration-300">
            <PlayCircle className="w-16 h-16 text-white animate-pulse mb-6" />
@@ -166,7 +162,6 @@ export function AgentModule() {
         </div>
       )}
 
-      {/* Mini Insight Card */}
       <Card className="border-none shadow-sm rounded-[1.5rem] bg-card overflow-hidden shrink-0 h-24 flex items-center">
         <CardContent className="p-5 w-full">
           {monthlyInsight ? (
@@ -193,7 +188,6 @@ export function AgentModule() {
         </CardContent>
       </Card>
 
-      {/* Compact Action Tabs */}
       <Tabs defaultValue="auditor" className="flex flex-col gap-2">
         <TabsList className="grid w-full grid-cols-2 bg-muted h-11 rounded-xl p-1 shrink-0">
           <TabsTrigger value="auditor" className="rounded-lg uppercase text-[10px] font-black data-[state=active]:bg-white data-[state=active]:text-primary shadow-sm">
@@ -208,11 +202,9 @@ export function AgentModule() {
           <Card className="border-none shadow-sm rounded-[2rem] bg-card">
             <CardContent className="p-5 py-10 space-y-4 flex flex-col items-center justify-center">
               <input type="file" accept="image/*" capture="environment" className="hidden" ref={fileInputRef} onChange={onFileChange} />
-              
               <div className="w-14 h-14 bg-muted/50 rounded-full flex items-center justify-center">
                 <ReceiptText className="w-7 h-7 text-primary opacity-30" />
               </div>
-
               <div className="w-full space-y-3">
                 <Button
                   onClick={() => fileInputRef.current?.click()}
@@ -221,14 +213,12 @@ export function AgentModule() {
                 >
                   {isAuditing ? <Loader2 className="w-5 h-5 animate-spin" /> : <><Camera className="w-5 h-5" /> {t.agent.scanButton}</>}
                 </Button>
-                
                 <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground text-center opacity-60">
                   {isAuditing ? t.agent.detecting : t.agent.auditorDesc}
                 </p>
               </div>
             </CardContent>
           </Card>
-
           {auditResult && (
             <div className={cn("p-4 rounded-xl shadow-md animate-in fade-in zoom-in-95 flex flex-col justify-center shrink-0 mb-1", auditResult.isCorrect ? "bg-green-50 border border-green-200" : "bg-red-50 border border-red-200")}>
                <div className="flex items-center justify-between">
@@ -249,7 +239,6 @@ export function AgentModule() {
               <div className="w-14 h-14 bg-muted/50 rounded-full flex items-center justify-center">
                 <Sparkles className="w-7 h-7 text-primary opacity-30" />
               </div>
-
               <div className="w-full space-y-3">
                 <div className="bg-muted/30 p-3 rounded-xl flex gap-2 items-center">
                   <AlertCircle className="w-4 h-4 text-primary shrink-0" />
@@ -267,7 +256,6 @@ export function AgentModule() {
               </div>
             </CardContent>
           </Card>
-
           {subResult && (
             <div className="p-4 bg-primary text-white rounded-xl flex items-center justify-between shadow-lg animate-in fade-in zoom-in-95 shrink-0 mb-1">
                <div>
@@ -282,13 +270,6 @@ export function AgentModule() {
           )}
         </TabsContent>
       </Tabs>
-
-      {/* Trust Banner */}
-      <div className="pb-4 pt-4 text-center shrink-0">
-        <p className="text-[7px] font-black text-primary opacity-10 uppercase tracking-[0.5em]">
-          FINOVO AI CORE v1.2
-        </p>
-      </div>
     </div>
   );
 }
