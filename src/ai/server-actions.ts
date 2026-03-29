@@ -1,11 +1,12 @@
 /**
- * @fileOverview Safe Client-Side AI Stubs for Static Export.
- * This file contains NO Server Actions and NO imports from flows to avoid Node.js dependency errors.
+ * @fileOverview Client-Side AI Stubs for Static Export.
+ * This file contains NO Server Actions and NO node-only imports.
+ * It provides placeholder logic to ensure the app builds successfully for APK.
  */
 
 export async function getAgentAdvice(input: any) {
   return { 
-    message: "AI Advice is currently unavailable in the offline app. Please use the web version for smart insights.", 
+    message: "AI Advice is currently restricted in the offline app. Please use the web version for smart insights.", 
     title: "AI Offline" 
   };
 }

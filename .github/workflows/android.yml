@@ -13,11 +13,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # ✅ FIX 1: Node 20 required
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
 
+      # ✅ FIX 2: Java 17 (Capacitor safe)
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
@@ -25,18 +27,15 @@ jobs:
           java-version: 17
 
       - name: Install dependencies
-        run: npm install --force
+        run: npm install
 
       - name: Build web app
         run: npm run build
-        env:
-          NEXT_PUBLIC_IS_EXPORT: 'true'
-          NODE_ENV: production
 
       - name: Sync Capacitor
         run: npx cap sync android
 
-      - name: Build Android APK
+      - name: Build APK
         run: |
           cd android
           chmod +x gradlew
@@ -46,4 +45,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: app-debug
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          path: android/app/build/outputs/apk/debug/
